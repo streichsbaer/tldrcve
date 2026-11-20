@@ -1,7 +1,7 @@
 {
   "id": "linux-kernel",
   "name": "Linux kernel",
-  "about": "The newest release on each Linux kernel line we track. Each one fixes every Linux kernel bug we cover.",
+  "about": "The newest release on each Linux kernel line we track. Each one fixes every Linux kernel bug we cover, except the SCTP bug below, which no distro kernel fixes yet.",
   "feed": null,
   "latest_from": [
     "https://security-tracker.debian.org/tracker/source-package/linux",
@@ -58,6 +58,15 @@
     }
   ],
   "older": "Ubuntu 26.10: 7.3.0-10.10. Cloud and HWE kernels have their own versions.",
+  "unfixed": [
+    {
+      "line": "All lines",
+      "note": "No stable or major distro kernel has the SCTP fix yet (merged into mainline 19 Nov). Block the sctp module meanwhile.",
+      "pages": [
+        "linux-sctp-root"
+      ]
+    }
+  ],
   "sources": [
     {
       "title": "Debian tracker: fixed versions",
@@ -82,6 +91,14 @@
     {
       "title": "Red Hat: kernel errata (CSAF)",
       "url": "https://access.redhat.com/hydra/rest/securitydata/csaf.json?package=kernel"
+    },
+    {
+      "title": "Linux kernel: SCTP fix merged into mainline",
+      "url": "https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=1e575bda30acc0bf01f799cee798d4a1c100d538"
+    },
+    {
+      "title": "kernel.org: newest stable kernels",
+      "url": "https://www.kernel.org/releases.json"
     }
   ]
 }

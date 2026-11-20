@@ -22,7 +22,7 @@
   "updated": "2026-11-20",
   "verdict": "if",
   "tile_line": "Only if HTTP/2 is on. Public exploit, no attacks yet.",
-  "summary": "A bug in nginx's HTTP/2 handling lets an attacker with no login crash nginx or run code as the nginx worker user. Despite the name, it doesn't give root by itself, and code execution needs ASLR to be off or bypassed. A second HTTP/2 bug (CVE-2026-123633) is fixed by the same releases, and so are three other nginx bugs (HTTP/3, resolver, mail proxy) that Xint groups under the same name; turning off HTTP/2 doesn't cover those.",
+  "summary": "A bug in nginx's HTTP/2 handling lets an attacker with no login crash nginx or run code as the nginx worker user. Despite the name, it doesn't give root by itself (Xint got root by chaining it with a separate Linux kernel bug, covered on our Linux SCTP root page), and code execution needs ASLR to be off or bypassed. A second HTTP/2 bug (CVE-2026-123633) is fixed by the same releases, and so are three other nginx bugs (HTTP/3, resolver, mail proxy) that Xint groups under the same name; turning off HTTP/2 doesn't cover those.",
   "affected": [
     {
       "label": "nginx 1.9.5 – 1.31.8",
@@ -172,6 +172,10 @@
     }
   ],
   "changes": [
+    {
+      "date": "2026-11-20",
+      "text": "Points to the Linux SCTP root page for the kernel bug Xint chained it with."
+    },
     {
       "date": "2026-11-20",
       "text": "Added CVE-2026-123633 (second HTTP/2 bug, same fix) and the other nginx bugs fixed by the same releases; Debian DLA-4918-1."
