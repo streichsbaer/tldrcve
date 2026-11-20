@@ -72,7 +72,7 @@ Copy the shape of an existing file (`content/nginx2root.json` is a good model).
 | `disclosed` | `YYYY-MM-DD`, when the bug was made public (drives the All CVEs date filter) |
 | `news` | Optional: when it became news, if later than `disclosed` (drives "Latest" on the homepage) |
 | `updated` | `YYYY-MM-DD` of the last edit |
-| `verdict` | `now`, `if` or `cycle` (see below) |
+| `verdict` | `now`, `if`, `cycle` or `watch` (see below) |
 | `tile_line` | One line explaining the verdict, about 55 chars max |
 | `summary` | 2-3 plain-English sentences |
 | `status.exploit` | `public` (working code anyone can download), `demonstrated` (shown, code not public) or `none` |
@@ -110,6 +110,7 @@ When a vulnerability gets attention but doesn't qualify yet, record it instead o
   - `now`: working exploit or attacks seen, and common setups are exposed.
   - `if`: serious, but only under conditions the page lists.
   - `cycle`: real, but hard to reach or low impact.
+  - `watch`: getting attention, but too little is known to act on (no details, no fix, no exploit). Never a softer `now`. The page must say what would change the verdict.
 - **Writing:**
   - Plain English and short. No hype words unless quoting an official rating.
   - Absolute dates only ("19 Nov 2026").

@@ -680,6 +680,7 @@ def how_page() -> str:
         <dt><span class="verdict verdict--now">Patch now</span></dt><dd>Working exploit or attacks seen, and common setups are exposed.</dd>
         <dt><span class="verdict verdict--if">Patch now if…</span></dt><dd>Serious, but only under conditions we list. Each page shows you how to check them.</dd>
         <dt><span class="verdict verdict--cycle">Next cycle</span></dt><dd>Real, but hard to reach or low impact. Patch on your normal schedule.</dd>
+        <dt><span class="verdict verdict--watch">Watching</span></dt><dd>People are talking about it, but too little is known to act on. We say what would change that, and update the page when it does.</dd>
       </dl>
     </section>
 

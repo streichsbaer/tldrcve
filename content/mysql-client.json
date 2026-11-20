@@ -1,0 +1,183 @@
+{
+  "slug": "mysql-client",
+  "name": "MySQL client flaw",
+  "aliases": [
+    "mysql",
+    "mysql server",
+    "mysql cluster",
+    "client programs",
+    "oracle cspu",
+    "lamp",
+    "cve-2026-114952",
+    "ghsa-cw64-jwv6-f83g"
+  ],
+  "cves": [
+    "CVE-2026-114952"
+  ],
+  "ghsa": [
+    "GHSA-cw64-jwv6-f83g"
+  ],
+  "product": "MySQL Server",
+  "disclosed": "2026-11-17",
+  "updated": "2026-11-20",
+  "verdict": "watch",
+  "tile_line": "Rated 9.1, but no details or fix yet. Nothing to do.",
+  "summary": "Oracle fixed a MySQL bug on 17 Nov in the part it calls \"Client programs\" and rated it Critical 9.1, but it hasn't said how the attack works or whether servers or the client tools are at risk. The free MySQL releases don't have the fix yet. The two GitHub \"exploits\" going around are a version checker and an unverified guess written without seeing Oracle's fix, and no attacks have been reported.",
+  "status": {
+    "exploit": "none",
+    "attacks": "none",
+    "kev": null,
+    "no_login": true,
+    "scare": 1.2
+  },
+  "affected": [
+    {
+      "label": "MySQL 8.4, 9.7 or 26.10",
+      "text": "Oracle lists MySQL Server 8.4.0 to 8.4.13, 9.7.0 to 9.7.4 and 26.10, and MySQL Cluster 8.0.0 to 8.0.50, 8.4.0 to 8.4.13, 9.7.0 to 9.7.4 and 26.10. Server 8.0 isn't listed because Oracle no longer supports it, not because it was checked, so TuxCare treats it as possibly affected. Oracle files the bug under \"Client programs\", so machines with only the `mysql` command-line tools count too. MariaDB and Percona haven't said whether they're affected; Red Hat lists its hardened MariaDB 10.11 and 11.8 images as affected.",
+      "cmd": "mysql --version",
+      "cite": [
+        1,
+        7,
+        8
+      ]
+    },
+    {
+      "label": "An attacker reaches the MySQL traffic",
+      "text": "Oracle says the attack goes over the MySQL network protocol, with no login and no user action. It hasn't said whether the server or a client program connecting to a server is the side at risk. \"A client connecting to a malicious server\" is analysts' guess, not something Oracle has confirmed. The sources also disagree on the kind of bug: CISA's data says improper authentication (CWE-287), Red Hat says missing authentication (CWE-306).",
+      "cite": [
+        1,
+        7,
+        15,
+        2,
+        8
+      ]
+    }
+  ],
+  "do": [
+    {
+      "label": "Nothing urgent yet",
+      "text": "There's no confirmed exploit and no reported attack, it isn't on CISA's exploited list, and CISA's own assessment says exploitation \"none\". The 19 Nov GitHub code is a fake MySQL server that captures passwords from clients connecting without encryption; its author says Oracle's fix isn't public, so nothing ties it to this bug. We'll change the verdict if Oracle, the researcher or a distro explains the bug, if real exploit code or attacks appear, or if it lands on CISA's list.",
+      "cite": [
+        2,
+        14,
+        12,
+        11,
+        13,
+        7
+      ]
+    },
+    {
+      "label": "Update when the fix ships",
+      "text": "The fixed builds 8.4.13.1, 9.7.4.1 and 26.10.0.1 are listed as not yet released, with no date. Until then the fix is only available to Oracle support customers through My Oracle Support. Oracle's next scheduled updates are on 15 Dec 2026 and 19 Jan 2027; nobody has said the public fix ships in either. Distros disagree on severity: Red Hat rates it Critical, Ubuntu Medium. Debian, Red Hat and Ubuntu have no fixed packages yet.",
+      "pending": {
+        "expected": null
+      },
+      "cite": [
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10
+      ]
+    },
+    {
+      "label": "Optional: general hardening",
+      "text": "TuxCare suggests limiting ports 3306 (and 33060 if the X Protocol is on) to the hosts that need them, having clients check the server's certificate with `--ssl-mode=VERIFY_IDENTITY`, and turning off local file loading with `--local-infile=0` where nobody uses it. It notes these are general hardening steps, not confirmed fixes for this bug.",
+      "cite": [
+        7
+      ]
+    }
+  ],
+  "slack": "MySQL CVE-2026-114952 (Oracle, Critical 9.1, \"Client programs\"): Oracle hasn't said how it works, and the free MySQL releases (8.4.13, 9.7.4, 26.10) don't have the fix yet; fixed builds 8.4.13.1, 9.7.4.1 and 26.10.0.1 are listed as not yet released. No confirmed exploit, no reported attacks, not on CISA KEV. The GitHub \"PoCs\" are a version checker and an unverified guess. Nothing urgent: update when the fix ships, and keep MySQL ports off the internet as usual.",
+  "sources": [
+    {
+      "title": "Oracle: Critical Security Patch Update, November 2026 (MySQL risk matrix)",
+      "url": "https://www.oracle.com/security-alerts/cspunov2026.html",
+      "date": "17 Nov"
+    },
+    {
+      "title": "CVE record: Oracle score, CISA assessment (exploitation none), CWE-287",
+      "url": "https://www.cve.org/CVERecord?id=CVE-2026-114952"
+    },
+    {
+      "title": "NVD: CVE-2026-114952 (not yet analysed)",
+      "url": "https://nvd.nist.gov/vuln/detail/CVE-2026-114952"
+    },
+    {
+      "title": "MySQL: 8.4 release notes (8.4.13.1 not yet released)",
+      "url": "https://dev.mysql.com/doc/relnotes/mysql/8.4/en/"
+    },
+    {
+      "title": "MySQL: 9.7 release notes (9.7.4.1 not yet released)",
+      "url": "https://dev.mysql.com/doc/relnotes/mysql/9.7/en/"
+    },
+    {
+      "title": "MySQL: 26.10 release notes (26.10.0.1 not yet released)",
+      "url": "https://dev.mysql.com/doc/relnotes/mysql/26.10/en/"
+    },
+    {
+      "title": "TuxCare: fix only via My Oracle Support, 8.0 status, hardening steps",
+      "url": "https://tuxcare.com/blog/mysql-cve-2026-114952/",
+      "date": "18 Nov"
+    },
+    {
+      "title": "Red Hat: rated Critical, CWE-306, affected packages and images",
+      "url": "https://access.redhat.com/security/cve/CVE-2026-114952"
+    },
+    {
+      "title": "Ubuntu: Medium priority, needs triage",
+      "url": "https://ubuntu.com/security/CVE-2026-114952"
+    },
+    {
+      "title": "Debian: mysql-9.7 vulnerable, no fix",
+      "url": "https://security-tracker.debian.org/tracker/CVE-2026-114952"
+    },
+    {
+      "title": "GitHub: the first 'PoC' is a read-only version check",
+      "url": "https://github.com/Quaerendir/cve-2026-114952-mysql-audit"
+    },
+    {
+      "title": "GitHub: 1dayexploit rogue-server code, written without Oracle's fix",
+      "url": "https://github.com/1dayexploit/1day-archive/tree/main/analyses/cve-2026-114952-mysql-client-auth-bypass",
+      "date": "19 Nov"
+    },
+    {
+      "title": "cve.now: CVE-2026-114952 (PoC claim)",
+      "url": "https://cve.now/CVE-2026-114952"
+    },
+    {
+      "title": "CISA KEV catalog: not listed",
+      "url": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog"
+    },
+    {
+      "title": "Independent analysis: root cause unknown, client-side guess",
+      "url": "https://gist.github.com/cyberheartmi9/65d179276c50e7e20f59549d0bbc8960",
+      "date": "18 Nov"
+    }
+  ],
+  "changes": [
+    {
+      "date": "2026-11-20",
+      "text": "Published."
+    }
+  ],
+  "status_cite": {
+    "exploit": [
+      2,
+      11,
+      12
+    ],
+    "attacks": [
+      7,
+      2
+    ],
+    "kev": [
+      14
+    ],
+    "no_login": [
+      1
+    ]
+  }
+}

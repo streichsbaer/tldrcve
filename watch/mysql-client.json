@@ -9,7 +9,7 @@
   ],
   "product": "MySQL Server",
   "evaluated": "2026-11-20",
-  "decision": "watch",
+  "decision": "page",
   "recheck": "2026-11-27",
   "why": "Oracle rates it 9.1 but says nothing about how it works, no public MySQL release fixes it yet, there's no exploit or reported attack, it isn't on CISA KEV, and the buzz is aggregators and one vendor blog. We can't yet say who is exposed, so a page would be guesswork either way.",
   "page_if": [
@@ -42,11 +42,20 @@
       ]
     },
     {
-      "text": "No public fix yet: the newest MySQL releases (8.4.13 and 9.7.4, 20 Oct) are inside the affected ranges, and 8.4.13.1 and 9.7.4.1 are listed as 'not yet released' with no date. TuxCare says the fix is only available to Oracle support customers.",
+      "text": "Oracle credits Kentaro Takeda of YouMind. CISA's data on the CVE record says the weakness is improper authentication (CWE-287); Red Hat says missing authentication (CWE-306). Red Hat lists mysql 8.4 on RHEL 8, 9 and 10 as affected, plus its hardened mariadb10.11 and mariadb11.8 images.",
+      "cite": [
+        1,
+        2,
+        6
+      ]
+    },
+    {
+      "text": "No public fix yet: the newest MySQL releases (8.4.13 and 9.7.4, 20 Oct) are inside the affected ranges, and 8.4.13.1, 9.7.4.1 and 26.10.0.1 are listed as 'not yet released' with no date. TuxCare says the fix is only available to Oracle support customers.",
       "cite": [
         4,
         5,
-        9
+        9,
+        15
       ]
     },
     {
@@ -58,12 +67,13 @@
       ]
     },
     {
-      "text": "No exploit: cve.now says a GitHub proof of concept was published, but the one repo it links is a read-only audit script that checks versions and never sends a request. CISA's SSVC entry says exploitation 'none'. Not on CISA KEV (catalog of 18 Nov).",
+      "text": "No confirmed exploit. cve.now's first linked 'proof of concept' is a read-only audit script that only checks versions. A second repo (19 Nov) is a fake MySQL server that captures passwords from clients connecting without TLS, but its author worked from the unfixed source because Oracle's fix isn't public, so nothing ties it to the bug Oracle fixed. CISA's SSVC entry says exploitation 'none'. Not on CISA KEV (catalog of 18 Nov).",
       "cite": [
         2,
         11,
         12,
-        13
+        13,
+        14
       ]
     },
     {
@@ -74,8 +84,9 @@
       ]
     },
     {
-      "text": "Unverified: whether MariaDB or Percona Server are affected. Neither has published anything on this CVE as of 20 Nov.",
+      "text": "Unverified: whether MariaDB or Percona Server are affected. Neither has published anything on this CVE as of 20 Nov (recheck), though Red Hat lists two of its MariaDB images as affected.",
       "cite": [
+        6,
         7,
         9
       ]
@@ -136,12 +147,30 @@
     {
       "title": "CISA: Known Exploited Vulnerabilities catalog",
       "url": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog"
+    },
+    {
+      "title": "GitHub: 1dayexploit 'client auth bypass' exploit (rogue MySQL server)",
+      "url": "https://github.com/1dayexploit/1day-archive/tree/main/analyses/cve-2026-114952-mysql-client-auth-bypass",
+      "date": "19 Nov"
+    },
+    {
+      "title": "MySQL: 26.10 release notes (26.10.0.1 not yet released)",
+      "url": "https://dev.mysql.com/doc/relnotes/mysql/26.10/en/"
     }
   ],
   "history": [
     {
       "date": "2026-11-20",
+      "text": "Got a page with the new Watching verdict: people are worried, so the page shows what is and isn't known."
+    },
+    {
+      "date": "2026-11-20",
+      "text": "Recheck: still no public fix (8.4.13.1, 9.7.4.1 and 26.10.0.1 not yet released), NVD not analysed, not on KEV, no reported attacks. New: a 19 Nov GitHub exploit for a rogue-server password capture, not tied to Oracle's fix; CWE-287 vs Red Hat's CWE-306. Still watch."
+    },
+    {
+      "date": "2026-11-20",
       "text": "Evaluated: watch, no page yet."
     }
-  ]
+  ],
+  "page": "mysql-client"
 }
