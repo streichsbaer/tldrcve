@@ -54,8 +54,9 @@ ICONS = {
 
 
 def text(s: str) -> str:
-    """Escape, then turn `backticks` into <code>."""
-    return re.sub(r"`([^`]+)`", r"<code>\1</code>", html.escape(s, quote=False))
+    """Escape, then turn `backticks` into <code> and [label](/internal/path/) into a link (site paths only)."""
+    out = re.sub(r"`([^`]+)`", r"<code>\1</code>", html.escape(s, quote=False))
+    return re.sub(r"\[([^\]]+)\]\((/[a-z0-9/-]*)\)", r'<a href="\2">\1</a>', out)
 
 
 def nice_date(iso: str) -> str:
@@ -236,6 +237,64 @@ def pending_badge(pending: dict) -> str:
     return f'<span class="pending{" pending--late" if late else ""}">Pending · {word} {nice_date(exp)}</span>'
 
 
+def cve_list(c: dict) -> str:
+    """CVE IDs for headings and meta lines. A release roundup can hold dozens, so show a count instead."""
+    ids = c["cves"]
+    if c.get("bugs"):  # count every bug in the release, including ones with their own page
+        return f'{len(c["bugs"])} CVEs'
+    return ", ".join(ids) if len(ids) <= 3 else f"{len(ids)} CVEs"
+
+
+SEVERITY_ORDER = ("critical", "high", "medium", "low")
+ROUNDUP_OF = {}  # bug page slug -> the release roundup that lists it; filled in main()
+ROUNDUP_TAG = '<span class="tag">Roundup</span>'
+
+
+def roundup_tag(c: dict) -> str:
+    return ROUNDUP_TAG if c.get("bugs") else ""
+
+
+def bug_list(c: dict) -> str:
+    """A release roundup's bugs: critical and high ones as folds with who's affected, the rest as a compact list."""
+    bugs = c.get("bugs", [])
+    if not bugs:
+        return ""
+    def sev(b):
+        return f'<span class="sev sev--{b["severity"]}">{b["severity"].title()}</span>'
+    def advisory(b):
+        return f'<a href="{html.escape(b["url"])}">{html.escape(b["cve"])}</a>'
+    major = [b for b in bugs if b.get("text")]
+    minor = [b for b in bugs if not b.get("text")]
+    folds = []
+    for b in major:
+        verdict = f'<span class="verdict verdict--{b["verdict"]}">{VERDICTS[b["verdict"]]}</span>' if b.get("verdict") else ""
+        own = f'<a class="bug__page" href="/{b["page"]}/">Full page →</a>' if b.get("page") else ""
+        folds.append(f"""      <details class="fold bug{" bug--own" if own else ""}">
+        <summary>{sev(b)}<span class="fold__title"><span class="bug__proj">{html.escape(b["project"])}</span> {text(b["title"])}</span>{own}{verdict}</summary>
+        <div class="fold__body"><p>{text(b["text"])}</p><p class="bug__links">{advisory(b)}</p></div>
+      </details>""")
+    rest = ""
+    if minor:
+        counts = {k: sum(1 for b in minor if b["severity"] == k) for k in SEVERITY_ORDER}
+        label = " and ".join(f"{n} {k}" for k, n in counts.items() if n)
+        items = "\n".join(f'          <li>{sev(b)}<span class="bug__proj">{html.escape(b["project"])}</span>{advisory(b)}</li>' for b in minor)
+        rest = f"""      <details class="fold bug">
+        <summary><span class="fold__title">{label.capitalize()}: opt-in features or low impact</span></summary>
+        <div class="fold__body"><ul class="bug-mini">
+{items}
+        </ul></div>
+      </details>"""
+    return f"""    <section class="pane" aria-labelledby="h-bugs" data-folds>
+      <div class="pane__head">
+        <h2 id="h-bugs">The bugs <span class="pane__sub">{len(bugs)} advisories</span></h2>
+        <button class="link-btn" type="button" data-expand-all>Expand all</button>
+      </div>
+{chr(10).join(folds)}
+{rest}
+    </section>
+"""
+
+
 def fold_items(entries: list) -> str:
     out = []
     for i, e in enumerate(entries, 1):
@@ -275,7 +334,7 @@ def versions_embed(pids: list) -> str:
 
 def toolbar(c: dict) -> str:
     url = f"{SITE_URL}/{c['slug']}/"
-    post = quote(f"{c['name']} ({', '.join(c['cves'])}): {VERDICTS[c['verdict']]}. Are you affected?")
+    post = quote(f"{c['name']} ({cve_list(c)}): {VERDICTS[c['verdict']]}. Are you affected?")
     x = f"https://x.com/intent/post?text={post}&url={quote(url, safe='')}"
     li = f"https://www.linkedin.com/sharing/share-offsite/?url={quote(url, safe='')}"
     return f"""    <div class="toolbar">
@@ -290,10 +349,18 @@ def toolbar(c: dict) -> str:
     </div>"""
 
 
+def part_of(c: dict) -> str:
+    r = ROUNDUP_OF.get(c["slug"])
+    if not r:
+        return ""
+    return (f'\n      <p class="part-of">Part of the <a href="/{r["slug"]}/">{html.escape(r["name"])} roundup</a>: '
+            f'<a href="/{r["slug"]}/#h-bugs">see all {len(r["bugs"])} advisories →</a></p>')
+
+
 def brief(c: dict) -> str:
     v = c["verdict"]
     s = c["status"]
-    kicker = [product_full(c), *c["cves"]]
+    kicker = [product_full(c), *(c["cves"] if len(c["cves"]) <= 3 and not c.get("bugs") else ["Release roundup", cve_list(c)])]
     if s.get("aka"):
         kicker.append(f"aka {s['aka']}")
     sources = "\n".join(
@@ -312,8 +379,8 @@ def brief(c: dict) -> str:
     <header class="brief-head">
       <p class="kicker">{html.escape(" · ".join(kicker))}</p>
       <h1>{html.escape(c["name"])}</h1>
-      <p class="verdict-line"><span class="verdict verdict--{v} verdict--lg">{VERDICTS[v]}</span><span>{text(c["tile_line"])}</span></p>
-      <p class="summary">{text(c["summary"])}</p>
+      <p class="verdict-line"><span class="verdict verdict--{v} verdict--lg">{VERDICTS[v]}</span>{roundup_tag(c)}<span>{text(c["tile_line"])}</span></p>
+      <p class="summary">{text(c["summary"])}</p>{part_of(c)}
     </header>
 
     <section class="pane" aria-labelledby="h-scare">
@@ -324,6 +391,7 @@ def brief(c: dict) -> str:
       </div>
     </section>
 
+{bug_list(c)}
     <section class="pane" aria-labelledby="h-affected" data-folds>
       <div class="pane__head">
         <h2 id="h-affected">Are you affected? <span class="pane__sub">only if <strong>all</strong> are true</span></h2>
@@ -352,7 +420,7 @@ def brief(c: dict) -> str:
     </details>
   </main>
 """
-    title = f'{c["name"]} ({", ".join(c["cves"])}) in plain English · tldrcve'
+    title = f'{c["name"]} ({cve_list(c)}) in plain English · tldrcve'
     return page(title, c["summary"], body, path=f"/{c['slug']}/")
 
 
@@ -443,7 +511,7 @@ def versions_page(v: dict, all_c: list) -> str:
             fix = '<span class="nofix">No fix yet</span>'
         bugs.append(f'''      <li class="vbug"><a href="/{c["slug"]}/">
         <span class="vbug__top"><span class="vbug__name">{html.escape(c["name"])}</span><span class="verdict verdict--{c["verdict"]}">{VERDICTS[c["verdict"]]}</span></span>
-        <span class="vbug__meta">{html.escape(", ".join(c["cves"]) or "No CVE yet")} · {nice_date(c["disclosed"])}</span>
+        <span class="vbug__meta">{html.escape(cve_list(c) or "No CVE yet")} · {nice_date(c["disclosed"])}</span>
         <span class="vbug__fix">{fix}</span>
       </a></li>''')
     updates = sorted(((ch["date"], c, ch["text"]) for c in pages for ch in c["changes"]), key=lambda x: x[0], reverse=True)[:8]
@@ -551,7 +619,7 @@ def tile(c: dict) -> str:
           <span class="tile__meta"><span class="tile__product">{html.escape(product_short(c))}</span><span>· {nice_date(news_date(c))}</span></span>
           <span class="tile__name">{html.escape(c["name"])}</span>
           <span class="tile__line">{text(c["tile_line"])}</span>
-          <span class="tile__foot"><span class="verdict verdict--{v}">{VERDICTS[v]}</span>{mini_meter(c["status"]["scare"])}</span>
+          <span class="tile__foot"><span class="verdict verdict--{v}">{VERDICTS[v]}</span>{roundup_tag(c)}{mini_meter(c["status"]["scare"])}</span>
         </a>
       </li>"""
 
@@ -610,10 +678,10 @@ def cves_page(all_c: list) -> str:
           <span class="row__meter">{mini_meter(c["status"]["scare"])}</span>
           <span class="row__main">
             <span class="row__name">{html.escape(c["name"])}</span>
-            <span class="row__meta">{html.escape(product_short(c))} · {html.escape(", ".join(c["cves"]))}</span>
+            <span class="row__meta">{html.escape(product_short(c))} · {html.escape(cve_list(c))}</span>
           </span>
           <span class="row__line">{text(c["tile_line"])}</span>
-          <span class="row__verdict"><span class="verdict verdict--{v}">{VERDICTS[v]}</span></span>
+          <span class="row__verdict"><span class="verdict verdict--{v}">{VERDICTS[v]}</span>{roundup_tag(c)}</span>
           <time class="row__date" datetime="{c["disclosed"]}">{nice_date(c["disclosed"])}</time>
         </a>
       </li>"""
@@ -890,7 +958,7 @@ def write_feed(all_c: list) -> None:
     for d, neg_i, c, t in entries:
         url = f'{SITE_URL}/{c["slug"]}/'
         verb = "New" if t == "Published." else "Update"
-        title = f'{verb}: {c["name"]} ({", ".join(c["cves"]) or "no CVE yet"})'
+        title = f'{verb}: {c["name"]} ({cve_list(c) or "no CVE yet"})'
         desc = c["summary"] if t == "Published." else t
         items.append(f"""    <item>
       <title>{html.escape(title)}</title>
@@ -963,6 +1031,13 @@ def not_found_page() -> str:
 def main() -> None:
     all_c = [json.loads(p.read_text()) for p in sorted(CONTENT.glob("*.json"))]
     warnings = editor_checks(all_c) + versions_checks(all_c)
+    slugs = {c["slug"] for c in all_c}
+    for c in all_c:
+        for b in c.get("bugs", []):
+            if b.get("page"):
+                if b["page"] not in slugs:
+                    warnings.append(f'{c["slug"]}.bugs: {b["cve"]} links to missing page /{b["page"]}/')
+                ROUNDUP_OF[b["page"]] = c
     watch_warnings, watch_notes = watch_checks(all_c)
     warnings += watch_warnings
     for note in watch_notes:

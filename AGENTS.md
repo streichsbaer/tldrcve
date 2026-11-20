@@ -85,6 +85,7 @@ Copy the shape of an existing file (`content/nginx2root.json` is a good model).
 | `affected[]` | Conditions that must **all** be true: `label`, `text`, optional `cmd`, `cite` |
 | `do[]` | Steps: `label`, `text`, optional `cmd`, `cite`, optional `pending: {"expected": "YYYY-MM-DD"}`, optional `versions: ["php"]` to show that product's latest safe versions in the step |
 | `fixed_in` | Optional: first fixed version per product line, e.g. `{"php": {"8.5": "8.5.13"}}`. Keys match `versions/<product>.json`. Leave it out when there is no fix |
+| `bugs` | Optional, makes the page a release roundup: one entry per advisory with `cve`, `project`, `severity`, `url`; critical and high ones also get `title`, `text`, `verdict` and optional `page` (slug of the bug's own page, which then links back). Leave a bug's CVE out of `cves` when it has its own page |
 | `slack` | Paste-ready summary paragraph, no URL |
 | `sources[]` | `title` ("Publisher: what it supports"), `url`, optional `date`. `cite` numbers are 1-based indexes into this list |
 | `changes[]` | `date` and `text`, newest first; the last entry is "Published." |
@@ -106,6 +107,7 @@ When a vulnerability gets attention but doesn't qualify yet, record it instead o
   - When sources conflict, say so on the page.
 - **"Are you affected?"** lists only conditions that must all be true. No "or" items. Fold "not affected if…" details into the matching condition.
 - **Commands** must be read-only and exact.
+- Text fields support `code` and links to site pages only: `[label](/slug/)`.
 - **Verdict, checklist and scare level** must agree:
   - `now`: working exploit or attacks seen, and common setups are exposed.
   - `if`: serious, but only under conditions the page lists.

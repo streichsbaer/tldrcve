@@ -1,0 +1,48 @@
+{
+  "id": "spring-boot",
+  "name": "Spring Boot",
+  "about": "Free fixes for the 19 Nov 2026 Spring advisories exist only on the 4.x lines. Spring Boot 4.2.0 came out the same day, but the advisories don't list it either way.",
+  "feed": null,
+  "latest_from": [
+    "https://github.com/spring-projects/spring-boot/releases",
+    "https://spring.io/security"
+  ],
+  "filter": "spring",
+  "checked": "2026-11-20",
+  "lines": [
+    {
+      "line": "4.1",
+      "key": "4.1",
+      "latest": "4.1.3"
+    },
+    {
+      "line": "4.0",
+      "key": "4.0",
+      "latest": "4.0.10"
+    }
+  ],
+  "unfixed": [
+    {
+      "line": "3.5, 3.4, 2.7 and older",
+      "note": "No free fix. Spring's fixes (3.5.18, 3.4.19, 2.7.36) are only for Enterprise support customers.",
+      "pages": [
+        "spring-2026-11-19",
+        "spring-boot-slash"
+      ]
+    }
+  ],
+  "sources": [
+    {
+      "title": "Spring: security advisories, free vs Enterprise-only fixes",
+      "url": "https://spring.io/security"
+    },
+    {
+      "title": "Spring Boot 4.1.3 release",
+      "url": "https://github.com/spring-projects/spring-boot/releases/tag/v4.1.3"
+    },
+    {
+      "title": "Spring Boot 4.0.10 release",
+      "url": "https://github.com/spring-projects/spring-boot/releases/tag/v4.0.10"
+    }
+  ]
+}

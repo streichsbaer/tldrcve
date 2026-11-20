@@ -1,0 +1,144 @@
+{
+  "slug": "spring-boot-slash",
+  "name": "Spring Boot slash",
+  "aliases": [
+    "spring boot",
+    "spring",
+    "actuator",
+    "endpointrequest",
+    "pathrequest",
+    "h2 console",
+    "trailing slash",
+    "spring security",
+    "java",
+    "cve-2026-59414"
+  ],
+  "cves": [
+    "CVE-2026-59414"
+  ],
+  "product": "Spring Boot",
+  "disclosed": "2026-11-19",
+  "updated": "2026-11-20",
+  "verdict": "if",
+  "tile_line": "Only bites if a configured path ends in /. No exploit.",
+  "summary": "Spring rates this Spring Boot bug Critical. Spring Boot builds security rules for Actuator endpoints and the H2 console from paths in your configuration; if such a path ends in a slash, the rule comes out wrong and doesn't match the real endpoint, which can then be left unsecured. The fix only strips that slash, so paths without one behave the same before and after. Free fixes exist only for Spring Boot 4.0 and 4.1.",
+  "status": {
+    "exploit": "none",
+    "attacks": "none",
+    "kev": null,
+    "no_login": true,
+    "scare": 1.3
+  },
+  "status_cite": {
+    "exploit": [
+      1
+    ],
+    "attacks": [
+      1
+    ],
+    "kev": [
+      5
+    ],
+    "no_login": [
+      1
+    ]
+  },
+  "affected": [
+    {
+      "label": "Spring Boot 4.1.2 or older",
+      "text": "Affected: 4.1.0 to 4.1.2, 4.0.0 to 4.0.9, 3.5.0 to 3.5.17, 3.0.0 to 3.4.18, and 2.7.35 and older.",
+      "cmd": "mvn dependency:list | grep spring-boot",
+      "cite": [
+        1
+      ]
+    },
+    {
+      "label": "Rules use EndpointRequest or the H2 console matcher",
+      "text": "Your Spring Security config builds rules with `EndpointRequest` (Actuator, servlet or reactive) or `PathRequest.toH2Console()`. The fix didn't change the static-resource matchers.",
+      "cite": [
+        1,
+        2
+      ]
+    },
+    {
+      "label": "A configured path ends in /",
+      "text": "For example `management.endpoints.web.path-mapping.health=status/` or `spring.h2.console.path=/custom/`, which produce a rule for `/actuator/status//**` that never matches `/actuator/status`. The fix also covers health group additional paths and `/` as the Actuator base path. Look for those properties and check whether a value ends in a slash.",
+      "cmd": "grep -rnE \"path-mapping|console.path|base-path|additional-path\" src/main/resources/",
+      "cite": [
+        2
+      ]
+    },
+    {
+      "label": "A later rule is looser",
+      "text": "Spring Security checks rules in order and uses the first that matches. When the broken rule doesn't match, the request falls through to your next rule, so the endpoint is only left open if that rule is looser, for example `anyRequest().permitAll()`.",
+      "cite": [
+        4,
+        1
+      ]
+    }
+  ],
+  "do": [
+    {
+      "label": "Upgrade to 4.1.3 or 4.0.10",
+      "text": "Spring Boot 4.2.0, released the same day, also contains the fix.",
+      "versions": [
+        "spring-boot"
+      ],
+      "cite": [
+        1,
+        3
+      ]
+    },
+    {
+      "label": "Or drop the trailing slash",
+      "text": "The fix strips trailing slashes from configured paths. Removing them from your configuration yourself should have the same effect; Spring's advisory doesn't list a workaround.",
+      "cite": [
+        2,
+        1
+      ]
+    },
+    {
+      "label": "On Boot 3.x or older: no free fix",
+      "text": "Spring's fixes for 3.5, 3.4 and 2.7 (3.5.18, 3.4.19, 2.7.36) are only for Enterprise support customers, so the configuration check above is your option.",
+      "cite": [
+        1
+      ]
+    }
+  ],
+  "fixed_in": {
+    "spring-boot": {
+      "4.1": "4.1.3",
+      "4.0": "4.0.10"
+    }
+  },
+  "slack": "Spring Boot CVE-2026-59414 (Critical): security rules built with EndpointRequest or the H2 console matcher come out wrong if a configured path ends in a slash (e.g. management.endpoints.web.path-mapping.health=status/), which can leave that endpoint open if a later rule is looser. Paths without a trailing slash are unaffected. No exploit, no reported attacks. Fixed in Boot 4.1.3 / 4.0.10 (and 4.2.0); 3.x fixes are Enterprise-only.",
+  "sources": [
+    {
+      "title": "Spring: CVE-2026-59414 advisory",
+      "url": "https://spring.io/security/cve-2026-59414",
+      "date": "19 Nov"
+    },
+    {
+      "title": "Spring Boot: fix commit and tests, \"Normalize paths when creating request matchers\" (4.1.x)",
+      "url": "https://github.com/spring-projects/spring-boot/commit/a540dafae61eeb1312d7b9baa985be6cbc6914ff"
+    },
+    {
+      "title": "Spring Boot: same fix on main, included in v4.2.0",
+      "url": "https://github.com/spring-projects/spring-boot/commit/74952c605486210bc6b030ca8772675b3efccdde"
+    },
+    {
+      "title": "Spring Security docs: request rules are checked in order",
+      "url": "https://docs.spring.io/spring-security/reference/servlet/authorization/authorize-http-requests.html"
+    },
+    {
+      "title": "CISA KEV catalog: not listed",
+      "url": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog"
+    }
+  ],
+  "changes": [
+    {
+      "date": "2026-11-20",
+      "text": "Published."
+    }
+  ]
+}

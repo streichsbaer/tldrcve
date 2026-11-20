@@ -347,3 +347,23 @@ sup.cite a:hover { color: var(--brand); }
 .vline--nofix th, .vline--nofix td { background: var(--now-bg); }
 .vchip--nofix b { color: var(--now); background: var(--now-bg); font-family: var(--sans); font-weight: 650; }
 .vcard[hidden] { display: none; }
+
+/* ---------- Release roundup: bug list ---------- */
+.sev { flex: none; font: 700 0.6875rem/1 var(--mono); text-transform: uppercase; letter-spacing: 0.04em; padding: 0.4em 0.6em; border-radius: 6px; border: 1.5px solid currentColor; }
+.sev--critical { color: var(--now); }
+.sev--high { color: var(--if); }
+.sev--medium, .sev--low { color: var(--muted); }
+.bug summary { flex-wrap: wrap; }
+.bug .fold__title { flex: 1 1 14rem; }
+.bug__proj { font: 600 0.8125rem/1.3 var(--mono); color: var(--muted); margin-right: 0.35em; }
+.bug__links { display: flex; gap: 16px; flex-wrap: wrap; font-size: 0.9375rem; }
+.bug__links a { font-weight: 600; }
+.bug-mini { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
+.bug-mini li { display: grid; grid-template-columns: 5.2rem minmax(0, 15rem) auto; align-items: center; gap: 10px; justify-content: start; }
+.bug-mini .sev { justify-self: start; }
+@media (max-width: 560px) { .bug-mini li { grid-template-columns: 5.2rem minmax(0, 1fr); } .bug-mini a { grid-column: 2; } }
+.bug-mini a { font: 500 0.875rem/1.3 var(--mono); }
+.tag { flex: none; display: inline-flex; align-items: center; font: 700 0.75rem/1 var(--mono); text-transform: uppercase; letter-spacing: 0.05em; padding: 0.45em 0.6em; border-radius: 6px; background: var(--ink); color: var(--paper, #fff); }
+.part-of { margin: 12px 0 0; padding: 10px 14px; border: 1.5px solid var(--rule); border-radius: 10px; font-weight: 600; }
+.bug__page { flex: none; font: 700 0.8125rem/1 var(--sans); white-space: nowrap; }
+.bug--own summary { background: var(--sunk); }

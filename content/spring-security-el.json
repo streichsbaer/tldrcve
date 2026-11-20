@@ -1,0 +1,148 @@
+{
+  "slug": "spring-security-el",
+  "name": "Spring Security EL",
+  "aliases": [
+    "spring security",
+    "spring",
+    "elrequestmatcher",
+    "requestmatcher",
+    "requestmatchereditor",
+    "spel",
+    "spring boot",
+    "java",
+    "cve-2026-59273"
+  ],
+  "cves": [
+    "CVE-2026-59273"
+  ],
+  "product": "Spring Security",
+  "disclosed": "2026-11-19",
+  "updated": "2026-11-20",
+  "verdict": "if",
+  "tile_line": "Runs code, but only if apps bind input to a matcher.",
+  "summary": "Spring rates this Spring Security bug Critical: `ELRequestMatcher` evaluates its expression with full SpEL, so whoever controls that expression can run code on the server. It's only reachable if an app lets outside input be bound onto a `RequestMatcher` property, a string conversion meant for XML bean definitions. There's no working public exploit, and free fixes exist only for Spring Security 7.0 and 7.1.",
+  "status": {
+    "exploit": "none",
+    "attacks": "none",
+    "kev": null,
+    "no_login": true,
+    "scare": 1.6
+  },
+  "status_cite": {
+    "exploit": [
+      5
+    ],
+    "attacks": [
+      7
+    ],
+    "kev": [
+      6
+    ],
+    "no_login": [
+      1
+    ]
+  },
+  "affected": [
+    {
+      "label": "Spring Security 7.1.2 or older",
+      "text": "Affected: 7.1.0 to 7.1.2, 7.0.0 to 7.0.8, 6.5.0 to 6.5.12, 6.4.0 to 6.4.19, 5.8.0 to 5.8.28, and 5.7.26 and older. Spring Boot 4.1.3 and 4.0.10 bring in the fixed 7.1.3 and 7.0.9.",
+      "cmd": "mvn dependency:list | grep spring-security",
+      "cite": [
+        1,
+        8,
+        9
+      ]
+    },
+    {
+      "label": "Outside input reaches a RequestMatcher property",
+      "text": "The app has to bind external input to a bean property of this matcher type. Spring's data binding then turns the string into an `ELRequestMatcher` and evaluates it. The conversion exists so a string can be used \"in a BeanDefinition\", like the `hasIpAddress(...)` map keys of an XML-configured `DelegatingAuthenticationEntryPoint`, where the expression comes from your own config. Spring's advisory doesn't give a concrete vulnerable app pattern.",
+      "cite": [
+        1,
+        2,
+        3
+      ]
+    }
+  ],
+  "do": [
+    {
+      "label": "Upgrade to 7.1.3 or 7.0.9",
+      "text": "On Spring Boot 4, upgrading Boot to 4.1.3 or 4.0.10 does this for you. The fix makes `ELRequestMatcher` use a restricted SpEL context that can't call arbitrary code.",
+      "versions": [
+        "spring-security"
+      ],
+      "cite": [
+        1,
+        4,
+        8,
+        9
+      ]
+    },
+    {
+      "label": "On 6.x or 5.x: no free fix",
+      "text": "Spring's fixes for 6.5, 6.4, 5.8 and 5.7 (6.5.13, 6.4.20, 5.8.29, 5.7.27) are only for Enterprise support customers, and the advisory lists no workaround. Until you can move to 7.x, check that no request data, form field or external config value is bound onto a `RequestMatcher` property.",
+      "cmd": "grep -rn \"RequestMatcher\" --include=*.java --include=*.xml src/",
+      "cite": [
+        1
+      ]
+    },
+    {
+      "label": "Ignore the \"PoC\" repos",
+      "text": "The one GitHub repo calling itself a proof of concept contained only a short README and no code on 20 Nov.",
+      "cite": [
+        5
+      ]
+    }
+  ],
+  "fixed_in": {
+    "spring-security": {
+      "7.1": "7.1.3",
+      "7.0": "7.0.9"
+    }
+  },
+  "slack": "Spring Security CVE-2026-59273 (Critical): ELRequestMatcher evaluates full SpEL, so code execution is possible, but only if an app binds outside input onto a RequestMatcher property (a conversion meant for XML bean definitions). No working public exploit, no reported attacks. Fixed in 7.1.3 / 7.0.9 (Boot 4.1.3 / 4.0.10); 6.x and 5.x fixes are Enterprise-only.",
+  "sources": [
+    {
+      "title": "Spring: CVE-2026-59273 advisory",
+      "url": "https://spring.io/security/cve-2026-59273",
+      "date": "19 Nov"
+    },
+    {
+      "title": "Spring Security source: ELRequestMatcher",
+      "url": "https://github.com/spring-projects/spring-security/blob/main/web/src/main/java/org/springframework/security/web/util/matcher/ELRequestMatcher.java"
+    },
+    {
+      "title": "Spring Security source: RequestMatcherEditor (\"in a BeanDefinition\")",
+      "url": "https://github.com/spring-projects/spring-security/blob/main/web/src/main/java/org/springframework/security/web/util/matcher/RequestMatcherEditor.java"
+    },
+    {
+      "title": "Spring Security: fix commit, restricted SpEL context",
+      "url": "https://github.com/spring-projects/spring-security/commit/5d28474a5c"
+    },
+    {
+      "title": "GitHub: the only 'PoC' repo is a README",
+      "url": "https://github.com/afernandesvigo/PoC-CVE-2026-59273"
+    },
+    {
+      "title": "CISA KEV catalog: not listed",
+      "url": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog"
+    },
+    {
+      "title": "SecurityOnline: no confirmed exploitation",
+      "url": "https://securityonline.info/spring-security-vulnerabilities-november-2026/"
+    },
+    {
+      "title": "Spring Boot 4.1.3 release: Spring Security 7.1.3",
+      "url": "https://github.com/spring-projects/spring-boot/releases/tag/v4.1.3"
+    },
+    {
+      "title": "Spring Boot 4.0.10 release: Spring Security 7.0.9",
+      "url": "https://github.com/spring-projects/spring-boot/releases/tag/v4.0.10"
+    }
+  ],
+  "changes": [
+    {
+      "date": "2026-11-20",
+      "text": "Published."
+    }
+  ]
+}

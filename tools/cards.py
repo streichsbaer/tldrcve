@@ -73,7 +73,10 @@ def page_card(c):
     label, _ = build.zone(scare)
     filled = next((i + 1 for i, (limit, _, _) in enumerate(build.ZONES) if scare < limit), len(build.ZONES))
     meter = "".join(f'<i style="background:{METER[i] if i < filled else "#fff"}"></i>' for i in range(4))
-    ids = " · ".join(c["cves"][:2]) + (f" +{len(c['cves']) - 2} more" if len(c["cves"]) > 2 else "") or "No CVE yet"
+    if c.get("bugs"):  # a release roundup: count every bug instead of listing IDs
+        ids = f"{build.cve_list(c)} · {build.nice_date(c['disclosed'])}"
+    else:
+        ids = " · ".join(c["cves"][:2]) + (f" +{len(c['cves']) - 2} more" if len(c["cves"]) > 2 else "") or "No CVE yet"
     return f"""{header("tldrcve.com/" + c["slug"])}
 <div class="main"><div class="ids">{html.escape(ids)}</div><h1>{html.escape(c["name"])}</h1>
 <p class="line">{html.escape(c["tile_line"])}</p></div>

@@ -1,0 +1,935 @@
+{
+  "slug": "spring-2026-11-19",
+  "name": "Spring Nov release",
+  "aliases": [
+    "spring",
+    "spring boot",
+    "spring framework",
+    "spring security",
+    "spring ai",
+    "spring integration",
+    "spring web services",
+    "spring-ws",
+    "spring cloud gateway",
+    "spring cloud config",
+    "eureka",
+    "spring data elasticsearch",
+    "spring data mongodb",
+    "spring ldap",
+    "spring for apache kafka",
+    "spring amqp",
+    "spring vault",
+    "spring for graphql",
+    "spring hateoas",
+    "spring data rest",
+    "java"
+  ],
+  "cves": [
+    "CVE-2026-41698",
+    "CVE-2026-59329",
+    "CVE-2026-59330",
+    "CVE-2026-59331",
+    "CVE-2026-59333",
+    "CVE-2026-59336",
+    "CVE-2026-59337",
+    "CVE-2026-59338",
+    "CVE-2026-59339",
+    "CVE-2026-59340",
+    "CVE-2026-59342",
+    "CVE-2026-59344",
+    "CVE-2026-59345",
+    "CVE-2026-59348",
+    "CVE-2026-59349",
+    "CVE-2026-59350",
+    "CVE-2026-59351",
+    "CVE-2026-59352",
+    "CVE-2026-59353",
+    "CVE-2026-59356",
+    "CVE-2026-59361",
+    "CVE-2026-59362",
+    "CVE-2026-59363",
+    "CVE-2026-59364",
+    "CVE-2026-59365",
+    "CVE-2026-59367",
+    "CVE-2026-59368",
+    "CVE-2026-59369",
+    "CVE-2026-59370",
+    "CVE-2026-59371",
+    "CVE-2026-59372",
+    "CVE-2026-59373",
+    "CVE-2026-59374",
+    "CVE-2026-59376",
+    "CVE-2026-59377",
+    "CVE-2026-59378",
+    "CVE-2026-59379",
+    "CVE-2026-59381",
+    "CVE-2026-59382",
+    "CVE-2026-59383",
+    "CVE-2026-59389",
+    "CVE-2026-59390",
+    "CVE-2026-59391",
+    "CVE-2026-59392",
+    "CVE-2026-59393",
+    "CVE-2026-59394",
+    "CVE-2026-59395",
+    "CVE-2026-59398",
+    "CVE-2026-59399",
+    "CVE-2026-59400",
+    "CVE-2026-59401",
+    "CVE-2026-59403",
+    "CVE-2026-59404",
+    "CVE-2026-59405",
+    "CVE-2026-59406",
+    "CVE-2026-59407",
+    "CVE-2026-59408",
+    "CVE-2026-59409",
+    "CVE-2026-59410",
+    "CVE-2026-59411",
+    "CVE-2026-59412",
+    "CVE-2026-59413",
+    "CVE-2026-59415",
+    "CVE-2026-59416",
+    "CVE-2026-59417",
+    "CVE-2026-59418",
+    "CVE-2026-59419",
+    "CVE-2026-59425",
+    "CVE-2026-59426",
+    "CVE-2026-59427",
+    "CVE-2026-59428",
+    "CVE-2026-59429",
+    "CVE-2026-59430",
+    "CVE-2026-59431",
+    "CVE-2026-59432",
+    "CVE-2026-59433",
+    "CVE-2026-59434",
+    "CVE-2026-59435",
+    "CVE-2026-59436",
+    "CVE-2026-59437",
+    "CVE-2026-59438",
+    "CVE-2026-59439",
+    "CVE-2026-59440",
+    "CVE-2026-59441",
+    "CVE-2026-59442",
+    "CVE-2026-59443",
+    "CVE-2026-59444",
+    "CVE-2026-123886"
+  ],
+  "product": "Spring",
+  "disclosed": "2026-11-19",
+  "updated": "2026-11-20",
+  "verdict": "if",
+  "tile_line": "90 advisories, 5 critical. Free fixes only on Boot 4.",
+  "summary": "Spring published 90 security advisories on 19 Nov across Boot, Framework, Security, Spring AI, Integration, Web Services, Cloud and more: 5 critical, 24 high, 49 medium and 12 low. None has a public exploit or reported attacks, and most need an opt-in feature. The catch is who gets fixes for free: only the newest lines, such as Spring Boot 4.0.10 and 4.1.3. Boot 3.5 and older get fixes only through Spring's paid Enterprise support.",
+  "status": {
+    "exploit": "none",
+    "attacks": "none",
+    "kev": null,
+    "no_login": true,
+    "scare": 1.8
+  },
+  "status_cite": {
+    "exploit": [
+      1,
+      9
+    ],
+    "attacks": [
+      1,
+      9
+    ],
+    "kev": [
+      5
+    ],
+    "no_login": [
+      6,
+      7,
+      8
+    ]
+  },
+  "affected": [
+    {
+      "label": "Spring Boot 4.1.2 or older",
+      "text": "Almost every advisory affects Spring Boot 4.1.2, 4.0.9 and older, or the Spring libraries those versions bring in (Framework, Security, Data, Integration, Web Services, LDAP). Spring AI and Spring Cloud have their own version numbers: see each bug. Spring Boot 4.2.0 came out the same day; the advisories don't list it either way. Check what your build actually resolves; with Gradle, run `./gradlew dependencies --configuration runtimeClasspath` instead.",
+      "cmd": "mvn dependency:list | grep org.springframework",
+      "cite": [
+        1,
+        2,
+        3,
+        4
+      ]
+    },
+    {
+      "label": "You use an affected feature",
+      "text": "Each bug needs a specific feature or setup, listed under The bugs above. Most are opt-in: Spring AI vector stores and caches, Integration adapters, Cloud Gateway caching, RSocket. The widest reach: Spring Web Services endpoints (every one is exposed to oversized messages), Spring Boot apps with Actuator on Cloud Foundry, and Framework data binding with field exclusion rules.",
+      "cite": [
+        1,
+        8,
+        10,
+        12
+      ]
+    }
+  ],
+  "do": [
+    {
+      "label": "On Boot 4: go to 4.1.3 or 4.0.10",
+      "text": "These bring in the fixed Spring Security (7.1.3 / 7.0.9), Framework (7.0.11), Data, Integration (7.1.3 / 7.0.8) and Web Services (5.0.4) versions. Spring AI and Spring Cloud aren't managed by Boot: move to Spring AI 2.0.3, Cloud Gateway 5.0.5, Cloud Config 5.0.7 and Cloud Netflix 5.0.4 separately.",
+      "versions": [
+        "spring-boot",
+        "spring-security",
+        "spring-framework",
+        "spring-ai"
+      ],
+      "cite": [
+        2,
+        3,
+        1
+      ]
+    },
+    {
+      "label": "On Boot 3 or older: no free fix",
+      "text": "Spring's fixes for Boot 3.5, 3.4 and 2.7 (3.5.18, 3.4.19, 2.7.36), Framework 6.x and 5.x, Security 6.x and 5.x, and Spring AI 1.x are only available with Enterprise support. Your options: move to Boot 4, buy Enterprise support, or use the workarounds for the bugs that affect you.",
+      "cite": [
+        1,
+        6,
+        12,
+        7
+      ]
+    },
+    {
+      "label": "Check the critical ones first",
+      "text": "[Spring Boot configured paths ending in /](/spring-boot-slash/) and [Spring Security ELRequestMatcher](/spring-security-el/) each have a full page with checks. Spring Boot on Cloud Foundry: define your own security configuration. Spring AI Redis semantic cache: don't share the cache advisor across users. The LDAP one only affects test servers.",
+      "cite": [
+        6,
+        7,
+        8,
+        11
+      ]
+    },
+    {
+      "label": "Workarounds if you can't upgrade",
+      "text": "Spring Web Services: cap the request body size at your proxy or servlet container. Data Elasticsearch: reject query arguments containing `#{`. Cloud Config: take credentials out of the Git or SVN URL. Integration Redis queues: switch to a String or JSON serializer. Other bugs list theirs under The bugs above.",
+      "cite": [
+        10,
+        13,
+        14,
+        15
+      ]
+    }
+  ],
+  "slack": "Spring published 90 security advisories on 19 Nov (5 critical, 24 high), across Boot, Framework, Security, Spring AI, Integration, Web Services and Cloud. No public exploits or reported attacks, and most need an opt-in feature. Free fixes only exist for the newest lines: Boot 4.1.3 / 4.0.10, Spring AI 2.0.3. Boot 3.5 and older, Framework 6.x and Security 6.x get fixes only with paid Enterprise support. On Boot 4: upgrade. On Boot 3: check the critical ones and the workarounds.",
+  "sources": [
+    {
+      "title": "Spring: security advisories (90 published 19 Nov, with free and Enterprise-only fixes)",
+      "url": "https://spring.io/security",
+      "date": "19 Nov"
+    },
+    {
+      "title": "Spring Boot 4.1.3 release: upgrades to Security 7.1.3, Integration 7.1.3, WS 5.0.4",
+      "url": "https://github.com/spring-projects/spring-boot/releases/tag/v4.1.3"
+    },
+    {
+      "title": "Spring Boot 4.0.10 release: upgrades to Security 7.0.9, Framework 7.0.11, WS 5.0.4",
+      "url": "https://github.com/spring-projects/spring-boot/releases/tag/v4.0.10"
+    },
+    {
+      "title": "Spring Boot 4.2.0 release",
+      "url": "https://github.com/spring-projects/spring-boot/releases/tag/v4.2.0"
+    },
+    {
+      "title": "CISA KEV catalog: none listed",
+      "url": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog"
+    },
+    {
+      "title": "Spring: CVE-2026-59414, configured paths and security rules",
+      "url": "https://spring.io/security/cve-2026-59414"
+    },
+    {
+      "title": "Spring: CVE-2026-59273, ELRequestMatcher",
+      "url": "https://spring.io/security/cve-2026-59273"
+    },
+    {
+      "title": "Spring: CVE-2026-59411, Cloud Foundry default security",
+      "url": "https://spring.io/security/cve-2026-59411"
+    },
+    {
+      "title": "GitHub: the only CVE-2026-59273 'PoC' repo is an empty README",
+      "url": "https://github.com/afernandesvigo/PoC-CVE-2026-59273"
+    },
+    {
+      "title": "Spring: CVE-2026-59349, Web Services message size",
+      "url": "https://spring.io/security/cve-2026-59349"
+    },
+    {
+      "title": "Spring: CVE-2026-59417, Spring AI Redis semantic cache",
+      "url": "https://spring.io/security/cve-2026-59417"
+    },
+    {
+      "title": "Spring: CVE-2026-59374, Framework data binding",
+      "url": "https://spring.io/security/cve-2026-59374"
+    },
+    {
+      "title": "Spring: CVE-2026-123886, Data Elasticsearch @Query",
+      "url": "https://spring.io/security/cve-2026-123886"
+    },
+    {
+      "title": "Spring: CVE-2026-59435, Cloud Config credentials",
+      "url": "https://spring.io/security/cve-2026-59435"
+    },
+    {
+      "title": "Spring: CVE-2026-59444, Integration Redis queue deserialization",
+      "url": "https://spring.io/security/cve-2026-59444"
+    }
+  ],
+  "bugs": [
+    {
+      "cve": "CVE-2026-59417",
+      "project": "Spring AI",
+      "severity": "critical",
+      "url": "https://spring.io/security/cve-2026-59417",
+      "title": "Redis semantic cache shares answers across users",
+      "text": "Apps using `spring-ai-redis-semantic-cache` with a `SemanticCacheAdvisor` shared by several users can serve one user's cached answers to another, and an attacker can plant answers. The fix needs a code change (a `SemanticCacheScopeResolver`). Workaround: don't use the advisor in multi-user apps.",
+      "verdict": "if"
+    },
+    {
+      "cve": "CVE-2026-59411",
+      "project": "Spring Boot",
+      "severity": "critical",
+      "url": "https://spring.io/security/cve-2026-59411",
+      "title": "Cloud Foundry turns off default security",
+      "text": "Servlet apps with Actuator deployed to Cloud Foundry lose Spring Boot's default web security. Reactive apps and apps with their own security configuration aren't affected. Workaround: define your own security configuration. Boot 3.5.0 to 4.1.2.",
+      "verdict": "if"
+    },
+    {
+      "cve": "CVE-2026-59414",
+      "project": "Spring Boot",
+      "severity": "critical",
+      "url": "https://spring.io/security/cve-2026-59414",
+      "title": "A configured path ending in / can skip security rules",
+      "text": "Only if you set an Actuator or H2 console path that ends in a slash (for example `management.endpoints.web.path-mapping.health=status/`) or use `/` as the Actuator base path, and a later rule in your security config is looser. The fix only changes how configured paths become rules. Free fix only in 4.0.10 and 4.1.3.",
+      "verdict": "if",
+      "page": "spring-boot-slash"
+    },
+    {
+      "cve": "CVE-2026-59273",
+      "project": "Spring Security",
+      "severity": "critical",
+      "url": "https://spring.io/security/cve-2026-59273",
+      "title": "ELRequestMatcher runs attacker-supplied code",
+      "text": "Only if the app binds outside input onto a `RequestMatcher` property, a conversion meant for XML bean definitions, not user input. Free fix only in 7.0.9 and 7.1.3.",
+      "verdict": "if",
+      "page": "spring-security-el"
+    },
+    {
+      "cve": "CVE-2026-59367",
+      "project": "Spring LDAP",
+      "severity": "critical",
+      "url": "https://spring.io/security/cve-2026-59367",
+      "title": "Embedded test LDAP server is open to the network",
+      "text": "The `spring-ldap-test` embedded server listens on every interface with a fixed, publicly known admin password. It matters only where tests run on a host others can reach (shared CI, a published container port), and only the throwaway test directory is exposed.",
+      "verdict": "cycle"
+    },
+    {
+      "cve": "CVE-2026-59344",
+      "project": "Spring AI",
+      "severity": "high",
+      "url": "https://spring.io/security/cve-2026-59344",
+      "title": "Coherence vector store filters can be bypassed",
+      "text": "Apps on `CoherenceVectorStore` that pass user- or model-influenced filters can expose documents from other tenants.",
+      "verdict": "if"
+    },
+    {
+      "cve": "CVE-2026-59361",
+      "project": "Spring AI",
+      "severity": "high",
+      "url": "https://spring.io/security/cve-2026-59361",
+      "title": "Redis vector store filters can be bypassed",
+      "text": "Apps on `RedisVectorStore` that put user values into filters can return other tenants' documents.",
+      "verdict": "if"
+    },
+    {
+      "cve": "CVE-2026-59369",
+      "project": "Spring AI",
+      "severity": "high",
+      "url": "https://spring.io/security/cve-2026-59369",
+      "title": "Typesense filters can be bypassed",
+      "text": "Apps on `TypesenseVectorStore` that put untrusted values into filters can expose other tenants' documents.",
+      "verdict": "if"
+    },
+    {
+      "cve": "CVE-2026-59442",
+      "project": "Spring AI",
+      "severity": "high",
+      "url": "https://spring.io/security/cve-2026-59442",
+      "title": "Typesense grouped filters are mistranslated",
+      "text": "Apps that rely on grouped (bracketed) Typesense filters for tenant or access rules may expose documents they shouldn't.",
+      "verdict": "if"
+    },
+    {
+      "cve": "CVE-2026-59435",
+      "project": "Spring Cloud Config",
+      "severity": "high",
+      "url": "https://spring.io/security/cve-2026-59435",
+      "title": "Config Server leaks Git and SVN passwords",
+      "text": "If the repository URL contains `user:pass@`, every config response includes it in clear text. Workaround: use the separate username and password properties, or SSH keys.",
+      "verdict": "if"
+    },
+    {
+      "cve": "CVE-2026-59427",
+      "project": "Spring Cloud Gateway",
+      "severity": "high",
+      "url": "https://spring.io/security/cve-2026-59427",
+      "title": "Response cache keeps private responses",
+      "text": "`LocalResponseCache` stores responses marked `private` or `no-store` when Cache-Control has more than one directive, as Spring Security's default does.",
+      "verdict": "if"
+    },
+    {
+      "cve": "CVE-2026-59433",
+      "project": "Spring Cloud Netflix",
+      "severity": "high",
+      "url": "https://spring.io/security/cve-2026-59433",
+      "title": "Eureka dashboard shows peer passwords",
+      "text": "Eureka Server with the dashboard on (the default), credentials in the peer URLs, and the dashboard reachable without login.",
+      "verdict": "if"
+    },
+    {
+      "cve": "CVE-2026-123886",
+      "project": "Spring Data Elasticsearch",
+      "severity": "high",
+      "url": "https://spring.io/security/cve-2026-123886",
+      "title": "Query arguments are run as code",
+      "text": "Apps that pass untrusted input to a repository method with a string `@Query` and positional placeholders. Spring's score says the attacker needs a login; its text says a remote attacker. Workaround: reject input containing `#{`, or build queries with `CriteriaQuery` or `NativeQuery`.",
+      "verdict": "if"
+    },
+    {
+      "cve": "CVE-2026-59374",
+      "project": "Spring Framework",
+      "severity": "high",
+      "url": "https://spring.io/security/cve-2026-59374",
+      "title": "Data binding can write fields you excluded",
+      "text": "Only apps that keep nested, map or list fields out of binding with an exact `disallowedFields` (or restrictive `allowedFields`) pattern. Binding without such rules isn't described as affected. Free fix only in 7.0.11.",
+      "verdict": "if"
+    },
+    {
+      "cve": "CVE-2026-59416",
+      "project": "Spring Integration",
+      "severity": "high",
+      "url": "https://spring.io/security/cve-2026-59416",
+      "title": "FTP chmod lets messages inject commands",
+      "text": "Apps whose FTP adapter has the `chmod` option set and whose file names come from untrusted messages. No login needed.",
+      "verdict": "if"
+    },
+    {
+      "cve": "CVE-2026-59444",
+      "project": "Spring Integration",
+      "severity": "high",
+      "url": "https://spring.io/security/cve-2026-59444",
+      "title": "Redis queues deserialize untrusted data",
+      "text": "Redis queue endpoints use Java serialization by default, so anyone who can write to that Redis list can run code if a usable gadget class is present. Workaround: switch to a String or JSON serializer.",
+      "verdict": "if"
+    },
+    {
+      "cve": "CVE-2026-59333",
+      "project": "Spring Security",
+      "severity": "high",
+      "url": "https://spring.io/security/cve-2026-59333",
+      "title": "IP rules mix up IPv4 and IPv6",
+      "text": "Apps that allow or block by IP (`hasIpAddress()` and similar) where the server can see IPv4-mapped IPv6 addresses, for example on a dual-stack listener or behind a proxy that translates between the two. 7.1 only.",
+      "verdict": "if"
+    },
+    {
+      "cve": "CVE-2026-59349",
+      "project": "Spring Web Services",
+      "severity": "high",
+      "url": "https://spring.io/security/cve-2026-59349",
+      "title": "Oversized messages exhaust memory",
+      "text": "Every Spring Web Services endpoint, no login and no special setup needed. The fix adds a 10 MB default limit. Workaround: cap the request body size at your proxy or servlet container.",
+      "verdict": "if"
+    },
+    {
+      "cve": "CVE-2026-59338",
+      "project": "Spring AI",
+      "severity": "high",
+      "url": "https://spring.io/security/cve-2026-59338",
+      "title": "Huge documents exhaust memory",
+      "text": "Apps that read untrusted documents (uploads, URLs) with `TikaDocumentReader`. No login needed.",
+      "verdict": "cycle"
+    },
+    {
+      "cve": "CVE-2026-59339",
+      "project": "Spring AI",
+      "severity": "high",
+      "url": "https://spring.io/security/cve-2026-59339",
+      "title": "Nested filter expressions crash threads",
+      "text": "Apps that accept filter expressions from users, for example in RAG search.",
+      "verdict": "cycle"
+    },
+    {
+      "cve": "CVE-2026-59345",
+      "project": "Spring AI",
+      "severity": "high",
+      "url": "https://spring.io/security/cve-2026-59345",
+      "title": "Crafted documents crash threads",
+      "text": "Apps that read untrusted documents with the Tika or PDF readers.",
+      "verdict": "cycle"
+    },
+    {
+      "cve": "CVE-2026-59415",
+      "project": "Spring AI",
+      "severity": "high",
+      "url": "https://spring.io/security/cve-2026-59415",
+      "title": "Typesense delete can remove the wrong documents",
+      "text": "Apps that pass user-supplied IDs to `delete()` on a Typesense store.",
+      "verdict": "cycle"
+    },
+    {
+      "cve": "CVE-2026-59378",
+      "project": "Spring Boot",
+      "severity": "high",
+      "url": "https://spring.io/security/cve-2026-59378",
+      "title": "Actuator health path skips login on Jersey",
+      "text": "Jersey apps (not Spring MVC or WebFlux) with Actuator and default Spring Security, where an authenticated JAX-RS resource shares a path with the health endpoint. Spring expects this to be rare.",
+      "verdict": "cycle"
+    },
+    {
+      "cve": "CVE-2026-59425",
+      "project": "Spring Cloud Gateway",
+      "severity": "high",
+      "url": "https://spring.io/security/cve-2026-59425",
+      "title": "JsonToGrpc filter leaks connections",
+      "text": "Routes using the `JsonToGrpc` filter; repeated requests exhaust resources. No login needed.",
+      "verdict": "cycle"
+    },
+    {
+      "cve": "CVE-2026-59426",
+      "project": "Spring Cloud Gateway",
+      "severity": "high",
+      "url": "https://spring.io/security/cve-2026-59426",
+      "title": "Global response cache mixes up routes",
+      "text": "The global `LocalResponseCache` with two routes on the same URI that differ by host, header or similar. Workaround: use the route-level cache instead.",
+      "verdict": "cycle"
+    },
+    {
+      "cve": "CVE-2026-59381",
+      "project": "Spring Integration",
+      "severity": "high",
+      "url": "https://spring.io/security/cve-2026-59381",
+      "title": "MGET can write files outside the target folder",
+      "text": "Apps using `MGET` on an FTP, SFTP or SMB gateway with `#remoteDirectory` in the local directory expression, connected to a hostile server.",
+      "verdict": "cycle"
+    },
+    {
+      "cve": "CVE-2026-59383",
+      "project": "Spring Integration",
+      "severity": "high",
+      "url": "https://spring.io/security/cve-2026-59383",
+      "title": "JdbcMessageStore accepts any class",
+      "text": "Apps that set allowed patterns on a `JdbcMessageStore` bean. An attacker who can already write to the message table can make the app deserialize any class.",
+      "verdict": "cycle"
+    },
+    {
+      "cve": "CVE-2026-59330",
+      "project": "Spring Security",
+      "severity": "high",
+      "url": "https://spring.io/security/cve-2026-59330",
+      "title": "WebAuthn doesn't catch cloned passkeys",
+      "text": "The signature-counter check that detects a cloned authenticator doesn't work. The attacker must already have a copy of the victim's authenticator; Spring calls the check defense in depth.",
+      "verdict": "cycle"
+    },
+    {
+      "cve": "CVE-2026-59331",
+      "project": "Spring Security",
+      "severity": "high",
+      "url": "https://spring.io/security/cve-2026-59331",
+      "title": "RSocket basic auth can exhaust memory",
+      "text": "Apps using RSocket security with the basic-auth payload converter, for example the deprecated `RSocketSecurity#basicAuthentication`. No login needed.",
+      "verdict": "cycle"
+    },
+    {
+      "cve": "CVE-2026-59340",
+      "project": "Spring AI",
+      "severity": "medium",
+      "url": "https://spring.io/security/cve-2026-59340"
+    },
+    {
+      "cve": "CVE-2026-59348",
+      "project": "Spring AI",
+      "severity": "medium",
+      "url": "https://spring.io/security/cve-2026-59348"
+    },
+    {
+      "cve": "CVE-2026-59395",
+      "project": "Spring AMQP",
+      "severity": "medium",
+      "url": "https://spring.io/security/cve-2026-59395"
+    },
+    {
+      "cve": "CVE-2026-59403",
+      "project": "Spring AMQP",
+      "severity": "medium",
+      "url": "https://spring.io/security/cve-2026-59403"
+    },
+    {
+      "cve": "CVE-2026-59404",
+      "project": "Spring AMQP",
+      "severity": "medium",
+      "url": "https://spring.io/security/cve-2026-59404"
+    },
+    {
+      "cve": "CVE-2026-59373",
+      "project": "Spring Boot",
+      "severity": "medium",
+      "url": "https://spring.io/security/cve-2026-59373"
+    },
+    {
+      "cve": "CVE-2026-59407",
+      "project": "Spring Boot",
+      "severity": "medium",
+      "url": "https://spring.io/security/cve-2026-59407"
+    },
+    {
+      "cve": "CVE-2026-59408",
+      "project": "Spring Boot",
+      "severity": "medium",
+      "url": "https://spring.io/security/cve-2026-59408"
+    },
+    {
+      "cve": "CVE-2026-59409",
+      "project": "Spring Boot",
+      "severity": "medium",
+      "url": "https://spring.io/security/cve-2026-59409"
+    },
+    {
+      "cve": "CVE-2026-59410",
+      "project": "Spring Boot",
+      "severity": "medium",
+      "url": "https://spring.io/security/cve-2026-59410"
+    },
+    {
+      "cve": "CVE-2026-59412",
+      "project": "Spring Boot",
+      "severity": "medium",
+      "url": "https://spring.io/security/cve-2026-59412"
+    },
+    {
+      "cve": "CVE-2026-59413",
+      "project": "Spring Boot",
+      "severity": "medium",
+      "url": "https://spring.io/security/cve-2026-59413"
+    },
+    {
+      "cve": "CVE-2026-59436",
+      "project": "Spring Cloud Config",
+      "severity": "medium",
+      "url": "https://spring.io/security/cve-2026-59436"
+    },
+    {
+      "cve": "CVE-2026-59437",
+      "project": "Spring Cloud Config",
+      "severity": "medium",
+      "url": "https://spring.io/security/cve-2026-59437"
+    },
+    {
+      "cve": "CVE-2026-59428",
+      "project": "Spring Cloud Gateway",
+      "severity": "medium",
+      "url": "https://spring.io/security/cve-2026-59428"
+    },
+    {
+      "cve": "CVE-2026-59434",
+      "project": "Spring Cloud Kubernetes",
+      "severity": "medium",
+      "url": "https://spring.io/security/cve-2026-59434"
+    },
+    {
+      "cve": "CVE-2026-59342",
+      "project": "Spring Data MongoDB",
+      "severity": "medium",
+      "url": "https://spring.io/security/cve-2026-59342"
+    },
+    {
+      "cve": "CVE-2026-59377",
+      "project": "Spring Data REST",
+      "severity": "medium",
+      "url": "https://spring.io/security/cve-2026-59377"
+    },
+    {
+      "cve": "CVE-2026-59389",
+      "project": "Spring Framework",
+      "severity": "medium",
+      "url": "https://spring.io/security/cve-2026-59389"
+    },
+    {
+      "cve": "CVE-2026-59390",
+      "project": "Spring Framework",
+      "severity": "medium",
+      "url": "https://spring.io/security/cve-2026-59390"
+    },
+    {
+      "cve": "CVE-2026-59391",
+      "project": "Spring Framework",
+      "severity": "medium",
+      "url": "https://spring.io/security/cve-2026-59391"
+    },
+    {
+      "cve": "CVE-2026-59392",
+      "project": "Spring Framework",
+      "severity": "medium",
+      "url": "https://spring.io/security/cve-2026-59392"
+    },
+    {
+      "cve": "CVE-2026-59393",
+      "project": "Spring Framework",
+      "severity": "medium",
+      "url": "https://spring.io/security/cve-2026-59393"
+    },
+    {
+      "cve": "CVE-2026-59394",
+      "project": "Spring Framework",
+      "severity": "medium",
+      "url": "https://spring.io/security/cve-2026-59394"
+    },
+    {
+      "cve": "CVE-2026-59398",
+      "project": "Spring Framework",
+      "severity": "medium",
+      "url": "https://spring.io/security/cve-2026-59398"
+    },
+    {
+      "cve": "CVE-2026-59418",
+      "project": "Spring Framework",
+      "severity": "medium",
+      "url": "https://spring.io/security/cve-2026-59418"
+    },
+    {
+      "cve": "CVE-2026-59419",
+      "project": "Spring Framework",
+      "severity": "medium",
+      "url": "https://spring.io/security/cve-2026-59419"
+    },
+    {
+      "cve": "CVE-2026-59430",
+      "project": "Spring Framework",
+      "severity": "medium",
+      "url": "https://spring.io/security/cve-2026-59430"
+    },
+    {
+      "cve": "CVE-2026-59431",
+      "project": "Spring Framework",
+      "severity": "medium",
+      "url": "https://spring.io/security/cve-2026-59431"
+    },
+    {
+      "cve": "CVE-2026-59376",
+      "project": "Spring HATEOAS",
+      "severity": "medium",
+      "url": "https://spring.io/security/cve-2026-59376"
+    },
+    {
+      "cve": "CVE-2026-59362",
+      "project": "Spring Integration",
+      "severity": "medium",
+      "url": "https://spring.io/security/cve-2026-59362"
+    },
+    {
+      "cve": "CVE-2026-59363",
+      "project": "Spring Integration",
+      "severity": "medium",
+      "url": "https://spring.io/security/cve-2026-59363"
+    },
+    {
+      "cve": "CVE-2026-59364",
+      "project": "Spring Integration",
+      "severity": "medium",
+      "url": "https://spring.io/security/cve-2026-59364"
+    },
+    {
+      "cve": "CVE-2026-59365",
+      "project": "Spring Integration",
+      "severity": "medium",
+      "url": "https://spring.io/security/cve-2026-59365"
+    },
+    {
+      "cve": "CVE-2026-59382",
+      "project": "Spring Integration",
+      "severity": "medium",
+      "url": "https://spring.io/security/cve-2026-59382"
+    },
+    {
+      "cve": "CVE-2026-59438",
+      "project": "Spring Integration",
+      "severity": "medium",
+      "url": "https://spring.io/security/cve-2026-59438"
+    },
+    {
+      "cve": "CVE-2026-59443",
+      "project": "Spring Integration",
+      "severity": "medium",
+      "url": "https://spring.io/security/cve-2026-59443"
+    },
+    {
+      "cve": "CVE-2026-59368",
+      "project": "Spring LDAP",
+      "severity": "medium",
+      "url": "https://spring.io/security/cve-2026-59368"
+    },
+    {
+      "cve": "CVE-2026-59400",
+      "project": "Spring Security",
+      "severity": "medium",
+      "url": "https://spring.io/security/cve-2026-59400"
+    },
+    {
+      "cve": "CVE-2026-59350",
+      "project": "Spring Web Services",
+      "severity": "medium",
+      "url": "https://spring.io/security/cve-2026-59350"
+    },
+    {
+      "cve": "CVE-2026-59351",
+      "project": "Spring Web Services",
+      "severity": "medium",
+      "url": "https://spring.io/security/cve-2026-59351"
+    },
+    {
+      "cve": "CVE-2026-59352",
+      "project": "Spring Web Services",
+      "severity": "medium",
+      "url": "https://spring.io/security/cve-2026-59352"
+    },
+    {
+      "cve": "CVE-2026-59353",
+      "project": "Spring Web Services",
+      "severity": "medium",
+      "url": "https://spring.io/security/cve-2026-59353"
+    },
+    {
+      "cve": "CVE-2026-59370",
+      "project": "Spring Web Services",
+      "severity": "medium",
+      "url": "https://spring.io/security/cve-2026-59370"
+    },
+    {
+      "cve": "CVE-2026-59371",
+      "project": "Spring Web Services",
+      "severity": "medium",
+      "url": "https://spring.io/security/cve-2026-59371"
+    },
+    {
+      "cve": "CVE-2026-59379",
+      "project": "Spring Web Services",
+      "severity": "medium",
+      "url": "https://spring.io/security/cve-2026-59379"
+    },
+    {
+      "cve": "CVE-2026-59399",
+      "project": "Spring for Apache Kafka",
+      "severity": "medium",
+      "url": "https://spring.io/security/cve-2026-59399"
+    },
+    {
+      "cve": "CVE-2026-59406",
+      "project": "Spring for Apache Kafka",
+      "severity": "medium",
+      "url": "https://spring.io/security/cve-2026-59406"
+    },
+    {
+      "cve": "CVE-2026-59432",
+      "project": "Spring for Apache Kafka",
+      "severity": "medium",
+      "url": "https://spring.io/security/cve-2026-59432"
+    },
+    {
+      "cve": "CVE-2026-59336",
+      "project": "Spring AI",
+      "severity": "low",
+      "url": "https://spring.io/security/cve-2026-59336"
+    },
+    {
+      "cve": "CVE-2026-59337",
+      "project": "Spring AI",
+      "severity": "low",
+      "url": "https://spring.io/security/cve-2026-59337"
+    },
+    {
+      "cve": "CVE-2026-59372",
+      "project": "Spring Boot",
+      "severity": "low",
+      "url": "https://spring.io/security/cve-2026-59372"
+    },
+    {
+      "cve": "CVE-2026-59439",
+      "project": "Spring Cloud Function",
+      "severity": "low",
+      "url": "https://spring.io/security/cve-2026-59439"
+    },
+    {
+      "cve": "CVE-2026-59440",
+      "project": "Spring Cloud Function",
+      "severity": "low",
+      "url": "https://spring.io/security/cve-2026-59440"
+    },
+    {
+      "cve": "CVE-2026-59441",
+      "project": "Spring Cloud Stream",
+      "severity": "low",
+      "url": "https://spring.io/security/cve-2026-59441"
+    },
+    {
+      "cve": "CVE-2026-59429",
+      "project": "Spring Framework",
+      "severity": "low",
+      "url": "https://spring.io/security/cve-2026-59429"
+    },
+    {
+      "cve": "CVE-2026-59405",
+      "project": "Spring Integration",
+      "severity": "low",
+      "url": "https://spring.io/security/cve-2026-59405"
+    },
+    {
+      "cve": "CVE-2026-59329",
+      "project": "Spring Security",
+      "severity": "low",
+      "url": "https://spring.io/security/cve-2026-59329"
+    },
+    {
+      "cve": "CVE-2026-41698",
+      "project": "Spring Vault",
+      "severity": "low",
+      "url": "https://spring.io/security/cve-2026-41698"
+    },
+    {
+      "cve": "CVE-2026-59401",
+      "project": "Spring for Apache Kafka",
+      "severity": "low",
+      "url": "https://spring.io/security/cve-2026-59401"
+    },
+    {
+      "cve": "CVE-2026-59356",
+      "project": "Spring for GraphQL",
+      "severity": "low",
+      "url": "https://spring.io/security/cve-2026-59356"
+    }
+  ],
+  "changes": [
+    {
+      "date": "2026-11-20",
+      "text": "Published."
+    }
+  ],
+  "fixed_in": {
+    "spring-boot": {
+      "4.1": "4.1.3",
+      "4.0": "4.0.10"
+    },
+    "spring-security": {
+      "7.1": "7.1.3",
+      "7.0": "7.0.9"
+    },
+    "spring-framework": {
+      "7.0": "7.0.11"
+    },
+    "spring-ai": {
+      "2.0": "2.0.3"
+    }
+  }
+}

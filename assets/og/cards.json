@@ -3,7 +3,7 @@
   "apache-http2": "f08787264418c285",
   "brotli": "6214c75d040cb164",
   "chrome-zero-day": "d4166212928e5415",
-  "cves": "11ce721a35391d71",
+  "cves": "2d257c650f5c3171",
   "default": "0102ee4bf020cbdf",
   "how-we-rate": "ddd51bc57fe6c95a",
   "java4shell": "b995ac70ef6708f4",
@@ -23,6 +23,9 @@
   "ruby2shell": "fcfa28b7eedb415d",
   "sap-icm2shell": "b0fd55ec21f05abf",
   "sglang": "f3d6acde9a23c574",
+  "spring-2026-11-19": "a522968cff085f90",
+  "spring-boot-slash": "f65983d792efd818",
+  "spring-security-el": "e2acc18dfc47e43e",
   "sshole": "c84f9423bf96f799",
   "synology-dsm": "32fbe68f1e3e3265",
   "versions": "a6985e2cffabffa7",
@@ -53,5 +56,9 @@
   "versions/ruby": "53580ab76f89de9a",
   "versions/sap-kernel": "c35163a0a97f7bad",
   "versions/sglang": "9db9b29cf078dfd0",
+  "versions/spring-ai": "8f22da13ef8f2cf8",
+  "versions/spring-boot": "d804c53f62be1809",
+  "versions/spring-framework": "e945defe10495a62",
+  "versions/spring-security": "e3889f1cff0ca981",
   "versions/synology-dsm": "62036a37e8203795"
 }
