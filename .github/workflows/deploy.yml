@@ -1,0 +1,54 @@
+name: deploy
+
+# Deploys tldrcve.com after every push to main (which only happens through a merged, checked pull
+# request or a maintainer push). The Cloudflare token lives in the "production" environment, which
+# only the main branch can use.
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: deploy-production
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    environment:
+      name: production
+      url: https://tldrcve.com
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: 22
+      - name: Render link-preview images
+        run: python3 tools/cards.py
+        env:
+          TLDRCVE_BROWSER: google-chrome
+      - name: Build the public site
+        run: python3 build.py --strict --public
+        env:
+          TLDRCVE_BUILD_ID: ${{ github.sha }}
+      - name: Deploy to Cloudflare
+        run: npx --yes wrangler@4.165.0 deploy
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ vars.CLOUDFLARE_ACCOUNT_ID }}
+      - name: Wait until the new build is live
+        run: |
+          for i in $(seq 1 40); do
+            if [ "$(curl -fsS https://tldrcve.com/build.txt || true)" = "$GITHUB_SHA" ]; then exit 0; fi
+            sleep 6
+          done
+          echo "tldrcve.com didn't serve build $GITHUB_SHA within 4 minutes" >&2
+          exit 1
+      - name: Check every live page
+        run: python3 tools/check_live.py

@@ -1,5 +1,7 @@
 name: build
 
+# Runs on every pull request (including from forks) and on pushes to main.
+# No secrets are available here, so a pull request can never deploy or read the Cloudflare token.
 on:
   pull_request:
   push:
@@ -11,10 +13,22 @@ permissions:
 jobs:
   build:
     runs-on: ubuntu-latest
-    timeout-minutes: 5
+    timeout-minutes: 10
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
-      - name: Build with strict checks
-        run: python3 build.py --strict
+      # Draw any missing or outdated link-preview images, so contributors don't need a browser.
+      - name: Render link-preview images
+        run: python3 tools/cards.py
+        env:
+          TLDRCVE_BROWSER: google-chrome
+      # The same checks a deploy runs: every page sourced, dated, with its own preview image.
+      - name: Build with strict, deploy-level checks
+        run: python3 build.py --strict --public
+      - name: Upload the rendered preview images for review
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: preview-images
+          path: assets/og/
+          retention-days: 14

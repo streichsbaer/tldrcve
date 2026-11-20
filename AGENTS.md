@@ -17,18 +17,27 @@ tldrcve.com explains the vulnerabilities people are talking about in plain Engli
 | `tools/cards.py` | Renders the link-preview images. Needs a desktop browser (Chrome, Firefox or Zen) |
 | `site/` | Build output. Never edit or commit it |
 
-## Build and check
+## Build and check locally
 
 ```bash
 python3 build.py --strict                                   # build; fails on any warning
 python3 -m http.server 4321 --directory site                # preview at http://localhost:4321
 ```
 
-Deploy (maintainers only; needs the Cloudflare token):
+## How changes go live
+
+1. Open a pull request. The `build` check renders any missing preview images (no browser needed on your side) and runs `build.py --strict --public`. It must pass before merging; the rendered images are attached to the run for review.
+2. A maintainer reviews and merges. Nobody can force-push to or delete `main`.
+3. Every push to `main` deploys automatically (`.github/workflows/deploy.yml`): build, deploy to Cloudflare, wait until the new build is live, then `tools/check_live.py` checks every page.
+
+Pull requests never see the Cloudflare token: it lives in the `production` environment, which only `main` can use. Workflows from first-time and outside contributors wait for a maintainer to approve them, and only GitHub's own actions, pinned to a commit, are allowed.
+
+Manual deploy (maintainers, emergencies only):
 
 ```bash
 python3 build.py --strict --public
-CLOUDFLARE_API_TOKEN=… npx wrangler@4 deploy
+CLOUDFLARE_API_TOKEN=… npx wrangler@4.165.0 deploy
+python3 tools/check_live.py
 ```
 
 Without `--public` the build tells search engines not to index the site.
@@ -42,9 +51,9 @@ The build warns about:
 
 A change is only done when `--strict` passes.
 
-Every page needs its own link-preview image: `--strict` fails until a new page (or product in `versions/`) has one, so run `python3 tools/cards.py`. If you change a page's name, CVEs, verdict, scare level or tile line, its image goes out of date: the build prints a note, and `--public` builds refuse to deploy until it's redrawn.
+Every page needs its own link-preview image: `--strict` fails until a new page (or product in `versions/`) has one. Run `python3 tools/cards.py` if you have Chrome, Firefox or Zen; if not, open the pull request anyway and CI draws them. If you change a page's name, CVEs, verdict, scare level or tile line, its image goes out of date: the build prints a note, and `--public` builds refuse to deploy until it's redrawn.
 
-After every deploy, run `python3 tools/check_live.py`. It loads every page in the sitemap and fails if a page, its preview image, the favicon, the feed or a CVE/GHSA redirect is wrong.
+`tools/check_live.py` runs after every deploy. It loads every page in the sitemap and fails if a page, its preview image, the favicon, the feed or a CVE/GHSA redirect is wrong.
 
 ## Writing a page
 

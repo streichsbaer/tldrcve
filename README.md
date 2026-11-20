@@ -36,7 +36,7 @@ Then open http://localhost:4321.
 
 ## Found a mistake, or a bug we should cover?
 
-Open an issue with a link to the source that shows it, or send a pull request that edits the file in `content/` or `versions/`. Run `python3 build.py --strict` first. [AGENTS.md](AGENTS.md) explains every field and the writing rules; they apply to people and AI agents alike.
+Open an issue with a link to the source that shows it, or send a pull request that edits the file in `content/` or `versions/`. Run `python3 build.py --strict` first if you can; the pull request check runs it too. Merged changes go live automatically. [AGENTS.md](AGENTS.md) explains every field and the writing rules; they apply to people and AI agents alike.
 
 We only cover vulnerabilities people are actually talking about, and accuracy beats speed: every claim needs a source that says it.
 

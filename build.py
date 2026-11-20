@@ -9,6 +9,7 @@ import hashlib
 import html
 import json
 import math
+import os
 import re
 import shutil
 import sys
@@ -951,6 +952,7 @@ def main() -> None:
     write_sitemap(all_c)
     write_redirects(all_c)
     write_feed(all_c)
+    (OUT / "build.txt").write_text(os.environ.get("TLDRCVE_BUILD_ID", "local"))  # lets CI see when a deploy is live
     print(f"{'PUBLIC' if public else 'private (noindex)'} build:", end=" ")
     print(f"built {len(all_c)} briefs + home, all CVEs, how we rate -> {OUT.relative_to(ROOT)}/")
 
