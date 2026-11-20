@@ -1,0 +1,196 @@
+{
+  "slug": "phpaftershell",
+  "name": "phpAfterShell",
+  "aliases": [
+    "php",
+    "php-fpm",
+    "mod_php",
+    "php sessions",
+    "session.save_handler",
+    "session.upload_progress",
+    "php2shell",
+    "phpaftershell",
+    "cve-2026-126714",
+    "ghsa-fm2m-fjf5-v3cp"
+  ],
+  "cves": [
+    "CVE-2026-126714"
+  ],
+  "ghsa": [
+    "GHSA-fm2m-fjf5-v3cp"
+  ],
+  "product": "PHP",
+  "disclosed": "2026-11-19",
+  "updated": "2026-11-21",
+  "verdict": "if",
+  "tile_line": "Needs a crashed session write and a gadget. Fixed 19 Nov.",
+  "summary": "PHP's default file-based session storage can leave a half-old, half-new session file if a write is cut short, and an attacker can use that to make PHP rebuild objects of their choice and run code. It also needs the attacker's data in the session, a worker killed mid-write and a suitable code library in the app; lab exploit code is public, no attacks are reported, and the 19 Nov 2026 releases fix it. It's a separate bug from [PHP2Shell](/php2shell/), not a bypass: the October releases just don't include this fix.",
+  "status": {
+    "exploit": "public",
+    "attacks": "none",
+    "kev": null,
+    "scare": 2.4
+  },
+  "affected": [
+    {
+      "label": "PHP older than the 19 Nov 2026 fix",
+      "text": "PHP 8.2 to 8.5 below 8.5.13, 8.4.28, 8.3.37 or 8.2.36. PHP 8.6.0 (19 Nov) is fixed. The October PHP2Shell releases don't fix it. PHP says the code dates back to PHP 4.1.0, so older, unsupported PHP is affected too. Distros may backport the fix without changing the version number.",
+      "cmd": "php -v",
+      "cite": [
+        1,
+        2,
+        3
+      ]
+    },
+    {
+      "label": "Sessions are stored in files",
+      "text": "The `files` save handler is PHP's default. Sessions in Redis, a database or another store that replaces a record in one step aren't hit by this bug. The CLI can read a different php.ini than PHP-FPM or Apache.",
+      "cmd": "php -i | grep session.save_handler",
+      "cite": [
+        1,
+        3
+      ]
+    },
+    {
+      "label": "Attackers can fill the session",
+      "text": "They need to put a lot of their own data into a session. Session upload progress does that for anyone who sends a file upload, and it was on by default until the 19 Nov releases (see [PHP session RCE](/php-sessions/)). An app that stores large user input in the session works too, even with upload progress off. Whether a login is needed depends on the app.",
+      "cmd": "php -i | grep session.upload_progress.enabled",
+      "cite": [
+        1,
+        3,
+        4
+      ]
+    },
+    {
+      "label": "The write can be cut short",
+      "text": "The PHP worker has to die partway through saving the session. PHP's advisory describes a memory-limit crash in another thread on threaded PHP builds; Wiz says memory limits or timeouts can do it. One public lab does it over plain HTTP by pushing a memory-limited container into an out-of-memory kill.",
+      "cite": [
+        1,
+        5,
+        6
+      ]
+    },
+    {
+      "label": "The app has a usable library",
+      "text": "Running code needs a suitable \"gadget chain\" in the app, which isn't in every app. Both public labs plant their own gadget class. Without one, the bug can still corrupt sessions.",
+      "cite": [
+        1,
+        5,
+        6,
+        7
+      ]
+    }
+  ],
+  "do": [
+    {
+      "label": "Update PHP and restart",
+      "text": "Update to 8.6.0, 8.5.13, 8.4.28, 8.3.37 or 8.2.36 (19 Nov 2026), then restart every PHP worker. The fix empties the session file before writing, so a cut-short write can lose a session but can't mix two. Debian has fixed packages (DSA-6641-1, DLA-4916-1). The same releases fix our other PHP pages, [PHP session RCE](/php-sessions/) and [PHP-FPM smuggling](/php-fpm-smuggling/).",
+      "cite": [
+        1,
+        2,
+        8
+      ],
+      "versions": [
+        "php"
+      ]
+    },
+    {
+      "label": "Can't update? Turn off upload progress",
+      "text": "Set it in php.ini, the FPM pool or server config, then restart. PHP says this removes the easiest way in, not the bug: apps that store user input in sessions stay exposed. Keep untrusted data in sessions small.",
+      "cmd": "session.upload_progress.enabled = 0",
+      "cite": [
+        1,
+        3
+      ]
+    },
+    {
+      "label": "Optional: a different session store",
+      "text": "PHP says a store that replaces records in one step avoids this bug; depthfirst names Redis and databases. Updating PHP is still the recommended fix for the default `files` handler.",
+      "cite": [
+        1,
+        3
+      ]
+    }
+  ],
+  "fixed_in": {
+    "php": {
+      "8.6": "8.6.0",
+      "8.5": "8.5.13",
+      "8.4": "8.4.28",
+      "8.3": "8.3.37",
+      "8.2": "8.2.36"
+    }
+  },
+  "slack": "phpAfterShell, PHP CVE-2026-126714 (Critical 9.2): PHP's default file session handler can leave a half-old, half-new session file when a write is cut short, letting an attacker inject objects and run code if the app has a usable gadget chain. Needs attacker data in the session (session upload progress, or the app storing user input) and a worker killed mid-write. Separate bug from PHP2Shell; the October releases don't fix it. Lab exploit code is public, no attacks reported, not in CISA KEV. Fix: 8.6.0, 8.5.13, 8.4.28, 8.3.37 or 8.2.36 (19 Nov 2026). Stopgap: session.upload_progress.enabled = 0.",
+  "sources": [
+    {
+      "title": "PHP GHSA-fm2m: full advisory, conditions, fix and mitigation",
+      "url": "https://github.com/php/php-src/security/advisories/GHSA-fm2m-fjf5-v3cp",
+      "date": "19 Nov"
+    },
+    {
+      "title": "PHP: 8.x ChangeLog, 19 Nov 2026 releases",
+      "url": "https://www.php.net/ChangeLog-8.php#8.5.13",
+      "date": "19 Nov"
+    },
+    {
+      "title": "depthfirst: the finder's write-up, separate flaw from PHP2Shell, other session stores",
+      "url": "https://depthfirst.com/phpaftershell",
+      "date": "19 Nov"
+    },
+    {
+      "title": "PHP GHSA-658j: upload progress off by default from the 19 Nov releases",
+      "url": "https://github.com/php/php-src/security/advisories/GHSA-658j-r8rw-q6mx",
+      "date": "19 Nov"
+    },
+    {
+      "title": "Wiz: memory limits or timeouts, gadget chain needed, no exploitation seen",
+      "url": "https://www.wiz.io/blog/phpaftershell-critical-php-rce-vulnerabilities-cve-2026-126714"
+    },
+    {
+      "title": "Public lab exploit: out-of-memory kill over HTTP, planted gadget",
+      "url": "https://github.com/VABISMO/PHPAfterShell-poc",
+      "date": "20 Nov"
+    },
+    {
+      "title": "Public practice lab: killed worker, planted gadget chain",
+      "url": "https://github.com/tani2shell/phpaftershell-lab",
+      "date": "20 Nov"
+    },
+    {
+      "title": "Debian tracker: DSA-6641-1, DLA-4916-1",
+      "url": "https://security-tracker.debian.org/tracker/CVE-2026-126714"
+    },
+    {
+      "title": "Cycode: no attacks reported by PHP or the finder",
+      "url": "https://cycode.com/blog/phpaftershell-cve-2026-126714/"
+    },
+    {
+      "title": "CISA KEV catalog: not listed",
+      "url": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog"
+    },
+    {
+      "title": "CVE record: CVE-2026-126714 (CVSS 4.0 9.2)",
+      "url": "https://www.cve.org/CVERecord?id=CVE-2026-126714"
+    }
+  ],
+  "changes": [
+    {
+      "date": "2026-11-21",
+      "text": "Published."
+    }
+  ],
+  "status_cite": {
+    "exploit": [
+      6,
+      7
+    ],
+    "attacks": [
+      5,
+      9
+    ],
+    "kev": [
+      10
+    ]
+  }
+}
