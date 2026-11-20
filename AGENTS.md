@@ -12,7 +12,8 @@ tldrcve.com explains the vulnerabilities people are talking about in plain Engli
 | `build.py` | Builds the static site into `site/`. Python standard library only |
 | `assets/` | `site.css`, `site.js`, and `og/` (link-preview images) |
 | `versions/<product>.json` | Latest safe version per product line, shared by every page that embeds it. Edit once, every page updates |
-| `tools/versions.py` | Refreshes `versions/` from vendor feeds (PHP, Node.js so far). Never lowers a version |
+| `watch/<id>.json` | Vulnerabilities we evaluated but haven't written a page for, with the facts, sources, what would change our mind, and a recheck date |
+| `tools/versions.py` | Refreshes `versions/` from vendor feeds (PHP, Node.js so far). Never lowers a version. `--report` lists every product, how it's refreshed, when it was last checked and where we look |
 | `tools/check_live.py` | Checks the live site after a deploy: every page, its own preview image, icons, feed, redirects |
 | `tools/cards.py` | Renders the link-preview images. Needs a desktop browser (Chrome, Firefox or Zen) |
 | `site/` | Build output. Never edit or commit it |
@@ -87,6 +88,14 @@ Copy the shape of an existing file (`content/nginx2root.json` is a good model).
 | `slack` | Paste-ready summary paragraph, no URL |
 | `sources[]` | `title` ("Publisher: what it supports"), `url`, optional `date`. `cite` numbers are 1-based indexes into this list |
 | `changes[]` | `date` and `text`, newest first; the last entry is "Published." |
+
+### Product version files (`versions/<product>.json`)
+
+`id`, `name`, `about`, `feed` (a `tools/versions.py` feed, or `null` for by hand), `latest_from` (URLs where the newest releases are checked), `filter` (All CVEs search term), `checked` (date of the last check), `lines[]` (`line`, `key`, `latest`, optional `released`, `note`), optional `older`, `unfixed[]` (`line`, `note`, `pages`) and `sources[]`. Update `checked` every time you look, even if nothing changed. The build notes products not checked for 14 days.
+
+### Evaluated, no page (`watch/<id>.json`)
+
+When a vulnerability gets attention but doesn't qualify yet, record it instead of dropping it: `id`, `title`, `cves`, `product`, `evaluated`, `decision` (`watch`, `page` or `dropped`), `why`, `page_if` (what would change our mind), `recheck` (date), `facts[]` (`text`, `cite`), `sources[]`, `history[]` (`date`, `text`, newest first). On each recheck, add a `history` entry and a new `recheck` date. When it gets a page, set `decision` to `page` and add `"page": "<slug>"`; the build fails if a watched CVE already has a page.
 
 ### Rules
 - **Sources:**

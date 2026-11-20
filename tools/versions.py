@@ -2,6 +2,7 @@
 
   python3 tools/versions.py          # update every product, print what changed
   python3 tools/versions.py --dry    # show what would change, write nothing
+  python3 tools/versions.py --report # table: every product, how it's refreshed, when it was last checked, where we look
 
 Never lowers a version: third-party feeds can lag, so a feed older than what we have is ignored.
 After it runs, `python3 build.py --strict` checks every line is at or above the fixes on our pages.
@@ -55,7 +56,27 @@ def feed(name):
     return {"php": feed_php, "nodejs": feed_nodejs, "endoflife": feed_endoflife}[kind](arg)
 
 
+def report():
+    """Markdown table of every product file: refresh method, last check, latest per line, and where we look."""
+    today = date.today()
+    rows = []
+    for f in sorted(DIR.glob("*.json")):
+        v = json.loads(f.read_text())
+        age = (today - date.fromisoformat(v["checked"])).days
+        how = f"feed `{v['feed']}`" if v.get("feed") else "by hand"
+        lines = ", ".join(f"{l['line']} → {l['latest']}" for l in v["lines"]) or "—"
+        if v.get("unfixed"):
+            lines += "; no fix: " + ", ".join(u["line"] for u in v["unfixed"])
+        where = " ".join(f"<{u}>" for u in v.get("latest_from", []))
+        flag = " ⚠️" if age > 14 else ""
+        rows.append(f"| [{v['name']}](versions/{f.name}) | {how} | {v['checked']} ({age}d){flag} | {lines} | {where} |")
+    print("| Product | Refreshed | Last checked | Latest safe | Where we look |\n|---|---|---|---|---|")
+    print("\n".join(rows))
+
+
 def main():
+    if "--report" in sys.argv:
+        return report()
     dry = "--dry" in sys.argv
     for f in sorted(DIR.glob("*.json")):
         v = json.loads(f.read_text())

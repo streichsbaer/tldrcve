@@ -3,6 +3,9 @@
   "name": "nginx",
   "about": "The newest open-source nginx release on each line. Each one fixes every nginx bug we cover.",
   "feed": "endoflife:nginx",
+  "latest_from": [
+    "https://nginx.org/en/download.html"
+  ],
   "filter": "nginx",
   "checked": "2026-11-20",
   "lines": [

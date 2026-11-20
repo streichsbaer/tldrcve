@@ -3,6 +3,10 @@
   "name": "Java",
   "about": "The newest release on each Java line we track. Each one fixes every Java bug we cover.",
   "feed": null,
+  "latest_from": [
+    "https://openjdk.org/groups/vulnerability/advisories/2026-11-17",
+    "https://github.com/adoptium/temurin/issues/326"
+  ],
   "filter": "java",
   "checked": "2026-11-20",
   "lines": [

@@ -3,6 +3,9 @@
   "name": "SAP kernel and Web Dispatcher",
   "about": "The first patch level on each SAP kernel release that fixes the SAP bugs we cover. Any later patch level is also fixed. SAP's download portal needs a login, so we can't confirm the newest level on each release.",
   "feed": null,
+  "latest_from": [
+    "https://support.sap.com/en/my-support/knowledge-base/security-notes-news/november-2026.html"
+  ],
   "filter": "sap",
   "checked": "2026-11-20",
   "lines": [

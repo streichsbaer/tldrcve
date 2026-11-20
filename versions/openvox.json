@@ -3,6 +3,11 @@
   "name": "OpenVox and Puppet",
   "about": "The newest release on each OpenVox and Puppet line we track. Each one fixes every OpenVox and Puppet bug we cover.",
   "feed": null,
+  "latest_from": [
+    "https://github.com/OpenVoxProject/openvox-server/releases",
+    "https://github.com/OpenVoxProject/openvox/releases",
+    "https://help.puppet.com/core/current/Content/PuppetCore/PuppetReleaseNotes/release_notes_puppet_x-9-1-3.htm"
+  ],
   "filter": "puppet",
   "checked": "2026-11-20",
   "lines": [

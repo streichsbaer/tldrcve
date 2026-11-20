@@ -1,0 +1,57 @@
+{
+  "id": "etherpad-static-file-read",
+  "title": "Etherpad file read without login",
+  "cves": [
+    "CVE-2026-114516"
+  ],
+  "ghsa": [
+    "GHSA-mc8w-wjhw-45x5"
+  ],
+  "product": "Etherpad",
+  "evaluated": "2026-11-20",
+  "decision": "watch",
+  "recheck": "2026-11-27",
+  "why": "High impact (unauthenticated file read that can lead to code execution), but the fix shipped on 29 Jul 2026, the CVE was only assigned on 19 Nov, and coverage is aggregators only: no news, no CISA, no reported attacks.",
+  "page_if": [
+    "attacks reported or CISA KEV listing",
+    "news or researcher coverage"
+  ],
+  "facts": [
+    {
+      "text": "Anyone who can reach the server, with no login, can read any file the Etherpad process can read via /static/*, including settings.json and credentials.json. The advisory says the admin password plus the plugin installer leads to code execution.",
+      "cite": [
+        1
+      ]
+    },
+    {
+      "text": "Affects 1.8.14 up to 3.3.2; fixed in 3.3.3 (29 Jul 2026). The release notes include the attack request.",
+      "cite": [
+        1,
+        2
+      ]
+    },
+    {
+      "text": "Sources differ on who reported it: the advisory credits gcm-explo1t.",
+      "cite": [
+        1
+      ]
+    }
+  ],
+  "sources": [
+    {
+      "title": "Etherpad GHSA-mc8w-wjhw-45x5: impact, versions, fix",
+      "url": "https://github.com/ether/etherpad/security/advisories/GHSA-mc8w-wjhw-45x5"
+    },
+    {
+      "title": "Etherpad v3.3.3 release notes",
+      "url": "https://github.com/ether/etherpad/releases/tag/v3.3.3",
+      "date": "29 Jul"
+    }
+  ],
+  "history": [
+    {
+      "date": "2026-11-20",
+      "text": "Evaluated: watch, no page yet."
+    }
+  ]
+}

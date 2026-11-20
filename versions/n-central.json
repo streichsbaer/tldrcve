@@ -3,6 +3,9 @@
   "name": "N-able N-central",
   "about": "The newest release on each N-able N-central line we track. Each one fixes every N-able N-central bug we cover.",
   "feed": null,
+  "latest_from": [
+    "https://www.n-able.com/blog/n-able-vulnerability-remediation-update"
+  ],
   "filter": "n-central",
   "checked": "2026-11-20",
   "lines": [

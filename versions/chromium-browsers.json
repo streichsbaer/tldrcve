@@ -3,6 +3,11 @@
   "name": "Edge, Brave and Opera",
   "about": "The newest release on each Edge, Brave and Opera line we track. Each one fixes every Edge, Brave and Opera bug we cover.",
   "feed": null,
+  "latest_from": [
+    "https://learn.microsoft.com/en-us/deployedge/microsoft-edge-relnotes-security",
+    "https://github.com/brave/brave-browser/releases",
+    "https://blogs.opera.com/desktop/changelog-for-140/"
+  ],
   "filter": "chromium",
   "checked": "2026-11-20",
   "lines": [

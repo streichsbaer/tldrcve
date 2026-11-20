@@ -3,6 +3,9 @@
   "name": "Microsoft 365 Apps",
   "about": "The newest release on each Microsoft 365 Apps line we track. Each one fixes every Microsoft 365 Apps bug we cover.",
   "feed": null,
+  "latest_from": [
+    "https://learn.microsoft.com/en-us/officeupdates/update-history-microsoft365-apps-by-date"
+  ],
   "filter": "outlook",
   "checked": "2026-11-20",
   "lines": [

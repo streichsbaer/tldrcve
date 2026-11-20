@@ -3,6 +3,9 @@
   "name": "Node.js",
   "about": "The newest release on each Node.js line we track. Each one fixes every Node.js bug we cover.",
   "feed": "nodejs",
+  "latest_from": [
+    "https://nodejs.org/dist/index.json"
+  ],
   "filter": "node",
   "checked": "2026-11-20",
   "lines": [

@@ -3,6 +3,9 @@
   "name": "Synology DSM",
   "about": "The newest DSM build on each line, as Synology lists them for a DS920+. Available versions vary by model. Each one fixes every DSM bug we cover.",
   "feed": null,
+  "latest_from": [
+    "https://www.synology.com/en-global/releaseNote/DSM"
+  ],
   "filter": "synology",
   "checked": "2026-11-20",
   "lines": [

@@ -3,6 +3,9 @@
   "name": "Apache Roller",
   "about": "The newest Apache Roller release. It fixes every Roller bug we cover.",
   "feed": null,
+  "latest_from": [
+    "https://roller.apache.org/downloads/downloads.html"
+  ],
   "filter": "roller",
   "checked": "2026-11-20",
   "lines": [

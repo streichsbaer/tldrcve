@@ -3,6 +3,9 @@
   "name": "Chrome",
   "about": "The newest release on each Chrome line we track. Each one fixes every Chrome bug we cover.",
   "feed": null,
+  "latest_from": [
+    "https://chromereleases.googleblog.com/"
+  ],
   "filter": "chrome",
   "checked": "2026-11-20",
   "lines": [

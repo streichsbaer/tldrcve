@@ -22,6 +22,7 @@ CONTENT = ROOT / "content"
 ASSETS = ROOT / "assets"
 OUT = ROOT / "site"
 VERSIONS_DIR = ROOT / "versions"
+WATCH_DIR = ROOT / "watch"
 SITE_URL = "https://tldrcve.com"
 
 VERDICTS = {"now": "Patch now", "if": "Patch now if…", "cycle": "Next cycle", "watch": "Watching"}
@@ -470,6 +471,7 @@ def versions_page(v: dict, all_c: list) -> str:
         </table>
         {f'<p class="safe__note">{text(v["older"])}</p>' if v.get("older") else ""}
         <p class="safe__note">From {srcs}.</p>
+        <p class="safe__note">Newest releases checked {nice_date(v["checked"])} at {" · ".join(f'<a href="{html.escape(u)}">{html.escape(u.split("//", 1)[-1].split("/", 1)[0])}</a>' for u in v.get("latest_from", []))}.</p>
       </div>
     </section>
 
@@ -715,6 +717,44 @@ NAME_MAX = 18  # fits one line on the narrowest card (checked in the browser at 
 PRODUCT_MAX = 26  # card label before the date, in a monospace font
 
 
+WATCH_DECISIONS = ("watch", "page", "dropped")
+VERSIONS_STALE_DAYS = 14
+
+
+def watch_checks(all_c: list) -> tuple:
+    """watch/<id>.json records vulnerabilities we evaluated but haven't (yet) written a page for.
+    Returns (warnings, notes): broken entries fail --strict; an overdue recheck is a note."""
+    warnings, notes = [], []
+    covered = {cve: c["slug"] for c in all_c for cve in c["cves"]}
+    for f in sorted(WATCH_DIR.glob("*.json")) if WATCH_DIR.exists() else []:
+        w = json.loads(f.read_text())
+        name = f"watch/{f.name}"
+        for key in ("id", "title", "cves", "evaluated", "decision", "why", "facts", "sources", "history"):
+            if key not in w:
+                warnings.append(f"{name}: missing {key!r}")
+        if w.get("decision") not in WATCH_DECISIONS:
+            warnings.append(f"{name}: decision must be one of {', '.join(WATCH_DECISIONS)}")
+        n_src = len(w.get("sources", []))
+        for i, fact in enumerate(w.get("facts", [])):
+            if not fact.get("cite") or any(not 1 <= x <= n_src for x in fact["cite"]):
+                warnings.append(f"{name}.facts[{i}]: needs a cite in range 1..{n_src}")
+        if w.get("decision") == "watch":
+            if not w.get("recheck"):
+                warnings.append(f"{name}: a watched item needs a 'recheck' date")
+            elif w["recheck"] < date.today().isoformat():
+                notes.append(f"{name}: recheck was due {w['recheck']}; look again and log it in 'history'")
+            for cve in w.get("cves", []):
+                if cve in covered:
+                    warnings.append(f"{name}: {cve} now has a page ({covered[cve]}); set decision to 'page' and 'page': '{covered[cve]}'")
+    for pid, v in VERSIONS.items():
+        if not v.get("latest_from"):
+            warnings.append(f"versions/{pid}.json: add 'latest_from', the URL(s) where the newest releases are checked")
+        age = (date.today() - date.fromisoformat(v["checked"])).days
+        if age > VERSIONS_STALE_DAYS:
+            notes.append(f"versions/{pid}.json: last checked {v['checked']} ({age} days ago); refresh it (python3 tools/versions.py --report)")
+    return warnings, notes
+
+
 def card_checks(all_c: list) -> tuple:
     """Link-preview images are rendered by tools/cards.py. Returns (missing, stale) warnings.
     A page with no card at all always fails --strict; a card that's only out of date fails --public."""
@@ -922,6 +962,10 @@ def not_found_page() -> str:
 def main() -> None:
     all_c = [json.loads(p.read_text()) for p in sorted(CONTENT.glob("*.json"))]
     warnings = editor_checks(all_c) + versions_checks(all_c)
+    watch_warnings, watch_notes = watch_checks(all_c)
+    warnings += watch_warnings
+    for note in watch_notes:
+        print(f"note: {note}")
     missing_cards, stale_cards = card_checks(all_c)
     warnings += missing_cards  # every page needs its own card, right away
     for note in stale_cards:  # an outdated card blocks a deploy; elsewhere it's a note

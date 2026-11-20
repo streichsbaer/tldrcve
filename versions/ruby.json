@@ -3,6 +3,9 @@
   "name": "Ruby",
   "about": "The newest release on each supported Ruby line. Each one fixes every Ruby bug we cover.",
   "feed": "endoflife:ruby",
+  "latest_from": [
+    "https://cache.ruby-lang.org/pub/ruby/index.txt"
+  ],
   "filter": "ruby",
   "checked": "2026-11-20",
   "lines": [

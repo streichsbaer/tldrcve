@@ -3,6 +3,9 @@
   "name": "REDCap",
   "about": "The first fixed release on each REDCap branch. REDCap's release list needs a Community login, so newer builds may exist; install the newest on your branch.",
   "feed": null,
+  "latest_from": [
+    "https://projectredcap.org/resources/community/"
+  ],
   "filter": "redcap",
   "checked": "2026-11-20",
   "lines": [

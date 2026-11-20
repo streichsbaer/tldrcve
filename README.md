@@ -21,6 +21,7 @@ A static site with no server code and no dependencies beyond Python's standard l
 |---|---|
 | `content/<slug>.json` | One file per vulnerability |
 | `versions/<product>.json` | Latest safe version per product line, shared by every page that uses it |
+| `watch/<id>.json` | Vulnerabilities we evaluated but don't cover yet, and why |
 | `build.py` | Builds everything into `site/` |
 | `tools/versions.py` | Refreshes `versions/` from vendor feeds |
 | `tools/cards.py` | Renders the link-preview images in `assets/og/` (needs a desktop browser) |

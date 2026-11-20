@@ -3,6 +3,9 @@
   "name": "LiteLLM",
   "about": "The newest release on each LiteLLM line we track. Each one fixes every LiteLLM bug we cover.",
   "feed": null,
+  "latest_from": [
+    "https://pypi.org/project/litellm/#history"
+  ],
   "filter": "litellm",
   "checked": "2026-11-20",
   "lines": [

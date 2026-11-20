@@ -3,6 +3,9 @@
   "name": "PHP",
   "about": "The newest release on each supported PHP line. Each one fixes every PHP bug we cover.",
   "feed": "php",
+  "latest_from": [
+    "https://www.php.net/releases/active.php"
+  ],
   "filter": "php",
   "checked": "2026-11-20",
   "lines": [

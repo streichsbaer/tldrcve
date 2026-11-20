@@ -1,0 +1,69 @@
+{
+  "id": "splunk-pass4symmkey",
+  "title": "Splunk empty shared-secret login bypass",
+  "cves": [
+    "CVE-2026-76535",
+    "CVE-2026-76536"
+  ],
+  "product": "Splunk Enterprise",
+  "evaluated": "2026-11-20",
+  "decision": "watch",
+  "recheck": "2026-11-27",
+  "why": "Serious on paper, but no exploit, no reported attacks, not on CISA KEV, coverage is mostly aggregators, and it's unclear whether ordinary installs have the empty shared secret the attack needs.",
+  "page_if": [
+    "attacks reported or CISA KEV listing",
+    "public exploit code",
+    "a source confirms default or common installs are exposed",
+    "mainstream news or researcher coverage"
+  ],
+  "facts": [
+    {
+      "text": "Splunk advisory SVD-2026-1103 (18 Nov 2026) lists 38 CVEs; the two critical ones are REST API login bypasses when the shared secret pass4SymmKey is empty.",
+      "cite": [
+        1
+      ]
+    },
+    {
+      "text": "CVE-2026-76535 (CVSS 9.1): someone with no login can run searches as an authenticated user through RapidDiag. CVE-2026-76536 (CVSS 9.4): on a standalone instance, someone with no login can read and change clustering settings; 10.6 isn't affected.",
+      "cite": [
+        1,
+        2
+      ]
+    },
+    {
+      "text": "Fixed in 10.6.1, 10.4.5, 10.2.9, 10.0.12 and 9.4.17. Workaround: set a non-empty pass4SymmKey in server.conf.",
+      "cite": [
+        1
+      ]
+    },
+    {
+      "text": "The scores come from the CVE record (CNA Cisco, 19 Nov); NVD hadn't analysed them on 20 Nov.",
+      "cite": [
+        2
+      ]
+    },
+    {
+      "text": "Unverified: whether an empty pass4SymmKey is the default on ordinary installs. The advisory doesn't say.",
+      "cite": [
+        1
+      ]
+    }
+  ],
+  "sources": [
+    {
+      "title": "Splunk SVD-2026-1103: affected and fixed versions, workaround",
+      "url": "https://advisory.splunk.com/advisories/SVD-2026-1103",
+      "date": "18 Nov"
+    },
+    {
+      "title": "CVE record: CVE-2026-76535",
+      "url": "https://www.cve.org/CVERecord?id=CVE-2026-76535"
+    }
+  ],
+  "history": [
+    {
+      "date": "2026-11-20",
+      "text": "Evaluated: watch, no page yet."
+    }
+  ]
+}

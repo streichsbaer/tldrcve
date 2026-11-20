@@ -3,6 +3,10 @@
   "name": "OpenSSH",
   "about": "The newest release on each OpenSSH line we track. Each one fixes every OpenSSH bug we cover.",
   "feed": null,
+  "latest_from": [
+    "https://www.openssh.org/releasenotes.html",
+    "https://pkgs.alpinelinux.org/packages?name=openssh&repo=main&arch=x86_64"
+  ],
   "filter": "openssh",
   "checked": "2026-11-20",
   "lines": [

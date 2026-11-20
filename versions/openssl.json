@@ -3,6 +3,9 @@
   "name": "OpenSSL",
   "about": "No fixed OpenSSL 4.x release yet for the bug we cover. It's low risk: see the bug's page before you rush.",
   "feed": null,
+  "latest_from": [
+    "https://github.com/openssl/openssl/releases"
+  ],
   "filter": "openssl",
   "checked": "2026-11-20",
   "lines": [],

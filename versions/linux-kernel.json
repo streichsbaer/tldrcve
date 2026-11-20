@@ -3,6 +3,11 @@
   "name": "Linux kernel",
   "about": "The newest release on each Linux kernel line we track. Each one fixes every Linux kernel bug we cover.",
   "feed": null,
+  "latest_from": [
+    "https://security-tracker.debian.org/tracker/source-package/linux",
+    "https://launchpad.net/ubuntu/+source/linux",
+    "https://access.redhat.com/hydra/rest/securitydata/csaf.json?package=kernel"
+  ],
   "filter": "linux",
   "checked": "2026-11-20",
   "lines": [

@@ -3,6 +3,9 @@
   "name": "NGINX Plus",
   "about": "The newest release on each NGINX Plus line we track. Each one fixes every NGINX Plus bug we cover.",
   "feed": null,
+  "latest_from": [
+    "https://docs.nginx.com/nginx/releases/"
+  ],
   "filter": "nginx plus",
   "checked": "2026-11-20",
   "lines": [
