@@ -34,7 +34,7 @@
   "affected": [
     {
       "label": "Ruby older than the fix",
-      "text": "Affected: 3.3.13 and earlier, 3.4.0–3.4.12 and 4.0.0–4.0.9. Ruby 3.2 and older are end of life and won't get a fix. Check the Ruby your app actually runs (its container image or `.ruby-version`), not just the system one. Distros may patch without changing the version; on 19 Nov Ubuntu and Debian were still evaluating.",
+      "text": "Affected: 3.3.13 and earlier, 3.4.0–3.4.12 and 4.0.0–4.0.9. Ruby 3.2 and older are end of life and won't get a fix. Check the Ruby your app actually runs (its container image or `.ruby-version`), not just the system one. Distros may patch without changing the version; on 20 Nov Ubuntu (priority Medium) and Debian were still evaluating.",
       "cmd": "ruby -v",
       "cite": [
         1,
@@ -163,6 +163,10 @@
     }
   ],
   "changes": [
+    {
+      "date": "2026-11-20",
+      "text": "Rechecked: no fixed GitLab, GitHub Enterprise Server or Chatwoot release yet; Veria's 25 Nov plan unchanged."
+    },
     {
       "date": "2026-11-20",
       "text": "Veria moved its exploit release to 25 Nov (later if vendors haven't shipped fixes). Safe versions added."

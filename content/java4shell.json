@@ -15,7 +15,7 @@
   "updated": "2026-11-20",
   "verdict": "if",
   "tile_line": "Only on newer Intel/AMD CPUs.",
-  "summary": "A bug in Java's Base64 decoder can let an attacker run code on your server. It only works on newer Intel/AMD CPUs, so on most systems a two-command check settles whether you need to rush.",
+  "summary": "A bug in Java's Base64 decoder can let an attacker run code on your server. It only works on newer Intel/AMD CPUs, so on most systems a two-command check settles whether you need to rush. Proof-of-concept code for the memory corruption is public, but no attacks are reported.",
   "affected": [
     {
       "label": "Java 17.0.6+, 21, 25 or 27",
@@ -50,7 +50,7 @@
   "do": [
     {
       "label": "Patch Java",
-      "text": "Oracle: 17.0.21.1, 21.0.13.1, 25.0.5.1 and 27.0.1.1 (17 Nov). Corretto shipped all four lines on 17 Nov. Temurin's fixed builds are out for Linux, Alpine and Apple-silicon Macs, but on 19 Nov not yet for Windows or the `eclipse-temurin` Docker images. Red Hat, Ubuntu and Debian have fixed packages. For Oracle's Java 8 Performance Pack, see Oracle's advisory.",
+      "text": "Oracle: 17.0.21.1, 21.0.13.1, 25.0.5.1 and 27.0.1.1 (17 Nov). Corretto shipped all four lines on 17 Nov. Temurin's fixed builds are out for x64 Linux, Alpine and Apple-silicon Macs, but on 20 Nov not yet for Windows or the `eclipse-temurin` Docker images. Red Hat, Ubuntu and Debian have fixed packages. For Oracle's Java 8 Performance Pack, see Oracle's advisory.",
       "cite": [
         16,
         15,
@@ -76,11 +76,14 @@
     },
     {
       "label": "Check bundled Java",
-      "text": "Common tools like Jira, Confluence, Artifactory, Jenkins and many others ship with their own Java. Updating the system Java doesn't fix them: update the tool, or set the flag in its own JVM settings. Red Hat still lists its Keycloak build, JBoss EAP OpenJDK 17 images and OpenShift Pipelines as affected.",
+      "text": "Common tools like Jira, Confluence, Artifactory, Jenkins and many others ship with their own Java. Updating the system Java doesn't fix them: update the tool, or set the flag in its own JVM settings. Red Hat still lists its Keycloak build, JBoss EAP OpenJDK 17 images and OpenShift Pipelines as affected. Appliances too: Cisco (for example Catalyst Center and Finesse) and Palo Alto (Privilege Threat Analytics, Remote Access Connector, the on-prem HTML5 Gateway) list affected products, and Fortinet is still checking. Their firewalls (Cisco ASA/FTD, PAN-OS, FortiOS) aren't affected.",
       "cite": [
         7,
         9,
-        12
+        12,
+        20,
+        21,
+        22
       ]
     }
   ],
@@ -92,7 +95,7 @@
       "17": "17.0.21.1"
     }
   },
-  "slack": "Java4Shell (CVE-2026-114938): a Java Base64 bug that can lead to RCE. You're only affected if ALL three are true: Java 17.0.6+/21/25/27 unpatched, a CPU with AVX-512 VBMI (Intel Ice Lake+ / AMD Zen 4+), and untrusted input that gets Base64-decoded. Check the host: grep avx512vbmi /proc/cpuinfo. No attacks seen yet. Fix: Java 17.0.21.1 / 21.0.13.1 / 25.0.5.1 / 27.0.1.1 or your vendor's build (Temurin Windows and Docker images still pending on 19 Nov).",
+  "slack": "Java4Shell (CVE-2026-114938): a Java Base64 bug that can lead to RCE. You're only affected if ALL three are true: Java 17.0.6+/21/25/27 unpatched, a CPU with AVX-512 VBMI (Intel Ice Lake+ / AMD Zen 4+), and untrusted input that gets Base64-decoded. Check the host: grep avx512vbmi /proc/cpuinfo. PoC code for the memory corruption is public (Cisco); no attacks seen yet. Fix: Java 17.0.21.1 / 21.0.13.1 / 25.0.5.1 / 27.0.1.1 or your vendor's build (Temurin Windows and Docker images still pending on 20 Nov).",
   "sources": [
     {
       "title": "Calif: original disclosure",
@@ -178,9 +181,32 @@
     {
       "title": "Debian tracker: fixed openjdk packages",
       "url": "https://security-tracker.debian.org/tracker/CVE-2026-114938"
+    },
+    {
+      "title": "Cisco: affected products, PoC code public, no malicious use",
+      "url": "https://sec.cloudapps.cisco.com/security/center/content/CiscoSecurityAdvisory/cisco-sa-nov2026-java-rce-eCa6ss9z",
+      "date": "19 Nov"
+    },
+    {
+      "title": "Palo Alto Networks: affected products and fixes, PAN-OS not affected",
+      "url": "https://security.paloaltonetworks.com/CVE-2026-114938",
+      "date": "19 Nov"
+    },
+    {
+      "title": "Fortinet FG-IR-26-278: still investigating, FortiOS not affected",
+      "url": "https://fortiguard.fortinet.com/psirt/FG-IR-26-278",
+      "date": "19 Nov"
+    },
+    {
+      "title": "Cisco Talos: no exploitation seen yet",
+      "url": "https://blog.talosintelligence.com/java4shell/"
     }
   ],
   "changes": [
+    {
+      "date": "2026-11-20",
+      "text": "Cisco, Palo Alto and Fortinet appliance advisories added; PoC code for the memory corruption is public; Temurin Windows and Docker images still pending."
+    },
     {
       "date": "2026-11-20",
       "text": "Corretto, Ubuntu and Debian fixes out; Temurin Windows and Docker images still pending. Oracle fixed builds now cited to Oracle. Safe versions added."
@@ -217,10 +243,13 @@
     ],
     "exploit": [
       1,
-      7
+      7,
+      20
     ],
     "attacks": [
-      3
+      3,
+      20,
+      23
     ],
     "kev": [
       9,

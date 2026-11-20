@@ -1,0 +1,76 @@
+{
+  "id": "sap-kernel",
+  "name": "SAP kernel and Web Dispatcher",
+  "about": "The first patch level on each SAP kernel release that fixes the SAP bugs we cover. Any later patch level is also fixed. SAP's download portal needs a login, so we can't confirm the newest level on each release.",
+  "feed": null,
+  "filter": "sap",
+  "checked": "2026-11-20",
+  "lines": [
+    {
+      "line": "Kernel 9.20",
+      "key": "9.20",
+      "latest": "9.20 PL 11"
+    },
+    {
+      "line": "Kernel 9.18",
+      "key": "9.18",
+      "latest": "9.18 PL 37"
+    },
+    {
+      "line": "Kernel 9.16",
+      "key": "9.16",
+      "latest": "9.16 PL 111"
+    },
+    {
+      "line": "Kernel 7.93",
+      "key": "7.93",
+      "latest": "7.93 PL 420",
+      "note": "PL 401 (updated stack) is also fixed; PL 419 isn't"
+    },
+    {
+      "line": "Kernel 7.77",
+      "key": "7.77",
+      "latest": "7.77 PL 914"
+    },
+    {
+      "line": "Kernel 7.54",
+      "key": "7.54",
+      "latest": "7.54 PL 710"
+    },
+    {
+      "line": "Kernel 7.53",
+      "key": "7.53",
+      "latest": "7.53 PL 1616"
+    },
+    {
+      "line": "HANA 2.0 Rev. 089 (XS)",
+      "key": "hana-089",
+      "latest": "2.00.089.05"
+    },
+    {
+      "line": "HANA 2.0 Rev. 079 (XS)",
+      "key": "hana-079",
+      "latest": "2.00.079.11"
+    }
+  ],
+  "older": "Kernel 7.22 isn't affected. XS Advanced 1.0 SP05 is fixed in Patch 4.",
+  "unfixed": [
+    {
+      "line": "Kernels 7.40, 7.41, 7.42, 7.45, 7.49, 7.73, 7.81, 7.85, 7.89",
+      "note": "Out of maintenance: no fix. Move to a supported kernel.",
+      "pages": [
+        "sap-icm2shell"
+      ]
+    }
+  ],
+  "sources": [
+    {
+      "title": "Onapsis: fixed patch levels per kernel release",
+      "url": "https://onapsis.com/blog/icm2shell-cve-2026-76964-cve-2026-89126-sap-netweaver-web-dispatcher-threat-advisory/"
+    },
+    {
+      "title": "SAP: November 2026 Patch Day",
+      "url": "https://support.sap.com/en/my-support/knowledge-base/security-notes-news/november-2026.html"
+    }
+  ]
+}

@@ -1,0 +1,186 @@
+{
+  "slug": "synology-dsm",
+  "name": "Synology DSM RCE",
+  "aliases": [
+    "synology",
+    "dsm",
+    "diskstation",
+    "diskstation manager",
+    "beestation",
+    "bsm",
+    "nas",
+    "c3rb3r",
+    "cerber",
+    "ransomware",
+    "synology-sa-24:20",
+    "cve-2024-10441"
+  ],
+  "cves": [
+    "CVE-2024-10441"
+  ],
+  "product": "Synology DSM",
+  "also_in": [
+    "BeeStation"
+  ],
+  "disclosed": "2024-11-05",
+  "news": "2026-11-18",
+  "updated": "2026-11-20",
+  "verdict": "now",
+  "tile_line": "Ransomware hits old DSM. In CISA KEV, due 21 Nov.",
+  "summary": "A bug in Synology's NAS software (DSM) lets an attacker with no login run code on the NAS. Synology fixed it in Nov 2024, but on 29 Oct 2026 it warned that ransomware (C3RB3R) is hitting NAS boxes on outdated DSM, and CISA added this bug to its exploited list on 18 Nov 2026. Current DSM builds are fixed.",
+  "status": {
+    "exploit": "demonstrated",
+    "attacks": "seen",
+    "kev": {
+      "added": "2026-11-18",
+      "due": "2026-11-21"
+    },
+    "no_login": true,
+    "scare": 3.2
+  },
+  "affected": [
+    {
+      "label": "DSM older than the 2024 fix",
+      "text": "DSM 7.2.2 before 7.2.2-72806 Update 1, 7.2.1 before 7.2.1-69057 Update 6, 7.2 before 7.2-64570 Update 4, or 7.1 before 7.1.1-42962 Update 7; BeeStation OS before 1.1-65374. DSM 7.3 and 7.4 came out later and aren't listed. For DSM 6.2 the CVE record says \"unknown\", while Synology's advisory lists a Moderate fix in 6.2.4-25556 Update 8. Synology's warning says the bug was \"patched in December 2024\"; the DSM 7 fixes shipped in Nov 2024. Control Panel > Info Center shows your version.",
+      "cite": [
+        2,
+        3,
+        4,
+        5,
+        7,
+        10
+      ]
+    },
+    {
+      "label": "Attackers can reach DSM",
+      "text": "The bug needs no login and works over the network. A NAS with the DSM web interface open to the internet is the obvious target; BleepingComputer's advice is to block that access.",
+      "cite": [
+        4,
+        6
+      ]
+    }
+  ],
+  "do": [
+    {
+      "label": "Update DSM now",
+      "text": "Install the newest DSM your model offers. On 12 Oct 2026 that was 7.4.1-90080 Update 1, 7.3.2-86009 Update 5, 7.2.2-72806 Update 10 or 7.2.1-69057 Update 13; Synology says available versions vary by model. BeeStation: 1.1-65374 or newer. Synology hasn't named the bug the attackers use: CISA lists this one, while a report citing 360 blames Synology's Sept 2026 bugs (SA-26:13). These newest builds fix both.",
+      "versions": [
+        "synology-dsm"
+      ],
+      "cite": [
+        7,
+        11,
+        3,
+        5,
+        1,
+        9,
+        8
+      ]
+    },
+    {
+      "label": "Turn on automatic updates",
+      "text": "Synology recommends it. In Control Panel > Update & Restore > Update Settings, choose to install important updates automatically.",
+      "cite": [
+        5,
+        11
+      ]
+    },
+    {
+      "label": "Take DSM off the internet",
+      "text": "Block outside access to the DSM web interface.",
+      "cite": [
+        6
+      ]
+    },
+    {
+      "label": "Look for signs of C3RB3R",
+      "text": "Victims report files renamed with a `.L0CK3D` extension and a ransom note called `read-me3.txt`.",
+      "cite": [
+        6
+      ]
+    }
+  ],
+  "fixed_in": {
+    "synology-dsm": {
+      "7.2.2": "7.2.2-72806 Update 1",
+      "7.2.1": "7.2.1-69057 Update 6",
+      "7.2": "7.2-64570 Update 4",
+      "7.1": "7.1.1-42962 Update 7"
+    }
+  },
+  "slack": "Synology DSM CVE-2024-10441: an attacker with no login can run code on a Synology NAS. Fixed in Nov 2024, but Synology warned on 29 Oct 2026 that C3RB3R ransomware is hitting outdated DSM, and CISA added this CVE to KEV on 18 Nov (due 21 Nov). Affected: DSM 7.1 to 7.2.2 below the 2024 updates, BeeStation OS below 1.1-65374. Synology hasn't named the exploited bug; a report citing 360 blames the Sept 2026 SA-26:13 bugs instead. Update to the newest DSM for your model (fixes both), turn on automatic updates, and keep the DSM web interface off the internet.",
+  "sources": [
+    {
+      "title": "CISA KEV: added 18 Nov, due 21 Nov, ransomware use \"Unknown\"",
+      "url": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog?field_cve=CVE-2024-10441",
+      "date": "18 Nov"
+    },
+    {
+      "title": "Synology SA-24:20: DSM fixed versions, Critical, Pwn2Own 2024",
+      "url": "https://www.synology.com/en-global/security/advisory/Synology_SA_24_20",
+      "date": "5 Nov 2024"
+    },
+    {
+      "title": "Synology SA-24:23: BeeStation OS fixed in 1.1-65374",
+      "url": "https://www.synology.com/en-global/security/advisory/Synology_SA_24_23",
+      "date": "5 Nov 2024"
+    },
+    {
+      "title": "CVE record (Synology): affected versions, CVSS 9.8, no login",
+      "url": "https://www.cve.org/CVERecord?id=CVE-2024-10441"
+    },
+    {
+      "title": "Synology: ransomware warning, update DSM, turn on auto-update",
+      "url": "https://www.synology.com/en-global/company/news/article/C3RB3R/Synology%20urges%20users%20to%20update%20DSM%20following%20ransomware%20attacks%20on%20outdated%20DSM%20versions",
+      "date": "29 Oct"
+    },
+    {
+      "title": "BleepingComputer: C3RB3R attacks, ransom note, block DSM from internet",
+      "url": "https://www.bleepingcomputer.com/news/security/synology-warns-customers-of-ongoing-c3rb3r-ransomware-attacks/",
+      "date": "2 Nov"
+    },
+    {
+      "title": "Synology: DSM release notes, builds and dates (DS920+)",
+      "url": "https://www.synology.com/en-global/releaseNote/DSM"
+    },
+    {
+      "title": "Synology SA-26:13: newer critical DSM bugs, fixed builds",
+      "url": "https://www.synology.com/en-global/security/advisory/Synology_SA_26_13",
+      "date": "18 Sep"
+    },
+    {
+      "title": "Techaeris: 360 blames the SA-26:13 bugs instead",
+      "url": "https://techaeris.com/2026/10/31/synology-nas-ransomware-alert-c3rb3r/",
+      "date": "31 Oct"
+    },
+    {
+      "title": "Synology docs: Info Center shows the DSM version",
+      "url": "https://kb.synology.com/en-global/DSM/help/DSM/AdminCenter/system_info_center?version=7"
+    },
+    {
+      "title": "Synology docs: automatic updates; versions vary by model",
+      "url": "https://kb.synology.com/en-global/DSM/help/DSM/AdminCenter/system_dsmupdate?version=7"
+    }
+  ],
+  "changes": [
+    {
+      "date": "2026-11-20",
+      "text": "Published."
+    }
+  ],
+  "status_cite": {
+    "no_login": [
+      4
+    ],
+    "exploit": [
+      2
+    ],
+    "attacks": [
+      1,
+      5
+    ],
+    "kev": [
+      1
+    ]
+  }
+}

@@ -1,0 +1,150 @@
+{
+  "slug": "redcap-survey-rce",
+  "name": "REDCap survey RCE",
+  "aliases": [
+    "redcap",
+    "vanderbilt",
+    "research electronic data capture",
+    "survey",
+    "dataimportcontroller",
+    "parcelcontroller",
+    "bladeone",
+    "xmrig",
+    "cve-2026-90817"
+  ],
+  "cves": [
+    "CVE-2026-90817"
+  ],
+  "product": "REDCap",
+  "disclosed": "2026-09-20",
+  "news": "2026-11-18",
+  "updated": "2026-11-20",
+  "verdict": "now",
+  "tile_line": "Attacks since 7 Oct. In CISA KEV, due 21 Nov.",
+  "summary": "A bug in REDCap, the research survey and data tool used by over 8,500 institutions, lets anyone who has a public survey link run code on the server, with no login. Exploit code has been public since 1 Oct 2026, Palo Alto's Unit 42 reported attackers using it to install crypto miners on 7 Oct, and CISA added it to its exploited list on 18 Nov. REDCap 16.0.49, 17.3.10 and 17.4.4 fix it.",
+  "status": {
+    "exploit": "public",
+    "attacks": "seen",
+    "kev": {
+      "added": "2026-11-18",
+      "due": "2026-11-21"
+    },
+    "no_login": true,
+    "scare": 3.5
+  },
+  "affected": [
+    {
+      "label": "REDCap 13.3.0 or newer, unfixed",
+      "text": "The bug is in REDCap 13.3.0 and later. Fixed in 16.0.49 (LTS), 17.3.10 (LTS) and 17.4.4 (Standard). The CVE record lists only those three as fixed, so other branches have no fix.",
+      "cite": [
+        2
+      ]
+    },
+    {
+      "label": "Attacker has a public survey link",
+      "text": "The attack needs one valid public survey hash (the `s=` value in a survey link). Securifera says these are easy to find through search engines, urlscan or the Wayback Machine.",
+      "cite": [
+        2,
+        3,
+        4
+      ]
+    },
+    {
+      "label": "Attacker can reach the server",
+      "text": "Unit 42 describes attacks on public-facing REDCap servers. Public survey links are made to be shared with people who have no login.",
+      "cite": [
+        3,
+        4
+      ]
+    }
+  ],
+  "do": [
+    {
+      "label": "Upgrade REDCap",
+      "text": "Upgrade to 16.0.49 or 17.3.10 (LTS) or 17.4.4 (Standard), or a newer release. REDCap says it shipped the fix within two days of learning about the bug in September 2026. Downloads and release notes need a REDCap Community login.",
+      "versions": [
+        "redcap"
+      ],
+      "cite": [
+        2,
+        3,
+        6
+      ]
+    },
+    {
+      "label": "Until then: limit public surveys",
+      "text": "Securifera's stopgap: disable or restrict public surveys and block survey requests to the root dispatcher, `DataImportController` and `ParcelController`. Treat this as temporary.",
+      "cite": [
+        4
+      ]
+    },
+    {
+      "label": "Check for signs of attack",
+      "text": "In web logs, look for survey requests with an encoded `__passthru` (such as `%2569ndex.php`) or `route=DataImportController:index` or `ParcelController:show`. Also check for unexpected changes under `temp/cache` and processes started by the web server user. Unit 42 saw miners running as `syslog-ng-…` with files under `/var/tmp/.syslog-…`.",
+      "cite": [
+        4,
+        3
+      ]
+    }
+  ],
+  "fixed_in": {
+    "redcap": {
+      "17.4": "17.4.4",
+      "17.3": "17.3.10",
+      "16.0": "16.0.49"
+    }
+  },
+  "slack": "REDCap CVE-2026-90817: anyone with a public survey link can run code on a REDCap server (13.3.0 and later), no login needed. Public exploit since 1 Oct 2026, Unit 42 saw crypto-miner attacks on 7 Oct, and CISA added it to KEV on 18 Nov (due 21 Nov). Fixed in 16.0.49 / 17.3.10 (LTS) and 17.4.4 (Standard). Until you upgrade, restrict public surveys and check logs for encoded __passthru requests to DataImportController.",
+  "sources": [
+    {
+      "title": "CISA KEV: added 18 Nov, due 21 Nov",
+      "url": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog?field_cve=CVE-2026-90817",
+      "date": "18 Nov"
+    },
+    {
+      "title": "CVE record (Securifera): 13.3.0 and later, fixed versions, CVSS 9.8",
+      "url": "https://www.cve.org/CVERecord?id=CVE-2026-90817",
+      "date": "20 Sep"
+    },
+    {
+      "title": "Unit 42: attacks installing XMRig miners; REDCap statement",
+      "url": "https://github.com/PaloAltoNetworks/Unit42-timely-threat-intel/blob/main/2026-10-07-XMRig-campaign-through-CVE-2026-90817.txt",
+      "date": "7 Oct"
+    },
+    {
+      "title": "Securifera: how the bug works, stopgaps, what to look for",
+      "url": "https://www.securifera.com/blog/2026/09/27/survey-says-remote-code-execution-cve-2026-90817/",
+      "date": "27 Sep"
+    },
+    {
+      "title": "Securifera GitHub: public exploit code",
+      "url": "https://github.com/securifera/CVE-2026-90817",
+      "date": "1 Oct"
+    },
+    {
+      "title": "REDCap: 8,547 institutions; Community site needs a login",
+      "url": "https://projectredcap.org/resources/community/"
+    }
+  ],
+  "changes": [
+    {
+      "date": "2026-11-20",
+      "text": "Published."
+    }
+  ],
+  "status_cite": {
+    "no_login": [
+      2
+    ],
+    "exploit": [
+      5
+    ],
+    "attacks": [
+      3,
+      1
+    ],
+    "kev": [
+      1
+    ]
+  }
+}

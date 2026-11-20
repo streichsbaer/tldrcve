@@ -32,6 +32,11 @@
       "latest": "9.1.4"
     },
     {
+      "line": "Puppet Core 8",
+      "key": "Puppet Core 8",
+      "latest": "8.22.3"
+    },
+    {
       "line": "Puppet Enterprise 2026.0",
       "key": "pe-2026.0",
       "latest": "2026.0.1"
@@ -47,7 +52,7 @@
       "latest": "2023.8.13"
     }
   ],
-  "older": "openvoxdb: 9.2.0 / 8.18.0. Debian: bookworm 7.23.0-1+deb12u1, trixie 8.10.0-5+deb13u1.",
+  "older": "openvoxdb: 9.2.0 / 8.18.0 or later. Debian: bookworm 7.23.0-1+deb12u1, trixie 8.10.0-5+deb13u1.",
   "sources": [
     {
       "title": "OpenVox GHSA-ffr6-rwpm-p5wq: versions, exploit",
@@ -72,6 +77,10 @@
     {
       "title": "CVE record (Perforce): Puppet Enterprise fixed versions",
       "url": "https://www.cve.org/CVERecord?id=CVE-2026-115731"
+    },
+    {
+      "title": "Puppet Core 8 release notes",
+      "url": "https://help.puppet.com/core/8/Content/PuppetCore/PuppetReleaseNotes/release_notes_puppet_x-8-22-2.htm"
     }
   ]
 }

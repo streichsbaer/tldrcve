@@ -1,0 +1,185 @@
+{
+  "slug": "roller-xmlrpc",
+  "name": "Roller XML-RPC",
+  "aliases": [
+    "apache roller",
+    "roller",
+    "xml-rpc",
+    "xmlrpc",
+    "roller-services/xmlrpc",
+    "enabledforextensions",
+    "deserialization",
+    "cve-2026-129448",
+    "cve-2026-82384"
+  ],
+  "cves": [
+    "CVE-2026-129448",
+    "CVE-2026-82384"
+  ],
+  "ghsa": [
+    "GHSA-pxp4-phq9-fx2q"
+  ],
+  "product": "Apache Roller",
+  "disclosed": "2026-09-25",
+  "news": "2026-11-17",
+  "updated": "2026-11-20",
+  "verdict": "now",
+  "tile_line": "Apache says exploited. No login. Fixed in 6.1.6.",
+  "summary": "A bug in Apache Roller, a Java blog server, lets anyone who can reach the site send one crafted request to its XML-RPC address and, in the worst case, run their own code, without logging in. Default installs from 4.0.0 through 6.1.5 are affected, even with XML-RPC switched off. Apache rates it Critical (CVSS 9.8) and says it is being actively exploited; one researcher's public code reaches the bug but says running code on a stock, up-to-date setup needs extra work. 6.1.6 (24 Sep 2026) and later fix it.",
+  "status": {
+    "exploit": "public",
+    "attacks": "seen",
+    "kev": null,
+    "no_login": true,
+    "scare": 3.4
+  },
+  "affected": [
+    {
+      "label": "Roller 4.0.0 to 6.1.5",
+      "text": "It's one bug with two CVEs: CVE-2026-129448 covers 4.0.0 through 6.1.4, and CVE-2026-82384 (25 Sep 2026) covers 6.1.5. 6.1.6 and later are fixed. Some news sites name 6.1.5 as the fix; Apache says 6.1.6.",
+      "cite": [
+        1,
+        2,
+        4
+      ]
+    },
+    {
+      "label": "XML-RPC extensions still on",
+      "text": "Every release up to 6.1.5 ships with `enabledForExtensions` set to `true` and `/roller-services/xmlrpc` mapped, so default installs are exposed. Turning XML-RPC off in the admin settings (off by default) does not help. Run this in Roller's webapp folder; `<param-value>true</param-value>` means exposed.",
+      "cmd": "grep -A1 enabledForExtensions WEB-INF/web.xml",
+      "cite": [
+        1,
+        2,
+        7,
+        8
+      ]
+    },
+    {
+      "label": "Attackers can reach the site",
+      "text": "One web request to `/roller-services/xmlrpc` is enough. No login and no user action are needed.",
+      "cite": [
+        1,
+        3
+      ]
+    }
+  ],
+  "do": [
+    {
+      "label": "Upgrade to Roller 6.1.7",
+      "text": "6.1.6 (24 Sep 2026) fixes this bug; 6.1.7 (11 Nov 2026) is the newest and also fixes CVE-2026-123374, a separate deserialization bug in ping responses. Read the 6.1.7 behaviour changes first: for example, Planet is now off by default. Apache doesn't patch older lines.",
+      "versions": [
+        "apache-roller"
+      ],
+      "cite": [
+        4,
+        5,
+        6,
+        12,
+        13
+      ]
+    },
+    {
+      "label": "Can't upgrade yet?",
+      "text": "In `WEB-INF/web.xml`, set `enabledForExtensions` to `false`, or remove the `/roller-services/xmlrpc` servlet mapping. Then restart Roller. The admin-screen switch alone is not enough.",
+      "cite": [
+        1
+      ]
+    },
+    {
+      "label": "Look for signs of attack",
+      "text": "Attacks are POST requests to `/roller-services/xmlrpc`. Apache hasn't published other signs, attacker details or how many sites were hit. If you were exposed, check the server for changes you didn't make.",
+      "cite": [
+        1,
+        10
+      ]
+    }
+  ],
+  "fixed_in": {
+    "apache-roller": {
+      "6.1": "6.1.6"
+    }
+  },
+  "slack": "Apache Roller CVE-2026-129448 (same bug as CVE-2026-82384): anyone who can reach a Roller blog can run code on it without logging in, via crafted XML-RPC requests to /roller-services/xmlrpc. Default installs from 4.0.0 through 6.1.5 are affected, even with XML-RPC turned off in the admin UI. Apache rates it Critical (CVSS 9.8) and says it is being actively exploited (no details given); not on CISA KEV as of 18 Nov. Public proof-of-concept code reaches the bug; the researcher says code execution on a stock, up-to-date setup needs a gadget chain public tools don't provide. Fixed in 6.1.6; upgrade to 6.1.7, the newest. Stopgap: set enabledForExtensions to false in WEB-INF/web.xml or remove the XML-RPC servlet mapping, then restart.",
+  "sources": [
+    {
+      "title": "Apache: CVE-2026-129448 advisory, 4.0.0-6.1.4, actively exploited",
+      "url": "https://lists.apache.org/thread/lnz4s26tv6hdo03wngtdbpfj4hg4gtds",
+      "date": "17 Nov"
+    },
+    {
+      "title": "Apache: CVE-2026-82384 advisory, 6.1.5, default setup affected",
+      "url": "https://lists.apache.org/thread/cc0jck13nb9vvcmzxzwotr6n16mx28z9",
+      "date": "25 Sep"
+    },
+    {
+      "title": "CVE record: CVSS 9.8, no login; CISA SSVC exploitation none (18 Nov)",
+      "url": "https://www.cve.org/CVERecord?id=CVE-2026-129448",
+      "date": "17 Nov"
+    },
+    {
+      "title": "Apache Roller: security page, 6.1.6 and 6.1.7 release dates and fixes",
+      "url": "https://roller.apache.org/security.html"
+    },
+    {
+      "title": "Apache Security: Roller advisories, CVE-2026-123374 fixed in 6.1.7",
+      "url": "https://security.apache.org/projects/roller/"
+    },
+    {
+      "title": "Apache Roller GitHub: the fix (PR #171)",
+      "url": "https://github.com/apache/roller/pull/171",
+      "date": "5 Sep"
+    },
+    {
+      "title": "Roller 6.1.5 source: extensions on, XML-RPC endpoint always mapped",
+      "url": "https://github.com/apache/roller/blob/roller-6.1.5/app/src/main/webapp/WEB-INF/web.xml"
+    },
+    {
+      "title": "Roller 6.1.5 source: XML-RPC setting off by default",
+      "url": "https://github.com/apache/roller/blob/roller-6.1.5/app/src/main/resources/org/apache/roller/weblogger/config/runtimeConfigDefs.xml"
+    },
+    {
+      "title": "CISA KEV catalog: not listed (18 Nov release)",
+      "url": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog"
+    },
+    {
+      "title": "Tuxshin Security: public PoC, scanner and lab; RCE needs a gadget chain",
+      "url": "https://github.com/Yanixos/APACHE-CVE-2026-129448",
+      "date": "18 Nov"
+    },
+    {
+      "title": "Public PoC for CVE-2026-82384 (6.1.5)",
+      "url": "https://github.com/murrez/CVE-2026-82384",
+      "date": "28 Sep"
+    },
+    {
+      "title": "Apache Roller: 6.1.7 changes and behaviour changes",
+      "url": "https://github.com/apache/roller/blob/roller-6.1.7/CHANGES.md"
+    },
+    {
+      "title": "Apache Roller: downloads, 6.1.7 is the current release",
+      "url": "https://roller.apache.org/downloads/downloads.html"
+    }
+  ],
+  "changes": [
+    {
+      "date": "2026-11-20",
+      "text": "Published."
+    }
+  ],
+  "status_cite": {
+    "no_login": [
+      1,
+      3
+    ],
+    "exploit": [
+      10,
+      11
+    ],
+    "attacks": [
+      1
+    ],
+    "kev": [
+      9
+    ]
+  }
+}

@@ -23,16 +23,18 @@
   "affected": [
     {
       "label": "Server below a fixed release",
-      "text": "OpenVox Server below 9.2.0 / 8.18.0, Puppet Enterprise before 2023.8.13 / 2025.12.1 / 2026.0.1, and Puppet Core before 9.1.3 (Puppet Server 9.0.24.1). OpenVox's advisory says up to 9.1.0 / 8.17.0, but 9.1.1 and 8.17.1 shipped before the fix, so count them as affected. Older open-source Puppet gets no fix, though Debian patched its puppet packages (bookworm 7.23.0-1+deb12u1, trixie 8.10.0-5+deb13u1). The command shows the Puppet Server version, not the Puppet Enterprise release.",
+      "text": "OpenVox Server below 9.2.0 / 8.18.0, Puppet Enterprise before 2023.8.13 / 2025.12.1 / 2026.0.1, and Puppet Core before 9.1.3 / 8.22.2 (Puppet Server 9.0.24.1 / 8.9.13). OpenVox's advisory says up to 9.1.0 / 8.17.0, but 9.1.1 and 8.17.1 shipped before the fix, so count them as affected. Older open-source Puppet gets no fix, though Debian patched its puppet packages (bookworm 7.23.0-1+deb12u1, trixie 8.10.0-5+deb13u1). The command shows the Puppet Server version, not the Puppet Enterprise release.",
       "cmd": "puppetserver --version",
       "cite": [
         2,
         3,
-        9,
         7,
+        8,
+        9,
         10,
         11,
-        8
+        13,
+        14
       ]
     },
     {
@@ -54,14 +56,16 @@
   "do": [
     {
       "label": "Upgrade the server",
-      "text": "OpenVox: server 9.2.0 / 8.18.0, agent 9.3.0 / 8.32.0, openvoxdb 9.2.0 / 8.18.0. Puppet Enterprise: 2023.8.13 / 2025.12.1 / 2026.0.1. Puppet Core: 9.1.3 with Puppet Server 9.0.24.1. Debian: install the patched packages. Other open-source Puppet: move to OpenVox, Puppet Core or Enterprise.",
+      "text": "OpenVox: server 9.2.0 / 8.18.0, agent 9.3.0 / 8.32.0, openvoxdb 9.2.0 / 8.18.0. Puppet Enterprise: 2023.8.13 / 2025.12.1 / 2026.0.1. Puppet Core: 9.1.3 or 8.22.2 (Puppet Server 9.0.24.1 or 8.9.13). Debian: install the patched packages. Other open-source Puppet: move to OpenVox, Puppet Core or Enterprise.",
       "cite": [
         2,
         3,
         7,
+        8,
         10,
         11,
-        8
+        13,
+        14
       ],
       "versions": [
         "openvox"
@@ -93,10 +97,11 @@
       "Puppet Core 9": "9.1.3",
       "pe-2026.0": "2026.0.1",
       "pe-2025.12": "2025.12.1",
-      "pe-2023.8": "2023.8.13"
+      "pe-2023.8": "2023.8.13",
+      "Puppet Core 8": "8.22.2"
     }
   },
-  "slack": "Puppet Server RCE (CVE-2026-115731): anyone with a signed agent cert can run code on Puppet Server (and reach the CA key). Public exploit, in CISA KEV (due 1 Dec). Upgrade to openvox-server 9.2.0 / 8.18.0, PE 2023.8.13 / 2025.12.1 / 2026.0.1, or Puppet Core 9.1.3 (Puppet Server 9.0.24.1). Until then: autosign = false.",
+  "slack": "Puppet Server RCE (CVE-2026-115731): anyone with a signed agent cert can run code on Puppet Server (and reach the CA key). Public exploit, in CISA KEV (due 1 Dec). Upgrade to openvox-server 9.2.0 / 8.18.0, PE 2023.8.13 / 2025.12.1 / 2026.0.1, or Puppet Core 9.1.3 / 8.22.2 (Puppet Server 9.0.24.1 / 8.9.13). Until then: autosign = false.",
   "sources": [
     {
       "title": "CISA KEV: added 17 Nov, due 1 Dec",
@@ -149,9 +154,21 @@
     {
       "title": "OpenVox: releases",
       "url": "https://github.com/OpenVoxProject/openvox/releases"
+    },
+    {
+      "title": "Puppet Core 8.22.2 release notes: fixes both CVEs",
+      "url": "https://help.puppet.com/core/8/Content/PuppetCore/PuppetReleaseNotes/release_notes_puppet_x-8-22-2.htm"
+    },
+    {
+      "title": "Puppet Server 8 release notes: 8.9.13 patched",
+      "url": "https://help.puppet.com/core/8/Content/PuppetCore/server/release_notes.htm"
     }
   ],
   "changes": [
+    {
+      "date": "2026-11-20",
+      "text": "Puppet Core 8.22.2 (Puppet Server 8.9.13) fixes it on the 8.x line."
+    },
     {
       "date": "2026-11-20",
       "text": "Puppet Core 9.1.3 (Puppet Server 9.0.24.1) fixes it. OpenVox Server 9.1.1 / 8.17.1 count as affected too. Safe versions added."

@@ -1,0 +1,195 @@
+{
+  "slug": "sap-icm2shell",
+  "name": "SAP ICM2SHELL",
+  "aliases": [
+    "sap",
+    "sapbleed",
+    "icm2shell",
+    "netweaver",
+    "sap netweaver",
+    "as abap",
+    "icm",
+    "internet communication manager",
+    "web dispatcher",
+    "sap web dispatcher",
+    "hana xs",
+    "s/4hana",
+    "websocket",
+    "3778530",
+    "3778556",
+    "cve-2026-76964",
+    "cve-2026-89126"
+  ],
+  "cves": [
+    "CVE-2026-76964",
+    "CVE-2026-89126"
+  ],
+  "product": "SAP ICM / Web Dispatcher",
+  "disclosed": "2026-11-10",
+  "updated": "2026-11-20",
+  "verdict": "if",
+  "tile_line": "If SAP's web ports are reachable. No attacks yet.",
+  "summary": "A memory bug in how SAP's built-in web server handles WebSocket traffic lets an attacker with no login leak server memory or run code as the SAP admin user (<sid>adm). It hits the ICM in NetWeaver AS ABAP and every SAP Web Dispatcher, including the one in HANA XS, and WebSocket support is on by default. SAP rates it 10.0 and fixed it on 10 Nov 2026; Onapsis (\"ICM2SHELL\") and nullFaktor (\"SAPBleed\") both built working exploits but haven't published them, and no attacks are reported.",
+  "status": {
+    "exploit": "demonstrated",
+    "attacks": "none",
+    "kev": null,
+    "no_login": true,
+    "scare": 2.9
+  },
+  "affected": [
+    {
+      "label": "Kernel or Web Dispatcher not patched",
+      "text": "AS ABAP on kernel 7.40 or newer (7.22 isn't affected) and every Web Dispatcher. Fixed in 7.53 PL 1616, 7.54 PL 710, 7.77 PL 914, 7.93 PL 420 (or the updated-stack PL 401; PL 419 is still affected), 9.16 PL 111, 9.18 PL 37 and 9.20 PL 11. HANA 2.0 Web Dispatcher: 2.00.079.11 or 2.00.089.05; XS Advanced 1.0 SP05: Patch 4. Out-of-maintenance kernels (7.40, 7.41, 7.42, 7.45, 7.49, 7.73, 7.81, 7.85, 7.89) get no fix. AS Java alone isn't affected; dual-stack systems are. Check each server's kernel patch level in transaction SM51.",
+      "cite": [
+        2,
+        5,
+        6,
+        8
+      ]
+    },
+    {
+      "label": "WebSocket upgrades are on",
+      "text": "On by default in both the ICM and the Web Dispatcher, whether or not you use WebSockets. Not affected if `icm/HTTP/support_websocket_upgrade` is set to `FALSE`.",
+      "cite": [
+        2,
+        3
+      ]
+    },
+    {
+      "label": "Attackers can reach its web port",
+      "text": "Anyone who can reach the ICM or Web Dispatcher HTTP or HTTPS port can attack it; no SAP user or click is needed. An unpatched Web Dispatcher in front of the ICM doesn't stop the attack and can pass it on to internal systems.",
+      "cite": [
+        3,
+        4,
+        5
+      ]
+    }
+  ],
+  "do": [
+    {
+      "label": "Apply SAP Notes 3778530 and 3778556",
+      "text": "Patch the kernel (ICM) and every Web Dispatcher, including HANA XS, to the fixed patch level for your release, then restart. On an out-of-maintenance kernel, move to a supported kernel first.",
+      "versions": [
+        "sap-kernel"
+      ],
+      "cite": [
+        1,
+        2
+      ]
+    },
+    {
+      "label": "Can't patch? Turn off WebSocket",
+      "text": "Set this parameter in the ICM and Web Dispatcher profiles and restart. It breaks ABAP Push Channels and some Fiori apps, so first look for status code 101 in the ICM or Web Dispatcher HTTP log. SAP's FAQ Note 3778788 says where the parameter goes for each component.",
+      "cmd": "icm/HTTP/support_websocket_upgrade = FALSE",
+      "cite": [
+        2,
+        3
+      ]
+    },
+    {
+      "label": "Or shield behind a patched Web Dispatcher",
+      "text": "A Web Dispatcher on 7.53 PL 1629, 7.54 PL 723, 7.93 PL 430, 9.16 PL 200 or later protects systems behind it, but only if nothing can reach them directly (check with a network scan) and it isn't set up with `PROT=ROUTER`.",
+      "cite": [
+        2,
+        8
+      ]
+    },
+    {
+      "label": "Keep SAP web ports off the internet",
+      "text": "Until you've patched, limit who can reach the ICM and Web Dispatcher ports.",
+      "cite": [
+        3
+      ]
+    }
+  ],
+  "fixed_in": {
+    "sap-kernel": {
+      "7.53": "7.53 PL 1616",
+      "7.54": "7.54 PL 710",
+      "7.77": "7.77 PL 914",
+      "7.93": "7.93 PL 420",
+      "9.16": "9.16 PL 111",
+      "9.18": "9.18 PL 37",
+      "9.20": "9.20 PL 11",
+      "hana-079": "2.00.079.11",
+      "hana-089": "2.00.089.05"
+    }
+  },
+  "slack": "SAP CVE-2026-76964 and CVE-2026-89126 (ICM2SHELL / SAPBleed): a memory bug in WebSocket handling in the ICM of NetWeaver AS ABAP (kernel 7.40+) and in every SAP Web Dispatcher, including HANA XS, lets an attacker with no login leak memory or run code as <sid>adm. WebSocket support is on by default. SAP rates both 10.0 and fixed them on 10 Nov 2026 (Notes 3778530 and 3778556). Onapsis and nullFaktor built working exploits but haven't published them; no attacks reported, not on KEV. If you can't patch yet, set icm/HTTP/support_websocket_upgrade = FALSE (breaks ABAP Push Channels and some Fiori apps) and keep SAP web ports off untrusted networks.",
+  "sources": [
+    {
+      "title": "SAP: November 2026 Patch Day, Notes 3778530 and 3778556 rated 10.0",
+      "url": "https://support.sap.com/en/my-support/knowledge-base/security-notes-news/november-2026.html",
+      "date": "10 Nov"
+    },
+    {
+      "title": "Onapsis: ICM2SHELL advisory, fixed patch levels, WebSocket on by default, workarounds",
+      "url": "https://onapsis.com/blog/icm2shell-cve-2026-76964-cve-2026-89126-sap-netweaver-web-dispatcher-threat-advisory/",
+      "date": "12 Nov"
+    },
+    {
+      "title": "nullFaktor: SAPBleed write-up, memory leak, exploit withheld, workaround",
+      "url": "https://www.nullfaktor.com/blog/cve-2026-76964-cve-2026-89126-sapbleed",
+      "date": "12 Nov"
+    },
+    {
+      "title": "Full Disclosure: SAPBleed advisory, no login needed, timeline",
+      "url": "https://seclists.org/fulldisclosure/2026/Nov/36",
+      "date": "13 Nov"
+    },
+    {
+      "title": "CVE record: CVE-2026-76964 (ICM), CVSS 10.0, CISA SSVC exploitation none",
+      "url": "https://www.cve.org/CVERecord?id=CVE-2026-76964",
+      "date": "10 Nov"
+    },
+    {
+      "title": "CVE record: CVE-2026-89126 (Web Dispatcher), CVSS 10.0, CISA SSVC exploitation none",
+      "url": "https://www.cve.org/CVERecord?id=CVE-2026-89126",
+      "date": "10 Nov"
+    },
+    {
+      "title": "CISA KEV catalog: not listed",
+      "url": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog"
+    },
+    {
+      "title": "RedRays: check kernel level in SM51, AS Java not affected, verify shielding by scan",
+      "url": "https://redrays.io/blog/sap-note-3778530-icm-websocket-memory-corruption-cve-2026-76964/",
+      "date": "10 Nov"
+    },
+    {
+      "title": "BleepingComputer: four CVSS 10 SAP flaws, Onapsis's ICM2SHELL name",
+      "url": "https://www.bleepingcomputer.com/news/security/sap-patches-four-maximum-severity-security-vulnerabilities/",
+      "date": "10 Nov"
+    },
+    {
+      "title": "SAP: researcher credits, November 2026 lists Onapsis and Raschin Tavakoli",
+      "url": "https://support.sap.com/en/my-support/knowledge-base/security-notes-news/credits-for-security-researchers.html"
+    }
+  ],
+  "changes": [
+    {
+      "date": "2026-11-20",
+      "text": "Published."
+    }
+  ],
+  "status_cite": {
+    "no_login": [
+      5,
+      6,
+      4
+    ],
+    "exploit": [
+      2,
+      3
+    ],
+    "attacks": [
+      2,
+      5,
+      6
+    ],
+    "kev": [
+      7
+    ]
+  }
+}

@@ -1,0 +1,36 @@
+{
+  "id": "apache-roller",
+  "name": "Apache Roller",
+  "about": "The newest Apache Roller release. It fixes every Roller bug we cover.",
+  "feed": null,
+  "filter": "roller",
+  "checked": "2026-11-20",
+  "lines": [
+    {
+      "line": "6.1",
+      "key": "6.1",
+      "latest": "6.1.7",
+      "released": "2026-11-11"
+    }
+  ],
+  "older": "Apache fixes only the current release line. On anything older, upgrade to the newest 6.1 release.",
+  "unfixed": [
+    {
+      "line": "6.0 and older",
+      "note": "Not patched: Apache's fix is to upgrade to the current release.",
+      "pages": [
+        "roller-xmlrpc"
+      ]
+    }
+  ],
+  "sources": [
+    {
+      "title": "Apache Roller: security page, release dates, older releases not patched",
+      "url": "https://roller.apache.org/security.html"
+    },
+    {
+      "title": "Apache Roller: downloads",
+      "url": "https://roller.apache.org/downloads/downloads.html"
+    }
+  ]
+}

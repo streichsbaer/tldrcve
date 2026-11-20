@@ -1,0 +1,44 @@
+{
+  "id": "redcap",
+  "name": "REDCap",
+  "about": "The first fixed release on each REDCap branch. REDCap's release list needs a Community login, so newer builds may exist; install the newest on your branch.",
+  "feed": null,
+  "filter": "redcap",
+  "checked": "2026-11-20",
+  "lines": [
+    {
+      "line": "17.4 Standard",
+      "key": "17.4",
+      "latest": "17.4.4"
+    },
+    {
+      "line": "17.3 LTS",
+      "key": "17.3",
+      "latest": "17.3.10"
+    },
+    {
+      "line": "16.0 LTS",
+      "key": "16.0",
+      "latest": "16.0.49"
+    }
+  ],
+  "unfixed": [
+    {
+      "line": "Other branches",
+      "note": "Any other branch from 13.3.0 on: no fix named. Move to a fixed branch.",
+      "pages": [
+        "redcap-survey-rce"
+      ]
+    }
+  ],
+  "sources": [
+    {
+      "title": "CVE record: fixed in 16.0.49 LTS, 17.3.10 LTS, 17.4.4 Standard",
+      "url": "https://www.cve.org/CVERecord?id=CVE-2026-90817"
+    },
+    {
+      "title": "REDCap: Community site (login only)",
+      "url": "https://projectredcap.org/resources/community/"
+    }
+  ]
+}
