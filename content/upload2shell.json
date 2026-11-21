@@ -1,0 +1,184 @@
+{
+  "slug": "upload2shell",
+  "name": "Upload2Shell",
+  "aliases": [
+    "ghostscript",
+    "gs",
+    "ghostpdl",
+    "libgs",
+    "upload2shell",
+    "imagemagick",
+    "imagick",
+    "pillow",
+    "cups",
+    "roundcube",
+    "wordpress",
+    "postscript",
+    "cve-2026-65640",
+    "cve-2026-114727"
+  ],
+  "cves": [
+    "CVE-2026-125396"
+  ],
+  "product": "Ghostscript",
+  "disclosed": "2026-11-09",
+  "news": "2026-11-17",
+  "updated": "2026-11-22",
+  "verdict": "if",
+  "tile_line": "Only if your server renders files from outsiders.",
+  "summary": "A bug in Ghostscript before 10.08.0 lets a crafted PostScript or PDF file escape Ghostscript's `-dSAFER` sandbox and run commands as the account doing the rendering. Ghostscript often runs out of sight behind image previews (ImageMagick, Pillow), email thumbnails and print servers, so even an upload named `.png` can reach it; the researchers ran commands through Debian's CUPS, Roundcube, WordPress and more. The CVE record scores it as a local attack (8.5), but those routes are remote. The full exploit isn't public and no attacks are reported.",
+  "affected": [
+    {
+      "label": "Ghostscript before 10.08.0",
+      "text": "Distros backport the fix without changing `gs --version`, so check the package instead: fixed in Debian 12 `10.0.0~dfsg-11+deb12u9`, Debian 13 `10.05.1~dfsg-1+deb13u2`, Ubuntu 24.04 `10.02.1~dfsg1-0ubuntu7.10` and 22.04 `9.55.0~dfsg1-0ubuntu5.15` (older Ubuntu releases through Ubuntu Pro). Container images carry their own copy.",
+      "cmd": "gs --version",
+      "cite": [
+        1,
+        4,
+        6,
+        7
+      ]
+    },
+    {
+      "label": "It renders files from outsiders",
+      "text": "Something passes files you don't control to Ghostscript. Common routes: image or PDF previews through ImageMagick/Imagick, Pillow (EPS files, once pixels are loaded) or libvips with ImageMagick loaders; these check the file's content, not its name, so a `.png` upload counts. Also: Roundcube attachment thumbnails (before 1.6.20 / 1.7.5), WordPress uploads by Authors and up or public plugin upload forms (before 7.0.4 / 6.9.7), CUPS print queues shared without a login, and document importers that convert PDFs. On a desktop, someone has to open the file.",
+      "cite": [
+        1,
+        2,
+        3,
+        8,
+        13,
+        14
+      ]
+    }
+  ],
+  "do": [
+    {
+      "label": "Update Ghostscript",
+      "text": "To 10.08.0 or your distro's fixed package: Debian DLA-4914-1 and DSA-6516-1, Ubuntu USN-8949-1 (it lists the bug without a CVE number). This fixes every route at once. Rebuild container images that install Ghostscript.",
+      "cite": [
+        4,
+        5,
+        6,
+        7
+      ]
+    },
+    {
+      "label": "Update the apps that reach it",
+      "text": "WordPress 7.0.4 or 6.9.7 (fixes go back to 4.7) closes the upload route as CVE-2026-65640. Roundcube 1.6.20 or 1.7.5 stops passing EPS and SVG to ImageMagick (CVE-2026-114727). These help, but the Ghostscript update fixes the bug itself.",
+      "cite": [
+        8,
+        9,
+        14
+      ]
+    },
+    {
+      "label": "Print servers: require a login",
+      "text": "Requiring authentication on a shared CUPS queue blocked the researchers' anonymous print job.",
+      "cite": [
+        3
+      ]
+    },
+    {
+      "label": "Can't update yet? Cut the route",
+      "text": "ImageMagick: its security policy docs show this `policy.xml` line to stop it running Ghostscript and other external delegates (ImageMagick 7.0.1-8 and later). Python: pass `formats=[\"PNG\", \"JPEG\"]` (whatever you accept) to Pillow's `Image.open()` so EPS is never loaded. Neither covers print servers or apps that call `gs` directly.",
+      "cmd": "<policy domain=\"delegate\" rights=\"none\" pattern=\"*\"/>",
+      "cite": [
+        11,
+        12,
+        13
+      ]
+    }
+  ],
+  "slack": "Upload2Shell (CVE-2026-125396): a crafted PostScript/PDF file escapes Ghostscript's -dSAFER sandbox and runs commands as the rendering user, in Ghostscript before 10.08.0. Reachable remotely wherever a server renders outsiders' files: ImageMagick/Imagick or Pillow previews (even files named .png), Roundcube thumbnails, WordPress uploads, shared CUPS queues. Technique published, full exploit not public, no attacks seen, not in KEV. Fix: Ghostscript 10.08.0 or distro packages (DSA-6516-1, DLA-4914-1, USN-8949-1); WordPress 7.0.4 / 6.9.7, Roundcube 1.6.20 / 1.7.5.",
+  "sources": [
+    {
+      "title": "CVE record (VulnCheck): before 10.08.0, CVSS 8.5 local, CISA: no exploitation",
+      "url": "https://www.cve.org/CVERecord?id=CVE-2026-125396",
+      "date": "9 Nov"
+    },
+    {
+      "title": "pwn.ai: Upload2Shell timeline and confirmed app routes",
+      "url": "https://pwn.ai/upload2shell"
+    },
+    {
+      "title": "pwn.ai: technical write-up, CUPS, Roundcube, WordPress, image libraries",
+      "url": "https://pwn.ai/upload2shell/research.html",
+      "date": "17 Nov"
+    },
+    {
+      "title": "Artifex: Ghostscript 10.08.0 release",
+      "url": "https://github.com/ArtifexSoftware/ghostpdl-downloads/releases/tag/gs10080",
+      "date": "8 Sep"
+    },
+    {
+      "title": "Artifex: fix commit",
+      "url": "https://github.com/ArtifexSoftware/ghostpdl/commit/1484854e0c8ddfda1baa4ad4cd965b8a9790aa81"
+    },
+    {
+      "title": "Debian tracker: DLA-4914-1 and DSA-6516-1 fixed packages",
+      "url": "https://security-tracker.debian.org/tracker/CVE-2026-125396"
+    },
+    {
+      "title": "Ubuntu: USN-8949-1 fixed packages",
+      "url": "https://ubuntu.com/security/notices/USN-8949-1",
+      "date": "21 Oct"
+    },
+    {
+      "title": "WordPress: CVE-2026-65640 advisory, fixed versions",
+      "url": "https://github.com/WordPress/wordpress-develop/security/advisories/GHSA-8vr3-7mxf-gx8w",
+      "date": "12 Aug"
+    },
+    {
+      "title": "WordPress: 7.0.4 security release",
+      "url": "https://wordpress.org/news/2026/08/wordpress-7-0-4-release/",
+      "date": "12 Aug"
+    },
+    {
+      "title": "CISA KEV catalog: not listed",
+      "url": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog"
+    },
+    {
+      "title": "ImageMagick: security policy, disabling delegates",
+      "url": "https://imagemagick.org/security-policy/"
+    },
+    {
+      "title": "Pillow docs: Image.open formats argument",
+      "url": "https://pillow.readthedocs.io/en/stable/reference/Image.html"
+    },
+    {
+      "title": "Pillow docs: EPS files use Ghostscript",
+      "url": "https://pillow.readthedocs.io/en/stable/handbook/image-file-formats.html"
+    },
+    {
+      "title": "CVE record: CVE-2026-114727, Roundcube 1.6.20 / 1.7.5",
+      "url": "https://www.cve.org/CVERecord?id=CVE-2026-114727",
+      "date": "22 Oct"
+    }
+  ],
+  "changes": [
+    {
+      "date": "2026-11-22",
+      "text": "Published."
+    }
+  ],
+  "status": {
+    "exploit": "demonstrated",
+    "attacks": "none",
+    "kev": null,
+    "scare": 2.6
+  },
+  "status_cite": {
+    "exploit": [
+      2,
+      3
+    ],
+    "attacks": [
+      1,
+      10
+    ],
+    "kev": [
+      10
+    ]
+  }
+}
