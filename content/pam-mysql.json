@@ -1,0 +1,189 @@
+{
+  "slug": "pam-mysql",
+  "name": "pam-mysql bypass",
+  "aliases": [
+    "pam-mysql",
+    "pam_mysql",
+    "libpam-mysql",
+    "pam",
+    "ssh",
+    "sshd",
+    "mysql",
+    "mariadb",
+    "postfixadmin",
+    "froxlor",
+    "pam_disallow_null_authtok",
+    "cve-2026-124749"
+  ],
+  "cves": [
+    "CVE-2026-124749"
+  ],
+  "product": "pam-mysql",
+  "disclosed": "2026-11-19",
+  "updated": "2026-11-21",
+  "verdict": "if",
+  "tile_line": "SSH in as users with no stored password. Rare module.",
+  "summary": "pam-mysql, a rarely used module that checks Linux logins against a MySQL table, gets one check backwards. With sshd's default settings, anyone can log in over SSH as an account whose stored password is empty, typing any password. Debian fixed it on 19 Nov 2026; Ubuntu and Fedora haven't yet. The researcher demonstrated it but hasn't published the exploit, and no attacks are reported.",
+  "status": {
+    "exploit": "demonstrated",
+    "attacks": "none",
+    "kev": null,
+    "no_login": true,
+    "scare": 1.6
+  },
+  "affected": [
+    {
+      "label": "pam-mysql checks your logins",
+      "text": "The module is in the PAM setup of a login service such as sshd, the case the researcher tested. Every released version has the bug, 0.8.x and the 1.0.0 betas. Few systems use it: Debian counts 190 installs. A file name in the output means it's in use for that service.",
+      "cmd": "grep -rl pam_mysql /etc/pam.d/",
+      "cite": [
+        1,
+        10
+      ]
+    },
+    {
+      "label": "The service refuses empty passwords",
+      "text": "That is sshd's default (`PermitEmptyPasswords no`), and it's what triggers the bug: sshd asks pam-mysql to refuse accounts with no password, and pam-mysql does the opposite. Don't switch it to `yes` as a fix; the researcher says that opens a different hole. Run as root.",
+      "cmd": "sshd -T | grep -i permitemptypasswords",
+      "cite": [
+        1,
+        5
+      ]
+    },
+    {
+      "label": "Some accounts have no password",
+      "text": "At least one row in the login table has no stored password. On 0.8.x (Debian, Ubuntu, Gentoo, FreeBSD) that means NULL. On the 1.0.0 betas (Fedora, Nix, Mageia, ALT) an empty string counts too, so the common `NOT NULL DEFAULT ''` column is exposed; the researcher says PostfixAdmin and Froxlor ship tables like that. Replace the table and column names with yours.",
+      "cmd": "SELECT username FROM users WHERE password IS NULL OR password='';",
+      "cite": [
+        1
+      ]
+    },
+    {
+      "label": "The package isn't patched",
+      "text": "Fixed: Debian 13 `0.8.2-2.1+deb13u1` and Debian 12 `0.8.2-2+deb12u1`. Some news sites give `0.8.2-2.1` as fixed for Debian 13; Debian lists that version as vulnerable. Not fixed yet on 21 Nov 2026: Debian testing and unstable, Ubuntu (\"needs evaluation\"), Fedora and Gentoo. On Fedora the package is `pam_mysql`.",
+      "cmd": "dpkg -l libpam-mysql",
+      "cite": [
+        2,
+        3,
+        4,
+        8,
+        11,
+        9,
+        12
+      ]
+    }
+  ],
+  "do": [
+    {
+      "label": "Update the package",
+      "text": "On Debian 12 and 13, install the update from DSA-6643-1 or DLA-4919-1. The fix adds a `nullok` option, off by default, so accounts with no password are refused. Elsewhere there's no fixed package yet: upstream fixed its 1.0 code on 19 Nov 2026 but hasn't tagged a release, and its 0.8.x branch has no fix.",
+      "cite": [
+        2,
+        3,
+        1,
+        6,
+        7
+      ]
+    },
+    {
+      "label": "No update yet? Fill the gaps",
+      "text": "Remove or lock rows with no password in any table used for logins, then make the password column `NOT NULL` with no empty-string default. That's the researcher's fix for unpatched systems. Don't set `PermitEmptyPasswords yes`.",
+      "cite": [
+        1
+      ]
+    },
+    {
+      "label": "Check past logins",
+      "text": "sshd logs a bypass exactly like a normal login (\"Accepted password for\"). Any password login by an account that had no stored password at the time was a bypass. The table as it is now may not show what it held then; a backup or the binary log does. pam-mysql's own log table is off by default, and when on it spells failures `AUTHENTICATION FALURE`.",
+      "cite": [
+        1
+      ]
+    }
+  ],
+  "slack": "pam-mysql CVE-2026-124749: the PAM module that checks Linux logins against MySQL gets the \"refuse empty passwords\" check backwards. With sshd's default PermitEmptyPasswords no, anyone can log in over SSH as an account whose stored password is NULL (or empty on the 1.0 betas Fedora ships), with any password. Only matters if pam-mysql handles your logins and some rows have no password; Debian counts 190 installs. Debian fixed it 19 Nov 2026 (DSA-6643-1, DLA-4919-1); Ubuntu and Fedora haven't yet. Demonstrated, exploit not public, no attacks, not in CISA KEV. Stopgap: remove password-less rows and make the column NOT NULL with no '' default. Don't set PermitEmptyPasswords yes.",
+  "sources": [
+    {
+      "title": "oss-security: Andrey Vasilevsky's disclosure, conditions, fix, mitigation, detection",
+      "url": "https://www.openwall.com/lists/oss-security/2026/11/19/7",
+      "date": "19 Nov"
+    },
+    {
+      "title": "Debian DSA-6643-1: Debian 13 fixed in 0.8.2-2.1+deb13u1",
+      "url": "https://lists.debian.org/debian-security-announce/2026/msg00565.html",
+      "date": "19 Nov"
+    },
+    {
+      "title": "Debian DLA-4919-1: Debian 12 fixed in 0.8.2-2+deb12u1, nullok option",
+      "url": "https://lists.debian.org/debian-lts-announce/2026/11/msg00045.html",
+      "date": "19 Nov"
+    },
+    {
+      "title": "Debian tracker: fixed and vulnerable versions",
+      "url": "https://security-tracker.debian.org/tracker/CVE-2026-124749"
+    },
+    {
+      "title": "OpenSSH source: sshd sets the flag when PermitEmptyPasswords is no",
+      "url": "https://github.com/openssh/openssh-portable/blob/master/auth-pam.c"
+    },
+    {
+      "title": "pam-MySQL upstream: \"CVE Fix\" commit",
+      "url": "https://github.com/NigelCunningham/pam-MySQL/commit/6e2c52eb0bacc8df7369181f2b3d9b9dd366eecd",
+      "date": "19 Nov"
+    },
+    {
+      "title": "pam-MySQL upstream: \"Add nullok option.\" commit",
+      "url": "https://github.com/NigelCunningham/pam-MySQL/commit/46175520d3e89384d4d7d92908e199ba5496d328",
+      "date": "19 Nov"
+    },
+    {
+      "title": "Ubuntu: all releases \"Needs evaluation\"",
+      "url": "https://ubuntu.com/security/CVE-2026-124749"
+    },
+    {
+      "title": "Gentoo: bug 986865, confirmed, open",
+      "url": "https://bugs.gentoo.org/986865",
+      "date": "20 Nov"
+    },
+    {
+      "title": "Debian popcon: 190 libpam-mysql installs",
+      "url": "https://qa.debian.org/popcon.php?package=pam-mysql"
+    },
+    {
+      "title": "SecurityOnline: no attacks or public exploit known; gives 0.8.2-2.1 as fixed",
+      "url": "https://securityonline.info/pam-mysql-authentication-bypass-cve-2026-124749/",
+      "date": "21 Nov"
+    },
+    {
+      "title": "Fedora updates: no pam_mysql security update",
+      "url": "https://bodhi.fedoraproject.org/updates/?packages=pam_mysql"
+    },
+    {
+      "title": "CISA KEV catalog: not listed",
+      "url": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog"
+    },
+    {
+      "title": "CVE record: not yet published (21 Nov)",
+      "url": "https://www.cve.org/CVERecord?id=CVE-2026-124749"
+    }
+  ],
+  "changes": [
+    {
+      "date": "2026-11-21",
+      "text": "Published."
+    }
+  ],
+  "status_cite": {
+    "exploit": [
+      1
+    ],
+    "attacks": [
+      11
+    ],
+    "kev": [
+      13
+    ],
+    "no_login": [
+      1
+    ]
+  }
+}
