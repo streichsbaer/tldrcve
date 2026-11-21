@@ -140,7 +140,7 @@ def page(title: str, description: str, body: str, current: str = "", path: str =
   <footer class="site-footer">
     <div class="wrap">
       <p class="follow">Follow <a href="https://x.com/{X_HANDLE}">@{X_HANDLE}</a> on X for live updates, or subscribe to the <a href="/feed.xml">RSS feed</a>.</p>
-      <p>Every claim is sourced. Wrong or out of date? Tell us on X. Made by <a href="https://x.com/{AUTHOR_HANDLE}">@{AUTHOR_HANDLE}</a>.</p>
+      <p>Every claim is sourced. Wrong or out of date? <a href="{REPO_URL}">Fix it on GitHub</a> or tell us on X. Made by <a href="https://x.com/{AUTHOR_HANDLE}">@{AUTHOR_HANDLE}</a>.</p>
     </div>
   </footer>
 </body>
@@ -900,6 +900,7 @@ CSP = "; ".join([
 
 X_HANDLE = "tldrcve"
 AUTHOR_HANDLE = "s_streichsbier"
+REPO_URL = "https://github.com/streichsbaer/tldrcve"
 # Cloudflare Web Analytics (cookieless). Empty token = no analytics snippet.
 CF_ANALYTICS_TOKEN = ""
 ANALYTICS = (f'  <script defer src="https://static.cloudflareinsights.com/beacon.min.js" '
