@@ -241,7 +241,8 @@ def cve_list(c: dict) -> str:
     """CVE IDs for headings and meta lines. A release roundup can hold dozens, so show a count instead."""
     ids = c["cves"]
     if c.get("bugs"):  # count every bug in the release, including ones with their own page
-        return f'{len(c["bugs"])} CVEs'
+        n = len(c["bugs"])  # say "CVEs" only when every bug has a CVE ID; otherwise "advisories"
+        return f"{n} CVEs" if all(b["cve"].startswith("CVE-") for b in c["bugs"]) else f"{n} advisories"
     return ", ".join(ids) if len(ids) <= 3 else f"{len(ids)} CVEs"
 
 

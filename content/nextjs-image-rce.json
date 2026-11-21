@@ -1,0 +1,162 @@
+{
+  "slug": "nextjs-image-rce",
+  "name": "Next.js image RCE",
+  "aliases": [
+    "next.js",
+    "nextjs",
+    "next",
+    "sharp",
+    "librsvg",
+    "svg",
+    "vercel",
+    "image optimization",
+    "_next/image",
+    "cve-2026-96889",
+    "cve-2026-114111",
+    "cve-2026-119347"
+  ],
+  "cves": [
+    "CVE-2026-96889",
+    "CVE-2026-114111",
+    "CVE-2026-119347"
+  ],
+  "product": "Next.js",
+  "also_in": [
+    "sharp",
+    "librsvg"
+  ],
+  "disclosed": "2026-10-14",
+  "updated": "2026-11-21",
+  "verdict": "if",
+  "tile_line": "Only with sharp below 0.35.5 on glibc Linux.",
+  "summary": "A memory bug in librsvg, the SVG library bundled inside `sharp`, may let an attacker with no login run code through Next.js image optimization on glibc-based Linux. Almost every Next.js version is affected, and a separate bug fixed on 3 Nov let self-hosted sites parse an attacker's SVG even with SVG support off (the default). The fix is a newer `sharp`, which upgrading Next.js doesn't always pull in on 15.x; no exploit or attacks are reported.",
+  "status": {
+    "exploit": "none",
+    "attacks": "none",
+    "kev": null,
+    "no_login": true,
+    "scare": 2.3
+  },
+  "affected": [
+    {
+      "label": "sharp older than 0.35.5",
+      "text": "Next.js 10.0.0 to 15.5.27 or 16.0.0 to 16.4.0 with `sharp` below 0.35.5, which bundles the unfixed librsvg. Next.js 15.5.28 and 15.5.29 still accept `sharp` 0.34.x, so an old lockfile can keep the bug after upgrading Next.js; 16.4.1 and later require 0.35.5.",
+      "cmd": "npm ls sharp",
+      "cite": [
+        1,
+        5,
+        6,
+        7
+      ]
+    },
+    {
+      "label": "Running on glibc-based Linux",
+      "text": "Vercel says the code execution risk is when Next.js runs on glibc-based Linux. Alpine and other musl-based images aren't named as affected.",
+      "cmd": "ldd --version",
+      "cite": [
+        1
+      ]
+    },
+    {
+      "label": "The image optimizer takes an attacker's SVG",
+      "text": "With `dangerouslyAllowSVG: true` it does by design. With the default `false`, self-hosted sites before 15.5.29 or 16.4.5 can still be made to parse an attacker-supplied SVG at `/_next/image` (CVE-2026-119347). The advisories don't say whether Vercel-hosted sites or apps with tight image source rules are exposed.",
+      "cmd": "grep -rn dangerouslyAllowSVG next.config.*",
+      "cite": [
+        1,
+        2
+      ]
+    }
+  ],
+  "do": [
+    {
+      "label": "Upgrade Next.js and check sharp",
+      "text": "Go to 16.4.5 or 15.5.29, which fix this and the SVG bypass, then check that `npm ls sharp` shows 0.35.5 or later; on 15.x, update `sharp` yourself if it doesn't. Rebuild and redeploy.",
+      "cmd": "npm ls next sharp",
+      "cite": [
+        1,
+        2,
+        7
+      ]
+    },
+    {
+      "label": "Can't upgrade Next.js? Upgrade sharp",
+      "text": "Vercel's workaround: make sure the `sharp` Next.js uses is 0.35.5 or later. Fresh installs get it automatically.",
+      "cite": [
+        1,
+        6
+      ]
+    }
+  ],
+  "slack": "Next.js image optimization RCE (CVE-2026-96889, a librsvg bug inside sharp; sharp: CVE-2026-114111): possible unauthenticated code execution on glibc Linux when the optimizer parses an attacker's SVG. Self-hosted sites could be made to parse SVGs even with dangerouslyAllowSVG off until 15.5.29 / 16.4.5 (CVE-2026-119347). No exploit, no attacks, not in KEV. Fix: Next.js 16.4.5 / 15.5.29 and sharp ≥ 0.35.5 (check npm ls sharp; 15.x can keep sharp 0.34).",
+  "sources": [
+    {
+      "title": "Next.js GHSA-2464: image optimization RCE, versions, sharp 0.35.5 workaround",
+      "url": "https://github.com/vercel/next.js/security/advisories/GHSA-2464-fhr4-w9xw",
+      "date": "14 Oct"
+    },
+    {
+      "title": "Next.js GHSA-7qx7: SVG reaches the parser even with dangerouslyAllowSVG off",
+      "url": "https://github.com/vercel/next.js/security/advisories/GHSA-7qx7-33qx-rqx2",
+      "date": "3 Nov"
+    },
+    {
+      "title": "Next.js: 14 Oct security update",
+      "url": "https://nextjs.org/blog/nextjs-security-update-october-14-2026",
+      "date": "14 Oct"
+    },
+    {
+      "title": "CVE record: CVE-2026-96889, librsvg use-after-free (Red Hat)",
+      "url": "https://www.cve.org/CVERecord?id=CVE-2026-96889",
+      "date": "23 Sep"
+    },
+    {
+      "title": "CVE record: CVE-2026-114111, sharp before 0.35.5",
+      "url": "https://www.cve.org/CVERecord?id=CVE-2026-114111",
+      "date": "21 Oct"
+    },
+    {
+      "title": "sharp v0.35.5 release (bundles the fixed librsvg)",
+      "url": "https://github.com/lovell/sharp/releases/tag/v0.35.5",
+      "date": "27 Sep"
+    },
+    {
+      "title": "npm registry: next 15.5.29 still accepts sharp 0.34.x",
+      "url": "https://registry.npmjs.org/next/15.5.29"
+    },
+    {
+      "title": "GNOME librsvg issue 1241: report and crash reproducer",
+      "url": "https://gitlab.gnome.org/GNOME/librsvg/-/work_items/1241",
+      "date": "18 Sep"
+    },
+    {
+      "title": "Cloud Security Alliance: no exploitation reported as of 15 Oct",
+      "url": "https://labs.cloudsecurityalliance.org/research/csa-research-note-nextjs-use-cache-librsvg-rce-20261016-csa/",
+      "date": "16 Oct"
+    },
+    {
+      "title": "CISA KEV catalog: not listed",
+      "url": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog"
+    }
+  ],
+  "changes": [
+    {
+      "date": "2026-11-21",
+      "text": "Published."
+    }
+  ],
+  "status_cite": {
+    "exploit": [
+      8,
+      9
+    ],
+    "attacks": [
+      9
+    ],
+    "kev": [
+      10
+    ],
+    "no_login": [
+      1
+    ]
+  }
+}

@@ -1,0 +1,330 @@
+{
+  "slug": "php-2026-11-19",
+  "name": "PHP Nov release",
+  "aliases": [
+    "php",
+    "php-fpm",
+    "mod_php",
+    "php-cgi",
+    "soap",
+    "phar",
+    "php 8.5",
+    "php 8.4",
+    "php 8.3",
+    "php 8.2",
+    "php 8.6",
+    "phpaftershell",
+    "php2shell",
+    "cve-2026-48841"
+  ],
+  "cves": [
+    "CVE-2026-129496",
+    "CVE-2026-129474",
+    "CVE-2026-129481",
+    "CVE-2026-129182",
+    "CVE-2026-129291",
+    "CVE-2026-128064",
+    "CVE-2026-127960",
+    "CVE-2026-128090",
+    "CVE-2026-129538",
+    "CVE-2026-129501",
+    "CVE-2026-129506",
+    "CVE-2026-15353",
+    "CVE-2026-129438",
+    "CVE-2026-129292"
+  ],
+  "product": "PHP",
+  "disclosed": "2026-11-19",
+  "updated": "2026-11-21",
+  "verdict": "if",
+  "tile_line": "17 advisories, 7 critical. All need uncommon setups.",
+  "summary": "PHP's 19 Nov releases fix 17 security advisories: 7 critical, 4 high and 6 medium (plus a bundled uriparser update, CVE-2026-48841, which is why some count 18). PHP says every critical one needs a non-default setting or an uncommon setup, and none is reported exploited, though four have public lab or test exploits. Two of them close gaps in October's exploited [PHP2Shell](/php2shell/) fix. One update fixes all of them.",
+  "status": {
+    "exploit": "public",
+    "attacks": "none",
+    "kev": null,
+    "scare": 2.0
+  },
+  "affected": [
+    {
+      "label": "PHP older than the 19 Nov 2026 fix",
+      "text": "PHP 8.2 to 8.5 below 8.5.13, 8.4.28, 8.3.37 or 8.2.36. PHP 8.6.0 (19 Nov) is fixed. Some bugs only hit 8.3 and later, or only 8.5: see each one. 8.1 and older get no fixes from PHP. Distros may backport fixes without changing the version number.",
+      "cmd": "php -v",
+      "cite": [
+        1,
+        3
+      ]
+    },
+    {
+      "label": "You use an affected feature",
+      "text": "Each critical bug needs a specific setting or setup, listed under The bugs above. The main ones: sessions stored in files with upload progress on (phpAfterShell, session serializer mismatch); a web server that reuses its connections to PHP-FPM (request smuggling); a non-thread-safe build logging startup warnings to a file (timezone cache); and PHP 8.5 with fatal error backtraces on (two bugs). Most need workers that serve many requests, which PHP-FPM and mod_php do.",
+      "cmd": "php -i | grep -E 'session.save_handler|session.upload_progress.enabled|error_log|fatal_error_backtraces|zend.exception_ignore_args'",
+      "cite": [
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
+      ]
+    }
+  ],
+  "do": [
+    {
+      "label": "Update PHP and restart",
+      "text": "Update to 8.6.0, 8.5.13, 8.4.28, 8.3.37 or 8.2.36 (19 Nov 2026), then restart every PHP worker. This fixes all 17 advisories.",
+      "cite": [
+        1
+      ],
+      "versions": [
+        "php"
+      ]
+    },
+    {
+      "label": "Check the critical ones first",
+      "text": "[phpAfterShell](/phpaftershell/), [PHP-FPM request smuggling](/php-fpm-smuggling/) and [PHP session RCE](/php-sessions/) each have a full page with checks. The other four critical bugs and the highs are explained under The bugs above.",
+      "cite": [
+        3
+      ]
+    },
+    {
+      "label": "Can't update yet? Stopgaps",
+      "text": "Turn off session upload progress (`session.upload_progress.enabled = 0`) and FastCGI connection reuse in your web server. On PHP 8.5, set `fatal_error_backtraces = 0`, or at least keep `zend.exception_ignore_args = On` as in `php.ini-production`. These remove some attack paths, not the bugs.",
+      "cite": [
+        3,
+        5,
+        7,
+        9,
+        12
+      ]
+    }
+  ],
+  "fixed_in": {
+    "php": {
+      "8.6": "8.6.0",
+      "8.5": "8.5.13",
+      "8.4": "8.4.28",
+      "8.3": "8.3.37",
+      "8.2": "8.2.36"
+    }
+  },
+  "bugs": [
+    {
+      "cve": "CVE-2026-126714",
+      "project": "Session",
+      "severity": "critical",
+      "url": "https://github.com/php/php-src/security/advisories/GHSA-fm2m-fjf5-v3cp",
+      "title": "phpAfterShell: half-written session files",
+      "text": "PHP's default file session storage can mix an old and a new session when a write is cut short, letting an attacker inject objects. Also needs attacker data in the session, a worker killed mid-write and a usable gadget chain in the app.",
+      "verdict": "if",
+      "page": "phpaftershell"
+    },
+    {
+      "cve": "CVE-2026-129289",
+      "project": "FPM",
+      "severity": "critical",
+      "url": "https://github.com/php/php-src/security/advisories/GHSA-qc49-hpvq-g2w6",
+      "title": "PHP-FPM request smuggling",
+      "text": "An attacker with no login can hide a second request in one web request and run PHP code, but only where the web server reuses its connections to PHP-FPM (off by default in nginx and Apache) and the app leaves part of the request body unread.",
+      "verdict": "if",
+      "page": "php-fpm-smuggling"
+    },
+    {
+      "cve": "CVE-2026-115560",
+      "project": "Session",
+      "severity": "critical",
+      "url": "https://github.com/php/php-src/security/advisories/GHSA-658j-r8rw-q6mx",
+      "title": "Session serializer mismatch",
+      "text": "Upload progress can let an attacker with no login run code, but only where sessions are written with one serializer and read with another, and the app has a usable gadget chain.",
+      "verdict": "if",
+      "page": "php-sessions"
+    },
+    {
+      "cve": "CVE-2026-129496",
+      "project": "Date",
+      "severity": "critical",
+      "url": "https://github.com/php/php-src/security/advisories/GHSA-gr4f-wgx5-jpfv",
+      "title": "Timezone cache use-after-free",
+      "text": "Every branch. Needs a non-thread-safe build (PHP-FPM, Apache mod_php or CGI) whose `error_log` writes to a file, a startup warning written there (for example an invalid `date.timezone`), and a request to a fresh worker. A request with no login can crash it. A public lab exploit runs code, but reads the worker's memory addresses from inside the lab; PHP calls a remote bypass of that \"plausible\", not shown.",
+      "verdict": "if"
+    },
+    {
+      "cve": "CVE-2026-129474",
+      "project": "Engine",
+      "severity": "critical",
+      "url": "https://github.com/php/php-src/security/advisories/GHSA-8mjj-2r7p-4hg2",
+      "title": "Use-after-free in magic method backtraces",
+      "text": "PHP 8.5 only, with `fatal_error_backtraces` on (the 8.5 default) and `zend.exception_ignore_args` off. That's the built-in default, but `php.ini-production` turns it on, which blocks this. The app must pass attacker-sized data into a `__call()` or `__callStatic()` method so a memory or time limit hits at the right moment, and the attacker needs known memory addresses. PHP confirmed code execution in testing; no code is public.",
+      "verdict": "if"
+    },
+    {
+      "cve": "CVE-2026-129481",
+      "project": "Session",
+      "severity": "critical",
+      "url": "https://github.com/php/php-src/security/advisories/GHSA-g3vh-838c-65v7",
+      "title": "Use-after-free after interrupted session cleanup",
+      "text": "PHP 8.3 to 8.5 workers that serve many requests (PHP-FPM or mod_php), with an app callback that runs during session cleanup and that an attacker can make hit a fatal error. A later request on the same worker can then reuse freed memory. One of two gaps PHP found in the October [PHP2Shell](/php2shell/) fix; PHP says code execution hasn't been demonstrated.",
+      "verdict": "cycle"
+    },
+    {
+      "cve": "CVE-2026-129182",
+      "project": "Engine",
+      "severity": "critical",
+      "url": "https://github.com/php/php-src/security/advisories/GHSA-2fjv-p558-g82m",
+      "title": "Fatal-error backtrace refilled after shutdown",
+      "text": "PHP 8.5 only. Needs per-directory settings that change `max_memory_limit` or zlib output compression, and a later request on the same worker that produces an early warning. The second gap in the October PHP2Shell fix. PHP says code execution hasn't been demonstrated. Workaround: `fatal_error_backtraces = 0`.",
+      "verdict": "cycle"
+    },
+    {
+      "cve": "CVE-2026-129291",
+      "project": "FPM",
+      "severity": "high",
+      "url": "https://github.com/php/php-src/security/advisories/GHSA-jm4m-qfqx-967m",
+      "title": "PHP-FPM worker to master privileges",
+      "text": "Someone who can already run PHP code in an FPM worker can run commands with the FPM master's privileges, which are commonly root, when `catch_workers_output` is on. Matters most on shared hosting.",
+      "verdict": "if"
+    },
+    {
+      "cve": "CVE-2026-128064",
+      "project": "Standard",
+      "severity": "high",
+      "url": "https://github.com/php/php-src/security/advisories/GHSA-f6gg-rchx-xw8j",
+      "title": "HTTPS URLs with an uppercase S sent unencrypted",
+      "text": "PHP's stream functions such as `file_get_contents()` sent `HTTPS://`, `httpS://` or `FTPS://` URLs without TLS, redirects included, so someone watching the network can read passwords, tokens or uploads.",
+      "verdict": "cycle"
+    },
+    {
+      "cve": "CVE-2026-127960",
+      "project": "Standard",
+      "severity": "high",
+      "url": "https://github.com/php/php-src/security/advisories/GHSA-mmf9-xm3v-hg2x",
+      "title": "Folded response headers burn CPU",
+      "text": "A server PHP fetches from can send folded HTTP response headers that tie up the CPU.",
+      "verdict": "cycle"
+    },
+    {
+      "cve": "CVE-2026-128090",
+      "project": "Phar",
+      "severity": "high",
+      "url": "https://github.com/php/php-src/security/advisories/GHSA-68fq-fh7h-f8gr",
+      "title": "Signed Phar accepted with a plain hash",
+      "text": "Someone who can replace an OpenSSL-signed Phar archive, but not its `.pubkey` file, can swap the signature for a plain hash and still have it accepted.",
+      "verdict": "cycle"
+    },
+    {
+      "cve": "CVE-2026-129538",
+      "project": "CGI",
+      "severity": "medium",
+      "url": "https://github.com/php/php-src/security/advisories/GHSA-5j3f-64r7-f564"
+    },
+    {
+      "cve": "CVE-2026-129501",
+      "project": "DOM",
+      "severity": "medium",
+      "url": "https://github.com/php/php-src/security/advisories/GHSA-x8r7-mg3g-74hg"
+    },
+    {
+      "cve": "CVE-2026-129506",
+      "project": "SOAP",
+      "severity": "medium",
+      "url": "https://github.com/php/php-src/security/advisories/GHSA-4646-p932-gw34"
+    },
+    {
+      "cve": "CVE-2026-15353",
+      "project": "SOAP",
+      "severity": "medium",
+      "url": "https://github.com/php/php-src/security/advisories/GHSA-q23r-hr55-xmpg"
+    },
+    {
+      "cve": "CVE-2026-129438",
+      "project": "URI",
+      "severity": "medium",
+      "url": "https://github.com/php/php-src/security/advisories/GHSA-mg3p-mxj9-g2mm"
+    },
+    {
+      "cve": "CVE-2026-129292",
+      "project": "FPM",
+      "severity": "medium",
+      "url": "https://github.com/php/php-src/security/advisories/GHSA-3mg3-cr28-46gc"
+    }
+  ],
+  "slack": "PHP's 19 Nov release (8.6.0, 8.5.13, 8.4.28, 8.3.37, 8.2.36) fixes 17 advisories: 7 critical, 4 high, 6 medium. PHP says every critical one needs a non-default setting or uncommon setup; none is reported exploited, not in CISA KEV, and four have lab or test exploits. Two close gaps in October's exploited PHP2Shell fix. Update and restart workers; until then turn off session upload progress and FastCGI connection reuse.",
+  "sources": [
+    {
+      "title": "PHP: 8.x ChangeLog, 19 Nov 2026 releases and every fix",
+      "url": "https://www.php.net/ChangeLog-8.php#8.5.13",
+      "date": "19 Nov"
+    },
+    {
+      "title": "PHP: 18 Nov notice, critical issues need non-default or uncommon setups",
+      "url": "https://www.php.net/archive/2026.php#2026-11-18-1",
+      "date": "18 Nov"
+    },
+    {
+      "title": "PHP: security advisories (all 17)",
+      "url": "https://github.com/php/php-src/security/advisories",
+      "date": "19 Nov"
+    },
+    {
+      "title": "PHP GHSA-gr4f: timezone cache use-after-free",
+      "url": "https://github.com/php/php-src/security/advisories/GHSA-gr4f-wgx5-jpfv",
+      "date": "19 Nov"
+    },
+    {
+      "title": "PHP GHSA-8mjj: magic method backtraces, 8.5 only",
+      "url": "https://github.com/php/php-src/security/advisories/GHSA-8mjj-2r7p-4hg2",
+      "date": "19 Nov"
+    },
+    {
+      "title": "PHP GHSA-g3vh: interrupted session cleanup, incomplete fix for CVE-2026-109619",
+      "url": "https://github.com/php/php-src/security/advisories/GHSA-g3vh-838c-65v7",
+      "date": "19 Nov"
+    },
+    {
+      "title": "PHP GHSA-2fjv: backtrace refilled after shutdown, workaround",
+      "url": "https://github.com/php/php-src/security/advisories/GHSA-2fjv-p558-g82m",
+      "date": "19 Nov"
+    },
+    {
+      "title": "Public lab exploit for CVE-2026-129496 (reads its own memory map)",
+      "url": "https://github.com/abraxas/php-tzcache-rce",
+      "date": "19 Nov"
+    },
+    {
+      "title": "Cloudflare Zero Wire: 17 advisories, 7 critical, no exploitation reported",
+      "url": "https://radar.cloudflare.com/zero-wire/php-november-2026-security-release-phpaftershell",
+      "date": "19 Nov"
+    },
+    {
+      "title": "BleepingComputer: counts 18 fixes, no exploitation reported",
+      "url": "https://www.bleepingcomputer.com/news/security/php-security-updates-fix-18-flaws-including-critical-rce-bugs/",
+      "date": "19 Nov"
+    },
+    {
+      "title": "CISA KEV catalog: none listed",
+      "url": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog"
+    },
+    {
+      "title": "php-src: php.ini-production sets zend.exception_ignore_args = On",
+      "url": "https://github.com/php/php-src/blob/PHP-8.5/php.ini-production"
+    }
+  ],
+  "changes": [
+    {
+      "date": "2026-11-21",
+      "text": "Published."
+    }
+  ],
+  "status_cite": {
+    "exploit": [
+      8
+    ],
+    "attacks": [
+      9,
+      10
+    ],
+    "kev": [
+      11
+    ]
+  }
+}

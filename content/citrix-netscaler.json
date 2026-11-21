@@ -1,0 +1,203 @@
+{
+  "slug": "citrix-netscaler",
+  "name": "NetScaler RCE",
+  "aliases": [
+    "citrix",
+    "netscaler",
+    "netscaler adc",
+    "netscaler gateway",
+    "citrix adc",
+    "citrix gateway",
+    "pitscaler",
+    "vpn",
+    "cve-2026-88771",
+    "cve-2026-88772",
+    "cve-2026-88779",
+    "cve-2026-107406"
+  ],
+  "cves": [
+    "CVE-2026-88771",
+    "CVE-2026-88772"
+  ],
+  "product": "Citrix NetScaler",
+  "disclosed": "2026-09-27",
+  "updated": "2026-11-21",
+  "verdict": "now",
+  "tile_line": "Exploited since September. Patch, then hunt for shells.",
+  "summary": "A bug in Citrix NetScaler ADC and Gateway lets anyone who can reach the appliance run commands on it with no login, and default setups are affected. Attackers have used it since at least 20 Sep, public exploit code came out on 28 Sep, and it's on CISA's exploited list. Updating doesn't remove an attacker who already got in, so appliances that were late to patch also need checking for web shells and stolen keys.",
+  "status": {
+    "exploit": "public",
+    "attacks": "seen",
+    "kev": {
+      "added": "2026-09-27",
+      "due": "2026-09-30"
+    },
+    "no_login": true,
+    "scare": 3.8
+  },
+  "affected": [
+    {
+      "label": "A NetScaler you run yourself",
+      "text": "Customer-managed NetScaler ADC or Gateway, including Secure Private Access hybrid setups that use NetScaler instances. Citrix-managed cloud services and Adaptive Authentication are updated by Citrix's parent, Cloud Software Group.",
+      "cite": [
+        1
+      ]
+    },
+    {
+      "label": "A build older than the fix",
+      "text": "14.1 before 14.1-73.37, 13.1 before 13.1-64.23, 14.1-FIPS before 14.1-73.37 FIPS, or 13.1-FIPS/NDcPP before 13.1-37.279. The same builds fix CVE-2026-88772, a second bug attackers used at the same time.",
+      "cite": [
+        1,
+        2,
+        15
+      ]
+    },
+    {
+      "label": "Attackers can send it web traffic",
+      "text": "Citrix lists \"All deployments (default configuration)\": no Gateway or AAA virtual server is needed. watchTowr says any endpoint that logs attacker-controlled web data can trigger it, including the management interface. Cloudflare says the Gateway must be publicly reachable; Citrix and watchTowr describe it more broadly.",
+      "cite": [
+        1,
+        6,
+        12
+      ]
+    }
+  ],
+  "do": [
+    {
+      "label": "Update to the newest build",
+      "text": "Go to 14.1-73.46, 13.1-64.29, 14.1-73.46 FIPS or 13.1.37.283, not just the first fix. These also fix CVE-2026-88779 (a crash bug, on CISA's exploited list since 4 Oct) and CVE-2026-107406 (SAML setups).",
+      "cite": [
+        1,
+        4,
+        5,
+        3
+      ]
+    },
+    {
+      "label": "Late to patch? Assume a break-in",
+      "text": "Patching doesn't remove an attacker who's already in. Mandiant says to end admin, Gateway, VPN and ICA sessions after patching, and to rotate admin passwords, SSH keys, TLS certificates and private keys, and the LDAP, RADIUS, TACACS, SNMP and API credentials the appliance uses. Follow Citrix's suspected-compromise steps, which include rebuilding the appliance.",
+      "cite": [
+        8,
+        11
+      ]
+    },
+    {
+      "label": "Look for web shells",
+      "text": "Unit 42 and Rapid7 found a web shell at `/var/netscaler/logon/LogonPoint/custom/.ctxs.receiver`. Mandiant's checks include whether `/bin/sh` has been made to run as root, and PHP handlers added to `/etc/httpd.conf`.",
+      "cmd": "grep -En -i \"application/x-httpd-php|php_flag|AliasMatch\" /etc/httpd.conf",
+      "cite": [
+        8,
+        9,
+        10
+      ]
+    },
+    {
+      "label": "No workaround",
+      "text": "Mandiant says disabling DTLS or blocking UDP 443 only helps against CVE-2026-88772, not this bug. A web firewall in front only covers the traffic that passes through it. Update.",
+      "cite": [
+        8,
+        12
+      ]
+    }
+  ],
+  "slack": "Citrix NetScaler ADC/Gateway CVE-2026-88771 (plus CVE-2026-88772): unauthenticated command execution, default configs affected. Exploited since about 20 Sep, public exploit since 28 Sep, CISA KEV (27 Sep). Update to 14.1-73.46 / 13.1-64.29 (FIPS: 14.1-73.46 FIPS, 13.1.37.283), which also fix the later CVE-2026-88779 and CVE-2026-107406. If you patched late, assume compromise: end sessions, rotate keys and credentials, hunt for web shells.",
+  "sources": [
+    {
+      "title": "Citrix CTX697096: affected and fixed builds, attacks seen, default config, cloud scope",
+      "url": "https://support.citrix.com/external/article/CTX697096",
+      "date": "27 Sep"
+    },
+    {
+      "title": "CVE record: CVE-2026-88771, CVSS 4.0 9.5, affected builds",
+      "url": "https://www.cve.org/CVERecord?id=CVE-2026-88771",
+      "date": "27 Sep"
+    },
+    {
+      "title": "CISA KEV catalog: CVE-2026-88771 and 88772 added 27 Sep, due 30 Sep",
+      "url": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog"
+    },
+    {
+      "title": "Citrix CTX697174: CVE-2026-88779, newer fixed builds",
+      "url": "https://support.citrix.com/external/article/CTX697174",
+      "date": "3 Oct"
+    },
+    {
+      "title": "Citrix CTX697191: CVE-2026-107406, newest fixed builds",
+      "url": "https://support.citrix.com/external/article/CTX697191/",
+      "date": "8 Oct"
+    },
+    {
+      "title": "watchTowr Labs: root cause, any logged endpoint including management",
+      "url": "https://labs.watchtowr.com/oh-look-the-foot-gun-went-off-again-citrix-netscaler-preauth-command-injection-cve-2026-88771/",
+      "date": "28 Sep"
+    },
+    {
+      "title": "watchTowr: public exploit tooling",
+      "url": "https://github.com/watchtowrlabs/watchTowr-vs-Citrix-Netscaler-CVE-2026-88771",
+      "date": "28 Sep"
+    },
+    {
+      "title": "Mandiant (Google): campaign, workaround limits, hunting, credential rotation",
+      "url": "https://cloud.google.com/blog/topics/threat-intelligence/defending-against-active-exploitation-of-citrix-netscaler-adc-and-gateway-appliances/",
+      "date": "30 Sep"
+    },
+    {
+      "title": "Unit 42: attack chain, web shells, 50,277 possibly vulnerable",
+      "url": "https://unit42.paloaltonetworks.com/netscaler-zero-days-exploited/",
+      "date": "30 Sep"
+    },
+    {
+      "title": "Rapid7: attempts from 20 Sep, compromised organisations, config theft",
+      "url": "https://rapid7.com/blog/post/etr-zero-day-exploitation-of-citrix-netscaler-adc-and-gateway-cve-2026-88771-and-cve-2026-88772",
+      "date": "28 Sep"
+    },
+    {
+      "title": "Citrix CTX694799: steps if a NetScaler is suspected compromised",
+      "url": "https://support.citrix.com/external/article/CTX694799/steps-to-take-if-netscaler-adc-is-suspec.html"
+    },
+    {
+      "title": "Cloudflare: says the Gateway must be publicly reachable; WAF rule",
+      "url": "https://blog.cloudflare.com/protect-your-netscaler-gateway/",
+      "date": "19 Oct"
+    },
+    {
+      "title": "Help Net Security: watchTowr code used in attacks; under 10% patched by 29 Sep",
+      "url": "https://helpnetsecurity.com/2026/09/29/netscaler-zero-day-exploitation-escalates-into-mass-attacks-cve-2026-88771",
+      "date": "29 Sep"
+    },
+    {
+      "title": "eSentire: four attacker groups, public code used within about 36 hours",
+      "url": "https://www.esentire.com/blog/more-shells-than-a-seafood-buffet-tracking-citrix-netscaler-exploitation-activities-cve-2026-88771",
+      "date": "6 Oct"
+    },
+    {
+      "title": "CVE record: CVE-2026-88772, second exploited NetScaler bug, same fix",
+      "url": "https://www.cve.org/CVERecord?id=CVE-2026-88772",
+      "date": "27 Sep"
+    }
+  ],
+  "changes": [
+    {
+      "date": "2026-11-21",
+      "text": "Published."
+    }
+  ],
+  "status_cite": {
+    "exploit": [
+      7,
+      13,
+      14
+    ],
+    "attacks": [
+      1,
+      9,
+      10
+    ],
+    "kev": [
+      3
+    ],
+    "no_login": [
+      2
+    ]
+  }
+}

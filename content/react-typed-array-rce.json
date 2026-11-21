@@ -1,0 +1,167 @@
+{
+  "slug": "react-typed-array-rce",
+  "name": "React RSC RCE",
+  "aliases": [
+    "react",
+    "react server components",
+    "rsc",
+    "next.js",
+    "nextjs",
+    "use cache",
+    "cache components",
+    "flight",
+    "server actions",
+    "react-server-dom-webpack",
+    "react-server-dom-turbopack",
+    "react-server-dom-parcel",
+    "cve-2026-126187",
+    "ghsa-673q-mjm6-r5xr"
+  ],
+  "cves": [
+    "CVE-2026-126187"
+  ],
+  "ghsa": [
+    "GHSA-xqc2-xf4c-x3h3"
+  ],
+  "product": "React",
+  "also_in": [
+    "Next.js"
+  ],
+  "disclosed": "2026-10-14",
+  "news": "2026-11-10",
+  "updated": "2026-11-21",
+  "verdict": "if",
+  "tile_line": "Only Next 16 apps returning typed arrays from use cache.",
+  "summary": "A bug in how React Server Components package several typed arrays (binary data) in one response can let an attacker with no login call one of the app's Server Actions with arguments they choose. React says it only affects \"extremely rare cases\"; in Next.js it needs Cache Components and a `use cache` function that returns several typed arrays. A lab exploit is public, no attacks are reported, and the fix has been out since 14 Oct; the CVE ID came on 10 Nov.",
+  "status": {
+    "exploit": "public",
+    "attacks": "none",
+    "kev": null,
+    "no_login": true,
+    "scare": 1.5
+  },
+  "affected": [
+    {
+      "label": "Next.js 16.0.0 – 16.4.0",
+      "text": "Or `react-server-dom-webpack`, `-parcel` or `-turbopack` 19.0.0–19.0.8, 19.1.0–19.1.9, 19.2.0–19.2.8 or 19.3.0 in another Server Components setup. Next.js 15.x isn't affected by this bug. Apps whose React code doesn't use a server aren't affected.",
+      "cmd": "npm ls next react-server-dom-webpack react-server-dom-parcel react-server-dom-turbopack",
+      "cite": [
+        1,
+        2,
+        7
+      ]
+    },
+    {
+      "label": "Cache Components is on",
+      "text": "The App Router with Cache Components (`cacheComponents: true` in the Next.js config).",
+      "cmd": "grep -n cacheComponents next.config.*",
+      "cite": [
+        2,
+        6
+      ]
+    },
+    {
+      "label": "A `use cache` function returns typed arrays",
+      "text": "One that returns several typed arrays. Hash Security adds that they must be larger than 4 KB, share one buffer, and come with a value the attacker influences.",
+      "cmd": "grep -rln \"use cache\" app src",
+      "cite": [
+        2,
+        4
+      ]
+    },
+    {
+      "label": "A Server Action does something dangerous",
+      "text": "Running commands needs a Server Action that does something risky with the arguments the attacker supplies, per Hash Security; their lab app wraps a shell command in one.",
+      "cite": [
+        4,
+        5
+      ]
+    }
+  ],
+  "do": [
+    {
+      "label": "Upgrade",
+      "text": "Next.js 16.4.1 or later (16.4.5 also fixes the [Next.js image bug](/nextjs-image-rce/)). Other setups: `react-server-dom-*` 19.0.9, 19.1.10, 19.2.9 or 19.3.1. Next.js says to upgrade even if your app has no such function.",
+      "cmd": "npm ls next",
+      "cite": [
+        1,
+        2
+      ]
+    },
+    {
+      "label": "No workaround",
+      "text": "Next.js says there's no workaround for apps with an affected `use cache` function.",
+      "cite": [
+        2
+      ]
+    }
+  ],
+  "slack": "React Server Components typed-array RCE (CVE-2026-126187; Next.js GHSA-673q): unauthenticated attacker can call a Server Action with chosen arguments, but only in \"extremely rare\" apps: Next.js 16.0.0–16.4.0 with Cache Components and a use cache function returning several typed arrays (or react-server-dom-* 19.x elsewhere). Lab exploit public, no attacks, not in KEV. Fix: Next.js 16.4.1+ / react-server-dom-* 19.0.9, 19.1.10, 19.2.9, 19.3.1. Next.js 15.x not affected.",
+  "sources": [
+    {
+      "title": "React GHSA-xqc2: affected and fixed react-server-dom versions, 'extremely rare'",
+      "url": "https://github.com/react/react/security/advisories/GHSA-xqc2-xf4c-x3h3",
+      "date": "14 Oct"
+    },
+    {
+      "title": "Next.js GHSA-673q: Next 16.0.0–16.4.0, Cache Components, no workaround",
+      "url": "https://github.com/vercel/next.js/security/advisories/GHSA-673q-mjm6-r5xr",
+      "date": "14 Oct"
+    },
+    {
+      "title": "CVE record: CVE-2026-126187, CISA assessment exploitation none",
+      "url": "https://www.cve.org/CVERecord?id=CVE-2026-126187",
+      "date": "10 Nov"
+    },
+    {
+      "title": "Hash Security: how the bug works, what a lab exploit needs",
+      "url": "https://hash-sec.com/blog/the-use-cache-rce-how-a-typed-array-bug-in-nextjs-became-remote-code-execution",
+      "date": "17 Oct"
+    },
+    {
+      "title": "Hash Security: public lab exploit",
+      "url": "https://github.com/hashseclb/nextjs-use-cache-rce-2026",
+      "date": "17 Oct"
+    },
+    {
+      "title": "Next.js docs: the cacheComponents setting",
+      "url": "https://nextjs.org/docs/app/api-reference/config/next-config-js/cacheComponents"
+    },
+    {
+      "title": "Next.js: v15.5.28 release notes (no typed-array fix needed)",
+      "url": "https://github.com/vercel/next.js/releases/tag/v15.5.28",
+      "date": "14 Oct"
+    },
+    {
+      "title": "CISA KEV catalog: not listed",
+      "url": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog"
+    },
+    {
+      "title": "Cloudflare Zero Wire: no exploitation reported as of 11 Nov",
+      "url": "https://radar.cloudflare.com/zero-wire/rsc-typed-array-rce",
+      "date": "11 Nov"
+    }
+  ],
+  "changes": [
+    {
+      "date": "2026-11-21",
+      "text": "Published."
+    }
+  ],
+  "status_cite": {
+    "exploit": [
+      5
+    ],
+    "attacks": [
+      3,
+      9
+    ],
+    "kev": [
+      8
+    ],
+    "no_login": [
+      1,
+      2
+    ]
+  }
+}

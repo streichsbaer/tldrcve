@@ -17,7 +17,7 @@
   ],
   "product": "PHP",
   "disclosed": "2026-10-21",
-  "updated": "2026-11-20",
+  "updated": "2026-11-21",
   "verdict": "now",
   "tile_line": "Exploited in the wild. In CISA KEV.",
   "summary": "Two bugs in PHP itself let an attacker with no login run code on web servers that run PHP. Attacks are already happening, so if you serve PHP on the web, update now.",
@@ -45,11 +45,13 @@
   "do": [
     {
       "label": "Update and restart PHP",
-      "text": "Update to 8.6.0, 8.5.13, 8.4.28, 8.3.37 or 8.2.36 (19 Nov 2026), then restart all workers. These include the 21 Oct PHP2Shell fixes plus newer security fixes. 8.1 and older get no official release; use a vendor with long-term support or upgrade.",
+      "text": "Update to 8.6.0, 8.5.13, 8.4.28, 8.3.37 or 8.2.36 (19 Nov 2026), then restart all workers. These include the 21 Oct PHP2Shell fixes plus newer security fixes, including two gaps PHP found in the October fix (CVE-2026-129481 and CVE-2026-129182); PHP says code execution through either hasn't been demonstrated. See the [PHP 19 Nov release](/php-2026-11-19/) page. 8.1 and older get no official release; use a vendor with long-term support or upgrade.",
       "cite": [
         1,
         8,
-        10
+        10,
+        12,
+        13
       ],
       "versions": [
         "php"
@@ -126,9 +128,23 @@
     {
       "title": "php-src: 19 Nov security advisories (eight rated Critical)",
       "url": "https://github.com/php/php-src/security/advisories"
+    },
+    {
+      "title": "PHP GHSA-g3vh: CVE-2026-129481, incomplete fix for CVE-2026-109619",
+      "url": "https://github.com/php/php-src/security/advisories/GHSA-g3vh-838c-65v7",
+      "date": "19 Nov"
+    },
+    {
+      "title": "PHP GHSA-2fjv: CVE-2026-129182, fatal-error backtrace refilled after shutdown",
+      "url": "https://github.com/php/php-src/security/advisories/GHSA-2fjv-p558-g82m",
+      "date": "19 Nov"
     }
   ],
   "changes": [
+    {
+      "date": "2026-11-21",
+      "text": "The 19 Nov releases also close two gaps PHP found in the October fix (CVE-2026-129481, CVE-2026-129182). Links to the new PHP 19 Nov release page."
+    },
     {
       "date": "2026-11-20",
       "text": "PHP 8.6.0 added. Safe versions added."

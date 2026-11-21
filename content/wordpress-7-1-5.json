@@ -1,0 +1,272 @@
+{
+  "slug": "wordpress-7-1-5",
+  "name": "WordPress 7.1.5",
+  "aliases": [
+    "wordpress",
+    "wp",
+    "wordpress core",
+    "template part",
+    "multisite",
+    "xml-rpc",
+    "wordpress 7.1.5",
+    "wordpress 7.0.9",
+    "cve-2026-119977"
+  ],
+  "cves": [],
+  "product": "WordPress",
+  "disclosed": "2026-11-18",
+  "updated": "2026-11-21",
+  "verdict": "if",
+  "tile_line": "Worst one needs an admin's click. Auto-updates fix it.",
+  "summary": "WordPress 7.1.5 (18 Nov) fixes 19 security advisories plus one hardening change, and the fixes were backported to every branch down to 4.7. The worst one can create an Administrator account for an attacker, and then run code, if a signed-in Administrator opens a crafted editor link. No exploit or attacks are reported, no CVE IDs have been assigned yet, and sites with automatic background updates get the fix on their own.",
+  "status": {
+    "exploit": "none",
+    "attacks": "none",
+    "kev": null,
+    "no_login": true,
+    "scare": 2.0
+  },
+  "affected": [
+    {
+      "label": "WordPress older than the fix",
+      "text": "Below 7.1.5, or below the fixed release on your branch: 7.0.9, 6.9.12, 6.8.13, 6.7.12, 6.6.12, 6.5.15, 6.4.15, 6.3.15, 6.2.16, 6.1.17, 6.0.19, 5.9.21, and so on down to 4.7.40. WordPress 4.6 and older get no fixes. Sites with automatic background updates on (the default for minor releases) get it on their own.",
+      "cmd": "wp core version",
+      "cite": [
+        1,
+        2,
+        5,
+        6
+      ]
+    },
+    {
+      "label": "Someone with access takes the bait",
+      "text": "For the worst bug, a signed-in Administrator has to open a crafted editor link or a post an Author planted it in. The stored XSS needs a Comments or Latest Comments block in post content; the multisite takeover needs a site Administrator on a multisite network. See The bugs above.",
+      "cite": [
+        3,
+        4
+      ]
+    }
+  ],
+  "do": [
+    {
+      "label": "Make sure every site updated",
+      "text": "Check that each site runs 7.1.5 or the fixed release for its branch, and update the ones with automatic updates turned off. Sites still below 7.1.4 also miss CVE-2026-119977, which lets attackers run code during a core upgrade and has been on CISA's exploited list since 3 Nov.",
+      "cmd": "wp core version",
+      "cite": [
+        1,
+        2,
+        6,
+        8,
+        9
+      ]
+    },
+    {
+      "label": "Until then: be careful with editor links",
+      "text": "Administrators shouldn't open block editor links they didn't expect. WordPress gives no workaround for these bugs; updating is the fix.",
+      "cite": [
+        4
+      ]
+    }
+  ],
+  "bugs": [
+    {
+      "cve": "GHSA-pmp8-6cv8-q323",
+      "project": "WordPress",
+      "severity": "high",
+      "url": "https://github.com/WordPress/wordpress-develop/security/advisories/GHSA-pmp8-6cv8-q323",
+      "title": "An Administrator's click can create an attacker admin",
+      "text": "A Template Part block's `theme` and `slug` attributes could make an Administrator's editor send requests to another URL on the same site. Anyone can send an Administrator a crafted editor link, and an Author or above can plant the attributes in a post. When the Administrator opens it, an Administrator account can be created for the attacker, who can then run code by uploading a plugin. Affects 5.9 and later.",
+      "verdict": "if"
+    },
+    {
+      "cve": "GHSA-cr2m-2j4r-3v3x",
+      "project": "WordPress",
+      "severity": "high",
+      "url": "https://github.com/WordPress/wordpress-develop/security/advisories/GHSA-cr2m-2j4r-3v3x",
+      "title": "Stored XSS from a visitor's comment",
+      "text": "Anyone who can comment could post a shortcode attribute that turns into HTML after cleaning, so their script runs for people viewing the page. Only where a Comments or Latest Comments block is placed in post content.",
+      "verdict": "if"
+    },
+    {
+      "cve": "GHSA-gm52-6h3w-97v4",
+      "project": "WordPress",
+      "severity": "high",
+      "url": "https://github.com/WordPress/wordpress-develop/security/advisories/GHSA-gm52-6h3w-97v4",
+      "title": "XSS link to the legacy media library popup",
+      "text": "A crafted link runs the attacker's script if a logged-in user who can upload files opens it.",
+      "verdict": "if"
+    },
+    {
+      "cve": "GHSA-jmhp-hg7w-w9c5",
+      "project": "WordPress",
+      "severity": "high",
+      "url": "https://github.com/WordPress/wordpress-develop/security/advisories/GHSA-jmhp-hg7w-w9c5",
+      "title": "XSS through Openverse image details",
+      "text": "Image credit details from Openverse went into the caption unescaped, so inserting an attacker's image from the editor's Openverse search runs their script. WordPress 6.2 and later.",
+      "verdict": "cycle"
+    },
+    {
+      "cve": "GHSA-mwj7-xhp9-7773",
+      "project": "WordPress",
+      "severity": "high",
+      "url": "https://github.com/WordPress/wordpress-develop/security/advisories/GHSA-mwj7-xhp9-7773",
+      "title": "Multisite: site admin can take over a Super Admin",
+      "text": "Only on multisite networks: a site Administrator could take over a Super Admin account through Customizer menu previews.",
+      "verdict": "if"
+    },
+    {
+      "cve": "GHSA-56j2-5mp6-wr3x",
+      "project": "WordPress",
+      "severity": "medium",
+      "url": "https://github.com/WordPress/wordpress-develop/security/advisories/GHSA-56j2-5mp6-wr3x"
+    },
+    {
+      "cve": "GHSA-rcr3-43fx-wqfv",
+      "project": "WordPress",
+      "severity": "medium",
+      "url": "https://github.com/WordPress/wordpress-develop/security/advisories/GHSA-rcr3-43fx-wqfv"
+    },
+    {
+      "cve": "GHSA-xc9c-4hg4-h4jg",
+      "project": "WordPress",
+      "severity": "medium",
+      "url": "https://github.com/WordPress/wordpress-develop/security/advisories/GHSA-xc9c-4hg4-h4jg"
+    },
+    {
+      "cve": "GHSA-mcv9-c2pg-6m4v",
+      "project": "WordPress",
+      "severity": "medium",
+      "url": "https://github.com/WordPress/wordpress-develop/security/advisories/GHSA-mcv9-c2pg-6m4v"
+    },
+    {
+      "cve": "GHSA-p9x8-m3q4-9wg6",
+      "project": "WordPress",
+      "severity": "medium",
+      "url": "https://github.com/WordPress/wordpress-develop/security/advisories/GHSA-p9x8-m3q4-9wg6"
+    },
+    {
+      "cve": "GHSA-86p8-2wq3-x387",
+      "project": "WordPress",
+      "severity": "low",
+      "url": "https://github.com/WordPress/wordpress-develop/security/advisories/GHSA-86p8-2wq3-x387"
+    },
+    {
+      "cve": "GHSA-h24f-q5c7-c33g",
+      "project": "WordPress",
+      "severity": "low",
+      "url": "https://github.com/WordPress/wordpress-develop/security/advisories/GHSA-h24f-q5c7-c33g"
+    },
+    {
+      "cve": "GHSA-g2r4-3wmg-48f7",
+      "project": "WordPress",
+      "severity": "low",
+      "url": "https://github.com/WordPress/wordpress-develop/security/advisories/GHSA-g2r4-3wmg-48f7"
+    },
+    {
+      "cve": "GHSA-2frv-jg59-g699",
+      "project": "WordPress",
+      "severity": "low",
+      "url": "https://github.com/WordPress/wordpress-develop/security/advisories/GHSA-2frv-jg59-g699"
+    },
+    {
+      "cve": "GHSA-6955-723v-xvmm",
+      "project": "WordPress",
+      "severity": "low",
+      "url": "https://github.com/WordPress/wordpress-develop/security/advisories/GHSA-6955-723v-xvmm"
+    },
+    {
+      "cve": "GHSA-wx6p-jg9m-c5mj",
+      "project": "WordPress",
+      "severity": "low",
+      "url": "https://github.com/WordPress/wordpress-develop/security/advisories/GHSA-wx6p-jg9m-c5mj"
+    },
+    {
+      "cve": "GHSA-qq5q-rw6p-gv4j",
+      "project": "WordPress",
+      "severity": "low",
+      "url": "https://github.com/WordPress/wordpress-develop/security/advisories/GHSA-qq5q-rw6p-gv4j"
+    },
+    {
+      "cve": "GHSA-jq8m-j7jq-c53m",
+      "project": "WordPress",
+      "severity": "low",
+      "url": "https://github.com/WordPress/wordpress-develop/security/advisories/GHSA-jq8m-j7jq-c53m"
+    },
+    {
+      "cve": "GHSA-v7qc-72mg-wgpc",
+      "project": "WordPress",
+      "severity": "low",
+      "url": "https://github.com/WordPress/wordpress-develop/security/advisories/GHSA-v7qc-72mg-wgpc"
+    }
+  ],
+  "slack": "WordPress 7.1.5 (18 Nov) fixes 19 advisories (5 high), backported to every branch down to 4.7 (7.0.9, 6.9.12, ...). Worst: a signed-in Administrator opening a crafted editor link can create an attacker admin account, then code execution via plugin upload. No exploit, no attacks, no CVEs yet, not in KEV. Auto-updates deliver it; check sites with them off (wp core version).",
+  "sources": [
+    {
+      "title": "WordPress.org: 7.1.5 release, 20 security fixes, automatic updates",
+      "url": "https://wordpress.org/news/2026/11/wordpress-7-1-5-release/",
+      "date": "18 Nov"
+    },
+    {
+      "title": "WordPress.org: Version 7.1.5, fixed release for every branch",
+      "url": "https://wordpress.org/documentation/wordpress-version/version-7-1-5/",
+      "date": "18 Nov"
+    },
+    {
+      "title": "WordPress: security advisories (all 19, no CVE IDs yet)",
+      "url": "https://github.com/WordPress/wordpress-develop/security/advisories",
+      "date": "18 Nov"
+    },
+    {
+      "title": "WordPress GHSA-pmp8: Template Part privilege escalation to code execution",
+      "url": "https://github.com/WordPress/wordpress-develop/security/advisories/GHSA-pmp8-6cv8-q323",
+      "date": "18 Nov"
+    },
+    {
+      "title": "WordPress Developer: minor core updates install automatically by default",
+      "url": "https://developer.wordpress.org/advanced-administration/upgrade/upgrading/"
+    },
+    {
+      "title": "WP-CLI: wp core version",
+      "url": "https://developer.wordpress.org/cli/commands/core/version/"
+    },
+    {
+      "title": "Patchstack: 7.1.5 analysis, no CVE IDs assigned",
+      "url": "https://patchstack.com/articles/wordpress-7-1-5-security-release/",
+      "date": "18 Nov"
+    },
+    {
+      "title": "CISA KEV catalog: none of the 7.1.5 issues; CVE-2026-119977 added 3 Nov",
+      "url": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog"
+    },
+    {
+      "title": "CVE record: CVE-2026-119977, upgrade-window code execution, fixed in 7.1.4",
+      "url": "https://www.cve.org/CVERecord?id=CVE-2026-119977"
+    },
+    {
+      "title": "Cloudflare Zero Wire: no exploitation reported as of 19 Nov",
+      "url": "https://radar.cloudflare.com/zero-wire/wordpress-7-1-5-template-part-privilege-escalation",
+      "date": "19 Nov"
+    }
+  ],
+  "changes": [
+    {
+      "date": "2026-11-21",
+      "text": "Published."
+    }
+  ],
+  "status_cite": {
+    "exploit": [
+      7,
+      10
+    ],
+    "attacks": [
+      10
+    ],
+    "kev": [
+      8
+    ],
+    "no_login": [
+      4
+    ]
+  }
+}
