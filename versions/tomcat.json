@@ -1,0 +1,68 @@
+{
+  "id": "tomcat",
+  "name": "Apache Tomcat",
+  "about": "The newest Apache Tomcat release on each supported line. Each one fixes every Tomcat bug we cover, except the two cluster bugs listed below.",
+  "feed": "endoflife:tomcat",
+  "latest_from": [
+    "https://tomcat.apache.org/",
+    "https://tomcat.apache.org/whichversion.html"
+  ],
+  "filter": "tomcat",
+  "checked": "2026-11-21",
+  "lines": [
+    {
+      "line": "11.0",
+      "key": "11.0",
+      "latest": "11.0.29",
+      "released": "2026-11-13"
+    },
+    {
+      "line": "10.1",
+      "key": "10.1",
+      "latest": "10.1.62",
+      "released": "2026-11-16"
+    },
+    {
+      "line": "9.0",
+      "key": "9.0",
+      "latest": "9.0.124",
+      "released": "2026-11-13",
+      "note": "Support ends 31 Mar 2027."
+    }
+  ],
+  "older": "Tomcat 8.5 reached end of life on 31 Mar 2024 and gets no fixes; 10.0 and older are also unsupported. Spring Boot embeds Tomcat and pins its own version.",
+  "unfixed": [
+    {
+      "line": "Cluster TLS-PSK on TLS 1.3",
+      "note": "Fix due in 11.0.30, 10.1.63 and 9.0.125, not released yet. Use TLS 1.2 until then.",
+      "pages": [
+        "tomcat-2026-11-19"
+      ]
+    },
+    {
+      "line": "Cluster EncryptInterceptor",
+      "note": "Deprecated, won't be fixed. Move to TLS-PSK on TLS 1.2.",
+      "pages": [
+        "tomcat-2026-11-19"
+      ]
+    }
+  ],
+  "sources": [
+    {
+      "title": "Apache Tomcat: latest releases and release dates",
+      "url": "https://tomcat.apache.org/"
+    },
+    {
+      "title": "Apache Tomcat: which version, supported lines",
+      "url": "https://tomcat.apache.org/whichversion.html"
+    },
+    {
+      "title": "Apache Tomcat: 8.5 end of life",
+      "url": "https://tomcat.apache.org/tomcat-85-eol.html"
+    },
+    {
+      "title": "Apache Tomcat 11 security page: unreleased fixes",
+      "url": "https://tomcat.apache.org/security-11.html"
+    }
+  ]
+}
