@@ -15,18 +15,23 @@
     "wordpress",
     "postscript",
     "cve-2026-65640",
-    "cve-2026-114727"
+    "cve-2026-114727",
+    "cve-2026-110133",
+    "cve-2026-112922",
+    "cve-2026-103226",
+    "cve-2026-19547",
+    "cve-2026-39919"
   ],
   "cves": [
     "CVE-2026-125396"
   ],
   "product": "Ghostscript",
   "disclosed": "2026-09-08",
-  "news": "2026-11-17",
+  "news": "2026-11-21",
   "updated": "2026-11-22",
   "verdict": "if",
   "tile_line": "Outsiders' files reach it. Full exploit announced.",
-  "summary": "A bug in Ghostscript before 10.08.0 lets a crafted file escape Ghostscript's `-dSAFER` sandbox and run commands as the account doing the rendering. The file has PostScript or PDF inside but can be uploaded as an image named `.png` or `.jpg`, because Ghostscript runs out of sight behind image previews (ImageMagick, Pillow), email thumbnails and print servers; the researchers ran commands through Debian's CUPS, Roundcube, WordPress and more. The CVE record scores it as a local attack (8.5), but those routes are remote. The researchers published a proof of concept that does most of the work: it takes control of Ghostscript's memory (tested on 10.07.0, x86-64 Linux), and their write-up shows the remaining steps to running commands in excerpts; one of them relies on memory offsets from the researchers' test build. They say a full exploit for the Debian CUPS route comes next. No attacks are reported yet.",
+  "summary": "A bug in Ghostscript before 10.08.0 lets a crafted file escape Ghostscript's `-dSAFER` sandbox and run commands as the account doing the rendering. The file holds PostScript but can be uploaded as an image named `.png` or `.jpg`: image libraries such as ImageMagick and Pillow pick the format from the content and hand it to Ghostscript, which also runs behind email thumbnails and print servers; the researchers ran commands through Debian's CUPS, Roundcube, WordPress and more. The CVE record scores it as a local attack (8.5), but those routes are remote. The researchers published a proof of concept that does most of the work: it takes control of Ghostscript's memory (tested on 10.07.0, x86-64 Linux), and their write-up shows the remaining steps to running commands in excerpts; one of them relies on memory offsets from the researchers' test build. They say a full exploit for the Debian CUPS route comes next. No attacks are reported yet.",
   "affected": [
     {
       "label": "Ghostscript before 10.08.0",
@@ -59,7 +64,7 @@
   "do": [
     {
       "label": "Outsiders' files reach it? Update now",
-      "text": "Upload forms, previews, email thumbnails, shared print queues: don't wait for attacks, because the public proof of concept and write-up cover most of an exploit. Update to 10.08.0 or your distro's fixed package: Debian DLA-4914-1 and DSA-6516-1, Ubuntu USN-8949-1 (it lists the bug without a CVE number). This fixes every route at once. Amazon Linux, SUSE Linux Enterprise 15 SP7 and 16, and openSUSE Leap 16 have no fixed package yet: cut the route (below) until they do. Rebuild container images that install Ghostscript.",
+      "text": "Upload forms, previews, email thumbnails, shared print queues: don't wait for attacks, because the public proof of concept and write-up cover most of an exploit. Update to 10.08.0 or your distro's fixed package: Debian DLA-4914-1 and DSA-6516-1, Ubuntu USN-8949-1 (it lists the bug without a CVE number). This fixes every route at once, and five other Ghostscript CVEs (CVE-2026-110133, -112922, -103226, -19547 and -39919); Artifex's own CVE list doesn't name this one. Amazon Linux, SUSE Linux Enterprise 15 SP7 and 16, and openSUSE Leap 16 have no fixed package yet: cut the route (below) until they do. Rebuild container images that install Ghostscript.",
       "cite": [
         3,
         4,
@@ -67,7 +72,9 @@
         6,
         7,
         15,
-        16
+        16,
+        18,
+        19
       ],
       "versions": [
         "ghostscript"
@@ -197,12 +204,21 @@
     {
       "title": "Ubuntu CVE tracker: CVE-2026-125396 \"Needs evaluation\" on every release",
       "url": "https://ubuntu.com/security/CVE-2026-125396"
+    },
+    {
+      "title": "Ghostscript: CVEs fixed in 10.08.0 (doesn't list CVE-2026-125396)",
+      "url": "https://www.ghostscript.com/releases/cve/index.html"
+    },
+    {
+      "title": "oss-security (Oracle): 10.08.0 fixes five more CVEs; Upload2Shell page published 21 Nov",
+      "url": "https://seclists.org/oss-sec/2026/q4/806",
+      "date": "21 Nov"
     }
   ],
   "changes": [
     {
       "date": "2026-11-22",
-      "text": "Clearer that the crafted file can be uploaded as an image."
+      "text": "Clearer that the crafted file can be uploaded as an image. Notes the five other CVEs 10.08.0 fixes. The write-up went public on 21 Nov."
     },
     {
       "date": "2026-11-22",
