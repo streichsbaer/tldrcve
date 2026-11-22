@@ -106,8 +106,14 @@ def product_card(v, n_bugs):
     if len(lines) > len(shown):
         chips += f'<span class="more">+{len(lines) - len(shown)} more</span>'
     return f"""{header("tldrcve.com/versions/" + v["id"])}
-<div class="main"><div class="kick">Latest safe versions</div><h1>{html.escape(v["name"])}</h1>
+<div class="main"><div class="kick">Latest safe versions</div><h1{h1_size(v["name"])}>{html.escape(v["name"])}</h1>
 <div class="chips">{chips}</div></div>"""
+
+
+def h1_size(name: str) -> str:
+    """Long product names get a smaller title so they fit on one line (about 0.56 em per character at 96px)."""
+    size = min(96, int((W - 144) / (0.56 * len(name))))
+    return "" if size == 96 else f' style="font-size:{size}px"'
 
 
 def find_browser():
