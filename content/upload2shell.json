@@ -50,7 +50,7 @@
     },
     {
       "label": "It renders files from outsiders",
-      "text": "Something passes files you don't control to Ghostscript. Common routes: image or PDF previews through ImageMagick/Imagick, Pillow (EPS files, once pixels are loaded) or libvips with ImageMagick loaders; these check the file's content, not its name, so a `.png` upload counts. The upload form doesn't matter either: the researcher says the file can arrive as an image or a video (the write-up tests images and documents, not video). Also: Roundcube attachment thumbnails (before 1.6.20 / 1.7.5), WordPress uploads by Authors and up or public plugin upload forms (before 7.0.4 / 6.9.7), CUPS print queues shared without a login, and document importers that convert PDFs. On a desktop, the CVE record's score assumes a user opens the file.",
+      "text": "Something passes files you don't control to Ghostscript. Common routes: image or PDF previews through ImageMagick/Imagick, Pillow (EPS files, once pixels are loaded) or libvips with ImageMagick loaders; these check the file's content, not its name, so a `.png` upload counts. It doesn't have to be a PDF: the researcher says an image or a video can carry it (the write-up tests images and documents, not video). Also: Roundcube attachment thumbnails (before 1.6.20 / 1.7.5), WordPress uploads by Authors and up or public plugin upload forms (before 7.0.4 / 6.9.7), CUPS print queues shared without a login, and document importers that convert PDFs. On a desktop, the CVE record's score assumes a user opens the file.",
       "cite": [
         1,
         2,
