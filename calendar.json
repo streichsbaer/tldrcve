@@ -33,10 +33,10 @@
     },
     {
       "date": "2026-12-08",
-      "title": "Microsoft Patch Tuesday",
-      "product": "Microsoft",
+      "title": "Windows Patch Tuesday",
+      "product": "Microsoft Windows",
       "kind": "patch-day",
-      "note": "Monthly security updates come out on the second Tuesday of each month.",
+      "note": "Windows monthly security updates come out on the second Tuesday of each month.",
       "source": {
         "title": "Microsoft: Windows monthly security update, second Tuesday of each month",
         "url": "https://learn.microsoft.com/en-us/windows/deployment/update/release-cycle"
@@ -45,9 +45,9 @@
     {
       "date": "2026-12-15",
       "title": "Oracle Critical Security Patch Update",
-      "product": "Oracle (Java, MySQL and more)",
+      "product": "Oracle",
       "kind": "patch-day",
-      "note": "Oracle's newer, more frequent update stream, separate from the quarterly Critical Patch Updates.",
+      "note": "Oracle's newer update stream, eight times a year, complementing the quarterly Critical Patch Updates.",
       "source": {
         "title": "Oracle: Critical Security Patch Update dates",
         "url": "https://www.oracle.com/security-alerts/"
@@ -55,7 +55,7 @@
     },
     {
       "date": "2026-12-17",
-      "title": "PHP security releases",
+      "title": "PHP releases",
       "product": "PHP",
       "kind": "release",
       "expected": true,
@@ -77,10 +77,10 @@
     },
     {
       "date": "2027-01-12",
-      "title": "Microsoft Patch Tuesday",
-      "product": "Microsoft",
+      "title": "Windows Patch Tuesday",
+      "product": "Microsoft Windows",
       "kind": "patch-day",
-      "note": "Monthly security updates come out on the second Tuesday of each month.",
+      "note": "Windows monthly security updates come out on the second Tuesday of each month.",
       "source": {
         "title": "Microsoft: Windows monthly security update, second Tuesday of each month",
         "url": "https://learn.microsoft.com/en-us/windows/deployment/update/release-cycle"
@@ -99,7 +99,7 @@
     {
       "date": "2027-01-19",
       "title": "Oracle Critical Patch Update",
-      "product": "Oracle (Java, MySQL and more)",
+      "product": "Oracle",
       "kind": "patch-day",
       "source": {
         "title": "Oracle: Critical Patch Update dates",

@@ -129,3 +129,26 @@
     }
   }
 })();
+
+// Homepage "Coming up": hide dates already past, keep the next few.
+(function () {
+  var list = document.querySelector("[data-upcoming]");
+  if (!list) return;
+  var keep = parseInt(list.getAttribute("data-upcoming"), 10) || 6;
+  var today = new Date().toISOString().slice(0, 10);
+  var shown = 0;
+  Array.prototype.forEach.call(list.querySelectorAll("li[data-date]"), function (li) {
+    if (li.getAttribute("data-date") < today || shown >= keep) { li.hidden = true; } else { shown++; }
+  });
+})();
+
+// Links to #sources open the folded sources and changelog.
+(function () {
+  function openSources() {
+    if (location.hash !== "#sources") return;
+    var d = document.getElementById("sources");
+    if (d && d.tagName === "DETAILS") d.open = true;
+  }
+  openSources();
+  window.addEventListener("hashchange", openSources);
+})();

@@ -133,7 +133,7 @@ def page(title: str, description: str, body: str, current: str = "", path: str =
       <nav class="site-nav" aria-label="Main">
         <a href="/cves/"{cur["cves"]}>All CVEs</a>
         <a href="/versions/"{cur["versions"]}>Safe versions</a>
-        <a href="/week/"{cur["week"]}>This week</a>
+        <a href="/week/"{cur["week"]}>Weekly</a>
         <a href="/how-we-rate/"{cur["how"]}>How we rate</a>
       </nav>
     </div>
@@ -661,15 +661,27 @@ def upcoming(all_c: list, start: date, end: date) -> list:
             exp = (d.get("pending") or {}).get("expected")
             if within(exp):
                 out.append({"date": exp, "kind": "pending", "title": f'{c["name"]}: {d["label"]}', "product": c["product"],
-                            "note": "", "expected": True, "url": f'/{c["slug"]}/', "source": ""})
+                            "note": "We expect news by this date and will check again.", "expected": True, "url": f'/{c["slug"]}/', "source": ""})
         kev = c["status"].get("kev")
         if kev and within(kev.get("due")):
             out.append({"date": kev["due"], "kind": "deadline", "title": f'CISA deadline: {c["name"]}', "product": c["product"],
-                        "note": "US federal agencies must fix it by this date.", "expected": False, "url": f'/{c["slug"]}/', "source": ""})
+                        "note": "CISA's fix-by date for US federal civilian agencies.", "expected": False, "url": f'/{c["slug"]}/', "source": ""})
     return sorted(out, key=lambda e: (e["date"], e["kind"], e["title"]))
 
 
 def week_data(w: str, all_c: list) -> dict:
+    """A finished week is frozen in its weeks/ file ("snapshot", written by `build.py --freeze-week`), so its page
+    stays as it was; the current week is computed from live data."""
+    wk = next((x for x in WEEKS if x["week"] == w), {})
+    snap = wk.get("snapshot")
+    if snap:
+        by_slug = {c["slug"]: c for c in all_c}
+        return {"week": w, "start": snap["start"], "end": snap["end"],
+                "new": [by_slug[s] for s in snap["new"] if s in by_slug],
+                "changed": [(dt, by_slug[sl], t) for dt, sl, t in snap["changed"] if sl in by_slug],
+                "releases": [(dt, pid, VERSIONS.get(pid, {"name": name}), {"line": line, "latest": latest})
+                             for dt, pid, name, line, latest in snap["releases"]],
+                "ahead": snap["ahead"]}
     mon, sun = week_bounds(w)
     def in_week(d):
         return d and mon <= date.fromisoformat(d) <= sun
@@ -689,9 +701,9 @@ def ahead_items(ahead: list) -> str:
         ext = e["url"].startswith("http")
         rel = ' rel="nofollow"' if ext else ""
         link = f'<a href="{html.escape(e["url"])}"{rel}>{html.escape(e["title"])}</a>'
-        tag = ' <span class="tag">Expected</span>' if e["expected"] and e["kind"] != "pending" else ""
+        tag = ' <span class="tag">Recheck</span>' if e["kind"] == "pending" else (' <span class="tag">Expected</span>' if e["expected"] else "")
         note = f' <span class="muted">{text(e["note"])}</span>' if e["note"] else ""
-        rows.append(f'        <li><time datetime="{e["date"]}">{nice_date(e["date"])}</time><span>{link}{tag}{note}</span></li>')
+        rows.append(f'        <li data-date="{e["date"]}"><time datetime="{e["date"]}">{nice_date(e["date"])}</time><span>{link}{tag}{note}</span></li>')
     return "\n".join(rows) or '        <li><span></span><span>Nothing scheduled that we know of.</span></li>'
 
 
@@ -701,7 +713,8 @@ def week_page(wk: dict, all_c: list) -> str:
     idx = [x["week"] for x in WEEKS].index(w)
     prev_w = WEEKS[idx - 1]["week"] if idx > 0 else None
     next_w = WEEKS[idx + 1]["week"] if idx + 1 < len(WEEKS) else None
-    counts = f'{len(d["new"])} new page{"s" if len(d["new"]) != 1 else ""}, {len(d["changed"])} update{"s" if len(d["changed"]) != 1 else ""}'
+    n_upd = len({c["slug"] for _, c, _ in d["changed"]})
+    counts = f'{len(d["new"])} new page{"s" if len(d["new"]) != 1 else ""}, {n_upd} page{"s" if n_upd != 1 else ""} updated'
     intro = f'\n      <p>{text(wk["intro"])}</p>' if wk.get("intro") else ""
     by_page = {}
     for dt, c, t in d["changed"]:  # newest first, so the first entry per page is its latest change
@@ -709,16 +722,16 @@ def week_page(wk: dict, all_c: list) -> str:
     changed = "\n".join(
         f'        <li><time datetime="{dt}">{nice_date(dt)}</time><span><a href="/{c["slug"]}/">{html.escape(c["name"])}</a>: {text(t)}'
         + (f' <a class="muted" href="/{c["slug"]}/#sources">+{len(all_t) - 1} earlier</a>' if len(all_t) > 1 else "") + "</span></li>"
-        for dt, c, t, all_t in by_page.values()) or '        <li><span></span><span>No updates this week.</span></li>'
+        for dt, c, t, all_t in by_page.values()) or '        <li><span></span><span>No updates.</span></li>'
     by_prod = {}
     for dt, pid, v, l in d["releases"]:  # newest first
-        by_prod.setdefault(pid, (dt, v, []))[2].append(l["latest"])
+        by_prod.setdefault((pid, dt), (v, []))[1].append(l["latest"])
     releases = "\n".join(
-        f'        <li><time datetime="{dt}">{nice_date(dt)}</time><span><a href="/versions/{pid}/">{html.escape(v["name"])}</a>: {html.escape(", ".join(vers))}</span></li>'
-        for pid, (dt, v, vers) in by_prod.items()) or '        <li><span></span><span>None this week.</span></li>'
+        f'        <li><time datetime="{dt}">{nice_date(dt)}</time><span><a href="/versions/{pid}/">{html.escape(v["name"])}</a>: {html.escape(", ".join(sorted(vers, key=vkey, reverse=True)))}</span></li>'
+        for (pid, dt), (v, vers) in by_prod.items()) or '        <li><span></span><span>None with a release date this week.</span></li>'
     top, rest = d["new"][:WEEK_TILES], d["new"][WEEK_TILES:]
     new_tiles = "\n".join(tile(c) for c in top)
-    new_block = f'    <ul class="tiles">\n{new_tiles}\n    </ul>' if top else '    <p class="muted">No new pages this week.</p>'
+    new_block = f'    <ul class="tiles">\n{new_tiles}\n    </ul>' if top else '    <p class="muted">No new pages.</p>'
     if rest:
         rest_rows = "\n".join(
             f'        <li><span class="verdict verdict--{c["verdict"]}">{VERDICTS[c["verdict"]]}</span><span><a href="/{c["slug"]}/">{html.escape(c["name"])}</a> <span class="muted">{text(c["tile_line"])}</span></span></li>'
@@ -743,7 +756,7 @@ def week_page(wk: dict, all_c: list) -> str:
       <p>{week_label(w)}: {counts}.</p>{intro}
     </header>
 
-    <div class="section-head"><h2>New this week</h2></div>
+    <div class="section-head"><h2>New pages</h2></div>
 {new_block}
 
     <section class="pane">
@@ -756,7 +769,7 @@ def week_page(wk: dict, all_c: list) -> str:
     </section>
 
     <section class="pane">
-      <div class="pane__head"><h2>New safe releases</h2><a class="more-link" href="/versions/">All safe versions →</a></div>
+      <div class="pane__head"><h2>New safe releases</h2><span class="pane__meta">only product lines where we record a release date</span></div>
       <div class="pane__body">
       <ul class="changes">
 {releases}
@@ -785,7 +798,7 @@ def weeks_index(all_c: list) -> str:
     for wk in reversed(WEEKS):
         w = wk["week"]
         d = week_data(w, all_c)
-        rows.append(f'        <li><time datetime="{d["start"]}">{nice_date(d["start"])}</time><span><a href="/week/{week_slug(w)}/">{week_title(w)}</a>: {week_label(w)}, {len(d["new"])} new, {len(d["changed"])} updates</span></li>')
+        rows.append(f'        <li><time datetime="{d["start"]}">{nice_date(d["start"])}</time><span><a href="/week/{week_slug(w)}/">{week_title(w)}</a>: {week_label(w)}, {len(d["new"])} new, {len({c["slug"] for _, c, _ in d["changed"]})} updated</span></li>')
     body = f"""  <main class="wrap prose-page">
     <header class="page-head">
       <h1>Weekly review</h1>
@@ -809,13 +822,14 @@ def home_week(all_c: list) -> str:
     if not WEEKS:
         return ""
     w = WEEKS[-1]["week"]
-    d = week_data(w, all_c)
+    start = week_bounds(w)[0]
+    soon = upcoming(all_c, start, start + timedelta(days=AHEAD_DAYS + 30))  # site.js hides dates already past and keeps 6
     return f"""
     <section class="pane">
       <div class="pane__head"><h2>Coming up</h2><a class="more-link" href="/week/{week_slug(w)}/">{week_title(w)} review →</a></div>
       <div class="pane__body">
-      <ul class="changes">
-{ahead_items(d["ahead"][:6])}
+      <ul class="changes" data-upcoming="6">
+{ahead_items(soon)}
       </ul>
       </div>
     </section>
@@ -980,7 +994,7 @@ def how_page() -> str:
         <dt>Public exploit code is out</dt><dd>Working code anyone can download. A blog post or video doesn't count, and neither do the fake exploits that show up after every big CVE.</dd>
         <dt>Shown working</dt><dd>A researcher demonstrated it, but hasn't published the code.</dd>
         <dt>Attacks seen in the wild</dt><dd>A credible report from the vendor, CISA or a named security team.</dd>
-        <dt>On CISA's exploited list</dt><dd>Listed in CISA's <a href="https://www.cisa.gov/known-exploited-vulnerabilities-catalog">Known Exploited Vulnerabilities</a> catalog. The fix-by date is the US federal deadline, which is a good default for everyone else.</dd>
+        <dt>On CISA's exploited list</dt><dd>Listed in CISA's <a href="https://www.cisa.gov/known-exploited-vulnerabilities-catalog">Known Exploited Vulnerabilities</a> catalog. The fix-by date is CISA's deadline for US federal civilian agencies, which is a good default for everyone else.</dd>
       </dl>
     </section>
 
@@ -1113,9 +1127,17 @@ def editor_checks(all_c: list) -> list:
             warnings.append(f"{where}: kind must be release or patch-day")
         if e.get("expected") and when < date.today():
             warnings.append(f"{where}: expected date {e['date']} has passed; confirm it or remove it")
+    for e in CALENDAR:
+        if RELATIVE.search(e.get("note", "")):
+            warnings.append(f"calendar.json ({e.get('title')}): relative date in note, use an absolute date")
     for wk in WEEKS:
         if not WEEK_RE.match(wk.get("week", "")):
             warnings.append(f"weeks: bad week id {wk.get('week')!r}, use YYYY-Www")
+            continue
+        if RELATIVE.search(wk.get("intro", "")):
+            warnings.append(f"weeks/{week_slug(wk['week'])}.json: relative date in intro, use an absolute date")
+        if not wk.get("snapshot") and week_bounds(wk["week"])[1] + timedelta(days=1) < date.today():
+            warnings.append(f"weeks/{week_slug(wk['week'])}.json: week is over; run python3 build.py --freeze-week {wk['week']}")
     return warnings
 
 
@@ -1216,7 +1238,7 @@ def write_feed(all_c: list) -> None:
       <link>{SITE_URL}/week/{week_slug(w)}/</link>
       <guid isPermaLink="false">week-{week_slug(w)}</guid>
       <pubDate>{rfc822(d["end"])}</pubDate>
-      <description>{html.escape(f'{len(d["new"])} new pages, {len(d["changed"])} updates, and {len(d["ahead"])} dates coming up.')}</description>
+      <description>{html.escape(f'{len(d["new"])} new pages, {len({c["slug"] for _, c, _ in d["changed"]})} pages updated, and {len(d["ahead"])} dates coming up.')}</description>
     </item>""")
     newest = entries[0][0] if entries else date.today().isoformat()
     (OUT / "feed.xml").write_text(f"""<?xml version="1.0" encoding="UTF-8"?>
@@ -1396,8 +1418,27 @@ def not_found_page() -> str:
     return page("Not found · tldrcve", "Page not found.", body, path="404")
 
 
+def freeze_week(w: str, all_c: list) -> None:
+    """Write a finished week's computed contents into its weeks/ file, so the page stops changing."""
+    path = WEEKS_DIR / f"{week_slug(w)}.json"
+    wk = json.loads(path.read_text())
+    if wk.get("snapshot"):
+        sys.exit(f"{w} is already frozen")
+    if week_bounds(w)[1] >= date.today():
+        sys.exit(f"{w} isn't over yet (ends {week_bounds(w)[1]})")
+    d = week_data(w, all_c)
+    wk["snapshot"] = {"start": d["start"], "end": d["end"], "new": [c["slug"] for c in d["new"]],
+                      "changed": [[dt, c["slug"], t] for dt, c, t in d["changed"]],
+                      "releases": [[dt, pid, v["name"], l["line"], l["latest"]] for dt, pid, v, l in d["releases"]],
+                      "ahead": d["ahead"]}
+    path.write_text(json.dumps(wk, indent=2, ensure_ascii=False) + "\n")
+    print(f"froze {w} in {path.relative_to(ROOT)}")
+
+
 def main() -> None:
     all_c = [json.loads(p.read_text()) for p in sorted(CONTENT.glob("*.json"))]
+    if "--freeze-week" in sys.argv:
+        return freeze_week(sys.argv[sys.argv.index("--freeze-week") + 1], all_c)
     warnings = editor_checks(all_c) + versions_checks(all_c)
     slugs = {c["slug"] for c in all_c}
     for c in all_c:

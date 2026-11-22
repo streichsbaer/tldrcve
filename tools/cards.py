@@ -153,7 +153,7 @@ def documents(all_c):
         d = build.week_data(w, all_c)
         cards[f"week/{build.week_slug(w)}"] = text_card(f"tldrcve.com/week/{build.week_slug(w)}", build.week_title(w),
                                                         build.week_label(w),
-                                                        f'{len(d["new"])} new, {len(d["changed"])} updates, {len(d["ahead"])} dates coming up.')
+                                                        f'{len(d["new"])} new, {len({c["slug"] for _, c, _ in d["changed"]})} updated, {len(d["ahead"])} dates coming up.')
     return {slug: f'<!doctype html><html><head><meta charset="utf-8">{FONTS}<style>{CSS}</style></head><body>{body}</body></html>'
             for slug, body in cards.items()}
 
