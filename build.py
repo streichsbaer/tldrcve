@@ -105,8 +105,9 @@ def write_fingerprinted() -> None:
         shutil.copyfile(ASSETS / name, OUT / fingerprinted(name).lstrip("/"))
 
 
-def page(title: str, description: str, body: str, current: str = "", path: str = "") -> str:
+def page(title: str, description: str, body: str, current: str = "", path: str = "", data: str = "") -> str:
     seo = social_tags(title, description, path)
+    data_link = f'\n  <link rel="alternate" type="application/json" title="This page as JSON" href="{data}">' if data else ""
     cur = {k: ' aria-current="page"' if k == current else "" for k in ("cves", "versions", "how")}
     return f"""<!doctype html>
 <html lang="en" class="no-js">
@@ -120,7 +121,7 @@ def page(title: str, description: str, body: str, current: str = "", path: str =
   <link rel="icon" href="/favicon.ico" sizes="16x16 32x32 48x48">
   <link rel="icon" href="/assets/icons/icon.svg" type="image/svg+xml">
   <link rel="apple-touch-icon" href="/assets/icons/apple-touch-icon.png">
-  <link rel="alternate" type="application/rss+xml" title="tldrcve updates" href="/feed.xml">
+  <link rel="alternate" type="application/rss+xml" title="tldrcve updates" href="/feed.xml">{data_link}
   <link rel="stylesheet" href="{fingerprinted("site.css")}">
   <script src="{fingerprinted("site.js")}" defer></script>
 {ANALYTICS}
@@ -422,7 +423,7 @@ def brief(c: dict) -> str:
   </main>
 """
     title = f'{c["name"]} ({cve_list(c)}) in plain English · tldrcve'
-    return page(title, c["summary"], body, path=f"/{c['slug']}/")
+    return page(title, c["summary"], body, path=f"/{c['slug']}/", data=f"/{c['slug']}.json")
 
 
 # ---------- Versions (latest safe version per product line) ----------
@@ -559,7 +560,7 @@ def versions_page(v: dict, all_c: list) -> str:
     </section>
   </main>
 """
-    return page(f'Latest safe {v["name"]} versions · tldrcve', v["about"], body, current="versions", path=f"/versions/{pid}/")
+    return page(f'Latest safe {v["name"]} versions · tldrcve', v["about"], body, current="versions", path=f"/versions/{pid}/", data=f"/versions/{pid}.json")
 
 
 def versions_index(all_c: list) -> str:
@@ -997,6 +998,108 @@ def write_redirects(all_c: list) -> None:
     (OUT / "_redirects").write_text("\n".join(dict.fromkeys(lines)) + "\n")
 
 
+# ---------- Data for agents: /llms.txt, /<slug>.json, /versions/<id>.json, /api/cves.json ----------
+
+def scare_label(scare: float) -> str:
+    return zone(scare)[0]
+
+
+def version_data(pid: str, all_c: list) -> dict:
+    """versions/<id>.json as published, plus its URLs and the pages it covers."""
+    v = VERSIONS[pid]
+    return {"url": f"{SITE_URL}/versions/{pid}/", "json": f"{SITE_URL}/versions/{pid}.json", **v,
+            "pages": [c["slug"] for c in product_pages(pid, all_c)]}
+
+
+def page_data(c: dict) -> dict:
+    """content/<slug>.json as published, plus URLs, labels and the safe versions its steps show."""
+    pids = list(dict.fromkeys(pid for d in c["do"] for pid in d.get("versions", [])))
+    safe = [{"id": pid, "name": VERSIONS[pid]["name"], "url": f"{SITE_URL}/versions/{pid}/",
+             "json": f"{SITE_URL}/versions/{pid}.json", "checked": VERSIONS[pid]["checked"],
+             "lines": [{k: l[k] for k in ("line", "latest", "released", "note") if k in l} for l in VERSIONS[pid]["lines"]],
+             **({"older": VERSIONS[pid]["older"]} if VERSIONS[pid].get("older") else {})} for pid in pids]
+    return {"url": f'{SITE_URL}/{c["slug"]}/', "json": f'{SITE_URL}/{c["slug"]}.json',
+            "verdict_label": VERDICTS[c["verdict"]], "scare_label": scare_label(c["status"]["scare"]),
+            **c, **({"safe_versions": safe} if safe else {})}
+
+
+def index_row(c: dict) -> dict:
+    s = c["status"]
+    row = {k: c[k] for k in ("slug", "name", "cves", "product", "verdict") if k in c}
+    row.update({"verdict_label": VERDICTS[c["verdict"]], "tile_line": c["tile_line"], "scare": s["scare"],
+                "scare_label": scare_label(s["scare"]), "exploit": s["exploit"], "attacks": s["attacks"],
+                "kev": s["kev"]})
+    row.update({k: c[k] for k in ("ghsa", "also_in") if c.get(k)})
+    if "no_login" in s:
+        row["no_login"] = s["no_login"]
+    row.update({k: c[k] for k in ("disclosed", "news", "updated") if c.get(k)})
+    row.update({"url": f'{SITE_URL}/{c["slug"]}/', "json": f'{SITE_URL}/{c["slug"]}.json'})
+    return row
+
+
+def dump(rel: str, obj) -> None:
+    out = OUT / rel
+    out.parent.mkdir(parents=True, exist_ok=True)
+    out.write_text(json.dumps(obj, indent=2, ensure_ascii=False) + "\n")
+
+
+def write_data(all_c: list) -> None:
+    by_update = sorted(all_c, key=lambda c: (c["updated"], c["slug"]), reverse=True)
+    for c in all_c:
+        dump(f'{c["slug"]}.json', page_data(c))
+    for pid in VERSIONS:
+        dump(f"versions/{pid}.json", version_data(pid, all_c))
+    dump("api/cves.json", {
+        "site": SITE_URL, "updated": max(c["updated"] for c in all_c),
+        "about": "Every page on tldrcve.com, newest update first. Each page's full data is at its json URL.",
+        "verdicts": VERDICTS, "scare_labels": [z[1] for z in ZONES],
+        "pages": [index_row(c) for c in by_update],
+        "safe_versions": [{"id": pid, "name": v["name"], "checked": v["checked"], "url": f"{SITE_URL}/versions/{pid}/",
+                           "json": f"{SITE_URL}/versions/{pid}.json"} for pid, v in VERSIONS.items()],
+    })
+
+    def flat(s: str) -> str:  # one line, no markup: llms.txt is read as plain Markdown
+        return re.sub(r"\[([^\]]+)\]\((/[a-z0-9/-]*)\)", r"\1", s).replace("\n", " ")
+
+    lines = [
+        "# tldrcve",
+        "",
+        "> The vulnerabilities people are talking about, in plain English: how scary each one is, whether you're "
+        "affected, and what to do. Every claim cites a source.",
+        "",
+        "Verdicts: " + "; ".join(f"`{k}` = {v}" for k, v in VERDICTS.items()) + ". "
+        "Scare level runs 0-4: " + ", ".join(f"{z[1]} below {z[0]}" for z in ZONES[:-1]) + f", then {ZONES[-1][1]}. "
+        "In the JSON, `affected` lists conditions that must all be true, `cite` numbers are 1-based indexes into "
+        "`sources`, and text uses `backticks` for code and [label](/path/) for links to this site. "
+        "Every CVE or GHSA ID also works as a URL, e.g. https://tldrcve.com/CVE-2026-125396 redirects to its page.",
+        "",
+        "## Data",
+        "",
+        f"- [All pages as JSON]({SITE_URL}/api/cves.json): verdict, scare level, exploit, attacks and KEV status for every page, with links to each page's JSON",
+        f"- Each page as JSON: add `.json` to the page path, e.g. {SITE_URL}/upload2shell.json",
+        f"- Safe versions as JSON: {SITE_URL}/versions/<product>.json, e.g. {SITE_URL}/versions/ghostscript.json",
+        f"- [RSS feed]({SITE_URL}/feed.xml): new pages and updates",
+        "",
+        "## Pages",
+        "",
+    ]
+    for c in by_update:
+        ids = ", ".join(c["cves"][:3]) + (f" +{len(c['cves']) - 3} more" if len(c["cves"]) > 3 else "")
+        lines.append(f'- [{c["name"]}]({SITE_URL}/{c["slug"]}/): {product_full(c)}'
+                     + (f" ({ids})" if ids else "") + f'. {VERDICTS[c["verdict"]]} · {scare_label(c["status"]["scare"])}. '
+                     + flat(c["tile_line"]) + f' Updated {c["updated"]}.')
+    lines += ["", "## Safe versions", "", f"- [All products]({SITE_URL}/versions/): newest safe release per product line"]
+    for pid, v in VERSIONS.items():
+        latest = ", ".join(l["latest"] for l in v["lines"])
+        lines.append(f'- [{v["name"]}]({SITE_URL}/versions/{pid}/): {latest} (checked {v["checked"]})')
+    lines += ["", "## About", "",
+              f"- [Home]({SITE_URL}/): latest pages",
+              f"- [All CVEs]({SITE_URL}/cves/): every page, filterable by product and date",
+              f"- [How we rate]({SITE_URL}/how-we-rate/): what the verdicts and scare levels mean",
+              f"- [Source on GitHub]({REPO_URL}): content files, corrections welcome", ""]
+    (OUT / "llms.txt").write_text("\n".join(lines))
+
+
 def write_host_files(public: bool) -> None:
     """Cloudflare reads _headers; robots.txt keeps crawlers out of non-public builds."""
     headers = [
@@ -1013,7 +1116,9 @@ def write_host_files(public: bool) -> None:
     # Only fingerprinted files are cached forever. Everything else (link-preview images, plain copies)
     # keeps a short cache, so a request that lands mid-deploy can't pin an old file for a year.
     headers += ["", "/assets/*", "  Cache-Control: public, max-age=3600",
-                "", "/assets/v/*", "  ! Cache-Control", "  Cache-Control: public, max-age=31536000, immutable", ""]
+                "", "/assets/v/*", "  ! Cache-Control", "  Cache-Control: public, max-age=31536000, immutable",
+                "", "/*.json", "  Access-Control-Allow-Origin: *",
+                "", "/llms.txt", "  Access-Control-Allow-Origin: *", ""]
     (OUT / "_headers").write_text("\n".join(headers))
     robots = f"User-agent: *\nAllow: /\n\nSitemap: {SITE_URL}/sitemap.xml\n" if public else "User-agent: *\nDisallow: /\n"
     (OUT / "robots.txt").write_text(robots)
@@ -1074,6 +1179,7 @@ def main() -> None:
     write_sitemap(all_c)
     write_redirects(all_c)
     write_feed(all_c)
+    write_data(all_c)
     (OUT / "build.txt").write_text(os.environ.get("TLDRCVE_BUILD_ID", "local"))  # lets CI see when a deploy is live
     print(f"{'PUBLIC' if public else 'private (noindex)'} build:", end=" ")
     print(f"built {len(all_c)} briefs + home, all CVEs, how we rate -> {OUT.relative_to(ROOT)}/")

@@ -9,12 +9,12 @@ tldrcve.com explains the vulnerabilities people are talking about in plain Engli
 | Path | What it is |
 |---|---|
 | `content/<slug>.json` | One file per vulnerability. Most changes touch only this folder |
-| `build.py` | Builds the static site into `site/`. Python standard library only |
+| `build.py` | Builds the static site into `site/`, plus files for agents: `/llms.txt`, `/<slug>.json`, `/versions/<product>.json` and the `/api/cves.json` index. Python standard library only |
 | `assets/` | `site.css`, `site.js`, and `og/` (link-preview images) |
 | `versions/<product>.json` | Latest safe version per product line, shared by every page that embeds it. Edit once, every page updates |
 | `watch/<id>.json` | Vulnerabilities we evaluated but haven't written a page for, with the facts, sources, what would change our mind, and a recheck date |
 | `tools/versions.py` | Refreshes `versions/` from vendor feeds (PHP, Node.js so far). Never lowers a version. `--report` lists every product, how it's refreshed, when it was last checked and where we look |
-| `tools/check_live.py` | Checks the live site after a deploy: every page, its own preview image, icons, feed, redirects |
+| `tools/check_live.py` | Checks the live site after a deploy: every page, its own preview image, icons, feed, redirects, `llms.txt` and the JSON files |
 | `tools/cards.py` | Renders the link-preview images. Needs a desktop browser (Chrome, Firefox or Zen) |
 | `site/` | Build output. Never edit or commit it |
 
@@ -54,7 +54,7 @@ A change is only done when `--strict` passes.
 
 Every page needs its own link-preview image: `--strict` fails until a new page (or product in `versions/`) has one. Run `python3 tools/cards.py` if you have Chrome, Firefox or Zen; if not, open the pull request anyway and CI draws them. If you change a page's name, CVEs, verdict, scare level or tile line, its image goes out of date: the build prints a note, and `--public` builds refuse to deploy until it's redrawn.
 
-`tools/check_live.py` runs after every deploy. It loads every page in the sitemap and fails if a page, its preview image, the favicon, the feed or a CVE/GHSA redirect is wrong.
+`tools/check_live.py` runs after every deploy. It loads every page in the sitemap and fails if a page, its preview image, the favicon, the feed, a CVE/GHSA redirect, `llms.txt` or a JSON file is wrong.
 
 ## Writing a page
 

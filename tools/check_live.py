@@ -1,5 +1,6 @@
 """Check the live site after a deploy: every page in the sitemap loads, has its own link-preview card,
-and the card is a 1200x630 PNG. Also checks the favicon, RSS feed and redirects for every CVE/GHSA ID.
+and the card is a 1200x630 PNG. Also checks the favicon, RSS feed, redirects for every CVE/GHSA ID, and the
+agent files: /llms.txt, /api/cves.json and every page's and product's JSON.
 
   python3 tools/check_live.py                 # checks https://tldrcve.com
   python3 tools/check_live.py http://localhost:8787
@@ -32,6 +33,47 @@ def png_size(data):
     if data[:8] != b"\x89PNG\r\n\x1a\n":
         return None
     return struct.unpack(">II", data[16:24])
+
+
+def check_data(urls):
+    """llms.txt and every JSON file exist, parse, match the sitemap, and can be read from other sites (CORS)."""
+    problems = []
+    slugs = sorted(json.loads(f.read_text())["slug"] for f in (ROOT / "content").glob("*.json"))
+    products = sorted(f.stem for f in (ROOT / "versions").glob("*.json"))
+    status, headers, body = get(f"{BASE}/llms.txt")
+    llms = body.decode(errors="replace")
+    if status != 200:
+        problems.append(f"/llms.txt: HTTP {status}")
+    else:
+        if headers.get("Access-Control-Allow-Origin") != "*":
+            problems.append("/llms.txt: no Access-Control-Allow-Origin: *")
+        missing = [u for u in urls if f"https://tldrcve.com{u})" not in llms]
+        if missing:
+            problems.append(f"/llms.txt: no link to {', '.join(missing[:5])}")
+    status, headers, body = get(f"{BASE}/api/cves.json")
+    try:
+        index = json.loads(body) if status == 200 else None
+    except ValueError:
+        index = None
+    if not index:
+        problems.append(f"/api/cves.json: HTTP {status}, not valid JSON")
+    else:
+        if headers.get("Access-Control-Allow-Origin") != "*":
+            problems.append("/api/cves.json: no Access-Control-Allow-Origin: *")
+        if sorted(p["slug"] for p in index["pages"]) != slugs:
+            problems.append("/api/cves.json: pages don't match content/")
+        if sorted(v["id"] for v in index["safe_versions"]) != products:
+            problems.append("/api/cves.json: safe_versions don't match versions/")
+    for kind, ids, key in (("", slugs, "slug"), ("versions/", products, "id")):
+        for i in ids:
+            status, _, body = get(f"{BASE}/{kind}{i}.json")
+            try:
+                ok = status == 200 and json.loads(body).get(key) == i
+            except ValueError:
+                ok = False
+            if not ok:
+                problems.append(f"/{kind}{i}.json: HTTP {status}, missing or wrong {key}")
+    return problems
 
 
 def main():
@@ -72,6 +114,7 @@ def main():
             loc = headers.get("Location", "") if headers else ""
             if status != 301 or not loc.rstrip("/").endswith(c["slug"]):
                 problems.append(f"/{cid}: HTTP {status} -> {loc or 'nothing'}, expected /{c['slug']}/")
+    problems += check_data(urls)
     for p in problems:
         print("FAIL", p)
     print(f"{pages} pages checked, {len(problems)} problem(s)")
