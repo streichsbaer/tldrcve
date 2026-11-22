@@ -50,14 +50,15 @@
     },
     {
       "label": "It renders files from outsiders",
-      "text": "Something passes files you don't control to Ghostscript. Common routes: image or PDF previews through ImageMagick/Imagick, Pillow (EPS files, once pixels are loaded) or libvips with ImageMagick loaders; these check the file's content, not its name, so a `.png` upload counts. Also: Roundcube attachment thumbnails (before 1.6.20 / 1.7.5), WordPress uploads by Authors and up or public plugin upload forms (before 7.0.4 / 6.9.7), CUPS print queues shared without a login, and document importers that convert PDFs. On a desktop, the CVE record's score assumes a user opens the file.",
+      "text": "Something passes files you don't control to Ghostscript. Common routes: image or PDF previews through ImageMagick/Imagick, Pillow (EPS files, once pixels are loaded) or libvips with ImageMagick loaders; these check the file's content, not its name, so a `.png` upload counts. The upload form doesn't matter either: the researcher says the file can arrive as an image or a video (the write-up tests images and documents, not video). Also: Roundcube attachment thumbnails (before 1.6.20 / 1.7.5), WordPress uploads by Authors and up or public plugin upload forms (before 7.0.4 / 6.9.7), CUPS print queues shared without a login, and document importers that convert PDFs. On a desktop, the CVE record's score assumes a user opens the file.",
       "cite": [
         1,
         2,
         3,
         8,
         13,
-        14
+        14,
+        20
       ]
     }
   ],
@@ -213,12 +214,17 @@
       "title": "oss-security (Oracle): 10.08.0 fixes five more CVEs; Upload2Shell page published 21 Nov",
       "url": "https://seclists.org/oss-sec/2026/q4/806",
       "date": "21 Nov"
+    },
+    {
+      "title": "Paulos Yibelo on X: the file can arrive as an image or a video",
+      "url": "https://x.com/PaulosYibelo/status/2124270467246969153",
+      "date": "21 Nov"
     }
   ],
   "changes": [
     {
       "date": "2026-11-22",
-      "text": "Clearer that the crafted file can be uploaded as an image. Notes the five other CVEs 10.08.0 fixes. The write-up is dated 17 Nov but first went public on 21 Nov, per oss-security."
+      "text": "Clearer that the crafted file can be uploaded as an image, or, the researcher says, a video. Notes the five other CVEs 10.08.0 fixes. The write-up is dated 17 Nov but first went public on 21 Nov, per oss-security."
     },
     {
       "date": "2026-11-22",
