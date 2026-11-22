@@ -22,16 +22,19 @@
   "product": "Apache Roller",
   "disclosed": "2026-09-25",
   "news": "2026-11-17",
-  "updated": "2026-11-20",
+  "updated": "2026-11-22",
   "verdict": "now",
-  "tile_line": "Apache says exploited. No login. Fixed in 6.1.6.",
-  "summary": "A bug in Apache Roller, a Java blog server, lets anyone who can reach the site send one crafted request to its XML-RPC address and, in the worst case, run their own code, without logging in. Default installs from 4.0.0 through 6.1.5 are affected, even with XML-RPC switched off. Apache rates it Critical (CVSS 9.8) and says it is being actively exploited; one researcher's public code reaches the bug but says running code on a stock, up-to-date setup needs extra work. 6.1.6 (24 Sep 2026) and later fix it.",
+  "tile_line": "Exploited, on CISA's list. No login. Fixed in 6.1.6.",
+  "summary": "A bug in Apache Roller, a Java blog server, lets anyone who can reach the site send one crafted request to its XML-RPC address and, in the worst case, run their own code, without logging in. Default installs from 4.0.0 through 6.1.5 are affected, even with XML-RPC switched off. Apache rates it Critical (CVSS 9.8) and says it is being actively exploited, and CISA added it to its exploited list (KEV) on 20 Nov 2026; one researcher's public code reaches the bug but says running code on a stock, up-to-date setup needs extra work. 6.1.6 (24 Sep 2026) and later fix it.",
   "status": {
     "exploit": "public",
     "attacks": "seen",
-    "kev": null,
+    "kev": {
+      "added": "2026-11-20",
+      "due": "2026-11-23"
+    },
     "no_login": true,
-    "scare": 3.4
+    "scare": 3.6
   },
   "affected": [
     {
@@ -99,7 +102,7 @@
       "6.1": "6.1.6"
     }
   },
-  "slack": "Apache Roller CVE-2026-129448 (same bug as CVE-2026-82384): anyone who can reach a Roller blog can run code on it without logging in, via crafted XML-RPC requests to /roller-services/xmlrpc. Default installs from 4.0.0 through 6.1.5 are affected, even with XML-RPC turned off in the admin UI. Apache rates it Critical (CVSS 9.8) and says it is being actively exploited (no details given); not on CISA KEV as of 18 Nov. Public proof-of-concept code reaches the bug; the researcher says code execution on a stock, up-to-date setup needs a gadget chain public tools don't provide. Fixed in 6.1.6; upgrade to 6.1.7, the newest. Stopgap: set enabledForExtensions to false in WEB-INF/web.xml or remove the XML-RPC servlet mapping, then restart.",
+  "slack": "Apache Roller CVE-2026-129448 (same bug as CVE-2026-82384): anyone who can reach a Roller blog can run code on it without logging in, via crafted XML-RPC requests to /roller-services/xmlrpc. Default installs from 4.0.0 through 6.1.5 are affected, even with XML-RPC turned off in the admin UI. Apache rates it Critical (CVSS 9.8) and says it is being actively exploited (no details given); on CISA KEV since 20 Nov (due 23 Nov). Public proof-of-concept code reaches the bug; the researcher says code execution on a stock, up-to-date setup needs a gadget chain public tools don't provide. Fixed in 6.1.6; upgrade to 6.1.7, the newest. Stopgap: set enabledForExtensions to false in WEB-INF/web.xml or remove the XML-RPC servlet mapping, then restart.",
   "sources": [
     {
       "title": "Apache: CVE-2026-129448 advisory, 4.0.0-6.1.4, actively exploited",
@@ -112,7 +115,7 @@
       "date": "25 Sep"
     },
     {
-      "title": "CVE record: CVSS 9.8, no login; CISA SSVC exploitation none (18 Nov)",
+      "title": "CVE record: CVSS 9.8, no login; CISA SSVC exploitation active, KEV 20 Nov",
       "url": "https://www.cve.org/CVERecord?id=CVE-2026-129448",
       "date": "17 Nov"
     },
@@ -138,8 +141,8 @@
       "url": "https://github.com/apache/roller/blob/roller-6.1.5/app/src/main/resources/org/apache/roller/weblogger/config/runtimeConfigDefs.xml"
     },
     {
-      "title": "CISA KEV catalog: not listed (18 Nov release)",
-      "url": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog"
+      "title": "CISA KEV catalog: CVE-2026-129448 added 20 Nov, due 23 Nov",
+      "url": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog?field_cve=CVE-2026-129448"
     },
     {
       "title": "Tuxshin Security: public PoC, scanner and lab; RCE needs a gadget chain",
@@ -162,6 +165,10 @@
   ],
   "changes": [
     {
+      "date": "2026-11-22",
+      "text": "CISA added CVE-2026-129448 to its exploited list (KEV) on 20 Nov, due 23 Nov; we'd still said it wasn't listed. Scare 3.6."
+    },
+    {
       "date": "2026-11-20",
       "text": "Published."
     }
@@ -176,7 +183,9 @@
       11
     ],
     "attacks": [
-      1
+      1,
+      3,
+      9
     ],
     "kev": [
       9
