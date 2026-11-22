@@ -21,7 +21,7 @@
     "CVE-2026-125396"
   ],
   "product": "Ghostscript",
-  "disclosed": "2026-09-02",
+  "disclosed": "2026-09-08",
   "news": "2026-11-17",
   "updated": "2026-11-22",
   "verdict": "if",
@@ -30,7 +30,7 @@
   "affected": [
     {
       "label": "Ghostscript before 10.08.0",
-      "text": "Distros backport the fix without changing `gs --version`, so check the package instead: fixed in Debian 12 `10.0.0~dfsg-11+deb12u9`, Debian 13 `10.05.1~dfsg-1+deb13u2`, Ubuntu 24.04 `10.02.1~dfsg1-0ubuntu7.10` and 22.04 `9.55.0~dfsg1-0ubuntu5.15` (newer releases too; older ones through Ubuntu Pro). Ubuntu's notice USN-8949-1 lists this bug as \"No CVE number\" (the researchers link it to this CVE), while Ubuntu's CVE tracker still says \"needs triage\" for every release. No fixed package yet on 22 Nov 2026: Amazon Linux 2, 2023 and 2027 Preview (\"Pending Fix\"), SUSE Linux Enterprise 15 SP7 and 16 (\"In progress\"), openSUSE Leap 16 (\"Affected\"). Container images carry their own copy.",
+      "text": "Distros backport the fix without changing `gs --version`, so check the package instead: fixed in Debian 12 `10.0.0~dfsg-11+deb12u9`, Debian 13 `10.05.1~dfsg-1+deb13u2`, Ubuntu 24.04 `10.02.1~dfsg1-0ubuntu7.10` and 22.04 `9.55.0~dfsg1-0ubuntu5.15` (newer releases too; older ones through Ubuntu Pro). Ubuntu's notice USN-8949-1 lists this bug as \"No CVE number\" (the researchers link it to this CVE), while Ubuntu's CVE tracker still says \"Needs evaluation\" for every release. No fixed package yet on 22 Nov 2026: Amazon Linux 2, 2023 and 2027 Preview (\"Pending Fix\"), SUSE Linux Enterprise 15 SP7 and 16 (\"In progress\"), openSUSE Leap 16 (\"Affected\"). Container images carry their own copy.",
       "cmd": "gs --version",
       "cite": [
         1,
@@ -186,14 +186,14 @@
       "url": "https://www.suse.com/security/cve/CVE-2026-125396.html"
     },
     {
-      "title": "Ubuntu CVE tracker: CVE-2026-125396 still needs triage on every release",
+      "title": "Ubuntu CVE tracker: CVE-2026-125396 \"Needs evaluation\" on every release",
       "url": "https://ubuntu.com/security/CVE-2026-125396"
     }
   ],
   "changes": [
     {
       "date": "2026-11-22",
-      "text": "Corrected: the researchers' write-up includes a downloadable proof-of-concept file (it takes control of memory but doesn't run commands by itself); we had said no exploit was public. Added Amazon Linux and SUSE, which have no fixed package yet, and Ubuntu's conflicting tracker status. Disclosure date set to 2 Sep, the date in the CVE record."
+      "text": "Corrected: the researchers' write-up includes a downloadable proof-of-concept file (it takes control of memory but doesn't run commands by itself); we had said no exploit was public. Added Amazon Linux, SUSE Linux Enterprise 15 SP7 and 16, and openSUSE Leap 16, which have no fixed package yet, and Ubuntu's conflicting tracker status. Disclosure date set to 8 Sep, when the fix was released (the CVE record says 2 Sep, when the fix was written)."
     },
     {
       "date": "2026-11-22",

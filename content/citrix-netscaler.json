@@ -64,7 +64,7 @@
   ],
   "do": [
     {
-      "label": "Update to the newest build",
+      "label": "Update to 14.1-73.46 or later",
       "text": "Go to 14.1-73.46, 13.1-64.29, 14.1-73.46 FIPS or 13.1.37.283, not just the first fix. These also fix CVE-2026-88779 (a crash bug, on CISA's exploited list since 4 Oct) and CVE-2026-107406 (SAML setups).",
       "cite": [
         1,
