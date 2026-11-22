@@ -27,7 +27,7 @@
   "affected": [
     {
       "label": "Kernel 4.15 or later",
-      "text": "The bug arrived in 4.15 (Jan 2018). The fix was merged into the main kernel tree on 19 Nov, after 7.4-rc3. The newest stable kernels (7.3.5, 6.18.64, 6.12.118, released 17 Nov) don't have it, and on 22 Nov it wasn't queued for the next ones either; the only distro kernels we found carrying it are Gentoo's kernel sources and a Fedora Rawhide test build. Xint hasn't named the fix, but the commit credits Xint's tool and matches its description.",
+      "text": "The bug arrived in 4.15 (Jan 2018). The fix was merged into the main kernel tree on 19 Nov, after 7.4-rc3. The newest stable kernels (7.3.5, 6.18.64, 6.12.118, released 17 Nov) don't have it, and on 22 Nov it wasn't queued for the next ones either; the only distro kernels we found carrying it are Gentoo's kernel sources and a Fedora Rawhide test build that hasn't shipped yet. Xint hasn't named the fix, but the commit credits Xint's tool and matches its description.",
       "cmd": "uname -r",
       "cite": [
         1,
@@ -37,7 +37,8 @@
         5,
         6,
         18,
-        20
+        20,
+        21
       ]
     },
     {
@@ -188,9 +189,13 @@
       "date": "18 Nov"
     },
     {
-      "title": "Fedora: Rawhide kernel test build with the fix (FEDORA-2026-af8fecb210)",
+      "title": "Fedora: Rawhide kernel test build of snapshot 65e4fd942f72, not shipped yet (FEDORA-2026-af8fecb210)",
       "url": "https://bodhi.fedoraproject.org/updates/FEDORA-2026-af8fecb210",
       "date": "20 Nov"
+    },
+    {
+      "title": "GitHub: snapshot 65e4fd942f72 comes after the fix's merge (1e575bda)",
+      "url": "https://github.com/torvalds/linux/compare/1e575bda30acc0bf01f799cee798d4a1c100d538...65e4fd942f72"
     }
   ],
   "changes": [

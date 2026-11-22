@@ -61,7 +61,7 @@
   "unfixed": [
     {
       "line": "All lines",
-      "note": "No stable or major distro kernel has the SCTP fix yet (merged into mainline 19 Nov; not queued for the next stable releases on 22 Nov). Block the sctp module meanwhile.",
+      "note": "No stable kernel has the SCTP fix yet (merged into mainline 19 Nov; not queued for the next stable releases on 22 Nov). Block the sctp module meanwhile.",
       "pages": [
         "linux-sctp-root"
       ]
