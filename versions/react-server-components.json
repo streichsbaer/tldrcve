@@ -1,0 +1,52 @@
+{
+  "id": "react-server-components",
+  "name": "React Server Components",
+  "about": "The newest `react-server-dom-webpack`, `-parcel` and `-turbopack` release on each React 19 line. Next.js apps upgrade Next.js instead.",
+  "feed": null,
+  "latest_from": [
+    "https://registry.npmjs.org/react-server-dom-webpack",
+    "https://github.com/react/react/security/advisories"
+  ],
+  "filter": "react",
+  "checked": "2026-11-22",
+  "lines": [
+    {
+      "line": "19.3",
+      "key": "19.3",
+      "latest": "19.3.1",
+      "released": "2026-10-14"
+    },
+    {
+      "line": "19.2",
+      "key": "19.2",
+      "latest": "19.2.9",
+      "released": "2026-10-14"
+    },
+    {
+      "line": "19.1",
+      "key": "19.1",
+      "latest": "19.1.10",
+      "released": "2026-10-14"
+    },
+    {
+      "line": "19.0",
+      "key": "19.0",
+      "latest": "19.0.9",
+      "released": "2026-10-14"
+    }
+  ],
+  "sources": [
+    {
+      "title": "npm registry: react-server-dom-webpack releases and dates",
+      "url": "https://registry.npmjs.org/react-server-dom-webpack"
+    },
+    {
+      "title": "React GHSA-xqc2: fixed react-server-dom versions",
+      "url": "https://github.com/react/react/security/advisories/GHSA-xqc2-xf4c-x3h3"
+    },
+    {
+      "title": "Next.js GHSA-673q: Next.js apps fix it by upgrading Next.js",
+      "url": "https://github.com/vercel/next.js/security/advisories/GHSA-673q-mjm6-r5xr"
+    }
+  ]
+}

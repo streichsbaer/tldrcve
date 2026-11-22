@@ -29,7 +29,7 @@
   ],
   "disclosed": "2026-10-14",
   "news": "2026-11-10",
-  "updated": "2026-11-21",
+  "updated": "2026-11-22",
   "verdict": "if",
   "tile_line": "Only Next 16 apps returning typed arrays from use cache.",
   "summary": "A bug in how React Server Components package several typed arrays (binary data) in one response can let an attacker with no login call one of the app's Server Actions with arguments they choose. React says it only affects \"extremely rare cases\"; in Next.js it needs Cache Components and a `use cache` function that returns several typed arrays. A lab exploit is public, no attacks are reported, and the fix has been out since 14 Oct; the CVE ID came on 10 Nov.",
@@ -86,6 +86,10 @@
       "cite": [
         1,
         2
+      ],
+      "versions": [
+        "nextjs",
+        "react-server-components"
       ]
     },
     {
@@ -96,6 +100,17 @@
       ]
     }
   ],
+  "fixed_in": {
+    "nextjs": {
+      "16.4": "16.4.1"
+    },
+    "react-server-components": {
+      "19.3": "19.3.1",
+      "19.2": "19.2.9",
+      "19.1": "19.1.10",
+      "19.0": "19.0.9"
+    }
+  },
   "slack": "React Server Components typed-array RCE (CVE-2026-126187; Next.js GHSA-673q): unauthenticated attacker can call a Server Action with chosen arguments, but only in \"extremely rare\" apps: Next.js 16.0.0–16.4.0 with Cache Components and a use cache function returning several typed arrays (or react-server-dom-* 19.x elsewhere). Lab exploit public, no attacks, not in KEV. Fix: Next.js 16.4.1+ / react-server-dom-* 19.0.9, 19.1.10, 19.2.9, 19.3.1. Next.js 15.x not affected.",
   "sources": [
     {
@@ -143,6 +158,10 @@
     }
   ],
   "changes": [
+    {
+      "date": "2026-11-22",
+      "text": "Added Safe versions."
+    },
     {
       "date": "2026-11-21",
       "text": "Published."

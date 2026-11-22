@@ -49,6 +49,7 @@ The build warns about:
 - relative dates ("today")
 - overdue pending items
 - a missing `needs` field when `no_login` is false
+- a page not tied to any Safe versions product and without `versions_skip`
 
 A change is only done when `--strict` passes.
 
@@ -85,6 +86,7 @@ Copy the shape of an existing file (`content/nginx2root.json` is a good model).
 | `affected[]` | Conditions that must **all** be true: `label`, `text`, optional `cmd`, `cite` |
 | `do[]` | Steps: `label`, `text`, optional `cmd`, `cite`, optional `pending: {"expected": "YYYY-MM-DD"}`, optional `versions: ["php"]` to show that product's latest safe versions in the step |
 | `fixed_in` | Optional: first fixed version per product line, e.g. `{"php": {"8.5": "8.5.13"}}`. Keys match `versions/<product>.json`. Leave it out when there is no fix |
+| `versions_skip` | Optional: why the page has no Safe versions product, e.g. fixes exist only as distro packages. Every other page must be tied to one: `fixed_in` when a fix is released, or an `unfixed` entry in `versions/<product>.json` while it's pending |
 | `bugs` | Optional, makes the page a release roundup: one entry per advisory with `cve`, `project`, `severity`, `url`; critical and high ones also get `title`, `text`, `verdict` and optional `page` (slug of the bug's own page, which then links back). Leave a bug's CVE out of `cves` when it has its own page |
 | `slack` | Paste-ready summary paragraph, no URL |
 | `sources[]` | `title` ("Publisher: what it supports"), `url`, optional `date`. `cite` numbers are 1-based indexes into this list |

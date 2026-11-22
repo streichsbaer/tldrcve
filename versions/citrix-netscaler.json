@@ -1,0 +1,46 @@
+{
+  "id": "citrix-netscaler",
+  "name": "NetScaler ADC / Gateway",
+  "about": "The newest build on each supported NetScaler ADC and Gateway line. Each one fixes every NetScaler bug we cover.",
+  "feed": null,
+  "latest_from": [
+    "https://www.citrix.com/downloads/citrix-adc/",
+    "https://support.citrix.com/external/article/CTX697191/"
+  ],
+  "filter": "netscaler",
+  "checked": "2026-11-22",
+  "lines": [
+    {
+      "line": "14.1",
+      "key": "14.1",
+      "latest": "14.1-73.58",
+      "released": "2026-11-12"
+    },
+    {
+      "line": "13.1",
+      "key": "13.1",
+      "latest": "13.1-64.39"
+    },
+    {
+      "line": "14.1-FIPS",
+      "key": "14.1-FIPS",
+      "latest": "14.1-73.58 FIPS"
+    },
+    {
+      "line": "13.1-FIPS / NDcPP",
+      "key": "13.1-FIPS",
+      "latest": "13.1-37.293"
+    }
+  ],
+  "older": "Citrix-managed cloud services and Adaptive Authentication are updated by Citrix's parent, Cloud Software Group.",
+  "sources": [
+    {
+      "title": "Citrix: NetScaler downloads, newest builds",
+      "url": "https://www.citrix.com/downloads/citrix-adc/"
+    },
+    {
+      "title": "Citrix CTX697191: newest fixed builds \"and later releases\", cloud scope",
+      "url": "https://support.citrix.com/external/article/CTX697191/"
+    }
+  ]
+}

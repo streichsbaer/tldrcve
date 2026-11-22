@@ -26,7 +26,7 @@
     "librsvg"
   ],
   "disclosed": "2026-10-14",
-  "updated": "2026-11-21",
+  "updated": "2026-11-22",
   "verdict": "if",
   "tile_line": "Only with sharp below 0.35.5 on glibc Linux.",
   "summary": "A memory bug in librsvg, the SVG library bundled inside `sharp`, may let an attacker with no login run code through Next.js image optimization on glibc-based Linux. Almost every Next.js version is affected, and a separate bug fixed on 3 Nov let self-hosted sites parse an attacker's SVG even with SVG support off (the default). The fix is a newer `sharp`, which upgrading Next.js doesn't always pull in on 15.x; no exploit or attacks are reported.",
@@ -76,6 +76,10 @@
         1,
         2,
         7
+      ],
+      "versions": [
+        "nextjs",
+        "sharp"
       ]
     },
     {
@@ -84,9 +88,21 @@
       "cite": [
         1,
         6
+      ],
+      "versions": [
+        "sharp"
       ]
     }
   ],
+  "fixed_in": {
+    "nextjs": {
+      "16.4": "16.4.5",
+      "15.5": "15.5.29"
+    },
+    "sharp": {
+      "0.35": "0.35.5"
+    }
+  },
   "slack": "Next.js image optimization RCE (CVE-2026-96889, a librsvg bug inside sharp; sharp: CVE-2026-114111): possible unauthenticated code execution on glibc Linux when the optimizer parses an attacker's SVG. Self-hosted sites could be made to parse SVGs even with dangerouslyAllowSVG off until 15.5.29 / 16.4.5 (CVE-2026-119347). No exploit, no attacks, not in KEV. Fix: Next.js 16.4.5 / 15.5.29 and sharp ≥ 0.35.5 (check npm ls sharp; 15.x can keep sharp 0.34).",
   "sources": [
     {
@@ -139,6 +155,10 @@
     }
   ],
   "changes": [
+    {
+      "date": "2026-11-22",
+      "text": "Added Safe versions."
+    },
     {
       "date": "2026-11-21",
       "text": "Published."

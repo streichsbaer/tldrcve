@@ -1,0 +1,53 @@
+{
+  "id": "wordpress",
+  "name": "WordPress",
+  "about": "The newest WordPress release on each recent branch. Each one fixes every WordPress bug we cover.",
+  "feed": null,
+  "latest_from": [
+    "https://api.wordpress.org/core/stable-check/1.0/",
+    "https://wordpress.org/download/releases/"
+  ],
+  "filter": "wordpress",
+  "checked": "2026-11-22",
+  "lines": [
+    {
+      "line": "7.1",
+      "key": "7.1",
+      "latest": "7.1.5",
+      "released": "2026-11-18"
+    },
+    {
+      "line": "7.0",
+      "key": "7.0",
+      "latest": "7.0.9",
+      "released": "2026-11-18"
+    },
+    {
+      "line": "6.9",
+      "key": "6.9",
+      "latest": "6.9.12",
+      "released": "2026-11-18"
+    },
+    {
+      "line": "6.8",
+      "key": "6.8",
+      "latest": "6.8.13",
+      "released": "2026-11-18"
+    }
+  ],
+  "older": "Older branches back to 4.7 also get security releases (for example 6.7.12); 4.6 and older get none. Only the newest version is actively supported, and sites with automatic background updates on get these by themselves.",
+  "sources": [
+    {
+      "title": "WordPress.org API: newest release on every branch",
+      "url": "https://api.wordpress.org/core/stable-check/1.0/"
+    },
+    {
+      "title": "WordPress.org: Version 7.1.5, fixed release for every branch",
+      "url": "https://wordpress.org/documentation/wordpress-version/version-7-1-5/"
+    },
+    {
+      "title": "WordPress.org: 7.1.5 release, automatic updates",
+      "url": "https://wordpress.org/news/2026/11/wordpress-7-1-5-release/"
+    }
+  ]
+}

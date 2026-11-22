@@ -1,0 +1,35 @@
+{
+  "id": "sharp",
+  "name": "sharp",
+  "about": "The newest release of sharp, the image library Next.js uses for image optimization. It bundles the fixed librsvg.",
+  "feed": null,
+  "latest_from": [
+    "https://registry.npmjs.org/sharp",
+    "https://github.com/lovell/sharp/releases"
+  ],
+  "filter": "sharp",
+  "checked": "2026-11-22",
+  "lines": [
+    {
+      "line": "0.35",
+      "key": "0.35",
+      "latest": "0.35.5",
+      "released": "2026-09-27"
+    }
+  ],
+  "older": "0.34.x and older bundle the unfixed librsvg. Check with `npm ls sharp`.",
+  "sources": [
+    {
+      "title": "npm registry: sharp releases and dates",
+      "url": "https://registry.npmjs.org/sharp"
+    },
+    {
+      "title": "sharp v0.35.5 release (bundles the fixed librsvg)",
+      "url": "https://github.com/lovell/sharp/releases/tag/v0.35.5"
+    },
+    {
+      "title": "CVE record: CVE-2026-114111, sharp before 0.35.5",
+      "url": "https://www.cve.org/CVERecord?id=CVE-2026-114111"
+    }
+  ]
+}

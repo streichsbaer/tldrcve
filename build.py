@@ -467,6 +467,13 @@ def versions_checks(all_c: list) -> list:
                 elif vkey(lines[key]["latest"]) < vkey(fixed):
                     warnings.append(f'versions/{pid}.json: {key} latest {lines[key]["latest"]} is older than the fix {fixed} '
                                     f'on {c["slug"]}; run python3 tools/versions.py')
+    for c in all_c:  # every page is tied to a product on Safe versions, or says why not
+        covered = [pid for pid in VERSIONS if c["slug"] in {x["slug"] for x in product_pages(pid, all_c)}]
+        if not covered and not c.get("versions_skip"):
+            warnings.append(f'{c["slug"]}: not on Safe versions; add fixed_in (fix released) or an unfixed entry in '
+                            f'versions/<product>.json (fix pending), or "versions_skip": "<reason>"')
+        if covered and c.get("versions_skip"):
+            warnings.append(f'{c["slug"]}: has versions_skip but is listed by versions/{covered[0]}.json; remove versions_skip')
     for pid, v in VERSIONS.items():
         for u in v.get("unfixed", []):
             for slug in set(u["pages"]) - slugs:

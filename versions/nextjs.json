@@ -1,0 +1,42 @@
+{
+  "id": "nextjs",
+  "name": "Next.js",
+  "about": "The newest Next.js release on each supported major. Each one fixes every Next.js bug we cover.",
+  "feed": null,
+  "latest_from": [
+    "https://registry.npmjs.org/next",
+    "https://github.com/vercel/next.js/releases"
+  ],
+  "filter": "next.js",
+  "checked": "2026-11-22",
+  "lines": [
+    {
+      "line": "16.4",
+      "key": "16.4",
+      "latest": "16.4.6",
+      "released": "2026-11-09"
+    },
+    {
+      "line": "15.5",
+      "key": "15.5",
+      "latest": "15.5.29",
+      "released": "2026-11-03",
+      "note": "Security releases until 31 Jan 2027."
+    }
+  ],
+  "older": "Next.js 16.0–16.3 and 15.4 and older don't get these fixes; move to the newest 16.x or 15.5.x.",
+  "sources": [
+    {
+      "title": "npm registry: Next.js releases and dates",
+      "url": "https://registry.npmjs.org/next"
+    },
+    {
+      "title": "Next.js: support policy, 15.x security releases until 31 Jan 2027",
+      "url": "https://nextjs.org/support-policy"
+    },
+    {
+      "title": "Next.js GHSA-7qx7: fixed in 16.4.5 and 15.5.29",
+      "url": "https://github.com/vercel/next.js/security/advisories/GHSA-7qx7-33qx-rqx2"
+    }
+  ]
+}
