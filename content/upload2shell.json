@@ -25,8 +25,8 @@
   "news": "2026-11-17",
   "updated": "2026-11-22",
   "verdict": "if",
-  "tile_line": "If outsiders' files reach it. Full exploit announced.",
-  "summary": "A bug in Ghostscript before 10.08.0 lets a crafted PostScript or PDF file escape Ghostscript's `-dSAFER` sandbox and run commands as the account doing the rendering. Ghostscript often runs out of sight behind image previews (ImageMagick, Pillow), email thumbnails and print servers, so even an upload named `.png` can reach it; the researchers ran commands through Debian's CUPS, Roundcube, WordPress and more. The CVE record scores it as a local attack (8.5), but those routes are remote. The researchers published a proof of concept that does most of the work: it takes control of Ghostscript's memory (tested on 10.07.0, x86-64 Linux), and their write-up shows the remaining steps to running commands in excerpts, using memory offsets from that tested build. They say a full exploit for the Debian CUPS route comes next. No attacks are reported yet.",
+  "tile_line": "Outsiders' files reach it. Full exploit announced.",
+  "summary": "A bug in Ghostscript before 10.08.0 lets a crafted PostScript or PDF file escape Ghostscript's `-dSAFER` sandbox and run commands as the account doing the rendering. Ghostscript often runs out of sight behind image previews (ImageMagick, Pillow), email thumbnails and print servers, so even an upload named `.png` can reach it; the researchers ran commands through Debian's CUPS, Roundcube, WordPress and more. The CVE record scores it as a local attack (8.5), but those routes are remote. The researchers published a proof of concept that does most of the work: it takes control of Ghostscript's memory (tested on 10.07.0, x86-64 Linux), and their write-up shows the remaining steps to running commands in excerpts; the first of them relies on memory offsets from the researchers' test build. They say a full exploit for the Debian CUPS route comes next. No attacks are reported yet.",
   "affected": [
     {
       "label": "Ghostscript before 10.08.0",
