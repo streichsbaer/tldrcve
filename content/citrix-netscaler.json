@@ -105,10 +105,10 @@
   ],
   "fixed_in": {
     "citrix-netscaler": {
-      "14.1": "14.1-73.46",
-      "13.1": "13.1-64.29",
-      "14.1-FIPS": "14.1-73.46 FIPS",
-      "13.1-FIPS": "13.1-37.283"
+      "14.1": "14.1-73.37",
+      "13.1": "13.1-64.23",
+      "14.1-FIPS": "14.1-73.37 FIPS",
+      "13.1-FIPS": "13.1-37.279"
     }
   },
   "slack": "Citrix NetScaler ADC/Gateway CVE-2026-88771 (plus CVE-2026-88772): unauthenticated command execution, default configs affected. Exploited since about 20 Sep, public exploit since 28 Sep, CISA KEV (27 Sep). Update to 14.1-73.46 / 13.1-64.29 (FIPS: 14.1-73.46 FIPS, 13.1.37.283), which also fix the later CVE-2026-88779 and CVE-2026-107406. If you patched late, assume compromise: end sessions, rotate keys and credentials, hunt for web shells.",
@@ -190,7 +190,7 @@
   "changes": [
     {
       "date": "2026-11-22",
-      "text": "Added Safe versions: Citrix has since released newer builds (14.1-73.58, 13.1-64.39)."
+      "text": "Added Safe versions. Citrix has since released newer builds (14.1-73.58, 13.1-64.39)."
     },
     {
       "date": "2026-11-21",

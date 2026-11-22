@@ -4,7 +4,8 @@
   "about": "The newest release on each LiteLLM line we track. Each one fixes every LiteLLM bug we cover.",
   "feed": "pypi:litellm",
   "latest_from": [
-    "https://pypi.org/project/litellm/#history"
+    "https://pypi.org/project/litellm/#history",
+    "https://github.com/BerriAI/litellm/releases"
   ],
   "filter": "litellm",
   "checked": "2026-11-22",
@@ -52,6 +53,10 @@
     {
       "title": "PyPI: LiteLLM release history",
       "url": "https://pypi.org/project/litellm/#history"
+    },
+    {
+      "title": "LiteLLM: GitHub releases, 1.108 releases named LTS",
+      "url": "https://github.com/BerriAI/litellm/releases"
     }
   ]
 }

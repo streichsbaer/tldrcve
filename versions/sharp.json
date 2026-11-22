@@ -17,15 +17,15 @@
       "released": "2026-09-27"
     }
   ],
-  "older": "0.34.x and older bundle the unfixed librsvg. Check with `npm ls sharp`.",
+  "older": "Versions before 0.35.5 bundle the unfixed librsvg. Check with `npm ls sharp`.",
   "sources": [
     {
       "title": "npm registry: sharp releases and dates",
       "url": "https://registry.npmjs.org/sharp"
     },
     {
-      "title": "sharp v0.35.5 release (bundles the fixed librsvg)",
-      "url": "https://github.com/lovell/sharp/releases/tag/v0.35.5"
+      "title": "sharp GHSA-wq5f: 0.35.5 provides the fixed librsvg 2.63.2",
+      "url": "https://github.com/advisories/GHSA-wq5f-xc86-pv6w"
     },
     {
       "title": "CVE record: CVE-2026-114111, sharp before 0.35.5",

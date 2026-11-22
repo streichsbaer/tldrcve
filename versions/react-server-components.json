@@ -1,7 +1,7 @@
 {
   "id": "react-server-components",
   "name": "React Server Components",
-  "about": "The newest `react-server-dom-webpack`, `-parcel` and `-turbopack` release on each React 19 line. Next.js apps upgrade Next.js instead.",
+  "about": "The newest `react-server-dom-webpack`, `-turbopack` and `-parcel` release on each React 19 line (`-parcel` starts at 19.1). Next.js apps upgrade Next.js instead.",
   "feed": "npm:react-server-dom-webpack",
   "latest_from": [
     "https://registry.npmjs.org/react-server-dom-webpack",

@@ -24,7 +24,6 @@
       "note": "Security releases until 31 Jan 2027."
     }
   ],
-  "older": "Next.js 16.0–16.3 and 15.4 and older don't get these fixes; move to the newest 16.x or 15.5.x.",
   "sources": [
     {
       "title": "npm registry: Next.js releases and dates",
