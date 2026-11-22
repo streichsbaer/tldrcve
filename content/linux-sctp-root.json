@@ -22,7 +22,7 @@
   "news": "2026-11-18",
   "updated": "2026-11-22",
   "verdict": "if",
-  "tile_line": "Needs code running on the box. No stable kernel fix yet.",
+  "tile_line": "Needs code on the box. No stable kernel fix yet.",
   "summary": "A bug in the Linux kernel's SCTP code lets any local user, including one inside a container, free the same kernel memory twice and take over the machine. Xint chained it with nginx2root to get root on the host and escape a Docker container. The fix reached the main kernel tree on 19 Nov, but no stable kernel has it yet and almost no distro ships it, so blocking the sctp module is the stopgap.",
   "affected": [
     {
