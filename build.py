@@ -1387,6 +1387,10 @@ def write_data(all_c: list) -> None:
         lines.append(f'- [{c["name"]}]({SITE_URL}/{c["slug"]}/): {product_full(c)}'
                      + (f" ({ids})" if ids else "") + f'. {VERDICTS[c["verdict"]]} · {scare_label(c["status"]["scare"])}. '
                      + flat(c["tile_line"]) + f' Updated {c["updated"]}.')
+    if WEEKS:
+        lines += ["", "## Weekly reviews", "", f"- [All weeks]({SITE_URL}/week/): new pages, changes and the dates coming up, week by week"]
+        for wk in reversed(WEEKS):
+            lines.append(f'- [{week_title(wk["week"])}]({SITE_URL}/week/{week_slug(wk["week"])}/): {week_label(wk["week"])}')
     lines += ["", "## Safe versions", "", f"- [All products]({SITE_URL}/versions/): newest safe release per product line"]
     for pid, v in VERSIONS.items():
         latest = ", ".join(l["latest"] for l in v["lines"])
