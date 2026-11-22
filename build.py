@@ -661,11 +661,13 @@ def upcoming(all_c: list, start: date, end: date) -> list:
             exp = (d.get("pending") or {}).get("expected")
             if within(exp):
                 out.append({"date": exp, "kind": "pending", "title": f'{c["name"]}: {d["label"]}', "product": c["product"],
-                            "note": "We'll check again by this date.", "expected": True, "url": f'/{c["slug"]}/', "source": ""})
+                            "note": "We'll check again by this date.", "expected": True, "url": f'/{c["slug"]}/', "source": "",
+                            "match": page_search(c)})
         kev = c["status"].get("kev")
         if kev and within(kev.get("due")):
             out.append({"date": kev["due"], "kind": "deadline", "title": f'CISA deadline: {c["name"]}', "product": c["product"],
-                        "note": "CISA's fix-by date for US federal civilian agencies.", "expected": False, "url": f'/{c["slug"]}/', "source": ""})
+                        "note": "CISA's fix-by date for US federal civilian agencies.", "expected": False, "url": f'/{c["slug"]}/', "source": "",
+                        "match": page_search(c)})
     return sorted(out, key=lambda e: (e["date"], e["kind"], e["title"]))
 
 
@@ -703,7 +705,8 @@ def ahead_items(ahead: list) -> str:
         link = f'<a href="{html.escape(e["url"])}"{rel}>{html.escape(e["title"])}</a>'
         tag = ' <span class="tag">Recheck</span>' if e["kind"] == "pending" else (' <span class="tag">Expected</span>' if e["expected"] else "")
         note = f' <span class="muted">{text(e["note"])}</span>' if e["note"] else ""
-        rows.append(f'        <li data-date="{e["date"]}"><time datetime="{e["date"]}">{nice_date(e["date"])}</time><span>{link}{tag}{note}</span></li>')
+        search = " ".join([e["title"], e.get("product", ""), e.get("note", ""), e.get("match", "")]).lower()
+        rows.append(f'        <li data-date="{e["date"]}" data-search="{html.escape(search)}"><time datetime="{e["date"]}">{nice_date(e["date"])}</time><span>{link}{tag}{note}</span></li>')
     return "\n".join(rows) or '        <li><span></span><span>Nothing scheduled that we know of.</span></li>'
 
 
@@ -720,24 +723,25 @@ def week_page(wk: dict, all_c: list) -> str:
     for dt, c, t in d["changed"]:  # newest first, so the first entry per page is its latest change
         by_page.setdefault(c["slug"], (dt, c, t, []))[3].append(t)
     changed = "\n".join(
-        f'        <li><time datetime="{dt}">{nice_date(dt)}</time><span><a href="/{c["slug"]}/">{html.escape(c["name"])}</a>: {text(t)}'
+        f'        <li data-search="{html.escape(page_search(c) + " " + " ".join(all_t).lower())}"><time datetime="{dt}">{nice_date(dt)}</time><span><a href="/{c["slug"]}/">{html.escape(c["name"])}</a>: {text(t)}'
         + (f' <a class="muted" href="/{c["slug"]}/#sources">+{len(all_t) - 1} earlier</a>' if len(all_t) > 1 else "") + "</span></li>"
         for dt, c, t, all_t in by_page.values()) or '        <li><span></span><span>No updates.</span></li>'
     by_prod = {}
     for dt, pid, v, l in d["releases"]:  # newest first
         by_prod.setdefault((pid, dt), (v, []))[1].append(l["latest"])
     releases = "\n".join(
-        f'        <li><time datetime="{dt}">{nice_date(dt)}</time><span><a href="/versions/{pid}/">{html.escape(v["name"])}</a>: {html.escape(", ".join(sorted(vers, key=vkey, reverse=True)))}</span></li>'
+        f'        <li data-search="{html.escape((pid + " " + v["name"] + " " + " ".join(vers)).lower())}"><time datetime="{dt}">{nice_date(dt)}</time><span><a href="/versions/{pid}/">{html.escape(v["name"])}</a>: {html.escape(", ".join(sorted(vers, key=vkey, reverse=True)))}</span></li>'
         for (pid, dt), (v, vers) in by_prod.items()) or '        <li><span></span><span>None with a release date.</span></li>'
     top, rest = d["new"][:WEEK_TILES], d["new"][WEEK_TILES:]
-    new_tiles = "\n".join(tile(c) for c in top)
+    rest_block = ""
+    new_tiles = "\n".join(tile(c, f' data-search="{html.escape(page_search(c))}"') for c in top)
     new_block = f'    <ul class="tiles">\n{new_tiles}\n    </ul>' if top else '    <p class="muted">No new pages.</p>'
     if rest:
         rest_rows = "\n".join(
-            f'        <li><span class="verdict verdict--{c["verdict"]}">{VERDICTS[c["verdict"]]}</span><span><a href="/{c["slug"]}/">{html.escape(c["name"])}</a> <span class="muted">{text(c["tile_line"])}</span></span></li>'
+            f'        <li data-search="{html.escape(page_search(c) + " " + c["tile_line"].lower())}"><span class="verdict verdict--{c["verdict"]}">{VERDICTS[c["verdict"]]}</span><span><a href="/{c["slug"]}/">{html.escape(c["name"])}</a> <span class="muted">{text(c["tile_line"])}</span></span></li>'
             for c in rest)
-        new_block += f"""
-    <section class="pane">
+        rest_block = f"""
+    <section class="pane" data-week-section>
       <div class="pane__head"><h2>Also new</h2><span class="pane__meta">{len(rest)} more, scariest first</span></div>
       <div class="pane__body">
       <ul class="changes week-more">
@@ -755,11 +759,19 @@ def week_page(wk: dict, all_c: list) -> str:
       <h1>{week_title(w)}</h1>
       <p>{week_label(w)}: {counts}.</p>{intro}
     </header>
+    <div class="search search--week" role="search">
+      <label for="wq" class="visually-hidden">Search this week</label>
+      {SEARCH_ICON}
+      <input id="wq" type="search" placeholder="Search this week: product, CVE ID or name" autocomplete="off" data-week-filter>
+    </div>
+    <p class="list__empty" data-week-empty hidden>Nothing this week matches. Try <a href="/cves/">all CVEs</a>.</p>
 
+    <div data-week-section>
     <div class="section-head"><h2>New pages</h2></div>
 {new_block}
+    </div>{rest_block}
 
-    <section class="pane">
+    <section class="pane" data-week-section>
       <div class="pane__head"><h2>What changed</h2></div>
       <div class="pane__body">
       <ul class="changes">
@@ -768,7 +780,7 @@ def week_page(wk: dict, all_c: list) -> str:
       </div>
     </section>
 
-    <section class="pane">
+    <section class="pane" data-week-section>
       <div class="pane__head"><h2>New safe releases</h2><span class="pane__meta">only product lines where we record a release date</span></div>
       <div class="pane__body">
       <ul class="changes">
@@ -777,7 +789,7 @@ def week_page(wk: dict, all_c: list) -> str:
       </div>
     </section>
 
-    <section class="pane">
+    <section class="pane" data-week-section>
       <div class="pane__head"><h2>Coming up</h2><span class="pane__meta">{nice_date((end + timedelta(days=1)).isoformat())} – {nice_date((end + timedelta(days=AHEAD_DAYS)).isoformat())}</span></div>
       <div class="pane__body">
       <ul class="changes">
@@ -848,9 +860,14 @@ def news_date(c: dict) -> str:
     return c.get("news", c["disclosed"])
 
 
-def tile(c: dict) -> str:
+def page_search(c: dict) -> str:
+    """Lowercase text a filter can match: name, products, CVE/GHSA IDs and aliases."""
+    return " ".join([c["name"], product_full(c), *c["cves"], *c.get("ghsa", []), *c.get("aliases", [])]).lower()
+
+
+def tile(c: dict, attrs: str = "") -> str:
     v = c["verdict"]
-    return f"""      <li>
+    return f"""      <li{attrs}>
         <a class="tile" href="/{c["slug"]}/">
           <span class="tile__meta"><span class="tile__product">{html.escape(product_short(c))}</span><span>· {nice_date(news_date(c))}</span></span>
           <span class="tile__name">{html.escape(c["name"])}</span>

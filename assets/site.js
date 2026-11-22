@@ -155,3 +155,31 @@
   openSources();
   window.addEventListener("hashchange", openSources);
 })();
+
+// Week page: one search box filters every section (new pages, changes, releases, coming up).
+(function () {
+  var input = document.querySelector("[data-week-filter]");
+  if (!input) return;
+  var sections = document.querySelectorAll("[data-week-section]");
+  var empty = document.querySelector("[data-week-empty]");
+  function apply() {
+    var q = input.value.trim().toLowerCase();
+    var any = false;
+    Array.prototype.forEach.call(sections, function (sec) {
+      var items = sec.querySelectorAll("[data-search]");
+      var shown = 0;
+      Array.prototype.forEach.call(items, function (it) {
+        var hit = !q || it.getAttribute("data-search").indexOf(q) !== -1 || it.textContent.toLowerCase().indexOf(q) !== -1;
+        it.hidden = !hit;
+        if (hit) shown++;
+      });
+      sec.hidden = q !== "" && shown === 0;
+      if (shown) any = true;
+    });
+    if (empty) empty.hidden = !q || any;
+  }
+  var params = new URLSearchParams(location.search);
+  if (params.get("q")) input.value = params.get("q");
+  input.addEventListener("input", apply);
+  apply();
+})();
