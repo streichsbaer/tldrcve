@@ -50,7 +50,7 @@
   "do": [
     {
       "label": "Patch now",
-      "text": "Install 9.1.1.0200, 9.0.2.0200 or 8.0 U3m (on VCF 5.x, patch vCenter to 8.0 U3m or move to VCF 5.2.5); Broadcom's patches are cumulative, so later versions also fix it. Broadcom gives no workaround. CISA's deadline for US agencies is 23 Nov 2026. Heads-up from Broadcom: 8.0 U3m and 9.0.2.0200 block upgrades to VCF 9.1.1, so wait for 9.1.2 if you planned that upgrade. The same advisory also covers four lesser bugs that need an account or local access, in SDDC Manager and VMware Tools for Windows (CVE-2026-123891 to CVE-2026-123894), with their own fixed versions.",
+      "text": "Install 9.1.1.0200, 9.0.2.0200 or 8.0 U3m (on VCF 5.x, patch vCenter to 8.0 U3m or move to VCF 5.2.5); Broadcom's patches are cumulative, so later versions also fix it. Broadcom gives no workaround. CISA's deadline for US agencies is 23 Nov 2026. Heads-up from Broadcom: 8.0 U3m and 9.0.2.0200 block upgrades to VCF 9.1.1, so patch now and wait for 9.1.2 before that upgrade (or move vCenter to 9.1.1 first and patch there). The same advisory also covers four lesser bugs that need an account or local access, in SDDC Manager and VMware Tools for Windows (CVE-2026-123891 to CVE-2026-123894), with their own fixed versions.",
       "cite": [
         1,
         3,
@@ -77,7 +77,7 @@
     },
     {
       "label": "Check for a break-in",
-      "text": "Patching doesn't remove attackers who are already in, and CISA flags this one for forensic triage. Look for single sign-on administrator accounts you didn't create, and for Mandiant's file indicators, such as `/tmp/123`, `/tmp/sss`, `/tmp/dbr` and `/usr/bin/vmtoolscs`, on other internal Linux machines the attackers took over first. The attackers also took vCenter's SAML signing key, which lets them forge logins for any user.",
+      "text": "Patching doesn't remove attackers who are already in, and CISA flags this one for forensic triage. Look for single sign-on administrator accounts you didn't create, and for Mandiant's file indicators, such as `/tmp/123`, `/tmp/sss`, `/tmp/dbr` and `/usr/bin/vmtoolscs`, on other internal Linux machines the attackers took over. The attackers also took vCenter's SAML signing key, which lets them forge logins for any user.",
       "cite": [
         2,
         3
@@ -99,7 +99,7 @@
       "date": "19 Nov"
     },
     {
-      "title": "Mandiant / Google: ARMORY CASTLE exploited it since September, port 2012, indicators, hardening",
+      "title": "Mandiant / Google: ARMORY CASTLE exploited it in early September, port 2012, indicators, hardening",
       "url": "https://cloud.google.com/blog/topics/threat-intelligence/armory-castle-exploits-vsphere",
       "date": "20 Nov"
     },
