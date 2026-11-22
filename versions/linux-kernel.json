@@ -9,7 +9,7 @@
     "https://access.redhat.com/hydra/rest/securitydata/csaf.json?package=kernel"
   ],
   "filter": "linux",
-  "checked": "2026-11-22",
+  "checked": "2026-11-23",
   "lines": [
     {
       "line": "Debian 13",
@@ -61,7 +61,7 @@
   "unfixed": [
     {
       "line": "All lines",
-      "note": "No stable kernel has the SCTP fix yet (merged into mainline 19 Nov; not queued for the next stable releases on 22 Nov). Block the sctp module meanwhile.",
+      "note": "No stable kernel has the SCTP fix yet (merged into mainline 19 Nov, first in the 7.4-rc4 test release; not queued for the next stable releases on 23 Nov). Block the sctp module meanwhile.",
       "pages": [
         "linux-sctp-root"
       ]
@@ -69,7 +69,7 @@
   ],
   "sources": [
     {
-      "title": "Debian tracker: fixed versions",
+      "title": "Debian tracker: fixed versions (CVE-2026-98432, the Linux TCP root bug)",
       "url": "https://security-tracker.debian.org/tracker/CVE-2026-98432"
     },
     {
@@ -77,7 +77,7 @@
       "url": "https://security-tracker.debian.org/tracker/source-package/linux"
     },
     {
-      "title": "Ubuntu: fixed versions, firewall stopgap",
+      "title": "Ubuntu: fixed versions, firewall stopgap (CVE-2026-98432, the Linux TCP root bug)",
       "url": "https://ubuntu.com/security/CVE-2026-98432"
     },
     {
@@ -85,7 +85,7 @@
       "url": "https://launchpad.net/ubuntu/+source/linux"
     },
     {
-      "title": "Red Hat: CVE page, RHEL errata",
+      "title": "Red Hat: CVE page, RHEL errata (CVE-2026-98432, the Linux TCP root bug)",
       "url": "https://access.redhat.com/security/cve/CVE-2026-98432"
     },
     {
@@ -99,6 +99,10 @@
     {
       "title": "kernel.org: newest stable kernels",
       "url": "https://www.kernel.org/releases.json"
+    },
+    {
+      "title": "Linux stable queue: SCTP fix not queued for any stable release yet",
+      "url": "https://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git/tree/"
     }
   ]
 }

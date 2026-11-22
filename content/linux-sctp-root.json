@@ -20,14 +20,14 @@
   "product": "Linux kernel",
   "disclosed": "2026-11-10",
   "news": "2026-11-18",
-  "updated": "2026-11-22",
+  "updated": "2026-11-23",
   "verdict": "if",
   "tile_line": "Needs code on the box. No stable kernel fix yet.",
-  "summary": "A bug in the Linux kernel's SCTP code lets any local user, including one inside a container, free the same kernel memory twice and take over the machine. Xint chained it with nginx2root to get root on the host and escape a Docker container. The fix reached the main kernel tree on 19 Nov, but no stable kernel has it yet and almost no distro ships it, so blocking the sctp module is the stopgap.",
+  "summary": "A bug in the Linux kernel's SCTP code lets any local user, including one inside a container, free the same kernel memory twice and take over the machine. Xint chained it with nginx2root to get root on the host and escape a Docker container. The fix reached the main kernel tree on 19 Nov, but no stable kernel has it yet and the only distro kernels we found with it are Gentoo's and an unshipped Fedora Rawhide test build, so blocking the sctp module is the stopgap.",
   "affected": [
     {
       "label": "Kernel 4.15 or later",
-      "text": "The bug arrived in 4.15 (Jan 2018). The fix was merged into the main kernel tree on 19 Nov, after 7.4-rc3. The newest stable kernels (7.3.5, 6.18.64, 6.12.118, released 17 Nov) don't have it, and on 22 Nov it wasn't queued for the next ones either; the only distro kernels we found carrying it are Gentoo's kernel sources and a Fedora Rawhide test build that hasn't shipped yet. Xint hasn't named the fix, but the commit credits Xint's tool and matches its description.",
+      "text": "The bug arrived in 4.15 (Jan 2018). The fix was merged into the main kernel tree on 19 Nov and first came out in 7.4-rc4 (22 Nov), a test release. The newest stable kernels (7.3.5, 6.18.64, 6.12.118, released 17 Nov) don't have it, and on 23 Nov it wasn't queued for the next ones either; the only distro kernels we found carrying it are Gentoo's kernel sources and a Fedora Rawhide test build that hasn't shipped yet. Xint hasn't named the fix, but the commit credits Xint's tool and matches its description.",
       "cmd": "uname -r",
       "cite": [
         1,
@@ -38,7 +38,8 @@
         6,
         18,
         20,
-        21
+        21,
+        22
       ]
     },
     {
@@ -80,7 +81,7 @@
     },
     {
       "label": "Update the kernel and reboot",
-      "text": "Install your distro's kernel with the fix (\"sctp: do not free a new asoc peeled off while sendmsg slept\") once it ships, then reboot. No stable release has it as of 22 Nov, and it isn't queued for the next stable releases yet; Debian unstable's 7.3.5-1 doesn't have it either.",
+      "text": "Install your distro's kernel with the fix (\"sctp: do not free a new asoc peeled off while sendmsg slept\") once it ships, then reboot. No stable release has it as of 23 Nov, and it isn't queued for the next stable releases yet; Debian unstable's 7.3.5-1 doesn't have it either.",
       "cite": [
         2,
         3,
@@ -89,7 +90,7 @@
         19
       ],
       "pending": {
-        "expected": null
+        "expected": "2026-11-27"
       }
     },
     {
@@ -101,7 +102,7 @@
       ]
     }
   ],
-  "slack": "Linux SCTP local root / container escape (no CVE yet): double free in the kernel's SCTP send path, in kernels since 4.15 (2018), reachable by any unprivileged local user, including inside a container. Xint chained it with nginx2root to get host root and escape Docker. Fix merged into mainline on 19 Nov (7.4-rc4); no stable kernel has it yet (22 Nov). Docker's default seccomp doesn't block SCTP. No public exploit, no attacks reported. Stopgap: `install sctp /bin/false` in /etc/modprobe.d/ (doesn't unload a loaded module, useless if SCTP is built in); check with `lsmod | grep sctp`.",
+  "slack": "Linux SCTP local root / container escape (no CVE yet): double free in the kernel's SCTP send path, in kernels since 4.15 (2018), reachable by any unprivileged local user, including inside a container. Xint chained it with nginx2root to get host root and escape Docker. Fix merged into mainline on 19 Nov (7.4-rc4); no stable kernel has it yet (23 Nov). Docker's default seccomp doesn't block SCTP. No public exploit, no attacks reported. Stopgap: `install sctp /bin/false` in /etc/modprobe.d/ (doesn't unload a loaded module, useless if SCTP is built in); check with `lsmod | grep sctp`.",
   "sources": [
     {
       "title": "Xint: nginx-to-root chain, Docker escape, since 4.15, module block",
@@ -196,9 +197,21 @@
     {
       "title": "GitHub: snapshot 65e4fd942f72 comes after the fix's merge (1e575bda)",
       "url": "https://github.com/torvalds/linux/compare/1e575bda30acc0bf01f799cee798d4a1c100d538...65e4fd942f72"
+    },
+    {
+      "title": "GitHub: 7.4-rc4 includes the fix's merge (1e575bda)",
+      "url": "https://github.com/torvalds/linux/compare/1e575bda30acc0bf01f799cee798d4a1c100d538...v7.4-rc4"
+    },
+    {
+      "title": "Linux kernel CNA: CVE records, none for the SCTP fix on 23 Nov",
+      "url": "https://git.kernel.org/pub/scm/linux/security/vulns.git/"
     }
   ],
   "changes": [
+    {
+      "date": "2026-11-23",
+      "text": "Rechecked: the fix is in the 7.4-rc4 test release, but still in no stable kernel or stable queue, and it has no CVE yet. Summary now names the only distro kernels we found with it."
+    },
     {
       "date": "2026-11-22",
       "text": "Rechecked: still no stable kernel with the fix, and it isn't queued for the next stable releases. Gentoo and a Fedora Rawhide test build carry it."
