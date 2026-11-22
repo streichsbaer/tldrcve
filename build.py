@@ -824,13 +824,13 @@ def home_week(all_c: list) -> str:
     w = WEEKS[-1]["week"]
     start = max(week_bounds(w)[0], date.today())  # drop what's past when the site is built
     soon = upcoming(all_c, start, start + timedelta(days=AHEAD_DAYS + 30))  # site.js hides dates past since, keeps 6
+    empty_row = "\n        <li data-empty hidden><span></span><span>Nothing scheduled that we know of.</span></li>" if soon else ""
     return f"""
     <section class="pane">
       <div class="pane__head"><h2>Coming up</h2><a class="more-link" href="/week/{week_slug(w)}/">{week_title(w)} review →</a></div>
       <div class="pane__body">
       <ul class="changes" data-upcoming="6">
-{ahead_items(soon)}
-        <li data-empty hidden><span></span><span>Nothing scheduled that we know of.</span></li>
+{ahead_items(soon)}{empty_row}
       </ul>
       </div>
     </section>
@@ -1137,7 +1137,6 @@ def editor_checks(all_c: list) -> list:
             continue
         if RELATIVE.search(wk.get("intro", "")):
             warnings.append(f"weeks/{week_slug(wk['week'])}.json: relative date in intro, use an absolute date")
-
     return warnings
 
 
