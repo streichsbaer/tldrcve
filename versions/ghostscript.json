@@ -1,0 +1,35 @@
+{
+  "id": "ghostscript",
+  "name": "Ghostscript",
+  "about": "The newest Ghostscript release from Artifex. It fixes every Ghostscript bug we cover.",
+  "feed": null,
+  "latest_from": [
+    "https://ghostscript.com/releases/index.html",
+    "https://github.com/ArtifexSoftware/ghostpdl-downloads/releases"
+  ],
+  "filter": "ghostscript",
+  "checked": "2026-11-22",
+  "lines": [
+    {
+      "line": "10.08",
+      "key": "10.08",
+      "latest": "10.08.0",
+      "released": "2026-09-08"
+    }
+  ],
+  "older": "Artifex lists a single current release. Linux distros ship older versions with fixes backported (`gs --version` doesn't change), so check your distro's advisory.",
+  "sources": [
+    {
+      "title": "Ghostscript: latest release and date",
+      "url": "https://ghostscript.com/releases/index.html"
+    },
+    {
+      "title": "Artifex: all Ghostscript releases",
+      "url": "https://github.com/ArtifexSoftware/ghostpdl-downloads/releases"
+    },
+    {
+      "title": "Debian tracker: backported fixes in older versions",
+      "url": "https://security-tracker.debian.org/tracker/CVE-2026-125396"
+    }
+  ]
+}

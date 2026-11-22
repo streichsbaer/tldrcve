@@ -46,6 +46,7 @@
   "versions/dotnet": "c88a021f7ba6e43a",
   "versions/electron": "faedb27a5b42d240",
   "versions/envoy": "5be8b4616fbebed4",
+  "versions/ghostscript": "798f87dbe7551465",
   "versions/istio": "ec4f705bdc9c9863",
   "versions/java": "8fa9cec7f2089cb4",
   "versions/linux-kernel": "56236988ac0e734f",

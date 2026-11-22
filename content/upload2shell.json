@@ -61,6 +61,9 @@
         5,
         6,
         7
+      ],
+      "versions": [
+        "ghostscript"
       ]
     },
     {
@@ -90,6 +93,11 @@
       ]
     }
   ],
+  "fixed_in": {
+    "ghostscript": {
+      "10.08": "10.08.0"
+    }
+  },
   "slack": "Upload2Shell (CVE-2026-125396): a crafted PostScript/PDF file escapes Ghostscript's -dSAFER sandbox and runs commands as the rendering user, in Ghostscript before 10.08.0. Reachable remotely wherever a server renders outsiders' files: ImageMagick/Imagick or Pillow previews (even files named .png), Roundcube thumbnails, WordPress uploads, shared CUPS queues. Technique published, full exploit not public, no attacks seen, not in KEV. Fix: Ghostscript 10.08.0 or distro packages (DSA-6516-1, DLA-4914-1, USN-8949-1); WordPress 7.0.4 / 6.9.7, Roundcube 1.6.20 / 1.7.5.",
   "sources": [
     {
@@ -157,6 +165,10 @@
     }
   ],
   "changes": [
+    {
+      "date": "2026-11-22",
+      "text": "Added Ghostscript to Safe versions."
+    },
     {
       "date": "2026-11-22",
       "text": "Published."
