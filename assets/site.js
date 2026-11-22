@@ -135,11 +135,14 @@
   var list = document.querySelector("[data-upcoming]");
   if (!list) return;
   var keep = parseInt(list.getAttribute("data-upcoming"), 10) || 6;
-  var today = new Date().toISOString().slice(0, 10);
+  var d = new Date();  // the reader's local date, as YYYY-MM-DD
+  var today = d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0") + "-" + String(d.getDate()).padStart(2, "0");
   var shown = 0;
   Array.prototype.forEach.call(list.querySelectorAll("li[data-date]"), function (li) {
     if (li.getAttribute("data-date") < today || shown >= keep) { li.hidden = true; } else { shown++; }
   });
+  var empty = list.querySelector("[data-empty]");
+  if (empty && shown === 0) empty.hidden = false;
 })();
 
 // Links to #sources open the folded sources and changelog.

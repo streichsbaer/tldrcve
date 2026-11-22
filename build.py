@@ -661,7 +661,7 @@ def upcoming(all_c: list, start: date, end: date) -> list:
             exp = (d.get("pending") or {}).get("expected")
             if within(exp):
                 out.append({"date": exp, "kind": "pending", "title": f'{c["name"]}: {d["label"]}', "product": c["product"],
-                            "note": "We expect news by this date and will check again.", "expected": True, "url": f'/{c["slug"]}/', "source": ""})
+                            "note": "We'll check again by this date.", "expected": True, "url": f'/{c["slug"]}/', "source": ""})
         kev = c["status"].get("kev")
         if kev and within(kev.get("due")):
             out.append({"date": kev["due"], "kind": "deadline", "title": f'CISA deadline: {c["name"]}', "product": c["product"],
@@ -728,7 +728,7 @@ def week_page(wk: dict, all_c: list) -> str:
         by_prod.setdefault((pid, dt), (v, []))[1].append(l["latest"])
     releases = "\n".join(
         f'        <li><time datetime="{dt}">{nice_date(dt)}</time><span><a href="/versions/{pid}/">{html.escape(v["name"])}</a>: {html.escape(", ".join(sorted(vers, key=vkey, reverse=True)))}</span></li>'
-        for (pid, dt), (v, vers) in by_prod.items()) or '        <li><span></span><span>None with a release date this week.</span></li>'
+        for (pid, dt), (v, vers) in by_prod.items()) or '        <li><span></span><span>None with a release date.</span></li>'
     top, rest = d["new"][:WEEK_TILES], d["new"][WEEK_TILES:]
     new_tiles = "\n".join(tile(c) for c in top)
     new_block = f'    <ul class="tiles">\n{new_tiles}\n    </ul>' if top else '    <p class="muted">No new pages.</p>'
@@ -822,14 +822,15 @@ def home_week(all_c: list) -> str:
     if not WEEKS:
         return ""
     w = WEEKS[-1]["week"]
-    start = week_bounds(w)[0]
-    soon = upcoming(all_c, start, start + timedelta(days=AHEAD_DAYS + 30))  # site.js hides dates already past and keeps 6
+    start = max(week_bounds(w)[0], date.today())  # drop what's past when the site is built
+    soon = upcoming(all_c, start, start + timedelta(days=AHEAD_DAYS + 30))  # site.js hides dates past since, keeps 6
     return f"""
     <section class="pane">
       <div class="pane__head"><h2>Coming up</h2><a class="more-link" href="/week/{week_slug(w)}/">{week_title(w)} review →</a></div>
       <div class="pane__body">
       <ul class="changes" data-upcoming="6">
 {ahead_items(soon)}
+        <li data-empty hidden><span></span><span>Nothing scheduled that we know of.</span></li>
       </ul>
       </div>
     </section>
@@ -1136,8 +1137,7 @@ def editor_checks(all_c: list) -> list:
             continue
         if RELATIVE.search(wk.get("intro", "")):
             warnings.append(f"weeks/{week_slug(wk['week'])}.json: relative date in intro, use an absolute date")
-        if not wk.get("snapshot") and week_bounds(wk["week"])[1] + timedelta(days=1) < date.today():
-            warnings.append(f"weeks/{week_slug(wk['week'])}.json: week is over; run python3 build.py --freeze-week {wk['week']}")
+
     return warnings
 
 
@@ -1438,7 +1438,10 @@ def freeze_week(w: str, all_c: list) -> None:
 def main() -> None:
     all_c = [json.loads(p.read_text()) for p in sorted(CONTENT.glob("*.json"))]
     if "--freeze-week" in sys.argv:
-        return freeze_week(sys.argv[sys.argv.index("--freeze-week") + 1], all_c)
+        i = sys.argv.index("--freeze-week")
+        if i + 1 >= len(sys.argv) or not WEEK_RE.match(sys.argv[i + 1]):
+            sys.exit("usage: python3 build.py --freeze-week 2026-W47")
+        return freeze_week(sys.argv[i + 1], all_c)
     warnings = editor_checks(all_c) + versions_checks(all_c)
     slugs = {c["slug"] for c in all_c}
     for c in all_c:
@@ -1447,6 +1450,9 @@ def main() -> None:
                 if b["page"] not in slugs:
                     warnings.append(f'{c["slug"]}.bugs: {b["cve"]} links to missing page /{b["page"]}/')
                 ROUNDUP_OF[b["page"]] = c
+    for wk in WEEKS:  # a note, not a warning: an unfrozen week must never block a deploy
+        if WEEK_RE.match(wk.get("week", "")) and not wk.get("snapshot") and week_bounds(wk["week"])[1] < date.today():
+            print(f"note: {wk['week']} is over; freeze it (on Monday) with python3 build.py --freeze-week {wk['week']}")
     watch_warnings, watch_notes = watch_checks(all_c)
     warnings += watch_warnings
     for note in watch_notes:
