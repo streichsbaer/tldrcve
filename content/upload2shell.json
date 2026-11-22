@@ -35,7 +35,7 @@
   "affected": [
     {
       "label": "Ghostscript before 10.08.0",
-      "text": "Distros backport the fix without changing `gs --version`, so check the package instead: fixed in Debian 12 `10.0.0~dfsg-11+deb12u9`, Debian 13 `10.05.1~dfsg-1+deb13u2`, Ubuntu 24.04 `10.02.1~dfsg1-0ubuntu7.10` and 22.04 `9.55.0~dfsg1-0ubuntu5.15` (newer releases too; older ones through Ubuntu Pro). Ubuntu's notice USN-8949-1 lists this bug as \"No CVE number\" (the researchers link it to this CVE), while Ubuntu's CVE tracker still says \"Needs evaluation\" for every release. No fixed package yet on 22 Nov 2026: Amazon Linux 2, 2023 and 2027 Preview (\"Pending Fix\"), SUSE Linux Enterprise 15 SP7 and 16 (\"In progress\"), openSUSE Leap 16 (\"Affected\"). Container images carry their own copy.",
+      "text": "Distros backport the fix without changing `gs --version`, so check the package instead: fixed in Debian 12 `10.0.0~dfsg-11+deb12u9`, Debian 13 `10.05.1~dfsg-1+deb13u2`, Ubuntu 24.04 `10.02.1~dfsg1-0ubuntu7.10` and 22.04 `9.55.0~dfsg1-0ubuntu5.15` (newer releases too; older ones through Ubuntu Pro). Ubuntu's notice USN-8949-1 lists this bug as \"No CVE number\" (the researchers link it to this CVE), while Ubuntu's CVE tracker still says \"Needs evaluation\" for every release. No fixed package yet on 22 Nov 2026: Amazon Linux 2, 2023 and 2027 Preview (\"Pending Fix\"), SUSE Linux Enterprise 15 SP7 and 16 (\"In progress\"), openSUSE Leap 16 (\"Affected\"). The 10.08.0 release candidate (18 Aug) also calls itself 10.08.0 but came before the fixes, so check it isn't what you run. Container images carry their own copy.",
       "cmd": "gs --version",
       "cite": [
         1,
@@ -45,7 +45,9 @@
         7,
         15,
         16,
-        17
+        17,
+        23,
+        24
       ]
     },
     {
@@ -65,7 +67,7 @@
   "do": [
     {
       "label": "Outsiders' files reach it? Update now",
-      "text": "Upload forms, previews, email thumbnails, shared print queues: don't wait for attacks, because the public proof of concept and write-up cover most of an exploit. Update to 10.08.0 or your distro's fixed package: Debian DLA-4914-1 and DSA-6516-1, Ubuntu USN-8949-1 (it lists the bug without a CVE number). This fixes every route at once. 10.08.0 also fixes five other Ghostscript CVEs (CVE-2026-110133, -112922, -103226, -19547 and -39919); Artifex's own CVE list doesn't name this one. One of them, CVE-2026-39919, is a JPEG 2000 overflow in PDFs; Wordfence's exploit for it only worked on a tuned test server, and no attacks are reported. Amazon Linux, SUSE Linux Enterprise 15 SP7 and 16, and openSUSE Leap 16 have no fixed package yet: cut the route (below) until they do. Rebuild container images that install Ghostscript.",
+      "text": "Upload forms, previews, email thumbnails, shared print queues: don't wait for attacks, because the public proof of concept and write-up cover most of an exploit. Update to 10.08.0 or your distro's fixed package: Debian DLA-4914-1 and DSA-6516-1, Ubuntu USN-8949-1 (it lists the bug without a CVE number). This fixes every route at once. 10.08.0 also fixes five other Ghostscript CVEs (CVE-2026-110133, -112922, -103226, -19547 and -39919); Artifex's own CVE list doesn't name this one. One of them, CVE-2026-39919, is a JPEG 2000 overflow in PDFs; Wordfence's two exploits for it only worked on the exact Ghostscript build they were made for, aren't public, and no attacks are reported. Amazon Linux, SUSE Linux Enterprise 15 SP7 and 16, and openSUSE Leap 16 have no fixed package yet: cut the route (below) until they do. Rebuild container images that install Ghostscript.",
       "cite": [
         3,
         4,
@@ -77,7 +79,8 @@
         18,
         19,
         21,
-        22
+        22,
+        23
       ],
       "versions": [
         "ghostscript"
@@ -224,18 +227,29 @@
     },
     {
       "title": "CVE record: CVE-2026-39919, JPEG 2000 heap overflow, fixed in 10.08.0",
-      "url": "https://www.cve.org/CVERecord?id=CVE-2026-39919"
+      "url": "https://www.cve.org/CVERecord?id=CVE-2026-39919",
+      "date": "15 Sep"
     },
     {
       "title": "BleepingComputer: CVE-2026-39919, Wordfence exploit unreliable, no attacks seen",
       "url": "https://www.bleepingcomputer.com/news/security/ghostscript-flaw-lets-hackers-hijack-servers-via-pdf-uploads/",
       "date": "13 Oct"
+    },
+    {
+      "title": "Wordfence: CVE-2026-39919, two exploits tied to one Ghostscript build, 10.08.0 release candidate unfixed",
+      "url": "https://www.wordfence.com/blog/2026/10/wordfence-argus-discovers-critical-vulnerability-in-ghostscript-the-program-that-turns-uploaded-pdfs-into-thumbnails-on-your-server/",
+      "date": "12 Oct"
+    },
+    {
+      "title": "Artifex: Ghostscript 10.08.0 release candidate 1",
+      "url": "https://github.com/ArtifexSoftware/ghostpdl-downloads/releases/tag/gs10080rc1",
+      "date": "18 Aug"
     }
   ],
   "changes": [
     {
       "date": "2026-11-22",
-      "text": "Added a note on CVE-2026-39919, another Ghostscript bug the same update fixes."
+      "text": "Added a note on CVE-2026-39919, another Ghostscript bug the same update fixes, and a warning that the 10.08.0 release candidate isn't fixed."
     },
     {
       "date": "2026-11-22",
