@@ -120,6 +120,7 @@ When a vulnerability gets attention but doesn't qualify yet, record it instead o
   - `watch`: getting attention, but too little is known to act on (no details, no fix, no exploit). Never a softer `now`. The page must say what would change the verdict.
 - **Writing:**
   - Plain English and short. No hype words unless quoting an official rating.
+  - Loaded terms (RCE, zero-day, wormable) follow common usage, not just the source's wording. RCE means an attacker reaches the target over the network without the user doing something like opening a file; if the user has to open or display something, call it code or command execution. Keep the source's term as an alias so people can still find the page.
   - Absolute dates only ("19 Nov 2026").
   - Mark anything still expected as `pending` with an expected date.
 

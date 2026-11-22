@@ -1,6 +1,6 @@
 {
   "slug": "iterm2-cat-rce",
-  "name": "iTerm2 cat RCE",
+  "name": "iTerm2 cmd exec",
   "aliases": [
     "iterm",
     "iterm2",
@@ -9,7 +9,11 @@
     "apc",
     "escape sequence",
     "macos terminal",
-    "cat"
+    "cat",
+    "rce",
+    "iterm2 rce",
+    "arbitrary command execution",
+    "command execution"
   ],
   "cves": [],
   "product": "iTerm2",
@@ -17,8 +21,8 @@
   "news": "2026-11-21",
   "updated": "2026-11-22",
   "verdict": "now",
-  "tile_line": "Public exploit: cat a file, run code. Update to 3.7.9.",
-  "summary": "In iTerm2 3.6.1 through 3.7.8, displaying a crafted file in the terminal, for example with `cat README.md`, runs commands on your Mac. The trap is hidden in the file (you only see some shell errors when it runs), and it works on a default install in bash, zsh and fish. The researcher published a complete exploit; iTerm2 fixed it in 3.7.9 on 20 Nov 2026. No attacks are reported. There's no fixed release for macOS 12.4 to 12.x, whose newest iTerm2 is 3.6.11.",
+  "tile_line": "Public exploit: cat a file, run commands. Get 3.7.9.",
+  "summary": "In iTerm2 3.6.1 through 3.7.8, displaying a crafted file in the terminal, for example with `cat README.md`, runs commands on your Mac. The trap is hidden in the file (you only see some shell errors when it runs), and it works on a default install in bash, zsh and fish. The researcher published a complete exploit; iTerm2 fixed it in 3.7.9 on 20 Nov 2026. No attacks are reported. There's no fixed release for macOS 12.4 to 12.x, whose newest iTerm2 is 3.6.11. The researcher first called it remote code execution (RCE), then retitled it arbitrary command execution: an attacker needs you to display their file, so it isn't remote in the usual sense.",
   "affected": [
     {
       "label": "iTerm2 3.6.1 to 3.7.8",
@@ -35,7 +39,8 @@
       "label": "It shows files from others",
       "text": "The file's raw contents have to reach iTerm2: `cat` on a README from a cloned repo or a download is the researcher's example, and any file you might print counts. The hidden part doesn't appear in the output; you only see shell errors when it fires. No setting needs to be changed for it to work.",
       "cite": [
-        1
+        1,
+        9
       ]
     }
   ],
@@ -73,10 +78,10 @@
       "3.7": "3.7.9"
     }
   },
-  "slack": "iTerm2 cat RCE (no CVE yet): in iTerm2 3.6.1 to 3.7.8, displaying a crafted file (e.g. cat README.md) runs commands, on a default install, in any shell. Full exploit public since 21 Nov, no attacks reported, not in KEV. Fix: iTerm2 3.7.9 (20 Nov, Check for Updates). On macOS 12.4 to 12.x the newest iTerm2 is 3.6.11 (June), with no fix.",
+  "slack": "iTerm2 arbitrary command execution (no CVE yet): in iTerm2 3.6.1 to 3.7.8, displaying a crafted file (e.g. cat README.md) runs commands, on a default install, in any shell. Full exploit public since 21 Nov, no attacks reported, not in KEV. Fix: iTerm2 3.7.9 (20 Nov, Check for Updates). On macOS 12.4 to 12.x the newest iTerm2 is 3.6.11 (June), with no fix.",
   "sources": [
     {
-      "title": "ii4gsp (Minseong Kim): write-up, affected versions, full exploit",
+      "title": "ii4gsp (Minseong Kim): write-up, now titled Arbitrary Command Execution; affected versions, full exploit",
       "url": "https://ii4gsp.github.io/iterm2-rce/",
       "date": "21 Nov"
     },
@@ -109,9 +114,18 @@
     {
       "title": "iTerm2 docs: iTerm2 > Check for Updates",
       "url": "https://iterm2.com/documentation-menu-items.html"
+    },
+    {
+      "title": "ii4gsp on X: write-up retitled from RCE to Arbitrary Command Execution",
+      "url": "https://x.com/ii4gsp/status/2124441046767808943",
+      "date": "22 Nov"
     }
   ],
   "changes": [
+    {
+      "date": "2026-11-22",
+      "text": "Renamed from \"iTerm2 cat RCE\": the researcher retitled the write-up Arbitrary Command Execution, since you have to display the attacker's file. The address stays the same."
+    },
     {
       "date": "2026-11-22",
       "text": "Published."

@@ -7,7 +7,7 @@
   "cves": "2eca5a70ee40bea0",
   "default": "0102ee4bf020cbdf",
   "how-we-rate": "ddd51bc57fe6c95a",
-  "iterm2-cat-rce": "06042ef445082a11",
+  "iterm2-cat-rce": "615adf85cec7ffd5",
   "java4shell": "b995ac70ef6708f4",
   "linux-sctp-root": "09e781885cd08340",
   "linux-tcp-root": "af7067710a4a9c75",
@@ -81,6 +81,6 @@
   "versions/vcenter": "60e36adc398efd90",
   "versions/wordpress": "bae7d49a5240f5ed",
   "week": "a967348ea7b6a725",
-  "week/2026-w47": "4038933503075849",
+  "week/2026-w47": "4b72632a6e3fb70b",
   "wordpress-7-1-5": "d359d06d0097d05a"
 }
