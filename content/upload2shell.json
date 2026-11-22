@@ -64,7 +64,7 @@
   "do": [
     {
       "label": "Outsiders' files reach it? Update now",
-      "text": "Upload forms, previews, email thumbnails, shared print queues: don't wait for attacks, because the public proof of concept and write-up cover most of an exploit. Update to 10.08.0 or your distro's fixed package: Debian DLA-4914-1 and DSA-6516-1, Ubuntu USN-8949-1 (it lists the bug without a CVE number). This fixes every route at once, and five other Ghostscript CVEs (CVE-2026-110133, -112922, -103226, -19547 and -39919); Artifex's own CVE list doesn't name this one. Amazon Linux, SUSE Linux Enterprise 15 SP7 and 16, and openSUSE Leap 16 have no fixed package yet: cut the route (below) until they do. Rebuild container images that install Ghostscript.",
+      "text": "Upload forms, previews, email thumbnails, shared print queues: don't wait for attacks, because the public proof of concept and write-up cover most of an exploit. Update to 10.08.0 or your distro's fixed package: Debian DLA-4914-1 and DSA-6516-1, Ubuntu USN-8949-1 (it lists the bug without a CVE number). This fixes every route at once. 10.08.0 also fixes five other Ghostscript CVEs (CVE-2026-110133, -112922, -103226, -19547 and -39919); Artifex's own CVE list doesn't name this one. Amazon Linux, SUSE Linux Enterprise 15 SP7 and 16, and openSUSE Leap 16 have no fixed package yet: cut the route (below) until they do. Rebuild container images that install Ghostscript.",
       "cite": [
         3,
         4,
@@ -218,7 +218,7 @@
   "changes": [
     {
       "date": "2026-11-22",
-      "text": "Clearer that the crafted file can be uploaded as an image. Notes the five other CVEs 10.08.0 fixes. The write-up went public on 21 Nov."
+      "text": "Clearer that the crafted file can be uploaded as an image. Notes the five other CVEs 10.08.0 fixes. The write-up is dated 17 Nov but first went public on 21 Nov, per oss-security."
     },
     {
       "date": "2026-11-22",

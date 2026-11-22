@@ -30,11 +30,6 @@
     {
       "title": "iTerm2: downloads, 3.7.9 security update, 3.6.11 for macOS 12.4+",
       "url": "https://iterm2.com/downloads.html"
-    },
-    {
-      "title": "iTerm2 3.6.0 source: Kitty file transfer still \"Unimplemented\"",
-      "url": "https://github.com/gnachman/iTerm2/blob/v3.6.0/sources/KittyImageController.swift"
     }
-  ],
-  "older": "Versions before 3.6.1 lack the Kitty file-transfer code this bug uses."
+  ]
 }
