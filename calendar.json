@@ -1,0 +1,110 @@
+{
+  "about": "Scheduled release and patch days. Every event needs a source that states the date (or the rule it follows). Mark dates not yet announced as \"expected\": true; the build warns when an expected date has passed.",
+  "events": [
+    {
+      "date": "2026-11-24",
+      "title": "Firefox 161",
+      "product": "Firefox",
+      "kind": "release",
+      "source": {
+        "title": "Mozilla: Firefox 161 release schedule",
+        "url": "https://whattrainisitnow.com/release/?version=161"
+      }
+    },
+    {
+      "date": "2026-12-08",
+      "title": "Chrome 159 stable",
+      "product": "Chrome",
+      "kind": "release",
+      "source": {
+        "title": "Chromium: release schedule",
+        "url": "https://chromiumdash.appspot.com/schedule"
+      }
+    },
+    {
+      "date": "2026-12-08",
+      "title": "Firefox 162",
+      "product": "Firefox",
+      "kind": "release",
+      "source": {
+        "title": "Mozilla: Firefox 162 release schedule",
+        "url": "https://whattrainisitnow.com/release/?version=162"
+      }
+    },
+    {
+      "date": "2026-12-08",
+      "title": "Microsoft Patch Tuesday",
+      "product": "Microsoft",
+      "kind": "patch-day",
+      "note": "Monthly security updates come out on the second Tuesday of each month.",
+      "source": {
+        "title": "Microsoft: Windows monthly security update, second Tuesday of each month",
+        "url": "https://learn.microsoft.com/en-us/windows/deployment/update/release-cycle"
+      }
+    },
+    {
+      "date": "2026-12-15",
+      "title": "Oracle Critical Security Patch Update",
+      "product": "Oracle (Java, MySQL and more)",
+      "kind": "patch-day",
+      "note": "Oracle's newer, more frequent update stream, separate from the quarterly Critical Patch Updates.",
+      "source": {
+        "title": "Oracle: Critical Security Patch Update dates",
+        "url": "https://www.oracle.com/security-alerts/"
+      }
+    },
+    {
+      "date": "2026-12-17",
+      "title": "PHP security releases",
+      "product": "PHP",
+      "kind": "release",
+      "expected": true,
+      "note": "Not announced yet: PHP releases on a four-week cycle, and the last ones were on 19 Nov.",
+      "source": {
+        "title": "php.net: PHP's regular four-week release cycle",
+        "url": "https://www.php.net/archive/2026.php#2026-11-18-1"
+      }
+    },
+    {
+      "date": "2027-01-05",
+      "title": "Chrome 160 stable",
+      "product": "Chrome",
+      "kind": "release",
+      "source": {
+        "title": "Chromium: release schedule",
+        "url": "https://chromiumdash.appspot.com/schedule"
+      }
+    },
+    {
+      "date": "2027-01-12",
+      "title": "Microsoft Patch Tuesday",
+      "product": "Microsoft",
+      "kind": "patch-day",
+      "note": "Monthly security updates come out on the second Tuesday of each month.",
+      "source": {
+        "title": "Microsoft: Windows monthly security update, second Tuesday of each month",
+        "url": "https://learn.microsoft.com/en-us/windows/deployment/update/release-cycle"
+      }
+    },
+    {
+      "date": "2027-01-19",
+      "title": "Chrome 161 stable",
+      "product": "Chrome",
+      "kind": "release",
+      "source": {
+        "title": "Chromium: release schedule",
+        "url": "https://chromiumdash.appspot.com/schedule"
+      }
+    },
+    {
+      "date": "2027-01-19",
+      "title": "Oracle Critical Patch Update",
+      "product": "Oracle (Java, MySQL and more)",
+      "kind": "patch-day",
+      "source": {
+        "title": "Oracle: Critical Patch Update dates",
+        "url": "https://www.oracle.com/security-alerts/"
+      }
+    }
+  ]
+}

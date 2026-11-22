@@ -13,7 +13,7 @@ import os
 import re
 import shutil
 import sys
-from datetime import date
+from datetime import date, timedelta
 from pathlib import Path
 from urllib.parse import quote
 
@@ -108,7 +108,7 @@ def write_fingerprinted() -> None:
 def page(title: str, description: str, body: str, current: str = "", path: str = "", data: str = "") -> str:
     seo = social_tags(title, description, path)
     data_link = f'\n  <link rel="alternate" type="application/json" title="This page as JSON" href="{data}">' if data else ""
-    cur = {k: ' aria-current="page"' if k == current else "" for k in ("cves", "versions", "how")}
+    cur = {k: ' aria-current="page"' if k == current else "" for k in ("cves", "versions", "week", "how")}
     return f"""<!doctype html>
 <html lang="en" class="no-js">
 <head>
@@ -133,6 +133,7 @@ def page(title: str, description: str, body: str, current: str = "", path: str =
       <nav class="site-nav" aria-label="Main">
         <a href="/cves/"{cur["cves"]}>All CVEs</a>
         <a href="/versions/"{cur["versions"]}>Safe versions</a>
+        <a href="/week/"{cur["week"]}>This week</a>
         <a href="/how-we-rate/"{cur["how"]}>How we rate</a>
       </nav>
     </div>
@@ -610,6 +611,217 @@ def versions_index(all_c: list) -> str:
     return page("Latest safe versions · tldrcve", "The newest safe release on each product line, as far as we know.", body, current="versions", path="/versions/")
 
 
+# ---------- Weekly review and week ahead ----------
+# weeks/<yyyy>-w<nn>.json: {"week": "2026-W47", "intro": ""}. Everything else on the page is derived from the data:
+# pages published or changed that week, safe releases that week, and what's coming up in the 30 days after it
+# (calendar.json events, pending fixes, CISA KEV deadlines).
+
+WEEKS_DIR = ROOT / "weeks"
+CALENDAR_FILE = ROOT / "calendar.json"
+CALENDAR = json.loads(CALENDAR_FILE.read_text())["events"] if CALENDAR_FILE.exists() else []
+WEEKS = sorted((json.loads(p.read_text()) for p in WEEKS_DIR.glob("*.json")), key=lambda w: w["week"]) if WEEKS_DIR.exists() else []
+AHEAD_DAYS = 30
+WEEK_TILES = 6  # the scariest new pages get a tile; the rest go in a compact list
+WEEK_RE = re.compile(r"^(\d{4})-W(\d{2})$")
+
+
+def week_bounds(w: str):
+    y, n = WEEK_RE.match(w).groups()
+    mon = date.fromisocalendar(int(y), int(n), 1)
+    return mon, mon + timedelta(days=6)
+
+
+def week_slug(w: str) -> str:
+    return w.lower()
+
+
+def week_label(w: str) -> str:
+    mon, sun = week_bounds(w)
+    if mon.month == sun.month:
+        return f"{mon.day}–{sun.day} {sun.strftime('%b %Y')}"
+    return f"{mon.day} {mon.strftime('%b')} – {sun.day} {sun.strftime('%b %Y')}"
+
+
+def week_title(w: str) -> str:
+    return f"Week {int(WEEK_RE.match(w).group(2))}"
+
+
+def upcoming(all_c: list, start: date, end: date) -> list:
+    """Scheduled release days, pending fixes and CISA deadlines between start and end, oldest first."""
+    out = []
+    def within(d):
+        return d and start <= date.fromisoformat(d) <= end
+    for e in CALENDAR:
+        if within(e["date"]):
+            out.append({"date": e["date"], "kind": e["kind"], "title": e["title"], "product": e.get("product", ""),
+                        "note": e.get("note", ""), "expected": bool(e.get("expected")), "url": e["source"]["url"],
+                        "source": e["source"]["title"]})
+    for c in all_c:
+        for d in c["do"]:
+            exp = (d.get("pending") or {}).get("expected")
+            if within(exp):
+                out.append({"date": exp, "kind": "pending", "title": f'{c["name"]}: {d["label"]}', "product": c["product"],
+                            "note": "", "expected": True, "url": f'/{c["slug"]}/', "source": ""})
+        kev = c["status"].get("kev")
+        if kev and within(kev.get("due")):
+            out.append({"date": kev["due"], "kind": "deadline", "title": f'CISA deadline: {c["name"]}', "product": c["product"],
+                        "note": "US federal agencies must fix it by this date.", "expected": False, "url": f'/{c["slug"]}/', "source": ""})
+    return sorted(out, key=lambda e: (e["date"], e["kind"], e["title"]))
+
+
+def week_data(w: str, all_c: list) -> dict:
+    mon, sun = week_bounds(w)
+    def in_week(d):
+        return d and mon <= date.fromisoformat(d) <= sun
+    new = sorted((c for c in all_c if any(ch["text"] == "Published." and in_week(ch["date"]) for ch in c["changes"])),
+                 key=lambda c: c["status"]["scare"], reverse=True)
+    changed = sorted(((ch["date"], c, ch["text"]) for c in all_c for ch in c["changes"]
+                      if ch["text"] != "Published." and in_week(ch["date"])), key=lambda x: (x[0], x[1]["slug"]), reverse=True)
+    releases = sorted(((l["released"], pid, v, l) for pid, v in VERSIONS.items() for l in v["lines"] if in_week(l.get("released"))),
+                      key=lambda x: (x[0], x[1]), reverse=True)
+    return {"week": w, "start": mon.isoformat(), "end": sun.isoformat(), "new": new, "changed": changed,
+            "releases": releases, "ahead": upcoming(all_c, sun + timedelta(days=1), sun + timedelta(days=AHEAD_DAYS))}
+
+
+def ahead_items(ahead: list) -> str:
+    rows = []
+    for e in ahead:
+        ext = e["url"].startswith("http")
+        rel = ' rel="nofollow"' if ext else ""
+        link = f'<a href="{html.escape(e["url"])}"{rel}>{html.escape(e["title"])}</a>'
+        tag = ' <span class="tag">Expected</span>' if e["expected"] and e["kind"] != "pending" else ""
+        note = f' <span class="muted">{text(e["note"])}</span>' if e["note"] else ""
+        rows.append(f'        <li><time datetime="{e["date"]}">{nice_date(e["date"])}</time><span>{link}{tag}{note}</span></li>')
+    return "\n".join(rows) or '        <li><span></span><span>Nothing scheduled that we know of.</span></li>'
+
+
+def week_page(wk: dict, all_c: list) -> str:
+    w = wk["week"]
+    d = week_data(w, all_c)
+    idx = [x["week"] for x in WEEKS].index(w)
+    prev_w = WEEKS[idx - 1]["week"] if idx > 0 else None
+    next_w = WEEKS[idx + 1]["week"] if idx + 1 < len(WEEKS) else None
+    counts = f'{len(d["new"])} new page{"s" if len(d["new"]) != 1 else ""}, {len(d["changed"])} update{"s" if len(d["changed"]) != 1 else ""}'
+    intro = f'\n      <p>{text(wk["intro"])}</p>' if wk.get("intro") else ""
+    by_page = {}
+    for dt, c, t in d["changed"]:  # newest first, so the first entry per page is its latest change
+        by_page.setdefault(c["slug"], (dt, c, t, []))[3].append(t)
+    changed = "\n".join(
+        f'        <li><time datetime="{dt}">{nice_date(dt)}</time><span><a href="/{c["slug"]}/">{html.escape(c["name"])}</a>: {text(t)}'
+        + (f' <a class="muted" href="/{c["slug"]}/#sources">+{len(all_t) - 1} earlier</a>' if len(all_t) > 1 else "") + "</span></li>"
+        for dt, c, t, all_t in by_page.values()) or '        <li><span></span><span>No updates this week.</span></li>'
+    by_prod = {}
+    for dt, pid, v, l in d["releases"]:  # newest first
+        by_prod.setdefault(pid, (dt, v, []))[2].append(l["latest"])
+    releases = "\n".join(
+        f'        <li><time datetime="{dt}">{nice_date(dt)}</time><span><a href="/versions/{pid}/">{html.escape(v["name"])}</a>: {html.escape(", ".join(vers))}</span></li>'
+        for pid, (dt, v, vers) in by_prod.items()) or '        <li><span></span><span>None this week.</span></li>'
+    top, rest = d["new"][:WEEK_TILES], d["new"][WEEK_TILES:]
+    new_tiles = "\n".join(tile(c) for c in top)
+    new_block = f'    <ul class="tiles">\n{new_tiles}\n    </ul>' if top else '    <p class="muted">No new pages this week.</p>'
+    if rest:
+        rest_rows = "\n".join(
+            f'        <li><span class="verdict verdict--{c["verdict"]}">{VERDICTS[c["verdict"]]}</span><span><a href="/{c["slug"]}/">{html.escape(c["name"])}</a> <span class="muted">{text(c["tile_line"])}</span></span></li>'
+            for c in rest)
+        new_block += f"""
+    <section class="pane">
+      <div class="pane__head"><h2>Also new</h2><span class="pane__meta">{len(rest)} more, scariest first</span></div>
+      <div class="pane__body">
+      <ul class="changes week-more">
+{rest_rows}
+      </ul>
+      </div>
+    </section>"""
+    nav = " · ".join(x for x in [
+        f'<a href="/week/{week_slug(prev_w)}/">← {week_title(prev_w)}</a>' if prev_w else "",
+        '<a href="/week/">All weeks</a>',
+        f'<a href="/week/{week_slug(next_w)}/">{week_title(next_w)} →</a>' if next_w else ""] if x)
+    end = date.fromisoformat(d["end"])
+    body = f"""  <main class="wrap prose-page">
+    <header class="page-head">
+      <h1>{week_title(w)}</h1>
+      <p>{week_label(w)}: {counts}.</p>{intro}
+    </header>
+
+    <div class="section-head"><h2>New this week</h2></div>
+{new_block}
+
+    <section class="pane">
+      <div class="pane__head"><h2>What changed</h2></div>
+      <div class="pane__body">
+      <ul class="changes">
+{changed}
+      </ul>
+      </div>
+    </section>
+
+    <section class="pane">
+      <div class="pane__head"><h2>New safe releases</h2><a class="more-link" href="/versions/">All safe versions →</a></div>
+      <div class="pane__body">
+      <ul class="changes">
+{releases}
+      </ul>
+      </div>
+    </section>
+
+    <section class="pane">
+      <div class="pane__head"><h2>Coming up</h2><span class="pane__meta">{nice_date((end + timedelta(days=1)).isoformat())} – {nice_date((end + timedelta(days=AHEAD_DAYS)).isoformat())}</span></div>
+      <div class="pane__body">
+      <ul class="changes">
+{ahead_items(d["ahead"])}
+      </ul>
+      </div>
+    </section>
+
+    <p class="week-nav">{nav}</p>
+  </main>
+"""
+    return page(f"{week_title(w)} ({week_label(w)}) · tldrcve", f"The week in vulnerabilities, {week_label(w)}: {counts}, and what's coming up.",
+                body, current="week", path=f"/week/{week_slug(w)}/", data=f"/week/{week_slug(w)}.json")
+
+
+def weeks_index(all_c: list) -> str:
+    rows = []
+    for wk in reversed(WEEKS):
+        w = wk["week"]
+        d = week_data(w, all_c)
+        rows.append(f'        <li><time datetime="{d["start"]}">{nice_date(d["start"])}</time><span><a href="/week/{week_slug(w)}/">{week_title(w)}</a>: {week_label(w)}, {len(d["new"])} new, {len(d["changed"])} updates</span></li>')
+    body = f"""  <main class="wrap prose-page">
+    <header class="page-head">
+      <h1>Weekly review</h1>
+      <p>What came out each week, what changed, and what's coming up.</p>
+    </header>
+    <section class="pane">
+      <div class="pane__body">
+      <ul class="changes">
+{chr(10).join(rows)}
+      </ul>
+      </div>
+    </section>
+  </main>
+"""
+    return page("Weekly review · tldrcve", "The week in vulnerabilities: new pages, what changed, and what's coming up.",
+                body, current="week", path="/week/")
+
+
+def home_week(all_c: list) -> str:
+    """Homepage block: the latest weekly review and the next few dates after it."""
+    if not WEEKS:
+        return ""
+    w = WEEKS[-1]["week"]
+    d = week_data(w, all_c)
+    return f"""
+    <section class="pane">
+      <div class="pane__head"><h2>Coming up</h2><a class="more-link" href="/week/{week_slug(w)}/">{week_title(w)} review →</a></div>
+      <div class="pane__body">
+      <ul class="changes">
+{ahead_items(d["ahead"][:6])}
+      </ul>
+      </div>
+    </section>
+"""
+
+
 # ---------- Home ----------
 
 LATEST_COUNT = 6
@@ -661,7 +873,7 @@ def home(all_c: list) -> str:
     <ul class="tiles">
 {chr(10).join(tile(c) for c in latest)}
     </ul>
-
+{home_week(all_c)}
     <section class="pane rate">
       <div class="pane__head"><h2>The scare-o-meter</h2><a class="more-link" href="/how-we-rate/">How we rate →</a></div>
 {zones_list()}
@@ -888,6 +1100,22 @@ def editor_checks(all_c: list) -> list:
                 exp = (e.get("pending") or {}).get("expected")
                 if exp and date.fromisoformat(exp) < date.today():
                     warnings.append(f"{c['slug']}.{section}[{i}]: pending item was due {exp}, check and update it")
+    for i, e in enumerate(CALENDAR):
+        where = f"calendar.json events[{i}] ({e.get('title', '?')})"
+        try:
+            when = date.fromisoformat(e["date"])
+        except (KeyError, ValueError):
+            warnings.append(f"{where}: needs a YYYY-MM-DD date")
+            continue
+        if not (e.get("source") or {}).get("url", "").startswith("https://"):
+            warnings.append(f"{where}: needs a source with an https URL")
+        if e.get("kind") not in ("release", "patch-day"):
+            warnings.append(f"{where}: kind must be release or patch-day")
+        if e.get("expected") and when < date.today():
+            warnings.append(f"{where}: expected date {e['date']} has passed; confirm it or remove it")
+    for wk in WEEKS:
+        if not WEEK_RE.match(wk.get("week", "")):
+            warnings.append(f"weeks: bad week id {wk.get('week')!r}, use YYYY-Www")
     return warnings
 
 
@@ -945,6 +1173,9 @@ def write_sitemap(all_c: list) -> None:
     urls = [("/", newest), ("/cves/", newest), ("/versions/", newest), ("/how-we-rate/", newest)]
     urls += [(f"/versions/{pid}/", v["checked"]) for pid, v in sorted(VERSIONS.items())]
     urls += [(f'/{c["slug"]}/', c["updated"]) for c in sorted(all_c, key=lambda c: c["slug"])]
+    if WEEKS:
+        urls.append(("/week/", newest))
+        urls += [(f'/week/{week_slug(w["week"])}/', min(newest, week_bounds(w["week"])[1].isoformat())) for w in WEEKS]
     body = "\n".join(f"  <url><loc>{SITE_URL}{p}</loc><lastmod>{d}</lastmod></url>" for p, d in urls)
     (OUT / "sitemap.xml").write_text(
         '<?xml version="1.0" encoding="UTF-8"?>\n'
@@ -976,6 +1207,16 @@ def write_feed(all_c: list) -> None:
       <guid isPermaLink="false">{c["slug"]}-{d}-{-neg_i}</guid>
       <pubDate>{rfc822(d)}</pubDate>
       <description>{html.escape(desc.replace("`", ""))} Verdict: {html.escape(VERDICTS[c["verdict"]])}</description>
+    </item>""")
+    for wk in WEEKS:
+        w = wk["week"]
+        d = week_data(w, all_c)
+        items.append(f"""    <item>
+      <title>{html.escape(f"{week_title(w)} review ({week_label(w)})")}</title>
+      <link>{SITE_URL}/week/{week_slug(w)}/</link>
+      <guid isPermaLink="false">week-{week_slug(w)}</guid>
+      <pubDate>{rfc822(d["end"])}</pubDate>
+      <description>{html.escape(f'{len(d["new"])} new pages, {len(d["changed"])} updates, and {len(d["ahead"])} dates coming up.')}</description>
     </item>""")
     newest = entries[0][0] if entries else date.today().isoformat()
     (OUT / "feed.xml").write_text(f"""<?xml version="1.0" encoding="UTF-8"?>
@@ -1056,6 +1297,16 @@ def write_data(all_c: list) -> None:
         dump(f'{c["slug"]}.json', page_data(c))
     for pid in VERSIONS:
         dump(f"versions/{pid}.json", version_data(pid, all_c))
+    for wk in WEEKS:
+        w = wk["week"]
+        d = week_data(w, all_c)
+        dump(f"week/{week_slug(w)}.json", {
+            "week": w, "start": d["start"], "end": d["end"], "url": f"{SITE_URL}/week/{week_slug(w)}/", "intro": wk.get("intro", ""),
+            "new": [index_row(c) for c in d["new"]],
+            "changed": [{"date": dt, "slug": c["slug"], "name": c["name"], "text": t, "url": f'{SITE_URL}/{c["slug"]}/'} for dt, c, t in d["changed"]],
+            "releases": [{"date": dt, "product": pid, "line": l["line"], "latest": l["latest"], "url": f"{SITE_URL}/versions/{pid}/"} for dt, pid, v, l in d["releases"]],
+            "ahead": [{**e, "url": e["url"] if e["url"].startswith("http") else SITE_URL + e["url"]} for e in d["ahead"]],
+        })
     dump("api/cves.json", {
         "site": SITE_URL, "updated": max(c["updated"] for c in all_c),
         "about": "Every page on tldrcve.com, newest update first. Each page's full data is at its json URL.",
@@ -1063,6 +1314,8 @@ def write_data(all_c: list) -> None:
         "pages": [index_row(c) for c in by_update],
         "safe_versions": [{"id": pid, "name": v["name"], "checked": v["checked"], "url": f"{SITE_URL}/versions/{pid}/",
                            "json": f"{SITE_URL}/versions/{pid}.json"} for pid, v in VERSIONS.items()],
+        "weeks": [{"week": w["week"], "url": f'{SITE_URL}/week/{week_slug(w["week"])}/', "json": f'{SITE_URL}/week/{week_slug(w["week"])}.json'}
+                  for w in WEEKS],
     })
 
     def flat(s: str) -> str:  # one line, no markup: llms.txt is read as plain Markdown
@@ -1086,6 +1339,7 @@ def write_data(all_c: list) -> None:
         f"- Each page as JSON: add `.json` to the page path, e.g. {SITE_URL}/upload2shell.json",
         f"- Safe versions as JSON: {SITE_URL}/versions/<product>.json, e.g. {SITE_URL}/versions/ghostscript.json",
         f"- [RSS feed]({SITE_URL}/feed.xml): new pages and updates",
+        f"- [Weekly review]({SITE_URL}/week/): each week's new pages, changes and the dates coming up; JSON at /week/<yyyy>-w<nn>.json",
         "",
         "## Pages",
         "",
@@ -1177,6 +1431,9 @@ def main() -> None:
              "404.html": not_found_page(), "versions/index.html": versions_index(all_c)}
     pages.update({f"versions/{pid}/index.html": versions_page(v, all_c) for pid, v in VERSIONS.items()})
     pages.update({f'{c["slug"]}/index.html': brief(c) for c in all_c})
+    if WEEKS:
+        pages["week/index.html"] = weeks_index(all_c)
+        pages.update({f'week/{week_slug(w["week"])}/index.html': week_page(w, all_c) for w in WEEKS})
     for rel, content in pages.items():
         out = OUT / rel
         out.parent.mkdir(parents=True, exist_ok=True)

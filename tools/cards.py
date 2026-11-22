@@ -145,6 +145,15 @@ def documents(all_c):
                                   "The newest release on each line, with every bug we cover fixed.")
     for pid, v in build.VERSIONS.items():
         cards[f"versions/{pid}"] = product_card(v, len(build.product_pages(pid, all_c)))
+    if build.WEEKS:
+        cards["week"] = text_card("tldrcve.com/week", "Weekly review", "Every week",
+                                  "New pages, what changed, and the patch days coming up.")
+    for wk in build.WEEKS:
+        w = wk["week"]
+        d = build.week_data(w, all_c)
+        cards[f"week/{build.week_slug(w)}"] = text_card(f"tldrcve.com/week/{build.week_slug(w)}", build.week_title(w),
+                                                        build.week_label(w),
+                                                        f'{len(d["new"])} new, {len(d["changed"])} updates, {len(d["ahead"])} dates coming up.')
     return {slug: f'<!doctype html><html><head><meta charset="utf-8">{FONTS}<style>{CSS}</style></head><body>{body}</body></html>'
             for slug, body in cards.items()}
 

@@ -82,7 +82,8 @@ sup.cite a:hover { color: var(--brand); }
 .wordmark__cve { font: 600 1rem/1 var(--mono); color: var(--brand); letter-spacing: 0.04em; }
 .site-nav { display: flex; gap: 20px; font-size: 0.9375rem; font-weight: 500; }
 .site-nav a { text-decoration: none; color: var(--ink-2); white-space: nowrap; }
-@media (max-width: 520px) { .site-header .wrap { flex-wrap: wrap; row-gap: 6px; } .site-nav { gap: 18px; width: 100%; } }
+@media (max-width: 520px) { .site-header .wrap { flex-wrap: wrap; row-gap: 6px; } .site-nav { gap: 14px; width: 100%; font-size: 0.875rem; } }
+@media (max-width: 360px) { .site-nav { gap: 10px; font-size: 0.8125rem; } }
 .site-nav a:hover { color: var(--ink); text-decoration: underline; }
 .site-footer { padding: 24px 0 40px; font-size: 0.875rem; color: var(--muted); }
 .site-footer p { margin: 0 0 6px; }
@@ -367,3 +368,10 @@ sup.cite a:hover { color: var(--brand); }
 .part-of { margin: 12px 0 0; padding: 10px 14px; border: 1.5px solid var(--rule); border-radius: 10px; font-weight: 600; }
 .bug__page { flex: none; font: 700 0.8125rem/1 var(--sans); white-space: nowrap; }
 .bug--own summary { background: var(--sunk); }
+
+/* Weekly review */
+.muted { color: var(--muted); }
+.changes li .tag { margin-left: 6px; font-size: 0.6875rem; vertical-align: 1px; }
+.week-nav { margin: 8px 0 32px; color: var(--muted); }
+.week-more li { grid-template-columns: 8.5rem 1fr; align-items: baseline; }
+@media (max-width: 600px) { .week-more li { grid-template-columns: 1fr; gap: 4px; } .week-more .verdict { justify-self: start; } }
