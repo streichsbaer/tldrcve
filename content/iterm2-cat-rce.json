@@ -22,11 +22,11 @@
   "updated": "2026-11-22",
   "verdict": "now",
   "tile_line": "Public exploit: cat a file, run commands. Get 3.7.9.",
-  "summary": "In iTerm2 3.6.1 through 3.7.8, displaying a crafted file in the terminal, for example with `cat README.md`, runs commands on your Mac. The trap is hidden in the file (you only see some shell errors when it runs), and it works on a default install in bash, zsh and fish. The researcher published a complete exploit; iTerm2 fixed it in 3.7.9 on 20 Nov 2026. No attacks are reported. There's no fixed release for macOS 12.4 to 12.x, whose newest iTerm2 is 3.6.11. The researcher first called it remote code execution (RCE), then retitled it arbitrary command execution: an attacker needs you to display their file, so it isn't remote in the usual sense.",
+  "summary": "In iTerm2 3.6.1 through 3.7.8, displaying a crafted file in the terminal, for example with `cat README.md`, runs commands on your Mac. The trap is hidden in the file (you only see some shell errors when it runs), and it works on a default install in bash, zsh and fish. The researcher published a complete exploit; iTerm2 fixed it in 3.7.9 on 20 Nov 2026. No attacks are reported. There's no fixed release for macOS 12.4 to 12.x, whose newest iTerm2 is 3.6.11. The researcher first called it remote code execution (RCE), then retitled it arbitrary command execution; since you have to display the attacker's file, it isn't remote in the usual sense.",
   "affected": [
     {
       "label": "iTerm2 3.6.1 to 3.7.8",
-      "text": "The exploit uses Kitty image file transfer, which arrived in 3.6.1 (18 Sep 2025); in 3.6.0 the code for it still returns \"Unimplemented\". The researcher says every version with Kitty image support is affected, but we found this path only from 3.6.1 on. iTerm2 3.6.11, the newest release for macOS 12.4 and later, came out on 2 Jun 2026, before the fix, and has the same flawed code.",
+      "text": "The exploit uses Kitty image file transfer, which arrived in 3.6.1 (18 Sep 2025); in 3.6.0 the code for it still returns \"Unimplemented\". The researcher's write-up now gives the same range, 3.6.1 to 3.7.8. iTerm2 3.6.11, the newest release for macOS 12.4 and later, came out on 2 Jun 2026, before the fix, and has the same flawed code.",
       "cmd": "defaults read /Applications/iTerm.app/Contents/Info.plist CFBundleShortVersionString",
       "cite": [
         1,
@@ -39,8 +39,7 @@
       "label": "It shows files from others",
       "text": "The file's raw contents have to reach iTerm2: `cat` on a README from a cloned repo or a download is the researcher's example, and any file you might print counts. The hidden part doesn't appear in the output; you only see shell errors when it fires. No setting needs to be changed for it to work.",
       "cite": [
-        1,
-        9
+        1
       ]
     }
   ],
@@ -116,15 +115,20 @@
       "url": "https://iterm2.com/documentation-menu-items.html"
     },
     {
-      "title": "ii4gsp on X: write-up retitled from RCE to Arbitrary Command Execution",
+      "title": "ii4gsp on X: updated the write-up title to Arbitrary Command Execution",
       "url": "https://x.com/ii4gsp/status/2124441046767808943",
+      "date": "22 Nov"
+    },
+    {
+      "title": "ii4gsp: write-up commit changing the title from RCE to Arbitrary Command Execution",
+      "url": "https://github.com/ii4gsp/ii4gsp.github.io/commit/75049b15",
       "date": "22 Nov"
     }
   ],
   "changes": [
     {
       "date": "2026-11-22",
-      "text": "Renamed from \"iTerm2 cat RCE\": the researcher retitled the write-up Arbitrary Command Execution, since you have to display the attacker's file. The address stays the same."
+      "text": "Renamed from \"iTerm2 cat RCE\" to match the researcher's new title, Arbitrary Command Execution: you have to display the attacker's file, so it isn't remote in the usual sense. The researcher's affected range now matches ours. The address stays the same."
     },
     {
       "date": "2026-11-22",
