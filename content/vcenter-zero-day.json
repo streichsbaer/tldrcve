@@ -1,0 +1,150 @@
+{
+  "slug": "vcenter-zero-day",
+  "name": "vCenter zero-day",
+  "aliases": [
+    "vcenter",
+    "vmware",
+    "vsphere",
+    "broadcom",
+    "vcf",
+    "vmware cloud foundation",
+    "armory castle",
+    "unc5221",
+    "bonesaw",
+    "vmsa-2026-0009",
+    "cve-2026-123891",
+    "cve-2026-123892",
+    "cve-2026-123893",
+    "cve-2026-123894"
+  ],
+  "cves": [
+    "CVE-2026-123890"
+  ],
+  "product": "VMware vCenter",
+  "disclosed": "2026-11-19",
+  "news": "2026-11-20",
+  "updated": "2026-11-22",
+  "verdict": "now",
+  "tile_line": "Exploited since September, on KEV. No workaround.",
+  "summary": "A bug in VMware vCenter's directory service lets anyone who can reach vCenter over the network get an administrator session without a password. Mandiant says a suspected China-nexus group, ARMORY CASTLE, has used it since early September to create a rogue admin account and steal vCenter's login-signing key, and CISA added it to its exploited list on 20 Nov 2026. Broadcom fixed it on 19 Nov and gives no workaround; vCenter 7.0 gets the fix only with an extended support contract.",
+  "affected": [
+    {
+      "label": "vCenter before the fix",
+      "text": "Below 9.1.1.0200, 9.0.2.0200 or 8.0 U3m, or VMware Cloud Foundation before 5.2.5 (for Telco Cloud versions, see Broadcom KB463116). vCenter 7.0 is affected too, and Mandiant says the attackers' tool works on 7.x and 8.x. The bug is in vCenter's directory service; Broadcom's advisory lists vCenter, not ESXi.",
+      "cite": [
+        1,
+        2,
+        4
+      ]
+    },
+    {
+      "label": "An attacker can reach vCenter",
+      "text": "Network access to vCenter is enough; no login is needed. In the attack Mandiant investigated, the attackers first broke into another machine on the internal network, then reached vCenter's single sign-on port 2012 from there.",
+      "cite": [
+        1,
+        2
+      ]
+    }
+  ],
+  "do": [
+    {
+      "label": "Patch now",
+      "text": "Install 9.1.1.0200, 9.0.2.0200, 8.0 U3m or VCF 5.2.5; Broadcom's patches are cumulative, so later versions also fix it. Broadcom gives no workaround. CISA's deadline for US agencies is 23 Nov 2026. The same update fixes four lesser bugs that need an account or local access, in SDDC Manager and VMware Tools for Windows (CVE-2026-123891 to CVE-2026-123894).",
+      "cite": [
+        1,
+        3,
+        5
+      ],
+      "versions": [
+        "vcenter"
+      ]
+    },
+    {
+      "label": "On vCenter 7.0?",
+      "text": "Broadcom offers the fix only to customers with an extended support contract. Without one, there is no fix for 7.0.",
+      "cite": [
+        1
+      ]
+    },
+    {
+      "label": "Limit who can reach vCenter",
+      "text": "Mandiant recommends allowing vCenter's management ports, including 443 and 2012, only from trusted admin hosts. In its write-up, blocking port 2012 would have stopped the exploit, and blocking 443 would have stopped the attackers using the logins they forged. This adds protection; it doesn't replace the patch.",
+      "cite": [
+        2
+      ]
+    },
+    {
+      "label": "Check for a break-in",
+      "text": "Patching doesn't remove attackers who are already in. Look for single sign-on administrator accounts you didn't create, and for Mandiant's file indicators, such as `/tmp/123`, `/tmp/sss`, `/tmp/dbr` and `/usr/bin/vmtoolscs` on Linux appliances near vCenter. The attackers also took vCenter's SAML signing key, which lets them forge logins for any user.",
+      "cite": [
+        2
+      ]
+    }
+  ],
+  "fixed_in": {
+    "vcenter": {
+      "9.1": "9.1.1.0200",
+      "9.0": "9.0.2.0200",
+      "8.0": "8.0 U3m",
+      "vcf5": "5.2.5"
+    }
+  },
+  "slack": "VMware vCenter CVE-2026-123890 (VMSA-2026-0009): unauthenticated attackers with network access to vCenter get an administrator session (9.8). Exploited since early September by a suspected China-nexus group (Mandiant: ARMORY CASTLE), on CISA KEV since 20 Nov (due 23 Nov). No workaround. Fix: 9.1.1.0200, 9.0.2.0200, 8.0 U3m or VCF 5.2.5; vCenter 7.0 only with extended support. Also restrict ports 443/2012 to admin hosts and look for rogue SSO admin accounts.",
+  "sources": [
+    {
+      "title": "Broadcom VMSA-2026-0009.1: affected and fixed versions, no workaround, 7.0 extended support only",
+      "url": "https://support.broadcom.com/web/ecx/support-content-notification/-/external/content/SecurityAdvisories/0/39495",
+      "date": "19 Nov"
+    },
+    {
+      "title": "Mandiant / Google: ARMORY CASTLE exploited it since September, port 2012, indicators, hardening",
+      "url": "https://cloud.google.com/blog/topics/threat-intelligence/armory-castle-exploits-vsphere",
+      "date": "20 Nov"
+    },
+    {
+      "title": "CISA KEV catalog: CVE-2026-123890 added 20 Nov, due 23 Nov",
+      "url": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog?field_cve=CVE-2026-123890"
+    },
+    {
+      "title": "CVE record: CVE-2026-123890, CVSS 9.8, no login, CISA: exploitation active",
+      "url": "https://www.cve.org/CVERecord?id=CVE-2026-123890",
+      "date": "19 Nov"
+    },
+    {
+      "title": "Broadcom: VMSA-2026-0009 FAQ, patches are cumulative",
+      "url": "https://github.com/vmware/vcf-security-and-compliance-guidelines/blob/main/security-advisories/vmsa-2026-0009/README.md"
+    }
+  ],
+  "changes": [
+    {
+      "date": "2026-11-22",
+      "text": "Published."
+    }
+  ],
+  "status": {
+    "exploit": "demonstrated",
+    "attacks": "seen",
+    "kev": {
+      "added": "2026-11-20",
+      "due": "2026-11-23"
+    },
+    "no_login": true,
+    "scare": 3.6
+  },
+  "status_cite": {
+    "exploit": [
+      2
+    ],
+    "attacks": [
+      2,
+      3
+    ],
+    "kev": [
+      3
+    ],
+    "no_login": [
+      1,
+      4
+    ]
+  }
+}

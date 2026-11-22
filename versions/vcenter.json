@@ -1,0 +1,52 @@
+{
+  "id": "vcenter",
+  "name": "VMware vCenter",
+  "about": "The first vCenter release on each line that fixes every vCenter bug we cover. Broadcom's patches are cumulative, so later versions include the fix.",
+  "feed": null,
+  "latest_from": [
+    "https://support.broadcom.com/web/ecx/support-content-notification/-/external/content/SecurityAdvisories/0/39495"
+  ],
+  "filter": "vcenter",
+  "checked": "2026-11-22",
+  "lines": [
+    {
+      "line": "9.1",
+      "key": "9.1",
+      "latest": "9.1.1.0200"
+    },
+    {
+      "line": "9.0",
+      "key": "9.0",
+      "latest": "9.0.2.0200"
+    },
+    {
+      "line": "8.0",
+      "key": "8.0",
+      "latest": "8.0 U3m"
+    },
+    {
+      "line": "VCF 5.x",
+      "key": "vcf5",
+      "latest": "5.2.5"
+    }
+  ],
+  "unfixed": [
+    {
+      "line": "7.0",
+      "note": "Broadcom offers the fix only to customers with an extended support contract.",
+      "pages": [
+        "vcenter-zero-day"
+      ]
+    }
+  ],
+  "sources": [
+    {
+      "title": "Broadcom VMSA-2026-0009.1: fixed vCenter versions, 7.0 only with extended support",
+      "url": "https://support.broadcom.com/web/ecx/support-content-notification/-/external/content/SecurityAdvisories/0/39495"
+    },
+    {
+      "title": "Broadcom: VMSA-2026-0009 FAQ, patches are cumulative",
+      "url": "https://github.com/vmware/vcf-security-and-compliance-guidelines/blob/main/security-advisories/vmsa-2026-0009/README.md"
+    }
+  ]
+}
