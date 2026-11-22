@@ -94,7 +94,7 @@ Copy the shape of an existing file (`content/nginx2root.json` is a good model).
 
 ### Product version files (`versions/<product>.json`)
 
-`id`, `name`, `about`, `feed` (a `tools/versions.py` feed, or `null` for by hand), `latest_from` (URLs where the newest releases are checked), `filter` (All CVEs search term), `checked` (date of the last check), `lines[]` (`line`, `key`, `latest`, optional `released`, `note`), optional `older`, `unfixed[]` (`line`, `note`, `pages`) and `sources[]`. Update `checked` every time you look, even if nothing changed. The build notes products not checked for 14 days. A feed is a hint, not a source: confirm every change on the vendor's page in `latest_from` before it ships, then run `python3 tools/cards.py` (a changed version redraws the product's card) and open a pull request. Products without a feed are checked by hand; `--check` lists them after 7 days.
+`id`, `name`, `about`, `feed` (a `tools/versions.py` feed, or `null` for by hand), `latest_from` (URLs where the newest releases are checked), `filter` (All CVEs search term), `checked` (date of the last check), `lines[]` (`line`, `key`, `latest`, optional `released`, `note`), optional `older`, `unfixed[]` (`line`, `note`, `pages`), optional `skip_lines` (`{"4.2": "why we don't list it"}`: a newer line left out on purpose, so `--check` stops flagging it) and `sources[]`. Update `checked` every time you look, even if nothing changed. The build notes products not checked for 14 days. A feed is a hint, not a source: confirm every change on the vendor's page in `latest_from` before it ships, then run `python3 tools/cards.py` (a changed version redraws the product's card) and open a pull request. Products without a feed are checked by hand; `--check` lists them after 7 days.
 
 ### Evaluated, no page (`watch/<id>.json`)
 
@@ -121,3 +121,5 @@ When a vulnerability gets attention but doesn't qualify yet, record it instead o
   - Mark anything still expected as `pending` with an expected date.
 
 Maintainers run an additional review before anything is merged.
+
+**Independent verification before merge.** Every pull request that changes data (pages, `versions/`, `watch/`) gets checked by a separate agent (Claude Opus 5.5) before it merges. That agent didn't write the change. It opens every source and confirms each data point in the diff: versions, dates, CVE IDs, verdict inputs (exploit, attacks, KEV), commands and quotes. It reports anything a source doesn't say. Fix or remove every finding, then verify again; merge only when nothing is left.

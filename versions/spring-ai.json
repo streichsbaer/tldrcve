@@ -30,5 +30,9 @@
       "title": "Spring: CVE-2026-59417, free and Enterprise-only fixes",
       "url": "https://spring.io/security/cve-2026-59417"
     }
-  ]
+  ],
+  "skip_lines": {
+    "2.1": "2.1.0 came out on 20 Nov 2026; Spring's 19 Nov advisories don't list it as affected or fixed."
+  },
+  "older": "Spring AI 2.1.0 (20 Nov 2026) isn't listed in Spring's advisories either way, so it isn't shown here."
 }

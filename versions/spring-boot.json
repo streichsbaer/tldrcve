@@ -44,5 +44,8 @@
       "title": "Spring Boot 4.0.10 release",
       "url": "https://github.com/spring-projects/spring-boot/releases/tag/v4.0.10"
     }
-  ]
+  ],
+  "skip_lines": {
+    "4.2": "4.2.0 came out on 19 Nov 2026; Spring's 19 Nov advisories don't list it as affected or fixed."
+  }
 }

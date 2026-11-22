@@ -10,6 +10,12 @@
   "checked": "2026-11-22",
   "lines": [
     {
+      "line": "1.32",
+      "key": "1.32",
+      "latest": "1.32.0",
+      "released": "2026-11-09"
+    },
+    {
       "line": "1.31",
       "key": "1.31",
       "latest": "1.31.4"
@@ -17,7 +23,8 @@
     {
       "line": "1.30",
       "key": "1.30",
-      "latest": "1.30.8"
+      "latest": "1.30.8",
+      "note": "Support ends 16 Dec 2026 (expected)."
     }
   ],
   "older": "Istio 1.29 has reached end of life.",
@@ -25,6 +32,10 @@
     {
       "title": "Istio: security bulletin 2026-007",
       "url": "https://istio.io/latest/news/security/istio-security-2026-007/"
+    },
+    {
+      "title": "Istio: supported releases, patched versions (1.32.0+), Envoy branch per release",
+      "url": "https://istio.io/latest/docs/releases/supported-releases/"
     }
   ]
 }

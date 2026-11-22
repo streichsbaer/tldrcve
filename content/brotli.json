@@ -21,7 +21,7 @@
   ],
   "product": "Brotli",
   "disclosed": "2026-10-21",
-  "updated": "2026-11-20",
+  "updated": "2026-11-22",
   "verdict": "now",
   "tile_line": "In Node.js, .NET, Envoy, Python. In CISA KEV.",
   "summary": "A bug in the Brotli decompressor, built into Node.js, .NET, Envoy and many Python apps, can crash your app, leak memory or possibly run code. It only matters where you decompress Brotli data someone else controls, which is common, and attacks have started. The public exploit only runs code on a deliberately weakened build.",
@@ -106,6 +106,7 @@
       "1.36": "1.36.12"
     },
     "istio": {
+      "1.32": "1.32.0",
       "1.31": "1.31.2",
       "1.30": "1.30.6"
     },
@@ -189,6 +190,10 @@
     }
   ],
   "changes": [
+    {
+      "date": "2026-11-22",
+      "text": "Added Istio 1.32 to Safe versions (Istio lists 1.32.0 and later as patched)."
+    },
     {
       "date": "2026-11-20",
       "text": "RHEL bundling corrected (Node 24 on RHEL 8/9 and .NET 8 carry their own copy). .NET 11.0.0 is out; .NET 8 and 9 reached end of life. Safe versions added."

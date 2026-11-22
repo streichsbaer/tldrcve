@@ -176,7 +176,8 @@ def refresh(v, latest):
         elif ver and vkey(ver) < vkey(line["latest"]):
             notes.append(f"{line['line']}: feed says {ver}, we have {line['latest']}; feed lags, ignored")
     known = {l["key"] for l in v["lines"]}
-    for new in sorted(set(latest) - known, key=vkey, reverse=True):
+    skipped = set(v.get("skip_lines", {}))  # newer lines we chose not to list; the reason is in the file
+    for new in sorted(set(latest) - known - skipped, key=vkey, reverse=True):
         if known and all(vkey(new) > vkey(k) for k in known):
             notes.append(f"new line {new} ({latest[new][0]}) in the feed; add it by hand after checking it")
     if not v["lines"]:  # nothing fixed yet: say when a new release appears, it may be the fix

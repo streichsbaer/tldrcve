@@ -26,17 +26,19 @@
   "updated": "2026-11-22",
   "verdict": "if",
   "tile_line": "Only if your server renders files from outsiders.",
-  "summary": "A bug in Ghostscript before 10.08.0 lets a crafted PostScript or PDF file escape Ghostscript's `-dSAFER` sandbox and run commands as the account doing the rendering. Ghostscript often runs out of sight behind image previews (ImageMagick, Pillow), email thumbnails and print servers, so even an upload named `.png` can reach it; the researchers ran commands through Debian's CUPS, Roundcube, WordPress and more. The CVE record scores it as a local attack (8.5), but those routes are remote. The full exploit isn't public and no attacks are reported.",
+  "summary": "A bug in Ghostscript before 10.08.0 lets a crafted PostScript or PDF file escape Ghostscript's `-dSAFER` sandbox and run commands as the account doing the rendering. Ghostscript often runs out of sight behind image previews (ImageMagick, Pillow), email thumbnails and print servers, so even an upload named `.png` can reach it; the researchers ran commands through Debian's CUPS, Roundcube, WordPress and more. The CVE record scores it as a local attack (8.5), but those routes are remote. The researchers published a proof-of-concept file that takes control of Ghostscript's memory but doesn't run commands; no attacks are reported.",
   "affected": [
     {
       "label": "Ghostscript before 10.08.0",
-      "text": "Distros backport the fix without changing `gs --version`, so check the package instead: fixed in Debian 12 `10.0.0~dfsg-11+deb12u9`, Debian 13 `10.05.1~dfsg-1+deb13u2`, Ubuntu 24.04 `10.02.1~dfsg1-0ubuntu7.10` and 22.04 `9.55.0~dfsg1-0ubuntu5.15` (older Ubuntu releases through Ubuntu Pro). Container images carry their own copy.",
+      "text": "Distros backport the fix without changing `gs --version`, so check the package instead: fixed in Debian 12 `10.0.0~dfsg-11+deb12u9`, Debian 13 `10.05.1~dfsg-1+deb13u2`, Ubuntu 24.04 `10.02.1~dfsg1-0ubuntu7.10` and 22.04 `9.55.0~dfsg1-0ubuntu5.15` (older Ubuntu releases through Ubuntu Pro). No fixed package yet on 22 Nov 2026: Amazon Linux 2, 2023 and 2027 Preview (\"Pending Fix\"), SUSE Linux Enterprise 15 SP7 and 16 (\"In progress\"), openSUSE Leap 16 (\"Affected\"). Container images carry their own copy.",
       "cmd": "gs --version",
       "cite": [
         1,
         4,
         6,
-        7
+        7,
+        15,
+        16
       ]
     },
     {
@@ -55,12 +57,14 @@
   "do": [
     {
       "label": "Update Ghostscript",
-      "text": "To 10.08.0 or your distro's fixed package: Debian DLA-4914-1 and DSA-6516-1, Ubuntu USN-8949-1 (it lists the bug without a CVE number). This fixes every route at once. Rebuild container images that install Ghostscript.",
+      "text": "To 10.08.0 or your distro's fixed package: Debian DLA-4914-1 and DSA-6516-1, Ubuntu USN-8949-1 (it lists the bug without a CVE number). This fixes every route at once. Amazon Linux and SUSE have no fixed package yet: cut the route (below) until they do. Rebuild container images that install Ghostscript.",
       "cite": [
         4,
         5,
         6,
-        7
+        7,
+        15,
+        16
       ],
       "versions": [
         "ghostscript"
@@ -107,7 +111,7 @@
       "6.8": "6.8.8"
     }
   },
-  "slack": "Upload2Shell (CVE-2026-125396): a crafted PostScript/PDF file escapes Ghostscript's -dSAFER sandbox and runs commands as the rendering user, in Ghostscript before 10.08.0. Reachable remotely wherever a server renders outsiders' files: ImageMagick/Imagick or Pillow previews (even files named .png), Roundcube thumbnails, WordPress uploads, shared CUPS queues. Technique published, full exploit not public, no attacks seen, not in KEV. Fix: Ghostscript 10.08.0 or distro packages (DSA-6516-1, DLA-4914-1, USN-8949-1); WordPress 7.0.4 / 6.9.7, Roundcube 1.6.20 / 1.7.5.",
+  "slack": "Upload2Shell (CVE-2026-125396): a crafted PostScript/PDF file escapes Ghostscript's -dSAFER sandbox and runs commands as the rendering user, in Ghostscript before 10.08.0. Reachable remotely wherever a server renders outsiders' files: ImageMagick/Imagick or Pillow previews (even files named .png), Roundcube thumbnails, WordPress uploads, shared CUPS queues. Proof-of-concept file public (memory control, not command execution), no attacks seen, not in KEV. Fix: Ghostscript 10.08.0 or distro packages (DSA-6516-1, DLA-4914-1, USN-8949-1); WordPress 7.0.4 / 6.9.7, Roundcube 1.6.20 / 1.7.5.",
   "sources": [
     {
       "title": "CVE record (VulnCheck): before 10.08.0, CVSS 8.5 local, CISA: no exploitation",
@@ -171,9 +175,21 @@
       "title": "CVE record: CVE-2026-114727, Roundcube 1.6.20 / 1.7.5",
       "url": "https://www.cve.org/CVERecord?id=CVE-2026-114727",
       "date": "22 Oct"
+    },
+    {
+      "title": "Amazon Linux: ghostscript fix pending for AL2, AL2023, AL2027 Preview",
+      "url": "https://explore.alas.aws.amazon.com/CVE-2026-125396.html"
+    },
+    {
+      "title": "SUSE: SLE 15 SP7 and 16 in progress, openSUSE Leap 16 affected",
+      "url": "https://www.suse.com/security/cve/CVE-2026-125396.html"
     }
   ],
   "changes": [
+    {
+      "date": "2026-11-22",
+      "text": "Corrected: the researchers' write-up has included a downloadable proof-of-concept file since 17 Nov (it takes control of memory but doesn't run commands); we had said no exploit was public. Added Amazon Linux and SUSE, which have no fixed package yet."
+    },
     {
       "date": "2026-11-22",
       "text": "Added WordPress to Safe versions."
@@ -188,14 +204,13 @@
     }
   ],
   "status": {
-    "exploit": "demonstrated",
+    "exploit": "public",
     "attacks": "none",
     "kev": null,
-    "scare": 2.6
+    "scare": 2.8
   },
   "status_cite": {
     "exploit": [
-      2,
       3
     ],
     "attacks": [

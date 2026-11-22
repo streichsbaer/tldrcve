@@ -40,5 +40,9 @@
       "title": "Spring Boot 4.1.3 and 4.0.10 releases: Spring Security upgrades",
       "url": "https://github.com/spring-projects/spring-boot/releases/tag/v4.1.3"
     }
-  ]
+  ],
+  "skip_lines": {
+    "7.2": "7.2.0 came out on 20 Nov 2026; Spring's 19 Nov advisories don't list it as affected or fixed."
+  },
+  "older": "Spring Security 7.2.0 (20 Nov 2026) isn't listed in Spring's advisories either way, so it isn't shown here."
 }
