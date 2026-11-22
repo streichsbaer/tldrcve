@@ -9,7 +9,7 @@
     "https://access.redhat.com/hydra/rest/securitydata/csaf.json?package=kernel"
   ],
   "filter": "linux",
-  "checked": "2026-11-20",
+  "checked": "2026-11-22",
   "lines": [
     {
       "line": "Debian 13",
@@ -61,7 +61,7 @@
   "unfixed": [
     {
       "line": "All lines",
-      "note": "No stable or major distro kernel has the SCTP fix yet (merged into mainline 19 Nov). Block the sctp module meanwhile.",
+      "note": "No stable or major distro kernel has the SCTP fix yet (merged into mainline 19 Nov; not queued for the next stable releases on 22 Nov). Block the sctp module meanwhile.",
       "pages": [
         "linux-sctp-root"
       ]
