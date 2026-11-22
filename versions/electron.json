@@ -2,12 +2,12 @@
   "id": "electron",
   "name": "Electron",
   "about": "The newest release on each Electron line we track. Each one fixes every Electron bug we cover.",
-  "feed": null,
+  "feed": "npm:electron:major",
   "latest_from": [
     "https://releases.electronjs.org/"
   ],
   "filter": "electron",
-  "checked": "2026-11-20",
+  "checked": "2026-11-22",
   "lines": [
     {
       "line": "45",

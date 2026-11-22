@@ -2,7 +2,7 @@
   "id": "sharp",
   "name": "sharp",
   "about": "The newest release of sharp, the image library Next.js uses for image optimization. It bundles the fixed librsvg.",
-  "feed": null,
+  "feed": "npm:sharp",
   "latest_from": [
     "https://registry.npmjs.org/sharp",
     "https://github.com/lovell/sharp/releases"

@@ -2,13 +2,13 @@
   "id": "brotli-python",
   "name": "Brotli for Python",
   "about": "The newest release on each Brotli for Python line we track. Each one fixes every Brotli for Python bug we cover.",
-  "feed": null,
+  "feed": "pypi-latest:Brotli,brotlicffi",
   "latest_from": [
     "https://pypi.org/project/Brotli/",
     "https://pypi.org/project/brotlicffi/"
   ],
   "filter": "brotli",
-  "checked": "2026-11-20",
+  "checked": "2026-11-22",
   "lines": [
     {
       "line": "Brotli",

@@ -2,7 +2,7 @@
   "id": "ghostscript",
   "name": "Ghostscript",
   "about": "The newest Ghostscript release from Artifex. It fixes every Ghostscript bug we cover.",
-  "feed": null,
+  "feed": "github:ArtifexSoftware/ghostpdl-downloads",
   "latest_from": [
     "https://ghostscript.com/releases/index.html",
     "https://github.com/ArtifexSoftware/ghostpdl-downloads/releases"

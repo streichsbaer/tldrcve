@@ -2,13 +2,13 @@
   "id": "spring-ai",
   "name": "Spring AI",
   "about": "Spring AI isn't managed by Spring Boot; upgrade it separately.",
-  "feed": null,
+  "feed": "github:spring-projects/spring-ai",
   "latest_from": [
     "https://github.com/spring-projects/spring-ai/releases",
     "https://spring.io/security"
   ],
   "filter": "spring ai",
-  "checked": "2026-11-20",
+  "checked": "2026-11-22",
   "lines": [
     {
       "line": "2.0",

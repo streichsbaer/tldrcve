@@ -2,13 +2,13 @@
   "id": "spring-boot",
   "name": "Spring Boot",
   "about": "Free fixes for the 19 Nov 2026 Spring advisories exist only on the 4.x lines. Spring Boot 4.2.0 came out the same day, but the advisories don't list it either way.",
-  "feed": null,
+  "feed": "github:spring-projects/spring-boot",
   "latest_from": [
     "https://github.com/spring-projects/spring-boot/releases",
     "https://spring.io/security"
   ],
   "filter": "spring",
-  "checked": "2026-11-20",
+  "checked": "2026-11-22",
   "lines": [
     {
       "line": "4.1",

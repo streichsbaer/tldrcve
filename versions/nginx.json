@@ -7,7 +7,7 @@
     "https://nginx.org/en/download.html"
   ],
   "filter": "nginx",
-  "checked": "2026-11-20",
+  "checked": "2026-11-22",
   "lines": [
     {
       "line": "1.31 (mainline)",

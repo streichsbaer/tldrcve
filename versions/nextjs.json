@@ -2,7 +2,7 @@
   "id": "nextjs",
   "name": "Next.js",
   "about": "The newest Next.js release on each supported major. Each one fixes every Next.js bug we cover.",
-  "feed": null,
+  "feed": "npm:next",
   "latest_from": [
     "https://registry.npmjs.org/next",
     "https://github.com/vercel/next.js/releases"

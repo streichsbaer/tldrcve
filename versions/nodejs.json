@@ -7,7 +7,7 @@
     "https://nodejs.org/dist/index.json"
   ],
   "filter": "node",
-  "checked": "2026-11-20",
+  "checked": "2026-11-22",
   "lines": [
     {
       "line": "26",

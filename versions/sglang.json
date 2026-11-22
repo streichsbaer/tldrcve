@@ -2,12 +2,12 @@
   "id": "sglang",
   "name": "SGLang",
   "about": "There is no fixed SGLang release yet. Keep it off untrusted networks and follow the steps on each bug's page.",
-  "feed": null,
+  "feed": "pypi:sglang",
   "latest_from": [
     "https://github.com/sgl-project/sglang/releases"
   ],
   "filter": "sglang",
-  "checked": "2026-11-20",
+  "checked": "2026-11-22",
   "lines": [],
   "unfixed": [
     {

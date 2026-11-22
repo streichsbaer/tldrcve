@@ -2,12 +2,12 @@
   "id": "envoy",
   "name": "Envoy",
   "about": "The newest release on each Envoy line we track. Each one fixes every Envoy bug we cover.",
-  "feed": null,
+  "feed": "github:envoyproxy/envoy",
   "latest_from": [
     "https://github.com/envoyproxy/envoy/releases"
   ],
   "filter": "envoy",
-  "checked": "2026-11-20",
+  "checked": "2026-11-22",
   "lines": [
     {
       "line": "1.40",

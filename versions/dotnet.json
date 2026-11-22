@@ -2,12 +2,12 @@
   "id": "dotnet",
   "name": ".NET",
   "about": "The newest release on each .NET line we track. Each one fixes every .NET bug we cover.",
-  "feed": null,
+  "feed": "dotnet",
   "latest_from": [
     "https://builds.dotnet.microsoft.com/dotnet/release-metadata/releases-index.json"
   ],
   "filter": ".net",
-  "checked": "2026-11-20",
+  "checked": "2026-11-22",
   "lines": [
     {
       "line": "11",

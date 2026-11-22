@@ -2,7 +2,7 @@
   "id": "wordpress",
   "name": "WordPress",
   "about": "The newest WordPress release on each recent branch. Each one fixes every WordPress bug we cover.",
-  "feed": null,
+  "feed": "wordpress",
   "latest_from": [
     "https://api.wordpress.org/core/stable-check/1.0/",
     "https://wordpress.org/download/releases/"

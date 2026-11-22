@@ -2,13 +2,13 @@
   "id": "spring-security",
   "name": "Spring Security",
   "about": "Usually comes with Spring Boot: Boot 4.1.3 brings 7.1.3 and Boot 4.0.10 brings 7.0.9.",
-  "feed": null,
+  "feed": "github:spring-projects/spring-security",
   "latest_from": [
     "https://github.com/spring-projects/spring-security/releases",
     "https://spring.io/security"
   ],
   "filter": "spring security",
-  "checked": "2026-11-20",
+  "checked": "2026-11-22",
   "lines": [
     {
       "line": "7.1",

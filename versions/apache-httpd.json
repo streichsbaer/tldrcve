@@ -2,12 +2,12 @@
   "id": "apache-httpd",
   "name": "Apache httpd",
   "about": "The newest release on each Apache httpd line we track. Each one fixes every Apache httpd bug we cover.",
-  "feed": null,
+  "feed": "endoflife:apache-http-server",
   "latest_from": [
     "https://httpd.apache.org/security/vulnerabilities_24.html"
   ],
   "filter": "apache",
-  "checked": "2026-11-20",
+  "checked": "2026-11-22",
   "lines": [
     {
       "line": "2.4",

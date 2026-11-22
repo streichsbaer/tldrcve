@@ -2,12 +2,12 @@
   "id": "istio",
   "name": "Istio",
   "about": "The newest release on each Istio line we track. Each one fixes every Istio bug we cover.",
-  "feed": null,
+  "feed": "github:istio/istio",
   "latest_from": [
     "https://istio.io/latest/news/releases/"
   ],
   "filter": "istio",
-  "checked": "2026-11-20",
+  "checked": "2026-11-22",
   "lines": [
     {
       "line": "1.31",

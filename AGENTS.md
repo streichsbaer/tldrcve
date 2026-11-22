@@ -13,7 +13,7 @@ tldrcve.com explains the vulnerabilities people are talking about in plain Engli
 | `assets/` | `site.css`, `site.js`, and `og/` (link-preview images) |
 | `versions/<product>.json` | Latest safe version per product line, shared by every page that embeds it. Edit once, every page updates |
 | `watch/<id>.json` | Vulnerabilities we evaluated but haven't written a page for, with the facts, sources, what would change our mind, and a recheck date |
-| `tools/versions.py` | Refreshes `versions/` from vendor feeds (PHP, Node.js so far). Never lowers a version. `--report` lists every product, how it's refreshed, when it was last checked and where we look |
+| `tools/versions.py` | Refreshes `versions/` from release feeds (vendor indexes, npm, PyPI, GitHub releases, endoflife.date). Never lowers a version or adds a line by itself. `--check` writes nothing and lists what to look at (the daily digest runs it); `--report` lists every product, how it's refreshed, when it was last checked and where we look |
 | `tools/check_live.py` | Checks the live site after a deploy: every page, its own preview image, icons, feed, redirects, `llms.txt` and the JSON files |
 | `tools/cards.py` | Renders the link-preview images. Needs a desktop browser (Chrome, Firefox or Zen) |
 | `site/` | Build output. Never edit or commit it |
@@ -94,7 +94,7 @@ Copy the shape of an existing file (`content/nginx2root.json` is a good model).
 
 ### Product version files (`versions/<product>.json`)
 
-`id`, `name`, `about`, `feed` (a `tools/versions.py` feed, or `null` for by hand), `latest_from` (URLs where the newest releases are checked), `filter` (All CVEs search term), `checked` (date of the last check), `lines[]` (`line`, `key`, `latest`, optional `released`, `note`), optional `older`, `unfixed[]` (`line`, `note`, `pages`) and `sources[]`. Update `checked` every time you look, even if nothing changed. The build notes products not checked for 14 days.
+`id`, `name`, `about`, `feed` (a `tools/versions.py` feed, or `null` for by hand), `latest_from` (URLs where the newest releases are checked), `filter` (All CVEs search term), `checked` (date of the last check), `lines[]` (`line`, `key`, `latest`, optional `released`, `note`), optional `older`, `unfixed[]` (`line`, `note`, `pages`) and `sources[]`. Update `checked` every time you look, even if nothing changed. The build notes products not checked for 14 days. A feed is a hint, not a source: confirm every change on the vendor's page in `latest_from` before it ships, then run `python3 tools/cards.py` (a changed version redraws the product's card) and open a pull request. Products without a feed are checked by hand; `--check` lists them after 7 days.
 
 ### Evaluated, no page (`watch/<id>.json`)
 
