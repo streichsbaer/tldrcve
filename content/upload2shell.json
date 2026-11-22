@@ -26,7 +26,7 @@
   "updated": "2026-11-22",
   "verdict": "if",
   "tile_line": "Outsiders' files reach it. Full exploit announced.",
-  "summary": "A bug in Ghostscript before 10.08.0 lets a crafted PostScript or PDF file escape Ghostscript's `-dSAFER` sandbox and run commands as the account doing the rendering. Ghostscript often runs out of sight behind image previews (ImageMagick, Pillow), email thumbnails and print servers, so even an upload named `.png` can reach it; the researchers ran commands through Debian's CUPS, Roundcube, WordPress and more. The CVE record scores it as a local attack (8.5), but those routes are remote. The researchers published a proof of concept that does most of the work: it takes control of Ghostscript's memory (tested on 10.07.0, x86-64 Linux), and their write-up shows the remaining steps to running commands in excerpts; one of them relies on memory offsets from the researchers' test build. They say a full exploit for the Debian CUPS route comes next. No attacks are reported yet.",
+  "summary": "A bug in Ghostscript before 10.08.0 lets a crafted file escape Ghostscript's `-dSAFER` sandbox and run commands as the account doing the rendering. The file has PostScript or PDF inside but can be uploaded as an image named `.png` or `.jpg`, because Ghostscript runs out of sight behind image previews (ImageMagick, Pillow), email thumbnails and print servers; the researchers ran commands through Debian's CUPS, Roundcube, WordPress and more. The CVE record scores it as a local attack (8.5), but those routes are remote. The researchers published a proof of concept that does most of the work: it takes control of Ghostscript's memory (tested on 10.07.0, x86-64 Linux), and their write-up shows the remaining steps to running commands in excerpts; one of them relies on memory offsets from the researchers' test build. They say a full exploit for the Debian CUPS route comes next. No attacks are reported yet.",
   "affected": [
     {
       "label": "Ghostscript before 10.08.0",
@@ -200,6 +200,10 @@
     }
   ],
   "changes": [
+    {
+      "date": "2026-11-22",
+      "text": "Clearer that the crafted file can be uploaded as an image."
+    },
     {
       "date": "2026-11-22",
       "text": "Now says to update right away if outsiders' files reach Ghostscript: the public proof of concept and write-up cover most of an exploit, and the researchers say a full exploit comes next. Scare 2.9. Added what would make this Patch now."

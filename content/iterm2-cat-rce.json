@@ -1,0 +1,128 @@
+{
+  "slug": "iterm2-cat-rce",
+  "name": "iTerm2 cat RCE",
+  "aliases": [
+    "iterm",
+    "iterm2",
+    "kitty graphics",
+    "kitty image protocol",
+    "apc",
+    "escape sequence",
+    "macos terminal",
+    "cat"
+  ],
+  "cves": [],
+  "product": "iTerm2",
+  "disclosed": "2026-11-20",
+  "news": "2026-11-21",
+  "updated": "2026-11-22",
+  "verdict": "now",
+  "tile_line": "Public exploit: cat a file, run code. Update to 3.7.9.",
+  "summary": "In iTerm2 before 3.7.9, displaying a crafted file in the terminal, for example with `cat README.md`, runs commands on your Mac. The trap is hidden in the file and doesn't show up in the output, and it works on a default install in bash, zsh and fish. The researcher published a complete exploit; iTerm2 fixed it in 3.7.9 on 20 Nov 2026. No attacks are reported. There's no fixed release for macOS 12, whose newest iTerm2 is 3.6.11.",
+  "affected": [
+    {
+      "label": "iTerm2 before 3.7.9",
+      "text": "The researcher says every version with Kitty image support is affected; iTerm2 added it in 3.5.4beta2 (September 2024). iTerm2 3.6.11, the newest release for macOS 12, came out on 2 Jun 2026, before the fix, and 3.6.9's source has the same flawed code.",
+      "cmd": "defaults read /Applications/iTerm.app/Contents/Info.plist CFBundleShortVersionString",
+      "cite": [
+        1,
+        2,
+        5
+      ]
+    },
+    {
+      "label": "It shows files from others",
+      "text": "The file's raw contents have to reach iTerm2: `cat` on a README from a cloned repo or a download is the researcher's example, and any file you might print counts. The hidden part doesn't appear in the output. No setting needs to be changed for it to work.",
+      "cite": [
+        1
+      ]
+    }
+  ],
+  "do": [
+    {
+      "label": "Update to 3.7.9",
+      "text": "In iTerm2, choose iTerm2 > Check for Updates. 3.7.9 is a security update: replies iTerm2 sends back to programs no longer include control characters that a shell could run.",
+      "cite": [
+        2,
+        3,
+        4
+      ],
+      "versions": [
+        "iterm2"
+      ]
+    },
+    {
+      "label": "On macOS 12? No fix yet",
+      "text": "3.7.9 needs macOS 13 or later, and the 3.6 line hasn't had a release since 3.6.11 (2 Jun 2026). Upgrade macOS if you can; until then, don't print files from others in iTerm2.",
+      "cite": [
+        2,
+        5
+      ]
+    },
+    {
+      "label": "No setting turns it off",
+      "text": "The \"Disable potentially insecure escape sequences\" setting doesn't cover the escape sequence this uses, per the researcher. Updating is the fix.",
+      "cite": [
+        1
+      ]
+    }
+  ],
+  "fixed_in": {
+    "iterm2": {
+      "3.7": "3.7.9"
+    }
+  },
+  "slack": "iTerm2 cat RCE (no CVE yet): in iTerm2 before 3.7.9, displaying a crafted file (e.g. cat README.md) runs commands, on a default install, in any shell. Full exploit public since 21 Nov, no attacks reported, not in KEV. Fix: iTerm2 3.7.9 (20 Nov, Check for Updates). macOS 12's newest iTerm2 is 3.6.11 (June), with no fix.",
+  "sources": [
+    {
+      "title": "ii4gsp (Minseong Kim): write-up, affected versions, full exploit",
+      "url": "https://ii4gsp.github.io/iterm2-rce/",
+      "date": "21 Nov"
+    },
+    {
+      "title": "iTerm2: downloads, 3.7.9 security update, Kitty graphics since 3.5.4beta2, 3.6.11 for macOS 12.4+",
+      "url": "https://iterm2.com/downloads.html"
+    },
+    {
+      "title": "iTerm2 fix: sanitize Kitty graphics responses",
+      "url": "https://github.com/gnachman/iTerm2/commit/a53b1bc084fe062de44b52d03ccf713c7962ac83",
+      "date": "20 Nov"
+    },
+    {
+      "title": "iTerm2 fix: strip control characters from all report paths",
+      "url": "https://github.com/gnachman/iTerm2/commit/2a63835ca19bbd20b0d051b33c14341b0b708d5b",
+      "date": "20 Nov"
+    },
+    {
+      "title": "iTerm2 3.6.9 source: same error path, no sanitizing",
+      "url": "https://github.com/gnachman/iTerm2/blob/v3.6.9/sources/KittyImageController.swift"
+    },
+    {
+      "title": "CISA KEV catalog: not listed",
+      "url": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog"
+    }
+  ],
+  "changes": [
+    {
+      "date": "2026-11-22",
+      "text": "Published."
+    }
+  ],
+  "status": {
+    "exploit": "public",
+    "attacks": "none",
+    "kev": null,
+    "scare": 2.6
+  },
+  "status_cite": {
+    "exploit": [
+      1
+    ],
+    "attacks": [
+      6
+    ],
+    "kev": [
+      6
+    ]
+  }
+}

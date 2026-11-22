@@ -1,0 +1,35 @@
+{
+  "id": "iterm2",
+  "name": "iTerm2",
+  "about": "The newest iTerm2 release. It fixes every iTerm2 bug we cover.",
+  "feed": null,
+  "latest_from": [
+    "https://iterm2.com/downloads.html",
+    "https://iterm2.com/appcasts/final_modern.xml"
+  ],
+  "filter": "iterm2",
+  "checked": "2026-11-22",
+  "lines": [
+    {
+      "line": "3.7 (macOS 13+)",
+      "key": "3.7",
+      "latest": "3.7.9",
+      "released": "2026-11-20"
+    }
+  ],
+  "unfixed": [
+    {
+      "line": "3.6 (macOS 12.4+)",
+      "note": "The newest 3.6 release is 3.6.11 (2 Jun 2026), from before the fix. 3.7.9 needs macOS 13 or later.",
+      "pages": [
+        "iterm2-cat-rce"
+      ]
+    }
+  ],
+  "sources": [
+    {
+      "title": "iTerm2: downloads, 3.7.9 security update, 3.6.11 for macOS 12.4+",
+      "url": "https://iterm2.com/downloads.html"
+    }
+  ]
+}
