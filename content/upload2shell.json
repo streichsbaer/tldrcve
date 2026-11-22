@@ -25,8 +25,8 @@
   "news": "2026-11-17",
   "updated": "2026-11-22",
   "verdict": "if",
-  "tile_line": "Public file uploads? Update now. Exploit is close.",
-  "summary": "A bug in Ghostscript before 10.08.0 lets a crafted PostScript or PDF file escape Ghostscript's `-dSAFER` sandbox and run commands as the account doing the rendering. Ghostscript often runs out of sight behind image previews (ImageMagick, Pillow), email thumbnails and print servers, so even an upload named `.png` can reach it; the researchers ran commands through Debian's CUPS, Roundcube, WordPress and more. The CVE record scores it as a local attack (8.5), but those routes are remote. The researchers published a proof of concept that does most of the work: it takes control of Ghostscript's memory (tested on 10.07.0, x86-64 Linux), and only a build-specific last step to running commands is left, which their write-up shows in excerpts. No attacks are reported yet, but that gap is small.",
+  "tile_line": "If outsiders' files reach it. Full exploit announced.",
+  "summary": "A bug in Ghostscript before 10.08.0 lets a crafted PostScript or PDF file escape Ghostscript's `-dSAFER` sandbox and run commands as the account doing the rendering. Ghostscript often runs out of sight behind image previews (ImageMagick, Pillow), email thumbnails and print servers, so even an upload named `.png` can reach it; the researchers ran commands through Debian's CUPS, Roundcube, WordPress and more. The CVE record scores it as a local attack (8.5), but those routes are remote. The researchers published a proof of concept that does most of the work: it takes control of Ghostscript's memory (tested on 10.07.0, x86-64 Linux), and their write-up shows the remaining steps to running commands in excerpts, using memory offsets from that tested build. They say a full exploit for the Debian CUPS route comes next. No attacks are reported yet.",
   "affected": [
     {
       "label": "Ghostscript before 10.08.0",
@@ -104,7 +104,11 @@
     },
     {
       "label": "What would make this Patch now",
-      "text": "Attacks reported, a full exploit published, or a listing on CISA's exploited list (KEV)."
+      "text": "Attacks reported, the researchers' announced full exploit (the Debian CUPS route) or another one published, or a listing on CISA's exploited list (KEV).",
+      "cite": [
+        3,
+        10
+      ]
     }
   ],
   "fixed_in": {
@@ -117,10 +121,10 @@
       "6.8": "6.8.8"
     }
   },
-  "slack": "Upload2Shell (CVE-2026-125396): a crafted PostScript/PDF file escapes Ghostscript's -dSAFER sandbox and runs commands as the rendering user, in Ghostscript before 10.08.0. Reachable remotely wherever a server renders outsiders' files: ImageMagick/Imagick or Pillow previews (even files named .png), Roundcube thumbnails, WordPress uploads, shared CUPS queues. Proof of concept public and does most of the work (memory control on 10.07.0 x86-64; the last step to commands is shown in excerpts), no attacks seen yet, not in KEV. If outsiders' files reach Ghostscript, update now. Fix: Ghostscript 10.08.0 or distro packages (DSA-6516-1, DLA-4914-1, USN-8949-1); WordPress 7.0.4 / 6.9.7, Roundcube 1.6.20 / 1.7.5.",
+  "slack": "Upload2Shell (CVE-2026-125396): a crafted PostScript/PDF file escapes Ghostscript's -dSAFER sandbox and runs commands as the rendering user, in Ghostscript before 10.08.0. Reachable remotely wherever a server renders outsiders' files: ImageMagick/Imagick or Pillow previews (even files named .png), Roundcube thumbnails, WordPress uploads, shared CUPS queues. Proof of concept public and does most of the work (memory control on 10.07.0 x86-64; the remaining steps to commands are shown in excerpts), researchers say a full exploit comes next, no attacks seen yet, not in KEV. If outsiders' files reach Ghostscript, update now. Fix: Ghostscript 10.08.0 or distro packages (DSA-6516-1, DLA-4914-1, USN-8949-1); WordPress 7.0.4 / 6.9.7, Roundcube 1.6.20 / 1.7.5.",
   "sources": [
     {
-      "title": "CVE record (VulnCheck): before 10.08.0, CVSS 8.5 local, CISA: no exploitation",
+      "title": "CVE record (VulnCheck): before 10.08.0, CVSS 8.5 local; CISA on 10 Nov: no exploitation",
       "url": "https://www.cve.org/CVERecord?id=CVE-2026-125396",
       "date": "9 Nov"
     },
@@ -198,7 +202,7 @@
   "changes": [
     {
       "date": "2026-11-22",
-      "text": "Now says to update right away if outsiders' files reach Ghostscript: the public proof of concept and write-up cover most of an exploit. Scare 2.9. Added what would make this Patch now."
+      "text": "Now says to update right away if outsiders' files reach Ghostscript: the public proof of concept and write-up cover most of an exploit, and the researchers say a full exploit comes next. Scare 2.9. Added what would make this Patch now."
     },
     {
       "date": "2026-11-22",
