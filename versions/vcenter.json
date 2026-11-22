@@ -1,7 +1,7 @@
 {
   "id": "vcenter",
   "name": "VMware vCenter",
-  "about": "The first vCenter release on each line that fixes every vCenter bug we cover. Broadcom's patches are cumulative, so later versions include the fix.",
+  "about": "The newest vCenter release on each line. Each one fixes every vCenter bug we cover; Broadcom's patches are cumulative.",
   "feed": null,
   "latest_from": [
     "https://support.broadcom.com/web/ecx/support-content-notification/-/external/content/SecurityAdvisories/0/39495"
@@ -23,17 +23,12 @@
       "line": "8.0",
       "key": "8.0",
       "latest": "8.0 U3m"
-    },
-    {
-      "line": "VCF 5.x",
-      "key": "vcf5",
-      "latest": "5.2.5"
     }
   ],
   "unfixed": [
     {
       "line": "7.0",
-      "note": "Broadcom offers the fix only to customers with an extended support contract.",
+      "note": "Broadcom lists no public fix; customers with an extended support contract are told to contact Broadcom Support.",
       "pages": [
         "vcenter-zero-day"
       ]
@@ -41,12 +36,13 @@
   ],
   "sources": [
     {
-      "title": "Broadcom VMSA-2026-0009.1: fixed vCenter versions, 7.0 only with extended support",
+      "title": "Broadcom VMSA-2026-0009: fixed vCenter versions, 7.0 via extended support only",
       "url": "https://support.broadcom.com/web/ecx/support-content-notification/-/external/content/SecurityAdvisories/0/39495"
     },
     {
-      "title": "Broadcom: VMSA-2026-0009 FAQ, patches are cumulative",
+      "title": "Broadcom: VMSA-2026-0009 FAQ, cumulative patches, newest versions, VCF 5.x uses vCenter 8.0 U3m",
       "url": "https://github.com/vmware/vcf-security-and-compliance-guidelines/blob/main/security-advisories/vmsa-2026-0009/README.md"
     }
-  ]
+  ],
+  "older": "VMware Cloud Foundation 5.x: patch vCenter to 8.0 U3m, or move to VCF 5.2.5, which includes it."
 }

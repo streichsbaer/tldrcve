@@ -37,7 +37,7 @@
   "synology-dsm": "32fbe68f1e3e3265",
   "tomcat-2026-11-19": "a36b09ddfe628d11",
   "upload2shell": "351ce39929f98850",
-  "vcenter-zero-day": "a304dd0f578d6aab",
+  "vcenter-zero-day": "3f1c341dba3677d2",
   "versions": "a6985e2cffabffa7",
   "versions/apache-axis": "4e9724d099879318",
   "versions/apache-httpd": "ef66b6503d661df9",
@@ -78,7 +78,7 @@
   "versions/spring-security": "e3889f1cff0ca981",
   "versions/synology-dsm": "62036a37e8203795",
   "versions/tomcat": "d7961f0fb19a24d3",
-  "versions/vcenter": "ec92738b9b061dc9",
+  "versions/vcenter": "60e36adc398efd90",
   "versions/wordpress": "bae7d49a5240f5ed",
   "wordpress-7-1-5": "d359d06d0097d05a"
 }
