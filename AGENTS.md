@@ -13,7 +13,7 @@ tldrcve.com explains the vulnerabilities people are talking about in plain Engli
 | `assets/` | `site.css`, `site.js`, and `og/` (link-preview images) |
 | `versions/<product>.json` | Latest safe version per product line, shared by every page that embeds it. Edit once, every page updates |
 | `calendar.json` | Scheduled release and patch days (Patch Tuesday, Chrome, Firefox, Oracle, PHP…), each with a source that states the date or the rule. Mark unannounced dates `"expected": true` |
-| `weeks/<yyyy>-w<nn>.json` | One file per weekly review (`week`, optional `intro`). The rest of `/week/…` is built from the data: new pages, changes, safe releases and the next 30 days (calendar, pending fixes, CISA deadlines) |
+| `weeks/<yyyy>-w<nn>.json` | One file per weekly review (`week`, optional `intro`). The rest of `/week/…` is built from the data: new pages, changes, safe releases and the next 30 days (calendar, pending fixes, CISA deadlines). On the Monday after a week ends, freeze it with `python3 build.py --freeze-week YYYY-Www` so its page stops changing; the build prints a reminder |
 | `watch/<id>.json` | Vulnerabilities we evaluated but haven't written a page for, with the facts, sources, what would change our mind, and a recheck date |
 | `tools/versions.py` | Refreshes `versions/` from release feeds (vendor indexes, npm, PyPI, GitHub releases, endoflife.date). Never lowers a version or adds a line by itself. `--check` writes nothing and lists what to look at (the daily digest runs it); `--report` lists every product, how it's refreshed, when it was last checked and where we look |
 | `tools/check_live.py` | Checks the live site after a deploy: every page, its own preview image, icons, feed, redirects, `llms.txt` and the JSON files |
