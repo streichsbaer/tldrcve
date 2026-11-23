@@ -4,7 +4,7 @@
   "brotli": "6214c75d040cb164",
   "chrome-zero-day": "d4166212928e5415",
   "citrix-netscaler": "aa7bb9c6d9be0413",
-  "cves": "2eca5a70ee40bea0",
+  "cves": "fcc49bd10ff8b6f7",
   "default": "0102ee4bf020cbdf",
   "how-we-rate": "ddd51bc57fe6c95a",
   "iterm2-cat-rce": "615adf85cec7ffd5",
@@ -82,5 +82,6 @@
   "versions/wordpress": "bae7d49a5240f5ed",
   "week": "a967348ea7b6a725",
   "week/2026-w47": "cf68f6f1e7483c49",
+  "whatsapp-nov-2026": "b1c7031d18bfccef",
   "wordpress-7-1-5": "d359d06d0097d05a"
 }
