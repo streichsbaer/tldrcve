@@ -26,38 +26,38 @@
   "updated": "2026-11-23",
   "verdict": "cycle",
   "tile_line": "Real bugs, low risk. Update the app as usual.",
-  "summary": "WhatsApp fixed three bugs on 20 Nov 2026. The worst one in practice could reveal your phone's IP address to a scammer who sent a crafted ad-reply message, and WhatsApp says it may have been abused with spam; it was already fixed in 2.26.17.4. The other two need you to tap a message sent from an unofficial app, or an attacker inside Meta's own systems, and Meta says neither was exploited.",
+  "summary": "WhatsApp disclosed three bugs on 20 Nov 2026. The one with real-world use could reveal your phone's IP address to a scammer who sent a crafted ad-reply message; WhatsApp says it may have been abused with spam, and it's fixed in 2.26.17.4. The other two need you to tap a message sent from an unofficial app, or an attacker inside Meta's own systems, and Meta says it has seen no sign either was exploited.",
   "status": {
-    "exploit": "none",
+    "exploit": "demonstrated",
     "attacks": "seen",
     "kev": null,
     "no_login": false,
-    "needs": "a WhatsApp account to message you (or, for the Meta AI bug, a position inside Meta's infrastructure)",
-    "scare": 1.0
+    "needs": "a WhatsApp account to message you; the Meta AI bug instead needs a position inside Meta's infrastructure",
+    "scare": 1.3
   },
   "status_cite": {
     "exploit": [
-      2,
-      3,
-      4
+      3
     ],
     "attacks": [
       2,
       5,
-      6
+      6,
+      7
     ],
     "kev": [
       8
     ],
     "no_login": [
       2,
-      3
+      3,
+      4
     ]
   },
   "affected": [
     {
-      "label": "An older WhatsApp app",
-      "text": "The IP address bug (CVE-2026-23871) is in WhatsApp and WhatsApp Business for Android from 2.20.198.3 up to 2.26.17.4. The order-message bug (CVE-2026-102769) is in WhatsApp for Android before 2.26.35.74; its description names only WhatsApp for Android, but the same record also lists WhatsApp Business for Android from 2.22.3.7 up to 2.26.35.74. The Meta AI bug (CVE-2026-44908) is in WhatsApp for iOS before 2.26.24.72, WhatsApp Business for iOS and WhatsApp for Mac before 2.26.23.72, WhatsApp for Android before 2.26.23.74 and WhatsApp Business for Android before 2.26.23.70.",
+      "label": "WhatsApp older than its fix",
+      "text": "The IP address bug (CVE-2026-23871) is in WhatsApp and WhatsApp Business for Android from 2.20.198.3, before 2.26.17.4. The order-message bug (CVE-2026-102769) is in WhatsApp for Android before 2.26.35.74; its description names only WhatsApp for Android, but the same record also lists WhatsApp Business for Android from 2.22.3.7, before 2.26.35.74. The Meta AI bug (CVE-2026-44908) is in WhatsApp for iOS before 2.26.24.72, WhatsApp Business for iOS and WhatsApp for Mac before 2.26.23.72, WhatsApp for Android before 2.26.23.74 and WhatsApp Business for Android before 2.26.23.70.",
       "cite": [
         1,
         2,
@@ -66,8 +66,8 @@
       ]
     },
     {
-      "label": "Someone sends you a crafted message",
-      "text": "IP address bug: a crafted Click to WhatsApp ad-reply message, once shown in a chat, can make your phone fetch media from the attacker's server and so reveal your IP address. Order-message bug: you have to tap a crafted \"order details\" message sent from an unofficial WhatsApp client; it can delete WhatsApp's own locally stored files, and leak one bit of information about your chat database if you're online when it arrives. The Meta AI bug needs someone positioned inside Meta's infrastructure, and Meta says its public certificate ledger confirms no exploitation.",
+      "label": "An attacker in the right position",
+      "text": "For the IP address bug, that's anyone who can send you a crafted Click to WhatsApp ad-reply message: once it's shown in a chat, your phone can fetch media from the attacker's server and reveal your IP address. For the order-message bug, you have to tap a crafted \"order details\" message sent from an unofficial WhatsApp client; it can delete WhatsApp's own locally stored files, and leak one bit of information about your chat database if you're online when it arrives. For the Meta AI bug, the attacker has to be inside Meta's infrastructure, and Meta says a third-party transparency ledger confirms no exploitation.",
       "cite": [
         2,
         3,
@@ -78,7 +78,7 @@
   "do": [
     {
       "label": "Update WhatsApp from the store",
-      "text": "Versions that include all three fixes: WhatsApp for Android 2.26.35.74, WhatsApp for iOS 2.26.24.72, WhatsApp Business for iOS and WhatsApp for Mac 2.26.23.72. For WhatsApp Business for Android, sources conflict: HKCERT gives 2.26.23.70 (the Meta AI fix), but the CVE record for the order-message bug lists Business for Android as affected below 2.26.35.74, so get 2.26.35.74 or later.",
+      "text": "Versions with every fix that applies to each app: WhatsApp for Android 2.26.35.74, WhatsApp for iOS 2.26.24.72, WhatsApp Business for iOS and WhatsApp for Mac 2.26.23.72. For WhatsApp Business for Android, sources conflict: HKCERT gives 2.26.23.70 (the Meta AI fix), but the CVE record for the order-message bug lists Business for Android as affected before 2.26.35.74, so get 2.26.35.74 or later.",
       "cite": [
         1,
         3,
@@ -87,20 +87,20 @@
       ]
     },
     {
-      "label": "No need to rush beyond that",
-      "text": "Meta rates the bugs 3.5 (Low), 6.8 and 4.8 (Medium). CISA's assessment in the CVE records says no exploitation for all three, while WhatsApp says the IP address bug may have been abused with spam messages; WhatsApp told SecurityWeek it found the bug while disrupting a scam campaign. None of the three is on CISA's list of exploited bugs. HKCERT rates the set Medium risk.",
+      "label": "Why it isn't Patch now",
+      "text": "Attacks were reported only for the IP address bug, and it only reveals an IP address: Meta rates it 3.5 (Low). WhatsApp says it may have been abused with spam messages, and a spokesperson told SecurityWeek \"we believe a scammer was using it to make their scam message seem more credible\". HKCERT says it is being exploited in scattered cases, while CISA's early assessment in the CVE records says no exploitation for all three. Meta rates the other two 6.8 and 4.8 (Medium), and its score for the order-message bug says working exploit code exists, though none is public. None of the three is on CISA's list of exploited bugs.",
       "cite": [
         2,
         3,
         4,
         6,
-        8,
-        7
+        7,
+        8
       ]
     }
   ],
-  "versions_skip": "WhatsApp ships only through app stores, which install the newest version; the fixed version for each app is in the steps.",
-  "slack": "WhatsApp, 20 Nov 2026 (CVE-2026-23871, CVE-2026-102769, CVE-2026-44908): three real but low-risk bugs. An Android ad-reply bug could reveal your IP address to a scammer (Meta: may have been abused with spam; fixed in 2.26.17.4). An order-message SQL injection needs you to tap a message from an unofficial client and can delete WhatsApp's own local files (no exploitation). A Meta AI certificate check needs an attacker inside Meta (no exploitation). Meta rates them 3.5, 6.8 and 4.8; not on CISA KEV. Update through the store: Android 2.26.35.74, iOS 2.26.24.72, Business iOS and Mac 2.26.23.72; Business Android 2.26.35.74 (sources conflict, HKCERT says 2.26.23.70).",
+  "versions_skip": "No release feed we track for WhatsApp; the fixed version for each app is in the steps.",
+  "slack": "WhatsApp, disclosed 20 Nov 2026 (CVE-2026-23871, CVE-2026-102769, CVE-2026-44908): three real but low-risk bugs. An Android ad-reply bug could reveal your IP address to a scammer (Meta: may have been abused with spam; fixed in 2.26.17.4). An order-message SQL injection needs you to tap a message from an unofficial client and can delete WhatsApp's own local files (no exploitation seen). A Meta AI certificate check needs an attacker inside Meta (ledger confirms no exploitation). Meta rates them 3.5, 6.8 and 4.8; not on CISA KEV. Update through the store: Android 2.26.35.74, iOS 2.26.24.72, Business iOS and Mac 2.26.23.72; Business Android 2.26.35.74 (sources conflict, HKCERT says 2.26.23.70).",
   "sources": [
     {
       "title": "WhatsApp: security advisories 2026, the three CVEs and fixed versions",
