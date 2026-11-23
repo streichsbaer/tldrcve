@@ -4,11 +4,14 @@
   "cves": [
     "CVE-2026-99362"
   ],
+  "ghsa": [
+    "GHSA-cvg6-q922-q66p"
+  ],
   "product": "Linux kernel",
   "evaluated": "2026-11-23",
   "decision": "watch",
   "recheck": "2026-11-30",
-  "why": "Rated 9.8 by the kernel's own CVE team and posted as critical by automated accounts, but it only matters on machines running the kernel's NFS server where untrusted hosts can reach it. No public exploit, no reported attacks, not in CISA KEV, and distros disagree on severity.",
+  "why": "Rated 9.8 by the kernel's own CVE team, but it only matters on machines running the kernel's NFS server where untrusted hosts can reach it. No public exploit, no reported attacks, not in CISA KEV, and distros disagree on severity.",
   "page_if": [
     "a public exploit or a detailed write-up",
     "attacks reported or a CISA KEV listing",
@@ -44,7 +47,7 @@
       ]
     },
     {
-      "text": "Sources disagree on severity: Red Hat rates it Critical (9.8, marked draft) with no fix yet, Ubuntu rates it Medium and still needs to evaluate it, and NVD hasn't scored it. Debian has fixed its 6.12 kernels; Debian 12's default 6.1 kernel is still vulnerable.",
+      "text": "Sources disagree on severity: Red Hat rates it Critical (9.8, marked draft) with no fix yet, Ubuntu rates it Medium and still needs to evaluate it, and NVD hasn't scored it. Debian has fixed its 6.12 and newer kernels; Debian 12's default 6.1 kernel is still vulnerable.",
       "cite": [
         6,
         7,
