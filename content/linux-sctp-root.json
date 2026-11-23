@@ -81,13 +81,14 @@
     },
     {
       "label": "Update the kernel and reboot",
-      "text": "Install your distro's kernel with the fix (\"sctp: do not free a new asoc peeled off while sendmsg slept\") once it ships, then reboot. No stable release has it as of 23 Nov, and it isn't queued for the next stable releases yet; Debian unstable's 7.3.5-1 doesn't have it either.",
+      "text": "Install your distro's kernel with the fix (\"sctp: do not free a new asoc peeled off while sendmsg slept\") once it ships, then reboot. No stable release has it as of 23 Nov, and it isn't queued for the next stable releases yet; Debian unstable's 7.3.5-1 doesn't have it either. No release date is announced and the fix has no CVE yet; we'll check again by 27 Nov 2026.",
       "cite": [
         2,
         3,
         4,
         18,
-        19
+        19,
+        23
       ],
       "pending": {
         "expected": "2026-11-27"

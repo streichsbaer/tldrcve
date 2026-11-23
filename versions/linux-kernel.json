@@ -103,6 +103,10 @@
     {
       "title": "Linux stable queue: SCTP fix not queued for any stable release yet",
       "url": "https://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git/tree/"
+    },
+    {
+      "title": "GitHub: 7.4-rc4 includes the SCTP fix's merge (1e575bda)",
+      "url": "https://github.com/torvalds/linux/compare/1e575bda30acc0bf01f799cee798d4a1c100d538...v7.4-rc4"
     }
   ]
 }
