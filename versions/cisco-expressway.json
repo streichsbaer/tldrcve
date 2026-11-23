@@ -14,7 +14,7 @@
       "line": "X15.5",
       "key": "X15.5",
       "latest": "X15.5.22",
-      "note": "Released Nov 2026"
+      "note": "Release note dated Nov 2026"
     }
   ],
   "older": "Earlier X15 releases upgrade to X15.5. For X14 and earlier, Cisco says to migrate to a fixed release.",
