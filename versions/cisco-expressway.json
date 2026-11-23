@@ -1,0 +1,31 @@
+{
+  "id": "cisco-expressway",
+  "name": "Cisco Expressway",
+  "about": "The newest Cisco Expressway release, for Expressway-C and Expressway-E. It fixes every Expressway bug we cover.",
+  "feed": null,
+  "latest_from": [
+    "https://www.cisco.com/c/en/us/support/unified-communications/expressway-series/products-release-notes-list.html",
+    "https://www.cisco.com/c/dam/en/us/td/docs/voice_ip_comm/expressway/release_note/X15-5-x/Cisco-Expressway-and-Cisco-Expressway-Select-Release-Note-X15-5-x.pdf"
+  ],
+  "filter": "expressway",
+  "checked": "2026-11-23",
+  "lines": [
+    {
+      "line": "X15.5",
+      "key": "X15.5",
+      "latest": "X15.5.22",
+      "note": "Released Nov 2026"
+    }
+  ],
+  "older": "Earlier X15 releases upgrade to X15.5. For X14 and earlier, Cisco says to migrate to a fixed release.",
+  "sources": [
+    {
+      "title": "Cisco: Expressway X15.5.x release note, X15.5.22 (Nov 2026) newest",
+      "url": "https://www.cisco.com/c/dam/en/us/td/docs/voice_ip_comm/expressway/release_note/X15-5-x/Cisco-Expressway-and-Cisco-Expressway-Select-Release-Note-X15-5-x.pdf"
+    },
+    {
+      "title": "Cisco advisory cisco-sa-vcs-static-cred-hr7EWZ8t: X15.5.3 and earlier fixed in X15.5.20, X14 and earlier migrate",
+      "url": "https://sec.cloudapps.cisco.com/security/center/content/CiscoSecurityAdvisory/cisco-sa-vcs-static-cred-hr7EWZ8t"
+    }
+  ]
+}

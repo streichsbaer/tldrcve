@@ -1,0 +1,179 @@
+{
+  "slug": "cisco-expressway",
+  "name": "Cisco Expressway",
+  "aliases": [
+    "cisco",
+    "expressway",
+    "expressway-c",
+    "expressway-e",
+    "expressway core",
+    "expressway edge",
+    "vcs",
+    "telepresence video communication server",
+    "cluster",
+    "clusterdb",
+    "erlang",
+    "hard-coded credentials",
+    "rce",
+    "cisco-sa-vcs-static-cred-hr7EWZ8t",
+    "cscww27732"
+  ],
+  "cves": [
+    "CVE-2026-76466"
+  ],
+  "product": "Cisco Expressway",
+  "disclosed": "2026-10-21",
+  "news": "2026-11-20",
+  "updated": "2026-11-23",
+  "verdict": "now",
+  "tile_line": "Exploited for root on clustered systems. Patch now.",
+  "summary": "Cisco Expressway's cluster database accepts a secret that is built into the software, so anyone who can reach a clustered Expressway-C or Expressway-E over the network can run commands on it as root, with no login. Exploit code has been public since 5 Nov 2026, F6 reported attackers using it against a company in Russia on 18 Nov, and on 20 Nov CISA added it to its exploited list with a 3-day deadline for US federal agencies. Cisco fixed it in X15.5.20 on 21 Oct 2026 and gives no workaround.",
+  "affected": [
+    {
+      "label": "Expressway before X15.5.20",
+      "text": "Expressway-C or Expressway-E, virtual or appliance, on X15.5.3 or earlier. X14 and earlier get no fix of their own: Cisco says to migrate to a fixed release.",
+      "cite": [
+        1
+      ]
+    },
+    {
+      "label": "Set up as a cluster",
+      "text": "Cisco lists only clustered systems as affected; cluster peers are set under System > Clustering. Sources differ on the TLS verification setting: Cisco says client certificates aren't checked when TLS Verify Mode is set to Enabled, while the public exploit was tested in Permissive mode, the default, and not in Enforce mode. Cisco doesn't name the setting as a condition, so treat every clustered system as affected.",
+      "cite": [
+        1,
+        4,
+        9
+      ]
+    },
+    {
+      "label": "An attacker can reach it",
+      "text": "Network access to the cluster database is enough; no login is needed. The public exploit connects on TCP port 4372, and F6 says to restrict TCP 4371–4372. In the attack F6 investigated, attackers first broke into two internet-facing Expressways on X15.5.3, then used one of them to reach two more cluster nodes on the internal network.",
+      "cite": [
+        1,
+        3,
+        4
+      ]
+    }
+  ],
+  "do": [
+    {
+      "label": "Upgrade now",
+      "text": "Go to X15.5.20 or later; X14 and earlier must migrate to a fixed release. Cisco gives no workaround. CISA gave US federal civilian agencies 3 days, until 23 Nov 2026, plus a check for a break-in. That deadline binds only those agencies, under BOD 26-04; for everyone else, the listing means it's being exploited. Before upgrading a cluster: X15.5.20 requires TLS verification set to Enforcing and every peer named by FQDN, or the upgrade stops, so sort out certificates first. The same release fixes eight bugs Cisco found itself (CVE-2026-76490 to CVE-2026-76497), which it says aren't exploited.",
+      "cite": [
+        1,
+        2,
+        6,
+        7,
+        8
+      ],
+      "versions": [
+        "cisco-expressway"
+      ]
+    },
+    {
+      "label": "Can't upgrade yet? Limit the ports",
+      "text": "As a stopgap, F6 recommends a firewall rule that allows TCP 4371–4372 only from your other cluster nodes. Cisco lists no workaround, so this adds protection; it doesn't replace the upgrade.",
+      "cite": [
+        3,
+        1
+      ]
+    },
+    {
+      "label": "Check for a break-in",
+      "text": "Upgrading doesn't remove attackers who are already in, and CISA flags this one for forensic triage. F6's signs: the entry `nodeup,'wombat@127.0.0.1'` in Expressway's Erlang log (`erlang.log`), Python files matching `/mnt/harddisk/i{0-9}{4}[a-zA-Z]?/*.py`, and the addresses `66.179.31.32` and `18.130.47.116`. If you find the log entry, F6 says to check other logs and artifacts to confirm. In its case the attackers went on to scan the network and look for passwords in file shares, SQL Server, WinRM and GitLab.",
+      "cite": [
+        3,
+        2
+      ]
+    }
+  ],
+  "fixed_in": {
+    "cisco-expressway": {
+      "X15.5": "X15.5.20"
+    }
+  },
+  "slack": "Cisco Expressway CVE-2026-76466 (cisco-sa-vcs-static-cred-hr7EWZ8t, 9.8): a secret built into the cluster database lets anyone who can reach a clustered Expressway-C or Expressway-E run commands as root, no login needed. Public exploit since 5 Nov; F6 reported attacks on a Russian company on 18 Nov; on CISA KEV since 20 Nov with a 3-day deadline for US federal agencies (23 Nov). Only clustered systems are affected. Fix: X15.5.20 or later (X14 and earlier: migrate); no workaround. Stopgap: allow TCP 4371-4372 only from cluster peers. Then check erlang.log for nodeup,'wombat@127.0.0.1'.",
+  "sources": [
+    {
+      "title": "Cisco advisory cisco-sa-vcs-static-cred-hr7EWZ8t: clustered systems, X15.5.20, no workaround, TLS Verify Mode",
+      "url": "https://sec.cloudapps.cisco.com/security/center/content/CiscoSecurityAdvisory/cisco-sa-vcs-static-cred-hr7EWZ8t",
+      "date": "21 Oct"
+    },
+    {
+      "title": "CISA KEV catalog: CVE-2026-76466 added 20 Nov, due 23 Nov, forensic triage",
+      "url": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog?field_cve=CVE-2026-76466"
+    },
+    {
+      "title": "F6: first exploitation, Russian company, X15.5.3, indicators, ports 4371–4372",
+      "url": "https://www.f6.ru/media-center/press-releases/cisco-cve-2026-76466/",
+      "date": "18 Nov"
+    },
+    {
+      "title": "dinosn: public exploit code, port 4372, tested on X15.3.2 in Permissive mode",
+      "url": "https://github.com/dinosn/cve-2026-76466",
+      "date": "5 Nov"
+    },
+    {
+      "title": "CVE record: CVE-2026-76466, CVSS 9.8, no login, CISA: exploitation active",
+      "url": "https://www.cve.org/CVERecord?id=CVE-2026-76466",
+      "date": "21 Oct"
+    },
+    {
+      "title": "CISA BOD 26-04: KEV deadlines bind federal civilian agencies, 3 days plus forensic triage",
+      "url": "https://www.cisa.gov/news-events/directives/bod-26-04-prioritizing-security-updates-based-risk",
+      "date": "10 Jun"
+    },
+    {
+      "title": "Cisco: Expressway X15.5.x release note, X15.5.22 newest, cluster upgrade needs Enforcing and FQDNs",
+      "url": "https://www.cisco.com/c/dam/en/us/td/docs/voice_ip_comm/expressway/release_note/X15-5-x/Cisco-Expressway-and-Cisco-Expressway-Select-Release-Note-X15-5-x.pdf"
+    },
+    {
+      "title": "Cisco: Expressway hardening release, eight more CVEs, not exploited",
+      "url": "https://sec.cloudapps.cisco.com/security/center/content/CiscoSecurityAdvisory/cisco-sa-exwy-hardening-FhcqBVcs",
+      "date": "21 Oct"
+    },
+    {
+      "title": "Cisco: Expressway clustering, System > Clustering, Permissive is the default",
+      "url": "https://www.cisco.com/c/en/us/support/docs/unified-communications/expressway/217230-what-is-expressway-cluster-and-how-it-wo.html"
+    },
+    {
+      "title": "CISA alert: four exploited vulnerabilities added, including CVE-2026-76466",
+      "url": "https://www.cisa.gov/news-events/alerts/2026/11/20/cisa-adds-four-known-exploited-vulnerabilities-catalog",
+      "date": "20 Nov"
+    }
+  ],
+  "changes": [
+    {
+      "date": "2026-11-23",
+      "text": "Published."
+    }
+  ],
+  "status": {
+    "exploit": "public",
+    "attacks": "seen",
+    "kev": {
+      "added": "2026-11-20",
+      "due": "2026-11-23"
+    },
+    "no_login": true,
+    "scare": 3.4
+  },
+  "status_cite": {
+    "exploit": [
+      4,
+      3
+    ],
+    "attacks": [
+      3,
+      2
+    ],
+    "kev": [
+      2,
+      10
+    ],
+    "no_login": [
+      1,
+      5
+    ]
+  }
+}
