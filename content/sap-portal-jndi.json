@@ -1,0 +1,161 @@
+{
+  "slug": "sap-portal-jndi",
+  "name": "SAP Portal JNDI",
+  "aliases": [
+    "sap",
+    "netweaver",
+    "sap netweaver",
+    "enterprise portal",
+    "sap enterprise portal",
+    "sap portal",
+    "as java",
+    "ep-basis",
+    "ep-runtime",
+    "jndi",
+    "jndi injection",
+    "3660969",
+    "3660659",
+    "onapsis-2026-0100",
+    "cve-2025-42884"
+  ],
+  "cves": [
+    "CVE-2025-42884"
+  ],
+  "product": "SAP Enterprise Portal",
+  "disclosed": "2025-11-11",
+  "news": "2026-11-20",
+  "updated": "2026-11-23",
+  "verdict": "now",
+  "tile_line": "Exploited, on CISA's list. Fix out since Nov 2025.",
+  "summary": "A bug in SAP NetWeaver Enterprise Portal lets an attacker with no login point the server's JNDI lookups (how Java finds named resources) at a provider of their choosing, to read or change information about the server. SAP rates it Medium (6.5) and fixed it on 11 Nov 2025; Onapsis, who found it, says it can also lead to running code on the server if a usable Java deserialization gadget chain is there. CISA added it to its exploited list on 20 Nov 2026 and gave US federal agencies three days to fix it; no one has published who is attacking or how.",
+  "status": {
+    "exploit": "none",
+    "attacks": "seen",
+    "kev": {
+      "added": "2026-11-20",
+      "due": "2026-11-23"
+    },
+    "no_login": true,
+    "scare": 3.1
+  },
+  "affected": [
+    {
+      "label": "Portal 7.50 without Note 3660969",
+      "text": "SAP lists Enterprise Portal components EP-BASIS 7.50 and EP-RUNTIME 7.50, which run on NetWeaver AS Java. SAP Note 3660969 (11 Nov 2025) ships patched versions of them; its fixed patch levels are behind an SAP login, so check in the SAP Support Portal whether the note is implemented on each Portal system.",
+      "cite": [
+        3,
+        4,
+        5,
+        9
+      ]
+    },
+    {
+      "label": "Attackers can reach the Portal",
+      "text": "The attack uses unprotected SOAP operations on an AS Java endpoint, which Onapsis hasn't named. No login or user action is needed.",
+      "cite": [
+        4,
+        5
+      ]
+    }
+  ],
+  "do": [
+    {
+      "label": "Apply SAP Note 3660969 now",
+      "text": "The fix has been out since 11 Nov 2025, so unpatched Portals are the ones at risk. CISA gave US federal civilian agencies until 23 Nov 2026, three days after listing it. That date binds only those agencies, under CISA's BOD 26-04 (which replaced BOD 22-01 on 10 Jun 2026); CISA listed the bug on evidence of active exploitation and urges every organization to prioritize fixing listed bugs.",
+      "cite": [
+        3,
+        1,
+        7,
+        2
+      ]
+    },
+    {
+      "label": "Also apply Note 3660659",
+      "text": "Onapsis recommends SAP's October 2025 hardening note against insecure deserialization in AS Java (Note 3660659, for CVE-2025-42944) as well. Onapsis says running code through this bug depends on Java deserialization not being blocked.",
+      "cite": [
+        5,
+        3
+      ]
+    },
+    {
+      "label": "No attack signs published yet",
+      "text": "CISA hasn't described the attacks, and no public report names the attackers or gives indicators. If an unpatched Portal was reachable from untrusted networks, check it for changes you didn't make.",
+      "cite": [
+        8,
+        9
+      ]
+    }
+  ],
+  "versions_skip": "SAP ships the fix as Security Note 3660969 with patched EP-BASIS and EP-RUNTIME 7.50 components; the fixed patch levels are behind an SAP login.",
+  "slack": "SAP NetWeaver Enterprise Portal CVE-2025-42884 (SAP Note 3660969): an attacker with no login can inject JNDI properties or a lookup URL to read or change server information. SAP rates it Medium (6.5); Onapsis, who found it, says it can lead to running code if a Java deserialization gadget chain is available. Affects EP-BASIS and EP-RUNTIME 7.50; fixed since 11 Nov 2025. On CISA KEV since 20 Nov 2026 with a 23 Nov deadline for US federal agencies; no attack details or public exploit code published. Apply Note 3660969, and Onapsis also recommends deserialization hardening Note 3660659.",
+  "sources": [
+    {
+      "title": "CISA KEV catalog: CVE-2025-42884 added 20 Nov, due 23 Nov",
+      "url": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog?field_cve=CVE-2025-42884"
+    },
+    {
+      "title": "CISA: four KEVs added on evidence of active exploitation, all organizations urged to prioritize them",
+      "url": "https://www.cisa.gov/news-events/alerts/2026/11/20/cisa-adds-four-known-exploited-vulnerabilities-catalog",
+      "date": "20 Nov"
+    },
+    {
+      "title": "SAP: 2025 Patch Day bulletin, Note 3660969 (November, Medium, 6.5, EP-BASIS/EP-RUNTIME 7.50) and Note 3660659 (October)",
+      "url": "https://support.sap.com/en/my-support/knowledge-base/security-notes-news/bulletin-2025.html",
+      "date": "11 Nov 2025"
+    },
+    {
+      "title": "CVE record: SAP's description, CVSS 6.5, no login; CISA SSVC exploitation active, KEV 20 Nov",
+      "url": "https://www.cve.org/CVERecord?id=CVE-2025-42884",
+      "date": "11 Nov 2025"
+    },
+    {
+      "title": "Onapsis: advisory ONAPSIS-2026-0100, reported 18 Aug 2025 as CVSS 10, SOAP endpoint, code execution via deserialization, Note 3660659",
+      "url": "https://onapsis.com/security-advisories/sap-netweaver-java-unauthenticated-jndi-injection-in-sap-netweaver-enterprise-portal/",
+      "date": "20 Nov"
+    },
+    {
+      "title": "Onapsis: November 2025 Patch Day, Onapsis Research Labs found it",
+      "url": "https://onapsis.com/blog/sap-security-patch-day-november-2025/",
+      "date": "11 Nov 2025"
+    },
+    {
+      "title": "CISA BOD 26-04: KEV deadlines for federal civilian agencies, replaces BOD 22-01",
+      "url": "https://www.cisa.gov/news-events/directives/bod-26-04-prioritizing-security-updates-based-risk",
+      "date": "10 Jun"
+    },
+    {
+      "title": "Security Affairs: no public reports identify the attackers",
+      "url": "https://securityaffairs.com/203639/security/u-s-cisa-adds-cisco-expressway-sap-netweaver-broadcom-vmware-vcenter-and-apache-roller-flaws-to-its-known-exploited-vulnerabilities-catalog.html",
+      "date": "21 Nov"
+    },
+    {
+      "title": "Rescana: no public proof of concept or indicators found; check the note is implemented",
+      "url": "https://www.rescana.com/post/sap-netweaver-enterprise-portal-cve-2025-42884-jndi-injection-kev-patch-now",
+      "date": "21 Nov"
+    }
+  ],
+  "changes": [
+    {
+      "date": "2026-11-23",
+      "text": "Published."
+    }
+  ],
+  "status_cite": {
+    "exploit": [
+      5,
+      9
+    ],
+    "attacks": [
+      1,
+      2,
+      4
+    ],
+    "kev": [
+      1
+    ],
+    "no_login": [
+      4,
+      5
+    ]
+  }
+}
