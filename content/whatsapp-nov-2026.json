@@ -26,7 +26,7 @@
   "updated": "2026-11-23",
   "verdict": "cycle",
   "tile_line": "Real bugs, low risk. Update the app as usual.",
-  "summary": "WhatsApp disclosed three bugs on 20 Nov 2026. The one with real-world use could reveal your phone's IP address to a scammer who sent a crafted ad-reply message; WhatsApp says it may have been abused with spam, and it's fixed in 2.26.17.4. The other two need you to tap a message sent from an unofficial app, or an attacker inside Meta's own systems, and Meta says it has seen no sign either was exploited.",
+  "summary": "WhatsApp disclosed three bugs on 20 Nov 2026. The one reported as abused could reveal your phone's IP address to a scammer who sent a crafted ad-reply message; WhatsApp says it may have been abused with spam, and it's fixed in 2.26.17.4. The other two need you to tap a message sent from an unofficial app, or an attacker inside Meta's own systems, and Meta says it has seen no sign either was exploited.",
   "status": {
     "exploit": "demonstrated",
     "attacks": "seen",
@@ -88,7 +88,7 @@
     },
     {
       "label": "Why it isn't Patch now",
-      "text": "Attacks were reported only for the IP address bug, and it only reveals an IP address: Meta rates it 3.5 (Low). WhatsApp says it may have been abused with spam messages, and a spokesperson told SecurityWeek \"we believe a scammer was using it to make their scam message seem more credible\". HKCERT says it is being exploited in scattered cases, while CISA's early assessment in the CVE records says no exploitation for all three. Meta rates the other two 6.8 and 4.8 (Medium), and its score for the order-message bug says working exploit code exists, though none is public. None of the three is on CISA's list of exploited bugs.",
+      "text": "Attacks were reported only for the IP address bug, and it only reveals an IP address: Meta rates it 3.5 (Low). WhatsApp says it may have been abused with spam messages, and a spokesperson told SecurityWeek \"we believe a scammer was using it to make their scam message seem more credible\". HKCERT says it is being exploited in scattered cases, while CISA's early assessment in the CVE records says no exploitation for all three. Meta rates the other two 6.8 and 4.8 (Medium), and its score for the order-message bug says working exploit code exists; no source links to public code. None of the three is on CISA's list of exploited bugs.",
       "cite": [
         2,
         3,
@@ -131,7 +131,7 @@
       "date": "20 Nov"
     },
     {
-      "title": "HKCERT: WhatsApp multiple vulnerabilities, Medium risk, update versions",
+      "title": "HKCERT: WhatsApp multiple vulnerabilities, Medium risk, scattered exploitation of CVE-2026-23871, update versions",
       "url": "https://www.hkcert.org/security-bulletin/whatsapp-multiple-vulnerabilities_20261123",
       "date": "23 Nov"
     },
