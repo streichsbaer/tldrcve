@@ -27,7 +27,7 @@
   "updated": "2026-11-23",
   "verdict": "now",
   "tile_line": "Exploited, on CISA's list. Fix out since Nov 2025.",
-  "summary": "A bug in SAP NetWeaver Enterprise Portal lets an attacker with no login point the server's JNDI lookups (how Java finds named resources) at a provider of their choosing, to read or change information about the server. SAP rates it Medium (6.5) and fixed it on 11 Nov 2025; Onapsis, who found it, says it can also lead to running code on the server if a usable Java deserialization gadget chain is there. CISA added it to its exploited list on 20 Nov 2026 and gave US federal civilian agencies three days to fix it; no one has published who is attacking or how.",
+  "summary": "A bug in SAP NetWeaver Enterprise Portal lets an attacker with no login point the server's JNDI lookups (how Java finds named resources) at a provider of their choosing, to read or change information about the server. SAP rates it Medium (6.5) and fixed it on 11 Nov 2025. Onapsis, who found it, rated it 10.0 (Critical) when reporting it to SAP, and says it can also lead to running code on the server if a usable Java deserialization gadget chain is there. CISA added it to its exploited list on 20 Nov 2026 and gave US federal civilian agencies three days to fix it; no one has published who is attacking or how.",
   "status": {
     "exploit": "none",
     "attacks": "seen",
@@ -87,7 +87,7 @@
     }
   ],
   "versions_skip": "SAP ships the fix as Security Note 3660969 with patched EP-BASIS and EP-RUNTIME 7.50 components; the fixed patch levels are behind an SAP login.",
-  "slack": "SAP NetWeaver Enterprise Portal CVE-2025-42884 (SAP Note 3660969): an attacker with no login can inject JNDI properties or a lookup URL to read or change server information. SAP rates it Medium (6.5); Onapsis, who found it, says it can lead to running code if a Java deserialization gadget chain is available. Affects EP-BASIS and EP-RUNTIME 7.50; fixed since 11 Nov 2025. On CISA KEV since 20 Nov 2026 with a 23 Nov deadline for US federal civilian agencies; no attack details or public exploit code published. Apply Note 3660969, and Onapsis also recommends deserialization hardening Note 3660659.",
+  "slack": "SAP NetWeaver Enterprise Portal CVE-2025-42884 (SAP Note 3660969): an attacker with no login can inject JNDI properties or a lookup URL to read or change server information. SAP rates it Medium (6.5); Onapsis, who found it, rated it 10.0 and says it can lead to running code if a Java deserialization gadget chain is available. Affects EP-BASIS and EP-RUNTIME 7.50; fixed since 11 Nov 2025. On CISA KEV since 20 Nov 2026 with a 23 Nov deadline for US federal civilian agencies; no attack details or public exploit code published. Apply Note 3660969, and Onapsis also recommends deserialization hardening Note 3660659.",
   "sources": [
     {
       "title": "CISA KEV catalog: CVE-2025-42884 added 20 Nov, due 23 Nov",
