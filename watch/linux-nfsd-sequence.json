@@ -1,0 +1,113 @@
+{
+  "id": "linux-nfsd-sequence",
+  "title": "Linux NFS server SEQUENCE overflow",
+  "cves": [
+    "CVE-2026-99362"
+  ],
+  "product": "Linux kernel",
+  "evaluated": "2026-11-23",
+  "decision": "watch",
+  "recheck": "2026-11-30",
+  "why": "Rated 9.8 by the kernel's own CVE team and posted as critical by automated accounts, but it only matters on machines running the kernel's NFS server where untrusted hosts can reach it. No public exploit, no reported attacks, not in CISA KEV, and distros disagree on severity.",
+  "page_if": [
+    "a public exploit or a detailed write-up",
+    "attacks reported or a CISA KEV listing",
+    "news or researcher coverage beyond automated CVE accounts"
+  ],
+  "facts": [
+    {
+      "text": "A bug in the kernel NFS server's handling of NFSv4.1 sessions lets a client make the server write past the end of a buffer in kernel memory; the fix's commit message says the client chooses most of the bytes written. It came in with kernel 3.16.",
+      "cite": [
+        1,
+        2
+      ]
+    },
+    {
+      "text": "The kernel's CVE team scored it 9.8 (CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H) on 20 Nov, after the 19 Nov announcement. Its reasoning says no login is needed, the crash can take down the host, and a later replay can send neighbouring kernel memory back to the client.",
+      "cite": [
+        3,
+        4,
+        1
+      ]
+    },
+    {
+      "text": "It only affects machines running the kernel NFS server. Red Hat says default RHEL setups don't run or enable it.",
+      "cite": [
+        2,
+        6
+      ]
+    },
+    {
+      "text": "Fixed in 6.12.117, 6.18.61, 7.3.2 and 7.4-rc1. The kernel's CVE team lists no fix for the 5.10, 5.15, 6.1 or 6.6 long-term kernels.",
+      "cite": [
+        1
+      ]
+    },
+    {
+      "text": "Sources disagree on severity: Red Hat rates it Critical (9.8, marked draft) with no fix yet, Ubuntu rates it Medium and still needs to evaluate it, and NVD hasn't scored it. Debian has fixed its 6.12 kernels; Debian 12's default 6.1 kernel is still vulnerable.",
+      "cite": [
+        6,
+        7,
+        5,
+        8
+      ]
+    },
+    {
+      "text": "No public exploit and no reported attacks; it isn't in CISA KEV. The NFS tool anfs added a check on 22 Nov that spots vulnerable servers without triggering the overflow.",
+      "cite": [
+        9,
+        10
+      ]
+    }
+  ],
+  "sources": [
+    {
+      "title": "CVE record: CVE-2026-99362, description, fixed versions, kernel CNA score",
+      "url": "https://www.cve.org/CVERecord?id=CVE-2026-99362"
+    },
+    {
+      "title": "Linux kernel: the fix, nfsd: preflight SEQUENCE replies before accepting a slot",
+      "url": "https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=35ff1a7a7e3835c3e974bc5c45d335897564ceae"
+    },
+    {
+      "title": "Linux kernel CNA: 9.8 score and reasoning added",
+      "url": "https://git.kernel.org/pub/scm/linux/security/vulns.git/commit/?id=c3e074e498fd6079864bb0d7f8df435426d26f00",
+      "date": "20 Nov"
+    },
+    {
+      "title": "linux-cve-announce: CVE-2026-99362 announced",
+      "url": "https://lore.kernel.org/linux-cve-announce/2026111950-CVE-2026-99362-c6f2@gregkh/",
+      "date": "19 Nov"
+    },
+    {
+      "title": "NVD: CVE-2026-99362, not yet analyzed",
+      "url": "https://nvd.nist.gov/vuln/detail/CVE-2026-99362"
+    },
+    {
+      "title": "Red Hat: Critical, default RHEL doesn't run the NFS server, no fix",
+      "url": "https://access.redhat.com/security/cve/CVE-2026-99362"
+    },
+    {
+      "title": "Ubuntu: Medium, needs evaluation",
+      "url": "https://ubuntu.com/security/CVE-2026-99362"
+    },
+    {
+      "title": "Debian tracker: fixed and vulnerable kernels",
+      "url": "https://security-tracker.debian.org/tracker/CVE-2026-99362"
+    },
+    {
+      "title": "CISA KEV catalog: not listed",
+      "url": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog"
+    },
+    {
+      "title": "anfs: NFS tool with a SEQUENCE preflight check",
+      "url": "https://github.com/skelsec/anfs"
+    }
+  ],
+  "history": [
+    {
+      "date": "2026-11-23",
+      "text": "Evaluated: watch, no page yet."
+    }
+  ]
+}
