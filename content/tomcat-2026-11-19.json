@@ -36,10 +36,11 @@
     "Spring Boot"
   ],
   "disclosed": "2026-11-19",
-  "updated": "2026-11-21",
+  "updated": "2026-11-24",
   "verdict": "cycle",
   "tile_line": "CISA says 9.1, Apache says Low. Off-by-default features.",
-  "summary": "Apache disclosed 11 Tomcat vulnerabilities on 19 Nov 2026: 1 critical, 4 important, 2 moderate and 4 low. All but one need a feature you have to turn on, such as HTTP/2, the RewriteValve or clustering, and none has a public exploit or reported attacks. The \"9.1 critical\" posts come from scores CISA added to the CVE records; Apache rates that bug Low. Fixed releases are out for all but two cluster bugs.",
+  "tldr": "Apache disclosed 11 Tomcat bugs on 19 Nov 2026. None has a public exploit or attacks, and all but one need a feature you turn on; the \"9.1 critical\" is CISA's score, Apache rates it Low. Update Tomcat; TLS-PSK clusters stay on TLS 1.2.",
+  "summary": "Apache rates the 11 as 1 critical, 4 important, 2 moderate and 4 low. The features you'd have to turn on include HTTP/2, the RewriteValve and clustering. Two cluster bugs aren't fixed: one fix is due in the next releases, and Apache has deprecated the EncryptInterceptor behind the other instead of fixing it.",
   "status": {
     "exploit": "none",
     "attacks": "none",
@@ -75,7 +76,7 @@
   "do": [
     {
       "label": "Upgrade to 11.0.29, 10.1.62 or 9.0.124",
-      "text": "Released 13 to 16 Nov 2026, these fix 10 of the 11 bugs. Tomcat 8.5 gets no fixes (end of life since 31 Mar 2024), and 9.0 support ends on 31 Mar 2027.",
+      "text": "Released 13 to 16 Nov 2026, these fix 9 of the 11 bugs; the two cluster bugs aren't fixed in them (see below). Tomcat 8.5 gets no fixes (end of life since 31 Mar 2024), and 9.0 support ends on 31 Mar 2027.",
       "versions": [
         "tomcat"
       ],
@@ -98,7 +99,7 @@
     },
     {
       "label": "Clusters: stay on TLS 1.2",
-      "text": "If your cluster uses TLS-PSK, keep it on TLS 1.2: on TLS 1.3 a node without the key can join (CVE-2026-133325). The fix comes in 11.0.30, 10.1.63 and 9.0.125; Apache hasn't announced a date, and we'll check again by 28 Nov 2026. The old EncryptInterceptor won't be fixed (CVE-2026-95517): move to TLS-PSK on TLS 1.2.",
+      "text": "If your cluster uses TLS-PSK, keep it on TLS 1.2: on TLS 1.3 a node without the key can join (CVE-2026-133325). The fix comes in 11.0.30, 10.1.63 and 9.0.125; Apache hasn't announced a date, and we'll check again by 28 Nov 2026. The old EncryptInterceptor isn't fixed (CVE-2026-95517) and Apache has deprecated it: move to TLS-PSK on TLS 1.2.",
       "cite": [
         7,
         8,
@@ -209,7 +210,6 @@
       "url": "https://lists.apache.org/thread/jshmkv50msc5lgwwqzt2b98w3t2n2v7w"
     }
   ],
-  "slack": "Apache Tomcat disclosed 11 vulnerabilities on 19 Nov 2026 (Apache's ratings: 1 critical, 4 important, 2 moderate, 4 low). All but one need a feature you have to turn on (HTTP/2, RewriteValve, ExpiresFilter, CGI, Jakarta Authentication, clustering, OWB), and none has a public exploit, reported attacks or a CISA KEV listing. The \"9.1 critical\" posts use scores CISA added to the CVE records; Apache rates that bug Low. Fix: Tomcat 11.0.29, 10.1.62 or 9.0.124. Spring Boot 4.2.0, 4.1.3 and 4.0.10 still bring in Tomcat 11.0.27, so set tomcat.version to 11.0.29. Clusters with TLS-PSK: stay on TLS 1.2 until the next release.",
   "sources": [
     {
       "title": "Apache Tomcat 11 security page: all 11 bugs, ratings, affected versions",
@@ -286,6 +286,10 @@
     }
   ],
   "changes": [
+    {
+      "date": "2026-11-24",
+      "text": "Corrected: the 13–16 Nov releases fix 9 of the 11 bugs, not 10; the EncryptInterceptor bug isn't fixed (Apache has deprecated it)."
+    },
     {
       "date": "2026-11-21",
       "text": "Published."

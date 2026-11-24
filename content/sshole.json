@@ -16,10 +16,11 @@
   ],
   "product": "OpenSSH",
   "disclosed": "2026-11-05",
-  "updated": "2026-11-20",
+  "updated": "2026-11-24",
   "verdict": "now",
   "tile_line": "Exploited, in CISA KEV. Alpine-style sshd only.",
-  "summary": "On Linux systems that use musl libc and run sshd without PAM, mainly Alpine, an attacker can log in to password-less accounts (key-only users, Alpine's cloud `alpine` user) just by sending a very long password. Attacks started within hours of disclosure on 5 Nov 2026. Debian, Ubuntu, Fedora and other glibc systems aren't affected.",
+  "tldr": "A very long password logs in to key-only SSH accounts. Exploited within hours, on CISA's exploited list. Only on musl systems running sshd without PAM, mainly Alpine, if any account has a real password: upgrade openssh (Debian, Ubuntu, Fedora are safe).",
+  "summary": "Password lengths that work differ by source: Alpine says 257 to 1024 bytes, the CVE record 256 to 1024 characters. It was disclosed on 5 Nov 2026, when OpenSSH 10.6p2 shipped a workaround; Alpine's cloud `alpine` user is one of the key-only accounts at risk.",
   "affected": [
     {
       "label": "sshd uses musl libc",
@@ -51,22 +52,24 @@
     },
     {
       "label": "openssh below the fixed package",
-      "text": "Upstream: OpenSSH before 10.6p2. Alpine's fixed packages are listed under Upgrade.",
+      "text": "Upstream: OpenSSH before 10.6p2, which works around the bug in sshd; OpenSSH says the root cause is outside sshd. Alpine's fixed packages are listed under Upgrade.",
       "cmd": "apk info -v | grep '^openssh'",
       "cite": [
         9,
-        2
+        2,
+        1
       ]
     }
   ],
   "do": [
     {
       "label": "Upgrade openssh, then restart",
-      "text": "Install the fixed package for your Alpine branch (listed below; fixes go back to 3.16). Run `apk upgrade -U -a`, then `rc-service sshd restart`: upgrading alone leaves the old sshd running. Other musl builds: OpenSSH 10.6p2.",
+      "text": "Install the fixed package for your Alpine branch (listed below; fixes go back to 3.16). Run `apk upgrade -U -a`, then `rc-service sshd restart`: upgrading alone leaves the old sshd running. Other musl builds: OpenSSH 10.6p2. musl itself hasn't changed yet: on 9 Nov 2026 its maintainer said musl 1.2.7 will probably stop returning `*` when crypt() fails, but it isn't decided.",
       "cite": [
         1,
         2,
-        3
+        3,
+        11
       ],
       "versions": [
         "openssh"
@@ -102,7 +105,6 @@
       "alpine-3.19": "9.6_p1-r3"
     }
   },
-  "slack": "SSHole (CVE-2026-123158): password-auth bypass in OpenSSH sshd on musl systems without PAM, mainly Alpine. A very long password (257–1024 bytes per Alpine; the CVE record says 256–1024) logs into accounts with no password (key-only users, Alpine's cloud `alpine` user). Exploited within hours of the 5 Nov disclosure, public PoC, in CISA KEV (added 9 Nov, due 12 Nov). glibc distros (Debian, Ubuntu, RHEL) are not affected. Fix: upgrade Alpine's openssh package (or OpenSSH 10.6p2) and restart sshd, or set PasswordAuthentication no. Check logs for 'Accepted password for' on passwordless accounts.",
   "sources": [
     {
       "title": "OpenSSH: 10.6p2 release notes",
@@ -148,9 +150,18 @@
     {
       "title": "Alpine packages: current openssh per branch",
       "url": "https://pkgs.alpinelinux.org/packages?name=openssh&repo=main&arch=x86_64"
+    },
+    {
+      "title": "musl mailing list: crypt() failure result not yet changed",
+      "url": "https://www.openwall.com/lists/musl/2026/11/09/5",
+      "date": "9 Nov"
     }
   ],
   "changes": [
+    {
+      "date": "2026-11-24",
+      "text": "Clarified: the attack also needs another account with a real password hash, and OpenSSH calls 10.6p2 a workaround. Alpine and the CVE record give different working password lengths (257 vs 256 to 1024). musl itself hasn't changed crypt() yet."
+    },
     {
       "date": "2026-11-20",
       "text": "Dropped a conflicting Alpine 3.19 tracker version (the package index matches the advisory). Safe versions added."

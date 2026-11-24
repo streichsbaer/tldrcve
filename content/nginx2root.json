@@ -21,7 +21,8 @@
     "cve-2026-120993",
     "cve-2026-125283",
     "cve-2026-120967",
-    "cve-2026-123640"
+    "cve-2026-123640",
+    "cve-2026-132779"
   ],
   "cves": [
     "CVE-2026-123007",
@@ -37,10 +38,11 @@
   ],
   "product": "nginx",
   "disclosed": "2026-11-18",
-  "updated": "2026-11-21",
+  "updated": "2026-11-24",
   "verdict": "if",
   "tile_line": "Public exploit for HTTP/2. Same fix covers 9 more bugs.",
-  "summary": "A bug in nginx's HTTP/2 handling lets an attacker with no login crash nginx or run code as the nginx worker user, and a public exploit is out. Despite the name, it doesn't give root by itself (Xint got root by chaining it with a separate Linux kernel bug, covered on our [Linux SCTP root](/linux-sctp-root/) page), and code execution needs ASLR to be off or bypassed. The same 18 Nov releases fix nine more nginx bugs, including the other four Xint groups as nginx2root (a second HTTP/2 bug, HTTP/3, resolver and mail proxy) and a TLS 1.3 hang; turning off HTTP/2 covers only the two HTTP/2 bugs.",
+  "tldr": "An attacker with no login can crash nginx workers over HTTP/2 or run code as the worker user, not root. Public exploit out, no attacks seen. Upgrade nginx, above all if HTTP/2 is on; the same releases fix nine more bugs, some without HTTP/2.",
+  "summary": "Despite the name, it doesn't give root by itself: Xint got root by chaining it with a separate Linux kernel bug, covered on our [Linux SCTP root](/linux-sctp-root/) page. F5 says running code needs ASLR off or bypassed; Rapid7's public exploit gets around ASLR with addresses the bug itself leaks, but it sends about 128 GB of HTTP/2 data and its README says it will likely fail against a server with several clients at once, while Xint says its own unreleased exploit worked under normal traffic against public servers on AWS, GCP and Azure. The nine other bugs fixed in the same 18 Nov releases include the four other bugs Xint reported as nginx2root (a second HTTP/2 bug, HTTP/3, resolver and mail proxy) and a TLS 1.3 hang; turning off HTTP/2 covers only the two HTTP/2 bugs.",
   "affected": [
     {
       "label": "nginx before 1.31.9 / 1.30.7",
@@ -73,16 +75,18 @@
   "do": [
     {
       "label": "Upgrade nginx",
-      "text": "1.31.9 (mainline) or 1.30.7 (stable). NGINX Plus: 37.3.0.1 or 37.0.8.1. Debian (DSA-6642-1, DLA-4918-1) and Ubuntu (USN-9159-1, USN-9182-1) have fixed packages. Then restart.",
+      "text": "1.31.9 (mainline) or 1.30.7 (stable). NGINX Plus: 37.3.0.1 or 37.0.8.1. The 23 Nov releases (1.31.10, 1.30.8, NGINX Plus 37.3.1.1, 37.0.9.1) also fix a separate medium-rated CPU bug when `ssl_early_data` is on (CVE-2026-132779), so go straight to those. Debian (DSA-6642-1, DLA-4918-1) and Ubuntu (USN-9159-1, USN-9182-1) have fixed packages. Then restart.",
       "cite": [
         1,
+        2,
         3,
         8,
         14,
         15,
         16,
         17,
-        23
+        23,
+        24
       ],
       "versions": [
         "nginx-plus",
@@ -124,7 +128,6 @@
       "1.30": "1.30.7"
     }
   },
-  "slack": "nginx2root (CVE-2026-123007): unauthenticated RCE (as the worker user, not root, ASLR off or bypassed) in nginx 1.9.5–1.31.8 when HTTP/2 is on. Public exploit since 18 Nov, no attacks seen, not in KEV. The same releases fix nine more nginx bugs: another HTTP/2 one, HTTP/3, resolver, mail proxy, a TLS 1.3 hang and smaller stream bugs. Check: nginx -T. Fix: 1.31.9 / 1.30.7 (NGINX Plus 37.3.0.1 / 37.0.8.1) and restart.",
   "sources": [
     {
       "title": "nginx.org: security advisories",
@@ -228,9 +231,18 @@
       "title": "Ubuntu: USN-9182-1, more nginx fixes",
       "url": "https://ubuntu.com/security/notices/USN-9182-1",
       "date": "20 Nov"
+    },
+    {
+      "title": "NGINX docs: NGINX Plus 37.3.1.1 and 37.0.9.1 fix CVE-2026-132779",
+      "url": "https://docs.nginx.com/nginx/releases/",
+      "date": "23 Nov"
     }
   ],
   "changes": [
+    {
+      "date": "2026-11-24",
+      "text": "Clarified: the public exploit can run code as the worker user, not only crash nginx; it gets around ASLR with addresses the bug itself leaks. Added how hard the public exploit is to use (about 128 GB of traffic, built for a fresh test server) and Xint's claim that its own exploit works on busy cloud servers. Noted the 23 Nov releases, which also fix a separate `ssl_early_data` CPU bug."
+    },
     {
       "date": "2026-11-21",
       "text": "Now lists all ten CVEs fixed by the 18 Nov releases, with a bug list. \"Are you affected?\" covers the HTTP/3, resolver, mail proxy and TLS 1.3 bugs, not only HTTP/2. Corrected the affected NGINX Plus range (37.2.x is affected too)."
@@ -274,7 +286,8 @@
     ],
     "exploit": [
       3,
-      4
+      4,
+      5
     ],
     "attacks": [
       6,
@@ -291,7 +304,7 @@
       "severity": "high",
       "url": "https://www.cve.org/CVERecord?id=CVE-2026-123007",
       "title": "HTTP/2 flow-control memory corruption",
-      "text": "Any server with HTTP/2 on. A public exploit crashes nginx with no login; running code also needs ASLR off or bypassed, as the worker user. Versions 1.9.5–1.31.8.",
+      "text": "Any server with HTTP/2 on. With no login, a public exploit crashes nginx or runs code as the worker user, getting around ASLR with leaked addresses; it needs about 128 GB of traffic and is built for a freshly started test server. Versions 1.9.5–1.31.8.",
       "verdict": "if"
     },
     {

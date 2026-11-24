@@ -20,8 +20,9 @@
   "disclosed": "2026-11-10",
   "updated": "2026-11-20",
   "verdict": "now",
-  "tile_line": "Exploited, in CISA KEV (due 24 Nov). Update Office.",
-  "summary": "If a user opens a crafted Office file in classic Outlook, Outlook connects to an attacker's server without its usual warning and hands over the user's NTLMv2 hash. Attackers can use that hash to sign in as the user. Microsoft says it is being exploited; it is fixed in the 10 Nov 2026 Office update, not a Windows update.",
+  "tile_line": "Exploited via crafted files. On CISA's exploited list.",
+  "tldr": "Opening a crafted Office file in classic Outlook hands the user's NTLMv2 hash to an attacker, who can sign in as them. Exploited, on CISA's exploited list. Install the 10 Nov 2026 Office update: Windows updates alone don't fix it.",
+  "summary": "The crafted file makes Outlook connect to the attacker's server without its usual warning, and that connection carries the user's NTLMv2 hash.",
   "status": {
     "exploit": "demonstrated",
     "attacks": "seen",
@@ -104,7 +105,6 @@
       "LTSC 2021": "14334.21048"
     }
   },
-  "slack": "Outlook zero-day (CVE-2026-124194): opening a crafted message/Office file in classic Outlook leaks the user's NTLMv2 hash to an attacker, who can use it to sign in as the user. Exploited in the wild; CISA KEV added 10 Nov, due 24 Nov. Affects Microsoft 365 Apps and Office LTSC 2021/2024. Not zero-click: the Preview Pane doesn't trigger it. Fix is the 10 Nov Office update (e.g. Current Channel build 20527.20196), delivered through Office updates, not Windows Update. Check: File > Office Account > About Outlook.",
   "sources": [
     {
       "title": "Microsoft MSRC: advisory, FAQ, affected products",

@@ -8,7 +8,7 @@
     "https://pkgs.alpinelinux.org/packages?name=openssh&repo=main&arch=x86_64"
   ],
   "filter": "openssh",
-  "checked": "2026-11-20",
+  "checked": "2026-11-24",
   "lines": [
     {
       "line": "Upstream",

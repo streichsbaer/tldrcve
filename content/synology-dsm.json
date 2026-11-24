@@ -13,7 +13,9 @@
     "cerber",
     "ransomware",
     "synology-sa-24:20",
-    "cve-2024-10441"
+    "cve-2024-10441",
+    "cve-2024-50629",
+    "cve-2024-10445"
   ],
   "cves": [
     "CVE-2024-10441"
@@ -24,10 +26,11 @@
   ],
   "disclosed": "2024-11-05",
   "news": "2026-11-18",
-  "updated": "2026-11-20",
+  "updated": "2026-11-24",
   "verdict": "now",
-  "tile_line": "Ransomware hits old DSM. In CISA KEV, due 21 Nov.",
-  "summary": "A bug in Synology's NAS software (DSM) lets an attacker with no login run code on the NAS. Synology fixed it in Nov 2024, but on 29 Oct 2026 it warned that ransomware (C3RB3R) is hitting NAS boxes on outdated DSM, and CISA added this bug to its exploited list on 18 Nov 2026. Current DSM builds are fixed.",
+  "tile_line": "Ransomware hits outdated DSM. On CISA's exploited list.",
+  "tldr": "A Synology DSM bug lets an attacker with no login run code on the NAS. Ransomware is hitting boxes on old DSM, and it's on CISA's exploited list. The fix has been out since Nov 2024: update DSM now and keep it off the internet.",
+  "summary": "Synology's 29 Oct 2026 warning says the bug was \"patched in December 2024\", but its advisory and the DSM 7 fixes date from Nov 2024; the advisory's only December change was the DSM 6.2 update on 5 Dec 2024. BleepingComputer names the ransomware C3RB3R; CISA listed the bug on 18 Nov 2026 and marks it as used by ransomware. SA-24:20 also fixes two moderate bugs: CVE-2024-50629 (reading limited files) and CVE-2024-10445 (writing limited files, for an attacker on the same network).",
   "status": {
     "exploit": "demonstrated",
     "attacks": "seen",
@@ -41,7 +44,7 @@
   "affected": [
     {
       "label": "DSM older than the 2024 fix",
-      "text": "DSM 7.2.2 before 7.2.2-72806 Update 1, 7.2.1 before 7.2.1-69057 Update 6, 7.2 before 7.2-64570 Update 4, or 7.1 before 7.1.1-42962 Update 7; BeeStation OS before 1.1-65374. DSM 7.3 and 7.4 came out later and aren't listed. For DSM 6.2 the CVE record says \"unknown\", while Synology's advisory lists a Moderate fix in 6.2.4-25556 Update 8. Synology's warning says the bug was \"patched in December 2024\"; the DSM 7 fixes shipped in Nov 2024. Control Panel > Info Center shows your version.",
+      "text": "DSM 7.2.2 before 7.2.2-72806 Update 1, 7.2.1 before 7.2.1-69057 Update 6, 7.2 before 7.2-64570 Update 4, 7.1 before 7.1.1-42962 Update 7; BeeStation OS before 1.1-65374. DSM 7.3 and 7.4 came out later and aren't listed. For DSM 6.2 the CVE record says \"unknown\", while Synology's advisory lists a Moderate fix in 6.2.4-25556 Update 8, which its details tie to CVE-2024-10445, a separate bug. Synology's warning says the bug was \"patched in December 2024\"; the DSM 7 fixes shipped in Nov 2024. Control Panel > Info Center shows your version.",
       "cite": [
         2,
         3,
@@ -63,18 +66,19 @@
   "do": [
     {
       "label": "Update DSM now",
-      "text": "Install the newest DSM your model offers. On 12 Oct 2026 that was 7.4.1-90080 Update 1, 7.3.2-86009 Update 5, 7.2.2-72806 Update 10 or 7.2.1-69057 Update 13; Synology says available versions vary by model. BeeStation: 1.1-65374 or newer. Synology hasn't named the bug the attackers use: CISA lists this one, while a report citing 360 blames Synology's Sept 2026 bugs (SA-26:13). These newest builds fix both.",
+      "text": "Install the newest DSM your model offers. On 12 Oct 2026 that was 7.4.1-90080 Update 1, 7.3.2-86009 Update 5, 7.2.2-72806 Update 10 or 7.2.1-69057 Update 13; Synology says available versions vary by model. BeeStation: 1.1-65374 or newer. Synology's 29 Oct warning points to its 2024 advisory SA-24:20, which covers this bug, but names no CVE; CISA lists this one, while a report citing 360 blames Synology's Sept 2026 bugs (SA-26:13). These newest builds fix both.",
       "versions": [
         "synology-dsm"
       ],
       "cite": [
-        7,
-        11,
+        1,
+        2,
         3,
         5,
-        1,
+        7,
+        8,
         9,
-        8
+        11
       ]
     },
     {
@@ -108,10 +112,9 @@
       "7.1": "7.1.1-42962 Update 7"
     }
   },
-  "slack": "Synology DSM CVE-2024-10441: an attacker with no login can run code on a Synology NAS. Fixed in Nov 2024, but Synology warned on 29 Oct 2026 that C3RB3R ransomware is hitting outdated DSM, and CISA added this CVE to KEV on 18 Nov (due 21 Nov). Affected: DSM 7.1 to 7.2.2 below the 2024 updates, BeeStation OS below 1.1-65374. Synology hasn't named the exploited bug; a report citing 360 blames the Sept 2026 SA-26:13 bugs instead. Update to the newest DSM for your model (fixes both), turn on automatic updates, and keep the DSM web interface off the internet.",
   "sources": [
     {
-      "title": "CISA KEV: added 18 Nov, due 21 Nov, ransomware use \"Unknown\"",
+      "title": "CISA KEV: added 18 Nov, due 21 Nov, ransomware use \"Known\"",
       "url": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog?field_cve=CVE-2024-10441",
       "date": "18 Nov"
     },
@@ -163,6 +166,10 @@
     }
   ],
   "changes": [
+    {
+      "date": "2026-11-24",
+      "text": "Corrected: Synology's own warning says the bug was patched in December 2024, while its advisory and the DSM 7 fixes date from November 2024; the page now says so. The ransomware name C3RB3R comes from BleepingComputer, not Synology. CISA now marks known ransomware use. Synology's warning points to its advisory SA-24:20 but names no CVE; corrected the page's wording. Noted the two moderate bugs in the same advisory, and that its DSM 6.2 fix is for one of them."
+    },
     {
       "date": "2026-11-20",
       "text": "Published."

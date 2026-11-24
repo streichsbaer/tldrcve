@@ -17,25 +17,28 @@
     "CVE-2026-111497"
   ],
   "ghsa": [
-    "GHSA-3wvj-j6qm-62mr"
+    "GHSA-3wvj-j6qm-62mr",
+    "GHSA-9v8h-qqgm-4m35"
   ],
   "product": "Brotli",
   "disclosed": "2026-10-21",
-  "updated": "2026-11-22",
+  "updated": "2026-11-24",
   "verdict": "now",
   "tile_line": "In Node.js, .NET, Envoy, Python. In CISA KEV.",
-  "summary": "A bug in the Brotli decompressor, built into Node.js, .NET, Envoy and many Python apps, can crash your app, leak memory or possibly run code. It only matters where you decompress Brotli data someone else controls, which is common, and attacks have started. The public exploit only runs code on a deliberately weakened build.",
+  "tldr": "A bug in the Brotli decompressor can crash apps, leak memory or run code when they unpack outside data. Attacks have started; it's on CISA's exploited list. It's in Node.js, .NET, Envoy and many Python apps: update them and rebuild images.",
+  "summary": "Unpacking outside Brotli data is common: HTTP clients such as Python's requests decompress Brotli responses on their own, and Express 5 request bodies can carry it. broccoli2shell.com first described code execution only on a deliberately weakened build, but ELLIO reproduced the public exploit on official, unmodified Node.js builds with default settings, and its sensors saw it in attacks.",
   "affected": [
     {
       "label": "A vulnerable Brotli copy",
-      "text": "Brotli 1.0.3–1.2.0, Node.js below 22.23.4 / 24.22.1 / 26.12.1 (including 20, 23 and 25, which get no fix), .NET 8/9/10, Envoy/Istio, or Python `Brotli` / `brotlicffi` below the fix, and PHP for Windows before the 26 Oct rebuilds. On RHEL, Node 22, Node 24 on RHEL 10 and .NET 9/10/11 use the system libbrotli, so update that package too; Node 24 on RHEL 8/9 and .NET 8 bundle their own copy. .NET Framework, Java and pure-JS/Rust ports use other code and aren't affected. `process.versions.brotli` only shows Node's bundled copy, so check `node -v`.",
+      "text": "Brotli 1.0.3–1.2.0 (except the patched 1.0.10 and 1.1.1), Node.js below 22.23.4 / 24.22.1 / 26.12.1 (including 20, 23 and 25, which get no fix), .NET 8/9/10, Envoy/Istio, or Python `Brotli` / `brotlicffi` below the fix, and PHP for Windows before the 26 Oct rebuilds. On RHEL, Node 22, Node 24 on RHEL 10 and .NET 9/10/11 use the system libbrotli, so update that package too; Node 24 on RHEL 8/9 and .NET 8 bundle their own copy. .NET Framework, Java's own decoder and pure-JS/Rust ports use other code and aren't affected; Java JNI wrappers, PHP and Ruby extensions and Go cgo bindings around the C library are. `process.versions.brotli` only shows Node's bundled copy, so check `node -v`.",
       "cmd": "node -v\npip show Brotli brotlicffi\ndpkg -l | grep -i brotli",
       "cite": [
-        9,
         2,
         5,
         8,
-        10
+        9,
+        10,
+        18
       ]
     },
     {
@@ -115,7 +118,6 @@
       "brotlicffi": "1.2.1.0"
     }
   },
-  "slack": "Brotli decoder RCE (CVE-2026-111497, aka Node2Shell / HTTP2Shell): in CISA KEV, attacks seen. Affects Node.js 22/24/26, .NET 8/9/10, Envoy/Istio and Python Brotli wherever you decompress outside data (fetch(), HttpClient, request bodies). Update to Node 22.23.4 / 24.22.1 / 26.12.1, .NET 8.0.33 / 9.0.22 / 10.0.14 / 11.0.0, Python Brotli 1.2.1, and rebuild container images.",
   "sources": [
     {
       "title": "google/brotli: fixed releases",
@@ -187,9 +189,23 @@
     {
       "title": "PyPI: brotlicffi",
       "url": "https://pypi.org/project/brotlicffi/"
+    },
+    {
+      "title": "GitHub GHSA-9v8h-qqgm-4m35: PyPI Brotli and brotlicffi, fixed in 1.2.1 / 1.2.1.0",
+      "url": "https://github.com/advisories/GHSA-9v8h-qqgm-4m35",
+      "date": "22 Oct"
+    },
+    {
+      "title": "ELLIO: public exploit gets a shell on official, unmodified Node.js builds; exploit traffic seen",
+      "url": "https://ellio.tech/en/blog/node2shell-cve-2026-111497-rce-on-stock-nodejs-builds",
+      "date": "26 Oct"
     }
   ],
   "changes": [
+    {
+      "date": "2026-11-24",
+      "text": "Corrected: ELLIO reproduced the public exploit on official, unmodified Node.js builds and saw it in attacks, so it isn't limited to a weakened build. Java JNI wrappers around the C decoder are affected too. Added the GitHub advisory for the Python Brotli packages."
+    },
     {
       "date": "2026-11-22",
       "text": "Added Istio 1.32 to Safe versions (Istio lists 1.32.0 and later as patched)."
@@ -233,12 +249,14 @@
   ],
   "status_cite": {
     "exploit": [
-      9
+      9,
+      19
     ],
     "attacks": [
       3,
       4,
-      9
+      9,
+      19
     ],
     "kev": [
       3

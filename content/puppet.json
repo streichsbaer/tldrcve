@@ -18,8 +18,9 @@
   "disclosed": "2026-11-03",
   "updated": "2026-11-20",
   "verdict": "now",
-  "tile_line": "Public exploit. In CISA KEV, due 1 Dec.",
-  "summary": "Anyone with a signed Puppet agent certificate can send a crafted report and run code on your Puppet Server, which holds the key that signs every node's certificate. Any compromised agent is enough, and autosigning lets anyone who can reach the server get a certificate.",
+  "tile_line": "Any signed agent can take over the server. Exploited.",
+  "tldr": "Anyone with a signed Puppet agent certificate can run code on your Puppet Server, which signs every node's certificate. Public exploit, attacks seen, on CISA's exploited list. With autosign on, anyone who reaches it can get a certificate, so upgrade now.",
+  "summary": "The attacker sends a crafted report to `PUT /puppet/v3/report`; the code runs as the `puppet` user, which can read the CA signing key. The same releases also fix CVE-2026-115732.",
   "affected": [
     {
       "label": "Server below a fixed release",
@@ -101,7 +102,6 @@
       "Puppet Core 8": "8.22.2"
     }
   },
-  "slack": "Puppet Server RCE (CVE-2026-115731): anyone with a signed agent cert can run code on Puppet Server (and reach the CA key). Public exploit, in CISA KEV (due 1 Dec). Upgrade to openvox-server 9.2.0 / 8.18.0, PE 2023.8.13 / 2025.12.1 / 2026.0.1, or Puppet Core 9.1.3 / 8.22.2 (Puppet Server 9.0.24.1 / 8.9.13). Until then: autosign = false.",
   "sources": [
     {
       "title": "CISA KEV: added 17 Nov, due 1 Dec",

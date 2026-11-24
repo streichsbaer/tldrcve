@@ -20,10 +20,11 @@
   ],
   "product": "pam-mysql",
   "disclosed": "2026-11-19",
-  "updated": "2026-11-21",
+  "updated": "2026-11-24",
   "verdict": "if",
   "tile_line": "SSH in as users with no stored password. Rare module.",
-  "summary": "pam-mysql, a rarely used module that checks Linux logins against a MySQL table, gets one check backwards. With sshd's default settings, anyone can log in over SSH as an account whose stored password is empty, typing any password. Debian fixed it on 19 Nov 2026; Ubuntu and Fedora haven't yet. The researcher demonstrated it but hasn't published the exploit, and no attacks are reported.",
+  "tldr": "A rarely used login module, pam-mysql, lets anyone SSH in as an account with no stored password, typing any password. Exploit demonstrated, not published; no attacks. If you use it, install Debian's fix where available, or delete password-less rows.",
+  "summary": "pam-mysql checks Linux logins against a MySQL table and gets one check backwards; with sshd's default settings that's enough for an SSH login. Debian fixed it on 19 Nov 2026; Ubuntu and Fedora haven't yet.",
   "status": {
     "exploit": "demonstrated",
     "attacks": "none",
@@ -87,7 +88,7 @@
     },
     {
       "label": "No update yet? Fill the gaps",
-      "text": "Remove or lock rows with no password in any table used for logins, then make the password column `NOT NULL` with no empty-string default. That's the researcher's fix for unpatched systems. Don't set `PermitEmptyPasswords yes`.",
+      "text": "Stop storing accounts with no password in any table used for logins: delete those rows, then make the password column `NOT NULL` with no empty-string default. That's the researcher's fix for unpatched systems. Don't set `PermitEmptyPasswords yes`.",
       "cite": [
         1
       ]
@@ -101,7 +102,6 @@
     }
   ],
   "versions_skip": "No upstream release has the fix; only distro packages (Debian) do, listed under Are you affected.",
-  "slack": "pam-mysql CVE-2026-124749: the PAM module that checks Linux logins against MySQL gets the \"refuse empty passwords\" check backwards. With sshd's default PermitEmptyPasswords no, anyone can log in over SSH as an account whose stored password is NULL (or empty on the 1.0 betas Fedora ships), with any password. Only matters if pam-mysql handles your logins and some rows have no password; Debian counts 190 installs. Debian fixed it 19 Nov 2026 (DSA-6643-1, DLA-4919-1); Ubuntu and Fedora haven't yet. Demonstrated, exploit not public, no attacks, not in CISA KEV. Stopgap: remove password-less rows and make the column NOT NULL with no '' default. Don't set PermitEmptyPasswords yes.",
   "sources": [
     {
       "title": "oss-security: Andrey Vasilevsky's disclosure, conditions, fix, mitigation, detection",
@@ -168,6 +168,10 @@
     }
   ],
   "changes": [
+    {
+      "date": "2026-11-24",
+      "text": "The stopgap now matches the researcher's wording: delete password-less rows, not lock them."
+    },
     {
       "date": "2026-11-21",
       "text": "Published."

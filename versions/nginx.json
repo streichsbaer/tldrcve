@@ -7,19 +7,19 @@
     "https://nginx.org/en/download.html"
   ],
   "filter": "nginx",
-  "checked": "2026-11-22",
+  "checked": "2026-11-24",
   "lines": [
     {
       "line": "1.31 (mainline)",
       "key": "1.31",
-      "latest": "1.31.9",
-      "released": "2026-11-18"
+      "latest": "1.31.10",
+      "released": "2026-11-23"
     },
     {
       "line": "1.30 (stable)",
       "key": "1.30",
-      "latest": "1.30.7",
-      "released": "2026-11-18"
+      "latest": "1.30.8",
+      "released": "2026-11-23"
     }
   ],
   "older": "Older nginx lines get no fixes. NGINX Plus is listed separately, and products that bundle nginx have their own versions.",

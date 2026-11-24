@@ -1,0 +1,87 @@
+{
+  "id": "openssl-quic-retire-cid",
+  "title": "OpenSSL QUIC peer can exhaust memory with RETIRE_CONNECTION_ID frames",
+  "cves": [
+    "CVE-2026-107494"
+  ],
+  "product": "OpenSSL",
+  "evaluated": "2026-11-24",
+  "decision": "watch",
+  "recheck": "2026-12-02",
+  "why": "OpenSSL rates it Low: a malicious QUIC peer can make an app that uses OpenSSL's own QUIC code run out of memory. It's a crash, not code execution, there's no exploit or reported attack, and it isn't on CISA KEV. GitHub's advisory database shows 9.1; that score isn't OpenSSL's or CISA's (CISA scored it 7.5).",
+  "page_if": [
+    "public exploit code or reported attacks, or a CISA KEV listing",
+    "a widely used server or client is shown to be exposed through OpenSSL's QUIC stack",
+    "OpenSSL raises the severity"
+  ],
+  "facts": [
+    {
+      "text": "OpenSSL's advisory (24 Nov 2026, Low): the QUIC stack queues a RETIRE_CONNECTION_ID frame for every retransmitted NEW_CONNECTION_ID frame with no limit, so a malicious QUIC peer can cause an out-of-memory denial of service. It's an incomplete fix for CVE-2026-84784.",
+      "cite": [
+        1
+      ]
+    },
+    {
+      "text": "Affected: OpenSSL 4.1, 4.0 and 3.5. Not affected: 3.0, 1.1.1 and 1.0.2. OpenSSL didn't analyse 3.1 to 3.4 or 3.6, which are out of support. The FIPS module isn't affected.",
+      "cite": [
+        1,
+        2
+      ]
+    },
+    {
+      "text": "No fixed release yet: 4.1.1, 4.0.4 and 3.5.10 are scheduled for 1 Dec 2026; the newest release is 4.1.0 (23 Oct). The fix is in the public repository.",
+      "cite": [
+        1,
+        5,
+        6
+      ]
+    },
+    {
+      "text": "Scores differ: CISA's entry on the CVE record gives 7.5 (availability only) and SSVC \"Exploitation: none\"; GitHub's advisory database gives 9.1 (confidentiality and availability high). NVD hasn't analysed it. Not on CISA KEV (catalog of 23 Nov).",
+      "cite": [
+        2,
+        3,
+        4,
+        7
+      ]
+    }
+  ],
+  "sources": [
+    {
+      "title": "OpenSSL: security advisory, Low, fixes due 1 Dec",
+      "url": "https://openssl-library.org/news/secadv/20261124.txt",
+      "date": "24 Nov"
+    },
+    {
+      "title": "CVE record: CVE-2026-107494, affected versions, CISA 7.5",
+      "url": "https://www.cve.org/CVERecord?id=CVE-2026-107494",
+      "date": "18 Nov"
+    },
+    {
+      "title": "GitHub advisory database: GHSA-9x26-7724-x23j (unreviewed), scored 9.1",
+      "url": "https://github.com/advisories/GHSA-9x26-7724-x23j"
+    },
+    {
+      "title": "NVD: CVE-2026-107494, awaiting analysis",
+      "url": "https://nvd.nist.gov/vuln/detail/CVE-2026-107494"
+    },
+    {
+      "title": "OpenSSL: releases",
+      "url": "https://github.com/openssl/openssl/releases"
+    },
+    {
+      "title": "OpenSSL: the fix commit",
+      "url": "https://github.com/openssl/openssl/commit/dec00b87"
+    },
+    {
+      "title": "CISA KEV catalog: not listed",
+      "url": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog"
+    }
+  ],
+  "history": [
+    {
+      "date": "2026-11-24",
+      "text": "Evaluated: watch, no page. Low-rated denial of service in OpenSSL's QUIC code; GitHub shows 9.1, CISA's score is 7.5. The same advisory has a second Low QUIC memory bug, CVE-2026-84785, not tracked separately."
+    }
+  ]
+}

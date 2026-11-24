@@ -8,7 +8,7 @@
     "https://tomcat.apache.org/whichversion.html"
   ],
   "filter": "tomcat",
-  "checked": "2026-11-22",
+  "checked": "2026-11-24",
   "lines": [
     {
       "line": "11.0",
@@ -41,7 +41,7 @@
     },
     {
       "line": "Cluster EncryptInterceptor",
-      "note": "Deprecated, won't be fixed. Move to TLS-PSK on TLS 1.2.",
+      "note": "Not fixed; Apache has deprecated it. Move to TLS-PSK on TLS 1.2.",
       "pages": [
         "tomcat-2026-11-19"
       ]

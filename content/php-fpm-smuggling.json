@@ -22,8 +22,9 @@
   "disclosed": "2026-11-19",
   "updated": "2026-11-20",
   "verdict": "if",
-  "tile_line": "Only if FastCGI connections are reused. Fixed 19 Nov.",
-  "summary": "A bug in PHP-FPM can let an attacker with no login sneak a second, hidden request to PHP in one web request and run their own code. It only works where the web server reuses its connections to PHP-FPM (off by default in nginx and Apache) and the app opens the request body without reading all of it. PHP rates it Critical (CVSS 9.2); public test code runs PHP on a target, and the 19 Nov 2026 releases fix it.",
+  "tile_line": "Only if FastCGI connections are reused. Exploit public.",
+  "tldr": "A PHP-FPM bug can let an attacker with no login hide a second request and run code. Public test code, no attacks. Only if the web server reuses FPM connections (off by default) and the app leaves the body unread; PHP's 19 Nov 2026 releases fix it.",
+  "summary": "PHP rates it Critical (CVSS 9.2), and public test code runs PHP on a target. The reuse settings to look for are `fastcgi_keep_conn on` in nginx and `enablereuse=on` in Apache's `mod_proxy_fcgi`.",
   "status": {
     "exploit": "public",
     "attacks": "none",
@@ -104,7 +105,6 @@
       "8.2": "8.2.36"
     }
   },
-  "slack": "PHP CVE-2026-129289 (PHP-FPM request smuggling): an attacker with no login can hide a forged FastCGI request inside one web request and run PHP code, but only where the web server reuses connections to PHP-FPM (nginx fastcgi_keep_conn on, Apache enablereuse=on, HAProxy keeping connections; off by default in nginx and Apache) and the app opens php://input without reading it all. PHP rates it Critical (CVSS 9.2); public test code runs PHP on a target, no attacks reported, not on KEV. Fixed in 8.6.0, 8.5.13, 8.4.28, 8.3.37 or 8.2.36 (19 Nov 2026). Stopgap: turn connection reuse off.",
   "sources": [
     {
       "title": "PHP GHSA-qc49: full advisory, affected setups, mitigations",

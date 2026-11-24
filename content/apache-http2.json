@@ -15,14 +15,15 @@
   ],
   "product": "Apache httpd",
   "disclosed": "2026-11-11",
-  "updated": "2026-11-20",
+  "updated": "2026-11-24",
   "verdict": "if",
   "tile_line": "Only if HTTP/2 is on. Crash PoC public, no RCE code.",
-  "summary": "A race condition in Apache's HTTP/2 module can corrupt memory and may let an attacker with no login run code. It only matters if HTTP/2 is turned on. Red Hat says a reliable exploit was shown; public proof-of-concept code crashes the server but doesn't run code. Singapore's Cyber Security Agency says it's reportedly exploited, without naming a source; F5 and Horizon3 report no attacks.",
+  "tldr": "A race in Apache httpd's HTTP/2 module may let an attacker with no login run code. Red Hat says a reliable exploit was shown; no code for it is public. On 2.4.55 to 2.4.70 (or some older distro builds) with HTTP/2 on, update or turn HTTP/2 off.",
+  "summary": "The race corrupts memory. Public proof-of-concept code crashes the server but doesn't run code. Singapore's Cyber Security Agency says it's reportedly exploited, without naming a source; F5 and Horizon3 report no attacks.",
   "affected": [
     {
       "label": "httpd 2.4.55 – 2.4.70",
-      "text": "Also standalone mod_h2 2.0.8–2.0.42. Distro packages differ: Ubuntu 22.04's 2.4.52 is affected through a backport, while base RHEL 8 and Ubuntu 18.04 or older aren't. Red Hat JBoss Core Services is affected, including on RHEL 8. Check your distro's advisory, not just the version number.",
+      "text": "Also standalone mod_h2 2.0.8–2.0.42. Distro packages differ: Ubuntu 22.04's 2.4.52 and 20.04's 2.4.41 are affected through backports (20.04's fix comes only through Ubuntu Pro), while base RHEL 8 and Ubuntu 18.04 or older aren't. Red Hat JBoss Core Services is affected, including on RHEL 8. Check your distro's advisory, not just the version number.",
       "cmd": "apachectl -v",
       "cite": [
         1,
@@ -72,7 +73,6 @@
       "2.4": "2.4.71"
     }
   },
-  "slack": "Apache HTTP/2 race (CVE-2026-119618): possible unauthenticated RCE in httpd 2.4.55–2.4.70, only if mod_http2 is loaded and h2/h2c is enabled. Red Hat says a reliable exploit was shown; public PoC code only crashes the server. Singapore's CSA says it's reportedly exploited (no source named); F5 and Horizon3 report no attacks; not in KEV. Check: apachectl -M | grep http2. Fix: 2.4.71 or distro package; stopgap: Protocols http/1.1.",
   "sources": [
     {
       "title": "Apache httpd: 2.4 vulnerabilities",
@@ -84,7 +84,7 @@
       "url": "https://access.redhat.com/security/cve/CVE-2026-119618"
     },
     {
-      "title": "Ubuntu: fixed packages",
+      "title": "Ubuntu: fixed packages, 20.04 only via Ubuntu Pro",
       "url": "https://ubuntu.com/security/CVE-2026-119618"
     },
     {
@@ -120,6 +120,10 @@
     }
   ],
   "changes": [
+    {
+      "date": "2026-11-24",
+      "text": "Ubuntu 20.04's 2.4.41 is affected too; its fix comes only through Ubuntu Pro."
+    },
     {
       "date": "2026-11-20",
       "text": "Public crash PoC noted (no code execution). Singapore's CSA says reportedly exploited; others report no attacks. JBoss Core Services affected. Safe versions added."

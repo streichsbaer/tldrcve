@@ -12,10 +12,11 @@
   ],
   "product": "OpenJDK",
   "disclosed": "2026-11-17",
-  "updated": "2026-11-20",
+  "updated": "2026-11-24",
   "verdict": "if",
   "tile_line": "Only on newer Intel/AMD CPUs.",
-  "summary": "A bug in Java's Base64 decoder can let an attacker run code on your server. It only works on newer Intel/AMD CPUs, so on most systems a two-command check settles whether you need to rush. Proof-of-concept code for the memory corruption is public, but no attacks are reported.",
+  "tldr": "A bug in Java's Base64 decoder can let an attacker with no login run code. Exploit shown, not public; no attacks. Patch if all three hold: Java 17.0.6+ or Oracle's Java 8 Performance Pack, unpatched; a CPU with AVX-512 VBMI; untrusted Base64 input.",
+  "summary": "A CPU check and a Java version check quickly narrow down whether you're exposed, since only newer Intel and AMD CPUs have AVX-512 VBMI; check every Java your apps actually use, including bundled ones. Proof-of-concept code for the memory corruption is public, but the researchers keep their working exploit chains private.",
   "affected": [
     {
       "label": "Java 17.0.6+, 21, 25 or 27",
@@ -95,7 +96,6 @@
       "17": "17.0.21.1"
     }
   },
-  "slack": "Java4Shell (CVE-2026-114938): a Java Base64 bug that can lead to RCE. You're only affected if ALL three are true: Java 17.0.6+/21/25/27 unpatched, a CPU with AVX-512 VBMI (Intel Ice Lake+ / AMD Zen 4+), and untrusted input that gets Base64-decoded. Check the host: grep avx512vbmi /proc/cpuinfo. PoC code for the memory corruption is public (Cisco); no attacks seen yet. Fix: Java 17.0.21.1 / 21.0.13.1 / 25.0.5.1 / 27.0.1.1 or your vendor's build (Temurin Windows and Docker images still pending on 20 Nov).",
   "sources": [
     {
       "title": "Calif: original disclosure",
@@ -203,6 +203,11 @@
     }
   ],
   "changes": [
+    {
+      "date": "2026-11-24",
+      "text": "Clarified that the CPU and version checks help narrow it down but don't settle it: check every Java your apps use.",
+      "minor": true
+    },
     {
       "date": "2026-11-20",
       "text": "Cisco, Palo Alto and Fortinet appliance advisories added; PoC code for the memory corruption is public; Temurin Windows and Docker images still pending."

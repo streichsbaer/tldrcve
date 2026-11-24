@@ -365,12 +365,12 @@ def toolbar(c: dict) -> str:
     return f"""    <div class="toolbar">
       <a class="back" href="/cves/">{ICONS["back"]}All CVEs</a>
       <div class="share" role="group" aria-label="Share">
-        <button class="icon-btn" type="button" data-copy="tldr-text" aria-label="Copy summary for Slack" data-tip="Copy summary">{ICONS["copy"]}</button>
+        <button class="icon-btn" type="button" data-copy="tldr-text" aria-label="Copy TL;DR and link" data-tip="Copy TL;DR">{ICONS["copy"]}</button>
         <button class="icon-btn" type="button" data-copy-link="{html.escape(url)}" aria-label="Copy link" data-tip="Copy link">{ICONS["link"]}</button>
         <a class="icon-btn" href="{html.escape(x)}" target="_blank" rel="noopener" aria-label="Post on X" data-tip="Post on X">{ICONS["x"]}</a>
         <a class="icon-btn" href="{html.escape(li)}" target="_blank" rel="noopener" aria-label="Share on LinkedIn" data-tip="LinkedIn">{ICONS["in"]}</a>
       </div>
-      <p id="tldr-text" class="visually-hidden">{html.escape(c["slack"])} {html.escape(url)}</p>
+      <p id="tldr-text" class="visually-hidden">{html.escape(plain(c["tldr"]))} {html.escape(url)}</p>
     </div>"""
 
 
@@ -388,13 +388,9 @@ TLDR_MAX = 256
 
 
 def tldr_pane(c: dict) -> str:
-    """TL;DR panel: the short "tldr" text, with the longer summary under "More details".
-    Pages without a tldr yet show their summary here instead."""
-    if not c.get("tldr"):
-        body = f'        <p class="tldr__text">{text(c["summary"])}</p>'
-    else:
-        body = (f'        <p class="tldr__text">{text(c["tldr"])}</p>\n'
-                f'        <details class="tldr__more"><summary>More details</summary><p>{text(c["summary"])}</p></details>')
+    """TL;DR panel: the "tldr" answer, with the "summary" (what the TL;DR leaves out) under "More details"."""
+    body = (f'        <p class="tldr__text">{text(c["tldr"])}</p>\n'
+            f'        <details class="tldr__more"><summary>More details</summary><p>{text(c["summary"])}</p></details>')
     return f"""    <section class="pane tldr" aria-labelledby="h-tldr">
       <div class="pane__head"><h2 id="h-tldr">TL;DR</h2></div>
       <div class="pane__body">
@@ -470,7 +466,7 @@ def brief(c: dict) -> str:
   </main>
 """
     title = f'{c["name"]}{cve_paren(c)} in plain English · tldrcve'
-    return page(title, c.get("tldr") or c["summary"], body, path=f"/{c['slug']}/", data=f"/{c['slug']}.json")
+    return page(title, plain(c["tldr"]), body, path=f"/{c['slug']}/", data=f"/{c['slug']}.json")
 
 
 # ---------- Versions (latest safe version per product line) ----------
@@ -906,16 +902,24 @@ def news_date(c: dict) -> str:
     return c.get("news", c["disclosed"])
 
 
+def last_change(c: dict) -> tuple:
+    """When the page itself last changed, for "Latest": (date, "Added" or "Updated")."""
+    d = next(ch["date"] for ch in c["changes"] if not ch.get("minor"))  # minor edits don't move a page up
+    added = any(ch["text"] == "Published." and ch["date"] == d for ch in c["changes"])
+    return d, "Added" if added else "Updated"
+
+
 def page_search(c: dict) -> str:
     """Lowercase text a filter can match: name, products, CVE/GHSA IDs and aliases."""
     return " ".join([c["name"], product_full(c), *c["cves"], *c.get("ghsa", []), *c.get("aliases", [])]).lower()
 
 
-def tile(c: dict, attrs: str = "") -> str:
+def tile(c: dict, attrs: str = "", when: str = "") -> str:
     v = c["verdict"]
+    when = when or nice_date(news_date(c))
     return f"""      <li{attrs}>
         <a class="tile" href="/{c["slug"]}/">
-          <span class="tile__meta"><span class="tile__product">{html.escape(product_short(c))}</span><span>· {nice_date(news_date(c))}</span></span>
+          <span class="tile__meta"><span class="tile__product">{html.escape(product_short(c))}</span><span>· {when}</span></span>
           <span class="tile__name">{html.escape(c["name"])}</span>
           <span class="tile__line">{text(c["tile_line"])}</span>
           <span class="tile__foot"><span class="verdict verdict--{v}">{VERDICTS[v]}</span>{roundup_tag(c)}{mini_meter(c["status"]["scare"])}</span>
@@ -932,7 +936,8 @@ def zones_list() -> str:
 
 
 def home(all_c: list) -> str:
-    latest = sorted(all_c, key=news_date, reverse=True)[:LATEST_COUNT]
+    # Latest = what changed on tldrcve most recently (new pages and updates), newest first.
+    latest = sorted(all_c, key=lambda c: (last_change(c)[0], last_change(c)[1] == "Added", news_date(c)), reverse=True)[:LATEST_COUNT]
     body = f"""  <main class="wrap home">
     <section class="hero">
       <h1>CVEs in plain English</h1>
@@ -949,7 +954,7 @@ def home(all_c: list) -> str:
       <a class="more-link" href="/cves/">Browse all CVEs →</a>
     </div>
     <ul class="tiles">
-{chr(10).join(tile(c) for c in latest)}
+{chr(10).join(tile(c, when=f"{last_change(c)[1]} {nice_date(last_change(c)[0])}") for c in latest)}
     </ul>
 {home_week(all_c)}
     <section class="pane rate">
@@ -1152,7 +1157,7 @@ def editor_checks(all_c: list) -> list:
                 yield from strings(v, f"{path}[{i}]")
 
     for c in all_c:
-        if c.get("tldr") and len(c["tldr"]) > TLDR_MAX:
+        if len(c["tldr"]) > TLDR_MAX:
             warnings.append(f'{c["slug"]}.tldr is {len(c["tldr"])} chars, keep it to {TLDR_MAX} so the X post with its link fits 280')
         if len(product_short(c)) > PRODUCT_MAX:
             warnings.append(f'{c["slug"]}: card label "{product_short(c)}" is {len(product_short(c))} chars, keep it to {PRODUCT_MAX} so it fits without "…"')
@@ -1193,6 +1198,8 @@ def editor_checks(all_c: list) -> list:
             warnings.append(f"{where}: kind must be release or patch-day")
         if e.get("expected") and when < date.today():
             warnings.append(f"{where}: expected date {e['date']} has passed; confirm it or remove it")
+        if not e.get("note"):
+            warnings.append(f"{where}: needs a note: whose schedule it is and what it means for readers (shown under Coming up)")
     for e in CALENDAR:
         if RELATIVE.search(e.get("note", "")):
             warnings.append(f"calendar.json ({e.get('title')}): relative date in note, use an absolute date")
@@ -1266,7 +1273,7 @@ def write_sitemap(all_c: list) -> None:
 
 
 FEED_ITEMS = 60
-FEED_ABOUT = "The vulnerabilities everyone's talking about, in plain English. New pages and updates."
+FEED_ABOUT = "The vulnerabilities everyone's talking about, in plain English. New pages, and updates that change what you should know or do."
 
 
 def item_image(url: str, size: int) -> str:
@@ -1277,12 +1284,28 @@ def item_image(url: str, size: int) -> str:
             f'      <media:thumbnail url="{u}" width="1200" height="630"/>')
 
 
+# Items the feed already published under the old position-based GUIDs (before 24 Nov 2026). Keeping their old IDs stops
+# readers from showing them again. Safe to delete once these dates have scrolled out of the feed.
+LEGACY_GUIDS = {
+    "linux-sctp-root-2026-11-22-0": "linux-sctp-root-2026-11-22-1",
+    "citrix-netscaler-2026-11-21-0": "citrix-netscaler-2026-11-21-1",
+    "react-typed-array-rce-2026-11-21-0": "react-typed-array-rce-2026-11-21-1",
+    "wordpress-7-1-5-2026-11-21-0": "wordpress-7-1-5-2026-11-21-1",
+    "nextjs-image-rce-2026-11-21-0": "nextjs-image-rce-2026-11-21-1",
+    "brotli-2026-11-20-0": "brotli-2026-11-20-1",
+}
+
+
 def feed_entries(all_c: list) -> list:
-    """One entry per changelog line across all pages (newest first), then one per weekly review. Shared by both feeds."""
-    changes = sorted(((ch["date"], -i, c, ch["text"]) for c in all_c for i, ch in enumerate(c["changes"])),
+    """One entry per changelog line across all pages (newest first), then one per weekly review. Shared by both feeds.
+    Entries marked "minor" (wording, sources, rechecks that changed nothing) stay on the page and out of the feeds."""
+    changes = sorted(((ch["date"], -i, c, ch["text"]) for c in all_c for i, ch in enumerate(c["changes"]) if not ch.get("minor")),
                      key=lambda e: (e[0], e[1]), reverse=True)[:FEED_ITEMS]
     out = []
     for d, neg_i, c, t in changes:
+        # Stable GUID: page, date, and how many newer entries the page has on that same date. A new entry on a later
+        # date never renames an older item, so readers don't show it again. (Same-day edits go into one entry.)
+        nth = sum(1 for ch in c["changes"][:-neg_i] if ch["date"] == d)
         new = t == "Published."
         s = c["status"]
         tags = [("type", "New page" if new else "Update"), ("verdict", VERDICTS[c["verdict"]]),
@@ -1292,9 +1315,12 @@ def feed_entries(all_c: list) -> list:
             tags.append(("kev", "On CISA's exploited list"))
         tags += [("product", c["product"])] + [("cve", x) for x in c["cves"]]
         out.append({
-            "id": f'{c["slug"]}-{d}-{-neg_i}', "date": d, "url": f'{SITE_URL}/{c["slug"]}/', "page": c,
+            "id": LEGACY_GUIDS.get(f'{c["slug"]}-{d}-{nth}', f'{c["slug"]}-{d}-{nth}'), "date": d, "url": f'{SITE_URL}/{c["slug"]}/', "page": c,
             "title": f'{"" if new else "Update: "}{c["name"]} ({cve_list(c) or "no CVE yet"})',
-            "text": f'{plain(c["summary"] if new else t)} Verdict: {VERDICTS[c["verdict"]]}',
+            # A new page: the TL;DR, then More details. An update: what changed, then where things stand now.
+            "text": plain(f'{c["tldr"]}\n\n{c["summary"]}' if new else f'What changed: {t}\n\nNow: {c["tldr"]}'),
+            "html": (f'<p>{html.escape(plain(c["tldr"]))}</p><p>{html.escape(plain(c["summary"]))}</p>' if new else
+                     f'<p><strong>What changed:</strong> {html.escape(plain(t))}</p><p><strong>Now:</strong> {html.escape(plain(c["tldr"]))}</p>'),
             "image": og_image(f'/{c["slug"]}/'), "tags": tags, "json": f'{SITE_URL}/{c["slug"]}.json'})
     for wk in WEEKS:
         w = wk["week"]
@@ -1303,6 +1329,7 @@ def feed_entries(all_c: list) -> list:
             "id": f"week-{week_slug(w)}", "date": d["end"], "url": f"{SITE_URL}/week/{week_slug(w)}/", "page": None,
             "title": f"{week_title(w)} review ({week_label(w)})",
             "text": f'{len(d["new"])} new pages, {len({c["slug"] for _, c, _ in d["changed"]})} pages updated, and {len(d["ahead"])} dates coming up.',
+            "html": f'<p>{len(d["new"])} new pages, {len({c["slug"] for _, c, _ in d["changed"]})} pages updated, and {len(d["ahead"])} dates coming up.</p>',
             "image": og_image(f"/week/{week_slug(w)}/"), "tags": [("type", "Weekly review")],
             "json": f"{SITE_URL}/week/{week_slug(w)}.json"})
     return out
@@ -1325,7 +1352,7 @@ def write_feed(all_c: list) -> None:
       <link>{e["url"]}</link>
       <guid isPermaLink="false">{e["id"]}</guid>
       <pubDate>{format_datetime(when(e["date"]))}</pubDate>
-      <description>{html.escape(e["text"])}</description>
+      <description>{html.escape(e["html"])}</description>
 {item_image(*e["image"])}
 {cats}
       <atom:link rel="alternate" type="application/json" href="{e["json"]}"/>
@@ -1358,7 +1385,7 @@ def write_feed(all_c: list) -> None:
         "version": "https://jsonfeed.org/version/1.1", "title": "tldrcve", "home_page_url": f"{SITE_URL}/",
         "feed_url": f"{SITE_URL}/feed.json", "description": FEED_ABOUT, "language": "en",
         "icon": f"{SITE_URL}/assets/icons/apple-touch-icon.png", "favicon": f"{SITE_URL}/assets/icons/icon-32.png",
-        "items": [{"id": e["id"], "url": e["url"], "title": e["title"], "content_text": e["text"],
+        "items": [{"id": e["id"], "url": e["url"], "title": e["title"], "content_text": e["text"], "content_html": e["html"],
                    "image": e["image"][0], "date_published": when(e["date"]).isoformat(),
                    "tags": [v for _, v in e["tags"]], "_tldrcve": extra(e)} for e in entries]}
     (OUT / "feed.json").write_text(json.dumps(feed, indent=2, ensure_ascii=False) + "\n")
@@ -1468,7 +1495,8 @@ def write_data(all_c: list) -> None:
         f"- [All pages as JSON]({SITE_URL}/api/cves.json): verdict, scare level, exploit, attacks and KEV status for every page, with links to each page's JSON",
         f"- Each page as JSON: add `.json` to the page path, e.g. {SITE_URL}/upload2shell.json",
         f"- Safe versions as JSON: {SITE_URL}/versions/<product>.json, e.g. {SITE_URL}/versions/ghostscript.json",
-        f"- [RSS feed]({SITE_URL}/feed.xml): new pages and updates, each with its preview image and categories "
+        f"- [RSS feed]({SITE_URL}/feed.xml): new pages (TL;DR and details) and material updates (what changed, then the "
+        "current TL;DR; wording and source fixes are left out), each with its preview image and categories "
         "(type, verdict, scare, exploit, attacks, CISA KEV, product, CVE) for filtering",
         f"- [JSON Feed]({SITE_URL}/feed.json): the same items as JSON Feed 1.1; `_tldrcve` on each item holds the raw "
         "verdict, scare, exploit, attacks, KEV dates, product and CVEs, plus a link to the page's JSON",
@@ -1552,6 +1580,9 @@ def freeze_week(w: str, all_c: list) -> None:
 
 def main() -> None:
     all_c = [json.loads(p.read_text()) for p in sorted(CONTENT.glob("*.json"))]
+    missing = [c["slug"] for c in all_c if not c.get("tldr")]
+    if missing:
+        sys.exit(f"every page needs a tldr (the TL;DR panel, meta description, feed item and X post): {', '.join(missing)}")
     if "--freeze-week" in sys.argv:
         i = sys.argv.index("--freeze-week")
         if i + 1 >= len(sys.argv) or not WEEK_RE.match(sys.argv[i + 1]):

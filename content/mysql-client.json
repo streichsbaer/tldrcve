@@ -19,20 +19,21 @@
   ],
   "product": "MySQL Server",
   "disclosed": "2026-11-17",
-  "updated": "2026-11-20",
-  "verdict": "watch",
-  "tile_line": "Rated 9.1, but no details or fix yet. Nothing to do.",
-  "summary": "Oracle fixed a MySQL bug on 17 Nov in the part it calls \"Client programs\" and rated it Critical 9.1, but it hasn't said how the attack works or whether servers or the client tools are at risk. The free MySQL releases don't have the fix yet. The two GitHub \"exploits\" going around are a version checker and an unverified guess written without seeing Oracle's fix, and no attacks have been reported.",
+  "updated": "2026-11-24",
+  "verdict": "if",
+  "tile_line": "Rated 9.1, no details or exploit; security releases out.",
+  "tldr": "Oracle rated a MySQL \"Client programs\" bug 9.1 but hasn't said how it works or who is at risk. No exploit or attacks are reported. On 8.4, 9.7 or 26.10, install Oracle's free fixed release; MySQL Cluster, 8.0 included, gets fixes on 26 Nov.",
+  "summary": "Of the two GitHub \"exploits\" going around, one is a read-only version and exposure check; the other claims to exploit this CVE, but its author hadn't seen Oracle's fix, so that link is unverified.",
   "status": {
     "exploit": "none",
     "attacks": "none",
     "kev": null,
     "no_login": true,
-    "scare": 1.2
+    "scare": 2.0
   },
   "affected": [
     {
-      "label": "MySQL 8.4, 9.7 or 26.10",
+      "label": "MySQL 8.4, 9.7, 26.10 or Cluster 8.0",
       "text": "Oracle lists MySQL Server 8.4.0 to 8.4.13, 9.7.0 to 9.7.4 and 26.10, and MySQL Cluster 8.0.0 to 8.0.50, 8.4.0 to 8.4.13, 9.7.0 to 9.7.4 and 26.10. Server 8.0 isn't listed because Oracle no longer supports it, not because it was checked, so TuxCare treats it as possibly affected. Oracle files the bug under \"Client programs\", so machines with only the `mysql` command-line tools count too. MariaDB and Percona haven't said whether they're affected; Red Hat lists its hardened MariaDB 10.11 and 11.8 images as affected.",
       "cmd": "mysql --version",
       "cite": [
@@ -43,7 +44,7 @@
     },
     {
       "label": "An attacker reaches the MySQL traffic",
-      "text": "Oracle says the attack goes over the MySQL network protocol, with no login and no user action. It hasn't said whether the server or a client program connecting to a server is the side at risk. \"A client connecting to a malicious server\" is analysts' guess, not something Oracle has confirmed. The sources also disagree on the kind of bug: CISA's data says improper authentication (CWE-287), Red Hat says missing authentication (CWE-306).",
+      "text": "Oracle's patch table lists the protocol as \"MySQL Protocol\", but its CVE record says \"network access via multiple protocols\"; both say no login and no user action are needed. It hasn't said whether the server or a client program connecting to a server is the side at risk. \"A client connecting to a malicious server\" is analysts' guess, not something Oracle has confirmed. The sources also disagree on the kind of bug: CISA's data says improper authentication (CWE-287), Red Hat says missing authentication (CWE-306).",
       "cite": [
         1,
         7,
@@ -55,8 +56,39 @@
   ],
   "do": [
     {
-      "label": "Nothing urgent yet",
-      "text": "There's no confirmed exploit and no reported attack, it isn't on CISA's exploited list, and CISA's own assessment says exploitation \"none\". The 19 Nov GitHub code is a fake MySQL server that captures passwords from clients connecting without encryption; its author says Oracle's fix isn't public, so nothing ties it to this bug. We'll change the verdict if Oracle, the researcher or a distro explains the bug, if real exploit code or attacks appear, or if it lands on CISA's list.",
+      "label": "Update to the fixed release",
+      "text": "Oracle released MySQL Server 8.4.13.1, 9.7.4.1 and 26.10.0.1 on 24 Nov 2026, free to download. Each release note calls it \"a Critical Security Patch Update\" and points to Oracle's November advisory, which lists versions up to 8.4.13, 9.7.4 and 26.10 as affected; the notes don't name this CVE. Update servers and machines with the `mysql` client tools. Oracle hasn't committed to a fix for Server 8.0, which it no longer supports. Debian, Red Hat and Ubuntu have no fixed packages yet; Red Hat rates it Critical, Ubuntu Medium.",
+      "cite": [
+        4,
+        5,
+        6,
+        16,
+        1,
+        7,
+        8,
+        9,
+        10
+      ],
+      "versions": [
+        "mysql"
+      ]
+    },
+    {
+      "label": "MySQL Cluster: fix due 26 Nov",
+      "text": "Oracle lists MySQL NDB Cluster 8.0.51, 8.4.13.1, 9.7.4.1 and 26.10.0.1 with a 26 Nov 2026 date; they aren't out yet. Update Cluster to them when they are.",
+      "cite": [
+        17,
+        18,
+        19,
+        20
+      ],
+      "pending": {
+        "expected": "2026-11-26"
+      }
+    },
+    {
+      "label": "No exploit or attacks yet",
+      "text": "There's no confirmed exploit and no reported attack, it isn't on CISA's exploited list, and CISA's own assessment says exploitation \"none\". The 19 Nov GitHub code is a fake MySQL server that captures passwords from clients connecting without encryption; it claims to exploit this CVE, but its author hadn't seen Oracle's fix, so that link is unverified. We'll update the page if Oracle, the researcher or a distro explains the bug, and raise the verdict if real exploit code or attacks appear or it lands on CISA's list.",
       "cite": [
         2,
         14,
@@ -67,22 +99,6 @@
       ]
     },
     {
-      "label": "Update when the fix ships",
-      "text": "The fixed builds 8.4.13.1, 9.7.4.1 and 26.10.0.1 are listed as not yet released, with no date. Until then the fix is only available to Oracle support customers through My Oracle Support. Oracle's next scheduled updates are on 15 Dec 2026 and 19 Jan 2027; nobody has said the public fix ships in either. Distros disagree on severity: Red Hat rates it Critical, Ubuntu Medium. Debian, Red Hat and Ubuntu have no fixed packages yet.",
-      "pending": {
-        "expected": null
-      },
-      "cite": [
-        4,
-        5,
-        6,
-        7,
-        8,
-        9,
-        10
-      ]
-    },
-    {
       "label": "Optional: general hardening",
       "text": "TuxCare suggests limiting ports 3306 (and 33060 if the X Protocol is on) to the hosts that need them, having clients check the server's certificate with `--ssl-mode=VERIFY_IDENTITY`, and turning off local file loading with `--local-infile=0` where nobody uses it. It notes these are general hardening steps, not confirmed fixes for this bug.",
       "cite": [
@@ -90,7 +106,6 @@
       ]
     }
   ],
-  "slack": "MySQL CVE-2026-114952 (Oracle, Critical 9.1, \"Client programs\"): Oracle hasn't said how it works, and the free MySQL releases (8.4.13, 9.7.4, 26.10) don't have the fix yet; fixed builds 8.4.13.1, 9.7.4.1 and 26.10.0.1 are listed as not yet released. No confirmed exploit, no reported attacks, not on CISA KEV. The GitHub \"PoCs\" are a version checker and an unverified guess. Nothing urgent: update when the fix ships, and keep MySQL ports off the internet as usual.",
   "sources": [
     {
       "title": "Oracle: Critical Security Patch Update, November 2026 (MySQL risk matrix)",
@@ -106,19 +121,22 @@
       "url": "https://nvd.nist.gov/vuln/detail/CVE-2026-114952"
     },
     {
-      "title": "MySQL: 8.4 release notes (8.4.13.1 not yet released)",
-      "url": "https://dev.mysql.com/doc/relnotes/mysql/8.4/en/"
+      "title": "MySQL: 8.4.13.1 release note, a Critical Security Patch Update",
+      "url": "https://dev.mysql.com/doc/relnotes/mysql/8.4/en/news-8-4-13-1.html",
+      "date": "24 Nov"
     },
     {
-      "title": "MySQL: 9.7 release notes (9.7.4.1 not yet released)",
-      "url": "https://dev.mysql.com/doc/relnotes/mysql/9.7/en/"
+      "title": "MySQL: 9.7.4.1 release note, a Critical Security Patch Update",
+      "url": "https://dev.mysql.com/doc/relnotes/mysql/9.7/en/news-9-7-4-1.html",
+      "date": "24 Nov"
     },
     {
-      "title": "MySQL: 26.10 release notes (26.10.0.1 not yet released)",
-      "url": "https://dev.mysql.com/doc/relnotes/mysql/26.10/en/"
+      "title": "MySQL: 26.10.0.1 release note, a Critical Security Patch Update",
+      "url": "https://dev.mysql.com/doc/relnotes/mysql/26.10/en/news-26-10-0-1.html",
+      "date": "24 Nov"
     },
     {
-      "title": "TuxCare: fix only via My Oracle Support, 8.0 status, hardening steps",
+      "title": "TuxCare: 8.0 status, hardening steps",
       "url": "https://tuxcare.com/blog/mysql-cve-2026-114952/",
       "date": "18 Nov"
     },
@@ -155,9 +173,34 @@
       "title": "Independent analysis: root cause unknown, client-side guess",
       "url": "https://gist.github.com/cyberheartmi9/65d179276c50e7e20f59549d0bbc8960",
       "date": "18 Nov"
+    },
+    {
+      "title": "MySQL: downloads offer 8.4.13.1, 9.7.4.1 and 26.10.0.1",
+      "url": "https://dev.mysql.com/downloads/mysql/",
+      "date": "24 Nov"
+    },
+    {
+      "title": "MySQL NDB Cluster 8.0 release notes: 8.0.51 dated 26 Nov",
+      "url": "https://dev.mysql.com/doc/relnotes/mysql-cluster/8.0/en/"
+    },
+    {
+      "title": "MySQL NDB Cluster 8.4 release notes: 8.4.13.1 dated 26 Nov",
+      "url": "https://dev.mysql.com/doc/relnotes/mysql-cluster/8.4/en/"
+    },
+    {
+      "title": "MySQL NDB Cluster 9.7 release notes: 9.7.4.1 dated 26 Nov",
+      "url": "https://dev.mysql.com/doc/relnotes/mysql-cluster/9.7/en/"
+    },
+    {
+      "title": "MySQL NDB Cluster 26.10 release notes: 26.10.0.1 dated 26 Nov",
+      "url": "https://dev.mysql.com/doc/relnotes/mysql-cluster/26.10/en/"
     }
   ],
   "changes": [
+    {
+      "date": "2026-11-24",
+      "text": "Oracle released fixed MySQL Server 8.4.13.1, 9.7.4.1 and 26.10.0.1 on 24 Nov; verdict moved from Watching to Patch now if… Cluster fixes are dated 26 Nov. Noted that Oracle's patch table and CVE record describe the protocol differently."
+    },
     {
       "date": "2026-11-20",
       "text": "Published."
@@ -179,5 +222,12 @@
     "no_login": [
       1
     ]
+  },
+  "fixed_in": {
+    "mysql": {
+      "8.4": "8.4.13.1",
+      "9.7": "9.7.4.1",
+      "26.10": "26.10.0.1"
+    }
   }
 }

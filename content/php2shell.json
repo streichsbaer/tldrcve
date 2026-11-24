@@ -17,10 +17,11 @@
   ],
   "product": "PHP",
   "disclosed": "2026-10-21",
-  "updated": "2026-11-21",
+  "updated": "2026-11-24",
   "verdict": "now",
   "tile_line": "Exploited in the wild. In CISA KEV.",
-  "summary": "Two bugs in PHP itself let an attacker with no login run code on web servers that run PHP. Attacks are already happening, so if you serve PHP on the web, update now.",
+  "tldr": "Two bugs in PHP itself let an attacker with no login run code on web servers running PHP. Exploited, on CISA's exploited list. If you serve PHP on the web, update now, to the 19 Nov 2026 releases or later, and restart it.",
+  "summary": "PHP's 19 Nov 2026 releases also close two gaps PHP found in the October fix (CVE-2026-129481 and CVE-2026-129182); PHP says code execution through either hasn't been demonstrated. See the [PHP 19 Nov release](/php-2026-11-19/) page. PHP 8.1 and older get no official release.",
   "affected": [
     {
       "label": "PHP older than 8.2.35 / 8.3.36 / 8.4.27 / 8.5.12",
@@ -77,7 +78,6 @@
       "8.6": "8.6.0"
     }
   },
-  "slack": "PHP2Shell (CVE-2026-109618/109619): unauthenticated RCE in PHP, exploited in the wild and in CISA KEV. If PHP serves web traffic (mod_php, FPM, CGI), update to 8.6.0, 8.5.13, 8.4.28, 8.3.37 or 8.2.36 (19 Nov) and restart workers. 8.1 and older: no official fix.",
   "sources": [
     {
       "title": "PHP: release announcements and advisory",
@@ -126,7 +126,7 @@
       "date": "19 Nov"
     },
     {
-      "title": "php-src: 19 Nov security advisories (eight rated Critical)",
+      "title": "php-src: 19 Nov security advisories (seven rated Critical)",
       "url": "https://github.com/php/php-src/security/advisories"
     },
     {
@@ -141,6 +141,11 @@
     }
   ],
   "changes": [
+    {
+      "date": "2026-11-24",
+      "text": "Corrected the count of Critical PHP advisories on 19 Nov (seven).",
+      "minor": true
+    },
     {
       "date": "2026-11-21",
       "text": "The 19 Nov releases also close two gaps PHP found in the October fix (CVE-2026-129481, CVE-2026-129182). Links to the new PHP 19 Nov release page."

@@ -31,7 +31,8 @@
   "updated": "2026-11-22",
   "verdict": "if",
   "tile_line": "Outsiders' files reach it. Full exploit announced.",
-  "summary": "A bug in Ghostscript before 10.08.0 lets a crafted file escape Ghostscript's `-dSAFER` sandbox and run commands as the account doing the rendering. The file holds PostScript but can be uploaded as an image named `.png` or `.jpg`: image libraries such as ImageMagick and Pillow pick the format from the content and hand it to Ghostscript, which also runs behind email thumbnails and print servers; the researchers ran commands through Debian's CUPS, Roundcube, WordPress and more. The CVE record scores it as a local attack (8.5), but those routes are remote. The researchers published a proof of concept that does most of the work: it takes control of Ghostscript's memory (tested on 10.07.0, x86-64 Linux), and their write-up shows the remaining steps to running commands in excerpts; one of them relies on memory offsets from the researchers' test build. They say a full exploit for the Debian CUPS route comes next. No attacks are reported yet.",
+  "tldr": "A crafted file disguised as an image can escape Ghostscript's sandbox and run commands. Most of an exploit is public; no attacks yet. If your servers render outsiders' files (uploads, email previews, print queues), update Ghostscript or its distro package.",
+  "summary": "The file holds PostScript but can be named `.png` or `.jpg`: image libraries such as ImageMagick and Pillow pick the format from the content and hand it to Ghostscript, whose `-dSAFER` sandbox it escapes, and commands run as the account doing the rendering. The researchers ran commands through Debian's CUPS, Roundcube, WordPress and more, so the CVE record's \"local attack\" score (8.5) understates it. Their proof of concept takes control of Ghostscript's memory (tested on 10.07.0, x86-64 Linux), the write-up shows the remaining steps in excerpts (one relies on memory offsets from their test build), and a full exploit for the CUPS route comes next.",
   "affected": [
     {
       "label": "Ghostscript before 10.08.0",
@@ -134,7 +135,6 @@
       "6.8": "6.8.8"
     }
   },
-  "slack": "Upload2Shell (CVE-2026-125396): a crafted PostScript/PDF file escapes Ghostscript's -dSAFER sandbox and runs commands as the rendering user, in Ghostscript before 10.08.0. Reachable remotely wherever a server renders outsiders' files: ImageMagick/Imagick or Pillow previews (even files named .png), Roundcube thumbnails, WordPress uploads, shared CUPS queues. Proof of concept public and does most of the work (memory control on 10.07.0 x86-64; the remaining steps to commands are shown in excerpts), researchers say a full exploit comes next, no attacks seen yet, not in KEV. If outsiders' files reach Ghostscript, update now. Fix: Ghostscript 10.08.0 or distro packages (DSA-6516-1, DLA-4914-1, USN-8949-1); WordPress 7.0.4 / 6.9.7, Roundcube 1.6.20 / 1.7.5.",
   "sources": [
     {
       "title": "CVE record (VulnCheck): before 10.08.0, CVSS 8.5 local; CISA on 10 Nov: no exploitation",

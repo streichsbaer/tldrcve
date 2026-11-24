@@ -20,10 +20,11 @@
   ],
   "product": "PHP",
   "disclosed": "2026-10-23",
-  "updated": "2026-11-20",
+  "updated": "2026-11-24",
   "verdict": "if",
-  "tile_line": "Only with mixed session serializers. Fixed 19 Nov.",
-  "summary": "PHP's session upload-progress feature can let an attacker with no login run code, but only where sessions are written with one serializer and read with another, and the app has a suitable code library. PHP rates it Critical; exploit code for a test lab is public, and the 19 Nov 2026 releases fix it. It's a sibling of PHP2Shell (CVE-2026-109618/109619).",
+  "tile_line": "Only with mixed session serializers. Lab exploit out.",
+  "tldr": "PHP's session upload progress can let an attacker with no login run code. Lab exploit public, no attacks. Only where sessions are written with one serializer and read with another, and the app has a usable code library; PHP's 19 Nov 2026 releases fix it.",
+  "summary": "PHP rates it Critical. It's a different bug from [PHP2Shell](/php2shell/) (CVE-2026-109618 and CVE-2026-109619); PHP calls it separate from the stale global state bug in CVE-2026-109619.",
   "status": {
     "exploit": "public",
     "attacks": "none",
@@ -109,7 +110,6 @@
       "8.2": "8.2.36"
     }
   },
-  "slack": "PHP CVE-2026-115560 (session serializer mismatch, sibling of PHP2Shell): no-login code execution where sessions are written with php_binary/php_serialize and read with php (an ini_set() switch, or apps/pools sharing a session store), with session upload progress on and a usable library such as Guzzle or Monolog. PHP rates it Critical; exploit code for a test lab is public, no attacks reported. Fixed in 8.6.0, 8.5.13, 8.4.28, 8.3.37 or 8.2.36 (19 Nov 2026). Stopgap: session.upload_progress.enabled = 0.",
   "sources": [
     {
       "title": "PHP GHSA-658j: full advisory, conditions, demonstrated exploit",
@@ -158,6 +158,11 @@
     }
   ],
   "changes": [
+    {
+      "date": "2026-11-24",
+      "text": "PHP calls this bug separate from PHP2Shell, so the page no longer calls it a sibling.",
+      "minor": true
+    },
     {
       "date": "2026-11-20",
       "text": "PHP 8.6.0 added. A public exploit for a test lab is out (uses a planted gadget class): exploit status set to public. Debian packages out. Safe versions added."

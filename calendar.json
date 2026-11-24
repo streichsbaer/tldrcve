@@ -9,7 +9,8 @@
       "source": {
         "title": "Mozilla: Firefox 161 release schedule",
         "url": "https://whattrainisitnow.com/release/?version=161"
-      }
+      },
+      "note": "Mozilla's scheduled release day. Update Firefox once it ships."
     },
     {
       "date": "2026-12-08",
@@ -19,7 +20,8 @@
       "source": {
         "title": "Chromium: release schedule",
         "url": "https://chromiumdash.appspot.com/schedule"
-      }
+      },
+      "note": "Google's scheduled stable release day. Chrome updates itself; relaunch it to finish."
     },
     {
       "date": "2026-12-08",
@@ -29,7 +31,8 @@
       "source": {
         "title": "Mozilla: Firefox 162 release schedule",
         "url": "https://whattrainisitnow.com/release/?version=162"
-      }
+      },
+      "note": "Mozilla's scheduled release day. Update Firefox once it ships."
     },
     {
       "date": "2026-12-08",
@@ -73,7 +76,8 @@
       "source": {
         "title": "Chromium: release schedule",
         "url": "https://chromiumdash.appspot.com/schedule"
-      }
+      },
+      "note": "Google's scheduled stable release day. Chrome updates itself; relaunch it to finish."
     },
     {
       "date": "2027-01-12",
@@ -94,7 +98,8 @@
       "source": {
         "title": "Chromium: release schedule",
         "url": "https://chromiumdash.appspot.com/schedule"
-      }
+      },
+      "note": "Google's scheduled stable release day. Chrome updates itself; relaunch it to finish."
     },
     {
       "date": "2027-01-19",
@@ -104,7 +109,8 @@
       "source": {
         "title": "Oracle: Critical Patch Update dates",
         "url": "https://www.oracle.com/security-alerts/"
-      }
+      },
+      "note": "Oracle's quarterly security update for its products, including Java and MySQL."
     }
   ]
 }

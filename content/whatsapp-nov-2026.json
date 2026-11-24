@@ -25,8 +25,9 @@
   "disclosed": "2026-11-20",
   "updated": "2026-11-23",
   "verdict": "cycle",
-  "tile_line": "Real bugs, low risk. Update the app as usual.",
-  "summary": "WhatsApp disclosed three bugs on 20 Nov 2026. The one reported as abused could reveal your phone's IP address to a scammer who sent a crafted ad-reply message; WhatsApp says it may have been abused with spam, and it's fixed in 2.26.17.4. The other two need you to tap a message sent from an unofficial app, or an attacker inside Meta's own systems, and Meta says it has seen no sign either was exploited.",
+  "tile_line": "An IP leak, a tap-needed bug and a Meta-internal one.",
+  "tldr": "WhatsApp disclosed three bugs on 20 Nov 2026. One could reveal your IP address to a scammer and may have been abused with spam; one needs you to tap a message from an unofficial client, the other an attacker inside Meta. Update the app as usual.",
+  "summary": "The IP leak came through a crafted ad-reply message and is fixed in 2.26.17.4. Meta says it has seen no sign either of the other two was exploited.",
   "status": {
     "exploit": "demonstrated",
     "attacks": "seen",
@@ -100,7 +101,6 @@
     }
   ],
   "versions_skip": "No release feed we track for WhatsApp; the fixed version for each app is in the steps.",
-  "slack": "WhatsApp, disclosed 20 Nov 2026 (CVE-2026-23871, CVE-2026-102769, CVE-2026-44908): three real but low-risk bugs. An Android ad-reply bug could reveal your IP address to a scammer (Meta: may have been abused with spam; fixed in 2.26.17.4). An order-message SQL injection needs you to tap a message from an unofficial client and can delete WhatsApp's own local files (no exploitation seen). A Meta AI certificate check needs an attacker inside Meta (ledger confirms no exploitation). Meta rates them 3.5, 6.8 and 4.8; not on CISA KEV. Update through the store: Android 2.26.35.74, iOS 2.26.24.72, Business iOS and Mac 2.26.23.72; Business Android 2.26.35.74 (sources conflict, HKCERT says 2.26.23.70).",
   "sources": [
     {
       "title": "WhatsApp: security advisories 2026, the three CVEs and fixed versions",
