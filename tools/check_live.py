@@ -1,5 +1,5 @@
 """Check the live site after a deploy: every page in the sitemap loads, has its own link-preview card,
-and the card is a 1200x630 PNG. Also checks the favicon, RSS feed, redirects for every CVE/GHSA ID, and the
+and the card is a 1200x630 PNG. Also checks the favicon, RSS and JSON feeds, redirects for every CVE/GHSA ID, and the
 agent files: /llms.txt, /api/cves.json and every page's and product's JSON.
 
   python3 tools/check_live.py                 # checks https://tldrcve.com
@@ -103,7 +103,7 @@ def main():
         for tag in ('name="twitter:card" content="summary_large_image"', 'rel="icon"', 'rel="canonical"'):
             if tag not in html:
                 problems.append(f"{path}: missing {tag}")
-    for name in ("/favicon.ico", "/assets/icons/icon-32.png", "/assets/icons/apple-touch-icon.png", "/feed.xml"):
+    for name in ("/favicon.ico", "/assets/icons/icon-32.png", "/assets/icons/apple-touch-icon.png", "/feed.xml", "/feed.json"):
         status, headers, _ = get(BASE + name)
         if status != 200:
             problems.append(f"{name}: HTTP {status}")

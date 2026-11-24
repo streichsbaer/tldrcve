@@ -26,6 +26,10 @@ WATCH_DIR = ROOT / "watch"
 SITE_URL = "https://tldrcve.com"
 
 VERDICTS = {"now": "Patch now", "if": "Patch now if…", "cycle": "Next cycle", "watch": "Watching"}
+# Status wording, shared by the page's status list and the feeds' categories: (state, text); state: yes | part | no
+EXPLOIT_LABELS = {"public": ("yes", "Public exploit code is out"), "demonstrated": ("part", "Shown working, code not public"),
+                  "none": ("no", "No public exploit")}
+ATTACK_LABELS = {"seen": ("yes", "Attacks seen in the wild"), "none": ("no", "No attacks seen yet")}
 
 # Scare-o-meter zones, 0–4.
 ZONES = [
@@ -136,7 +140,8 @@ def page(title: str, description: str, body: str, current: str = "", path: str =
   <link rel="icon" href="/favicon.ico" sizes="16x16 32x32 48x48">
   <link rel="icon" href="/assets/icons/icon.svg" type="image/svg+xml">
   <link rel="apple-touch-icon" href="/assets/icons/apple-touch-icon.png">
-  <link rel="alternate" type="application/rss+xml" title="tldrcve updates" href="/feed.xml">{data_link}
+  <link rel="alternate" type="application/rss+xml" title="tldrcve updates" href="/feed.xml">
+  <link rel="alternate" type="application/feed+json" title="tldrcve updates (JSON Feed)" href="/feed.json">{data_link}
   <link rel="stylesheet" href="{fingerprinted("site.css")}">
   <script src="{fingerprinted("site.js")}" defer></script>
 {ANALYTICS}
@@ -210,12 +215,8 @@ def checklist(c: dict) -> str:
     if "no_login" in s:
         rows.append(("no_login",) + (("yes", "Works without logging in") if s["no_login"]
                     else ("no", f"Needs {s.get('needs', 'a login')} first")))
-    rows.append(("exploit",) + {
-        "public": ("yes", "Public exploit code is out"),
-        "demonstrated": ("part", "Shown working, code not public"),
-        "none": ("no", "No public exploit"),
-    }[s["exploit"]])
-    rows.append(("attacks",) + (("yes", "Attacks seen in the wild") if s["attacks"] == "seen" else ("no", "No attacks seen yet")))
+    rows.append(("exploit",) + EXPLOIT_LABELS[s["exploit"]])
+    rows.append(("attacks",) + ATTACK_LABELS[s["attacks"]])
     kev = s.get("kev")
     if kev:
         due = date.fromisoformat(kev["due"])
@@ -1239,6 +1240,7 @@ def write_sitemap(all_c: list) -> None:
 
 
 FEED_ITEMS = 60
+FEED_ABOUT = "The vulnerabilities everyone's talking about, in plain English. New pages and updates."
 
 
 def item_image(url: str, size: int) -> str:
@@ -1249,56 +1251,91 @@ def item_image(url: str, size: int) -> str:
             f'      <media:thumbnail url="{u}" width="1200" height="630"/>')
 
 
-def write_feed(all_c: list) -> None:
-    """RSS 2.0: one item per changelog entry across all pages, newest first."""
-    from email.utils import format_datetime
-    from datetime import datetime, timezone
-    entries = sorted(((ch["date"], -i, c, ch["text"]) for c in all_c for i, ch in enumerate(c["changes"])),
+def feed_entries(all_c: list) -> list:
+    """One entry per changelog line across all pages (newest first), then one per weekly review. Shared by both feeds."""
+    changes = sorted(((ch["date"], -i, c, ch["text"]) for c in all_c for i, ch in enumerate(c["changes"])),
                      key=lambda e: (e[0], e[1]), reverse=True)[:FEED_ITEMS]
-
-    def rfc822(d):
-        return format_datetime(datetime.fromisoformat(d).replace(hour=12, tzinfo=timezone.utc))
-
-    items = []
-    for d, neg_i, c, t in entries:
-        url = f'{SITE_URL}/{c["slug"]}/'
-        verb = "New" if t == "Published." else "Update"
-        title = f'{verb}: {c["name"]} ({cve_list(c) or "no CVE yet"})'
-        desc = c["summary"] if t == "Published." else t
-        img, size = og_image(f'/{c["slug"]}/')
-        items.append(f"""    <item>
-      <title>{html.escape(title)}</title>
-      <link>{url}</link>
-      <guid isPermaLink="false">{c["slug"]}-{d}-{-neg_i}</guid>
-      <pubDate>{rfc822(d)}</pubDate>
-      <description>{html.escape(plain(desc))} Verdict: {html.escape(VERDICTS[c["verdict"]])}</description>
-{item_image(img, size)}
-    </item>""")
+    out = []
+    for d, neg_i, c, t in changes:
+        new = t == "Published."
+        s = c["status"]
+        tags = [("type", "New page" if new else "Update"), ("verdict", VERDICTS[c["verdict"]]),
+                ("scare", zone(s["scare"])[0]), ("exploit", EXPLOIT_LABELS[s["exploit"]][1]),
+                ("attacks", ATTACK_LABELS[s["attacks"]][1])]
+        if s.get("kev"):
+            tags.append(("kev", "On CISA's exploited list"))
+        tags += [("product", c["product"])] + [("cve", x) for x in c["cves"]]
+        out.append({
+            "id": f'{c["slug"]}-{d}-{-neg_i}', "date": d, "url": f'{SITE_URL}/{c["slug"]}/', "page": c,
+            "title": f'{"" if new else "Update: "}{c["name"]} ({cve_list(c) or "no CVE yet"})',
+            "text": f'{plain(c["summary"] if new else t)} Verdict: {VERDICTS[c["verdict"]]}',
+            "image": og_image(f'/{c["slug"]}/'), "tags": tags, "json": f'{SITE_URL}/{c["slug"]}.json'})
     for wk in WEEKS:
         w = wk["week"]
         d = week_data(w, all_c)
+        out.append({
+            "id": f"week-{week_slug(w)}", "date": d["end"], "url": f"{SITE_URL}/week/{week_slug(w)}/", "page": None,
+            "title": f"{week_title(w)} review ({week_label(w)})",
+            "text": f'{len(d["new"])} new pages, {len({c["slug"] for _, c, _ in d["changed"]})} pages updated, and {len(d["ahead"])} dates coming up.',
+            "image": og_image(f"/week/{week_slug(w)}/"), "tags": [("type", "Weekly review")],
+            "json": f"{SITE_URL}/week/{week_slug(w)}.json"})
+    return out
+
+
+def write_feed(all_c: list) -> None:
+    """RSS 2.0 at /feed.xml and JSON Feed 1.1 at /feed.json, with the same items."""
+    from email.utils import format_datetime
+    from datetime import datetime, timezone
+    entries = feed_entries(all_c)
+
+    def when(d):  # noon UTC on that day, but never later than the build itself (validators flag future dates)
+        return min(datetime.fromisoformat(d).replace(hour=12, tzinfo=timezone.utc), datetime.now(timezone.utc).replace(microsecond=0))
+
+    items = []
+    for e in entries:
+        cats = "\n".join(f'      <category domain="{k}">{html.escape(v)}</category>' for k, v in e["tags"])
         items.append(f"""    <item>
-      <title>{html.escape(f"{week_title(w)} review ({week_label(w)})")}</title>
-      <link>{SITE_URL}/week/{week_slug(w)}/</link>
-      <guid isPermaLink="false">week-{week_slug(w)}</guid>
-{item_image(*og_image(f"/week/{week_slug(w)}/"))}
-      <pubDate>{rfc822(d["end"])}</pubDate>
-      <description>{html.escape(f'{len(d["new"])} new pages, {len({c["slug"] for _, c, _ in d["changed"]})} pages updated, and {len(d["ahead"])} dates coming up.')}</description>
+      <title>{html.escape(e["title"])}</title>
+      <link>{e["url"]}</link>
+      <guid isPermaLink="false">{e["id"]}</guid>
+      <pubDate>{format_datetime(when(e["date"]))}</pubDate>
+      <description>{html.escape(e["text"])}</description>
+{item_image(*e["image"])}
+{cats}
+      <atom:link rel="alternate" type="application/json" href="{e["json"]}"/>
     </item>""")
-    newest = entries[0][0] if entries else date.today().isoformat()
+    newest = max((e["date"] for e in entries), default=date.today().isoformat())
     (OUT / "feed.xml").write_text(f"""<?xml version="1.0" encoding="UTF-8"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:media="http://search.yahoo.com/mrss/">
   <channel>
     <title>tldrcve</title>
     <link>{SITE_URL}/</link>
     <atom:link href="{SITE_URL}/feed.xml" rel="self" type="application/rss+xml"/>
-    <description>The vulnerabilities everyone's talking about, in plain English. New pages and updates.</description>
+    <description>{FEED_ABOUT}</description>
     <language>en</language>
-    <lastBuildDate>{rfc822(newest)}</lastBuildDate>
+    <lastBuildDate>{format_datetime(when(newest))}</lastBuildDate>
 {chr(10).join(items)}
   </channel>
 </rss>
 """)
+
+    def extra(e):
+        c = e["page"]
+        if c is None:
+            return {"type": "weekly-review", "json": e["json"]}
+        s = c["status"]
+        return {"type": "new" if e["tags"][0][1] == "New page" else "update", "slug": c["slug"], "json": e["json"],
+                "product": c["product"], "cves": c["cves"], "verdict": c["verdict"], "scare": s["scare"],
+                "exploit": s["exploit"], "attacks": s["attacks"], "kev": s.get("kev"), "no_login": s.get("no_login")}
+
+    feed = {
+        "version": "https://jsonfeed.org/version/1.1", "title": "tldrcve", "home_page_url": f"{SITE_URL}/",
+        "feed_url": f"{SITE_URL}/feed.json", "description": FEED_ABOUT, "language": "en",
+        "icon": f"{SITE_URL}/assets/icons/apple-touch-icon.png", "favicon": f"{SITE_URL}/assets/icons/icon-32.png",
+        "items": [{"id": e["id"], "url": e["url"], "title": e["title"], "content_text": e["text"],
+                   "image": e["image"][0], "date_published": when(e["date"]).isoformat(),
+                   "tags": [v for _, v in e["tags"]], "_tldrcve": extra(e)} for e in entries]}
+    (OUT / "feed.json").write_text(json.dumps(feed, indent=2, ensure_ascii=False) + "\n")
 
 
 def write_redirects(all_c: list) -> None:
@@ -1405,7 +1442,10 @@ def write_data(all_c: list) -> None:
         f"- [All pages as JSON]({SITE_URL}/api/cves.json): verdict, scare level, exploit, attacks and KEV status for every page, with links to each page's JSON",
         f"- Each page as JSON: add `.json` to the page path, e.g. {SITE_URL}/upload2shell.json",
         f"- Safe versions as JSON: {SITE_URL}/versions/<product>.json, e.g. {SITE_URL}/versions/ghostscript.json",
-        f"- [RSS feed]({SITE_URL}/feed.xml): new pages and updates",
+        f"- [RSS feed]({SITE_URL}/feed.xml): new pages and updates, each with its preview image and categories "
+        "(type, verdict, scare, exploit, attacks, CISA KEV, product, CVE) for filtering",
+        f"- [JSON Feed]({SITE_URL}/feed.json): the same items as JSON Feed 1.1; `_tldrcve` on each item holds the raw "
+        "verdict, scare, exploit, attacks, KEV dates, product and CVEs, plus a link to the page's JSON",
         f"- [Weekly review]({SITE_URL}/week/): each week's new pages, changes and the dates coming up; JSON at /week/<yyyy>-w<nn>.json",
         "",
         "## Pages",
