@@ -150,6 +150,12 @@ DEBIAN = {"11": "bullseye", "12": "bookworm", "13": "trixie", "14": "forky"}
 RHEL_KERNEL = re.compile(r"^kernel-0:(\d+\.\d+\.\d+-[\d.]+\.el(\d+)(?:_(\d+))?)\.src$")
 
 
+def debkey(v):
+    """Debian ordering for one detail build.vkey misses: "~" sorts lower ("6.12.118-1~deb12u1" < "6.12.118-1")."""
+    base, tilde, rest = v.partition("~")
+    return (vkey(base), 0 if tilde else 1, vkey(rest) if tilde else ())
+
+
 def kernel_debian():
     """Debian's archive (madison): the newest linux source per release, from its main, security and updates suites."""
     out = {}
@@ -158,7 +164,7 @@ def kernel_debian():
         text = get_text(f"https://qa.debian.org/madison.php?package=linux&table=debian&text=on&s={suites}")
         vers = [row.split("|")[1].strip() for row in text.splitlines() if row.count("|") >= 3 and row.split("|")[0].strip() == "linux"]
         if vers:
-            out[f"Debian {number}"] = (max(vers, key=vkey), "")
+            out[f"Debian {number}"] = (max(vers, key=debkey), "")
     return out
 
 
@@ -206,7 +212,17 @@ def kernel_redhat():
 
 
 def feed_distro_kernel(_):
-    return {**kernel_debian(), **kernel_ubuntu(), **kernel_redhat()}
+    """Each distribution on its own: one that fails (Launchpad is slow) is reported and the others still count."""
+    out, failed = {}, []
+    for name, fetch in (("debian", kernel_debian), ("ubuntu", kernel_ubuntu), ("redhat", kernel_redhat)):
+        try:
+            out.update(fetch())
+        except Exception as e:
+            failed.append(name)
+            print(f"FEED FAILED versions/linux-kernel (distro-kernel, {name}): {e}")
+    if len(failed) == 3:
+        raise RuntimeError("every distribution failed")
+    return out
 
 
 def feed(name):
