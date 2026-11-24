@@ -24,7 +24,7 @@
   "updated": "2026-11-22",
   "verdict": "now",
   "tile_line": "In Node.js, .NET, Envoy, Python. In CISA KEV.",
-  "tldr": "A bug in the Brotli decompressor inside Node.js, .NET, Envoy and many Python apps can crash them, leak memory or possibly run code on outside data. Attacks have started; on CISA's exploited list. Update your runtime and rebuild images.",
+  "tldr": "A bug in the Brotli decompressor inside Node.js, .NET, Envoy and many Python apps can crash them, leak memory or possibly run code when they unpack outside data. Attacks have started; on CISA's exploited list. Update your runtime and rebuild images.",
   "summary": "A bug in the Brotli decompressor, built into Node.js, .NET, Envoy and many Python apps, can crash your app, leak memory or possibly run code. It only matters where you decompress Brotli data someone else controls, which is common, and attacks have started. The public exploit only runs code on a deliberately weakened build.",
   "affected": [
     {

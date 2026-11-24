@@ -22,7 +22,7 @@
   "updated": "2026-11-20",
   "verdict": "if",
   "tile_line": "Any IPv4 TCP server. Root shown only via MPTCP.",
-  "tldr": "A race in the Linux kernel's IPv4 TCP handshake (4.4 or later) lets a remote attacker corrupt kernel memory, no login. Root was shown via MPTCP, but turning MPTCP off doesn't make you safe. No public exploit. Update and reboot.",
+  "tldr": "A race in the Linux kernel's IPv4 TCP handshake (4.4 or later) lets a remote attacker corrupt kernel memory, no login. Root was shown via MPTCP, but turning MPTCP off doesn't make you safe. No full exploit is public. Update and reboot.",
   "summary": "A race in the kernel's IPv4 TCP handshake code lets a remote attacker with no login corrupt kernel memory by sending connection requests that carry IP options. On 27 Oct, Anthropic showed remote root against a server with a Multipath TCP (MPTCP) listener, but the bug is in plain TCP, so turning off MPTCP doesn't make you safe. Full exploit code isn't public and no attacks are reported.",
   "affected": [
     {

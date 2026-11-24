@@ -22,7 +22,7 @@
   "updated": "2026-11-22",
   "verdict": "now",
   "tile_line": "Public exploit: cat a file, run commands. Get 3.7.9.",
-  "tldr": "In iTerm2 3.6.1 to 3.7.8, displaying a crafted file (say, with cat) runs commands on your Mac, even on a default install. A full exploit is public; no attacks reported. Update to 3.7.9. macOS 12 has no fixed release.",
+  "tldr": "In iTerm2 3.6.1 to 3.7.8, displaying a crafted file (say, with cat) runs commands on your Mac, even on a default install. A full exploit is public; no attacks reported. Update to 3.7.9. macOS 12.4 to 12.x has no fixed release.",
   "summary": "In iTerm2 3.6.1 through 3.7.8, displaying a crafted file in the terminal, for example with `cat README.md`, runs commands on your Mac. The trap is hidden in the file (you only see some shell errors when it runs), and it works on a default install in bash, zsh and fish. The researcher published a complete exploit; iTerm2 fixed it in 3.7.9 on 20 Nov 2026. No attacks are reported. There's no fixed release for macOS 12.4 to 12.x, whose newest iTerm2 is 3.6.11. The researcher first called it remote code execution (RCE), then retitled it arbitrary command execution; since you have to display the attacker's file, it isn't remote in the usual sense.",
   "affected": [
     {

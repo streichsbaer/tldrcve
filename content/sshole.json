@@ -19,7 +19,7 @@
   "updated": "2026-11-20",
   "verdict": "now",
   "tile_line": "Exploited, in CISA KEV. Alpine-style sshd only.",
-  "tldr": "SSHole: on musl systems running sshd without PAM, mainly Alpine, a very long password logs in to password-less accounts. Exploited within hours, on CISA's exploited list. Debian, Ubuntu and Fedora aren't affected. Upgrade openssh.",
+  "tldr": "SSHole: on musl systems running sshd without PAM, mainly Alpine, a very long password logs in to key-only accounts if any account has a real password. Exploited within hours, on CISA's exploited list. Debian, Ubuntu and Fedora are safe. Upgrade openssh.",
   "summary": "On Linux systems that use musl libc and run sshd without PAM, mainly Alpine, an attacker can log in to password-less accounts (key-only users, Alpine's cloud `alpine` user) just by sending a very long password. Attacks started within hours of disclosure on 5 Nov 2026. Debian, Ubuntu, Fedora and other glibc systems aren't affected.",
   "affected": [
     {

@@ -23,7 +23,7 @@
   "updated": "2026-11-21",
   "verdict": "if",
   "tile_line": "SSH in as users with no stored password. Rare module.",
-  "tldr": "pam-mysql, a rarely used login module, lets anyone SSH in as an account whose stored password is empty, typing any password. Shown but not published; no attacks. If you use it, update the package or give those accounts a password.",
+  "tldr": "pam-mysql, a rarely used login module, lets anyone SSH in as an account with no stored password, typing any password. Shown but not published; no attacks. If you use it, install Debian's fix where available, or give those accounts a password.",
   "summary": "pam-mysql, a rarely used module that checks Linux logins against a MySQL table, gets one check backwards. With sshd's default settings, anyone can log in over SSH as an account whose stored password is empty, typing any password. Debian fixed it on 19 Nov 2026; Ubuntu and Fedora haven't yet. The researcher demonstrated it but hasn't published the exploit, and no attacks are reported.",
   "status": {
     "exploit": "demonstrated",

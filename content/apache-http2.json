@@ -18,7 +18,7 @@
   "updated": "2026-11-20",
   "verdict": "if",
   "tile_line": "Only if HTTP/2 is on. Crash PoC public, no RCE code.",
-  "tldr": "A race in the HTTP/2 module of Apache httpd 2.4.55 to 2.4.70 may let an attacker with no login run code. Red Hat says a reliable exploit was shown; no code for it is public. If HTTP/2 is on, update to 2.4.71 or turn HTTP/2 off.",
+  "tldr": "A race in the HTTP/2 module of Apache httpd 2.4.55 to 2.4.70, and in some older distro builds, may let an attacker with no login run code. Red Hat says a reliable exploit was shown; no code for it is public. If HTTP/2 is on, update or turn HTTP/2 off.",
   "summary": "A race condition in Apache's HTTP/2 module can corrupt memory and may let an attacker with no login run code. It only matters if HTTP/2 is turned on. Red Hat says a reliable exploit was shown; public proof-of-concept code crashes the server but doesn't run code. Singapore's Cyber Security Agency says it's reportedly exploited, without naming a source; F5 and Horizon3 report no attacks.",
   "affected": [
     {

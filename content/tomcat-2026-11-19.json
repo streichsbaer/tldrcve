@@ -39,7 +39,7 @@
   "updated": "2026-11-21",
   "verdict": "cycle",
   "tile_line": "CISA says 9.1, Apache says Low. Off-by-default features.",
-  "tldr": "Apache fixed 11 Tomcat bugs on 19 Nov 2026. All but one need a feature you turn on, and none has an exploit or attacks. The \"9.1 critical\" is CISA's score; Apache rates that bug Low. Update to 11.0.29, 10.1.62 or 9.0.124 as usual.",
+  "tldr": "Apache disclosed 11 Tomcat bugs on 19 Nov 2026. All but one need a feature you turn on, and none has an exploit or attacks. The \"9.1 critical\" is CISA's score; Apache rates it Low. Update to 11.0.29, 10.1.62 or 9.0.124; TLS-PSK clusters stay on TLS 1.2.",
   "summary": "Apache disclosed 11 Tomcat vulnerabilities on 19 Nov 2026: 1 critical, 4 important, 2 moderate and 4 low. All but one need a feature you have to turn on, such as HTTP/2, the RewriteValve or clustering, and none has a public exploit or reported attacks. The \"9.1 critical\" posts come from scores CISA added to the CVE records; Apache rates that bug Low. Fixed releases are out for all but two cluster bugs.",
   "status": {
     "exploit": "none",

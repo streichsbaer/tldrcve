@@ -26,7 +26,7 @@
   "updated": "2026-11-23",
   "verdict": "cycle",
   "tile_line": "Real bugs, low risk. Update the app as usual.",
-  "tldr": "WhatsApp disclosed three bugs on 20 Nov 2026. One could reveal your IP address to a scammer and may have been abused with spam; the other two need an unofficial app or an attacker inside Meta. Update the app as usual.",
+  "tldr": "WhatsApp disclosed three bugs on 20 Nov 2026. One could reveal your IP address to a scammer and may have been abused with spam; one needs you to tap a message from an unofficial client, the other an attacker inside Meta. Update the app as usual.",
   "summary": "WhatsApp disclosed three bugs on 20 Nov 2026. The one reported as abused could reveal your phone's IP address to a scammer who sent a crafted ad-reply message; WhatsApp says it may have been abused with spam, and it's fixed in 2.26.17.4. The other two need you to tap a message sent from an unofficial app, or an attacker inside Meta's own systems, and Meta says it has seen no sign either was exploited.",
   "status": {
     "exploit": "demonstrated",

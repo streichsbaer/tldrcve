@@ -119,7 +119,7 @@
   "updated": "2026-11-20",
   "verdict": "if",
   "tile_line": "90 advisories, 5 critical. Free fixes only on Boot 4.",
-  "tldr": "Spring published 90 advisories on 19 Nov 2026, 5 critical. None has a public exploit or attacks, and most need an opt-in feature. Free fixes are only on the newest lines, such as Boot 4.1.3 and 4.0.10; Boot 3.5 and older need paid support.",
+  "tldr": "Spring published 90 advisories on 19 Nov 2026. None has a public exploit or attacks, and most need an opt-in feature. Free fixes are only on the newest lines, such as Boot 4.1.3 and 4.0.10; Boot 3.5 and older need paid support.",
   "summary": "Spring published 90 security advisories on 19 Nov across Boot, Framework, Security, Spring AI, Integration, Web Services, Cloud and more: 5 critical, 24 high, 49 medium and 12 low. None has a public exploit or reported attacks, and most need an opt-in feature. The catch is who gets fixes for free: only the newest lines, such as Spring Boot 4.0.10 and 4.1.3. Boot 3.5 and older get fixes only through Spring's paid Enterprise support.",
   "status": {
     "exploit": "none",

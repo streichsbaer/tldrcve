@@ -21,7 +21,7 @@
   "updated": "2026-11-20",
   "verdict": "now",
   "tile_line": "Attacks since 7 Oct. In CISA KEV, due 21 Nov.",
-  "tldr": "Anyone with a public REDCap survey link can run code on the server, no login. Exploit public since 1 Oct 2026, attacks since 7 Oct, on CISA's exploited list. Upgrade to 16.0.49, 17.3.10 or 17.4.4 and check for signs of attack.",
+  "tldr": "Anyone with a public REDCap survey link can run code on the server, no login. Exploit public since 1 Oct 2026, attacks reported 7 Oct, on CISA's exploited list. Upgrade to 16.0.49, 17.3.10 or 17.4.4 and check for signs of attack.",
   "summary": "A bug in REDCap, the research survey and data tool used by over 8,500 institutions, lets anyone who has a public survey link run code on the server, with no login. Exploit code has been public since 1 Oct 2026, Palo Alto's Unit 42 reported attackers using it to install crypto miners on 7 Oct, and CISA added it to its exploited list on 18 Nov. REDCap 16.0.49, 17.3.10 and 17.4.4 fix it.",
   "status": {
     "exploit": "public",

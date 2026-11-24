@@ -22,7 +22,7 @@
   "updated": "2026-11-20",
   "verdict": "now",
   "tile_line": "Exploited, no login. Axis bug in KEV, due 21 Nov.",
-  "tldr": "4EverAble2Shell gives attackers root on on-prem N-able N-central servers with the Legacy API on, no login needed. Exploit public, attacks seen, on CISA's exploited list. Patch now to 2026.4 HF3; until then, turn off the Legacy API.",
+  "tldr": "4EverAble2Shell gives attackers root on on-prem N-able N-central servers with the Legacy API on, no login needed. Exploit public, attacks seen, its Axis bug is on CISA's exploited list. Patch now to 2026.4 HF3 or later; until then, turn off the Legacy API.",
   "summary": "A public exploit chain gives an attacker root on on-prem N-central servers that have the old Legacy API turned on, with no login. It gets in through an Apache Axis bug (CVE-2026-90436); the N-central root step has no CVE yet. Security firm Huntback found crypto miners on 21 servers within hours, and N-able reported attacks on 13 Nov.",
   "status": {
     "exploit": "public",

@@ -15,7 +15,7 @@
   "updated": "2026-11-20",
   "verdict": "if",
   "tile_line": "Only on newer Intel/AMD CPUs.",
-  "tldr": "Java4Shell: a bug in Java's Base64 decoder can let an attacker run code, but only on Java 17.0.6+, 21, 25 or 27, on a CPU with AVX-512 VBMI, decoding untrusted input. No attacks reported. Patch Java if all three apply.",
+  "tldr": "Java4Shell: a bug in Java's Base64 decoder can let an attacker run code, but only on Java 17.0.6+, 21, 25, 27 or Oracle's Java 8 Performance Pack, on a CPU with AVX-512 VBMI, decoding untrusted input. No attacks reported. Patch Java if all three apply.",
   "summary": "A bug in Java's Base64 decoder can let an attacker run code on your server. It only works on newer Intel/AMD CPUs, so on most systems a two-command check settles whether you need to rush. Proof-of-concept code for the memory corruption is public, but no attacks are reported.",
   "affected": [
     {

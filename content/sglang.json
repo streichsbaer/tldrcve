@@ -29,7 +29,7 @@
   "updated": "2026-11-20",
   "verdict": "if",
   "tile_line": "Exploited, no fix yet. Risky if the port is reachable.",
-  "tldr": "SGLang, a popular AI model server, has unfixed bugs that let anyone who reaches its port run code or steal API keys, mostly with no login. NEAR AI says one was used to break into a server. No fix yet: keep SGLang off untrusted networks.",
+  "tldr": "SGLang, a popular AI model server, has unfixed bugs that let anyone who reaches its port run code or steal API keys, mostly with no login. NEAR AI says an unnamed SGLang bug was used to break into a server. No fix yet: keep SGLang off untrusted networks.",
   "summary": "SGLang, a popular server for running AI models, has unfixed bugs that let anyone who can reach its port run code or steal its API keys, mostly without logging in. On 9 Nov 2026 NEAR AI said an attacker used an SGLang code-execution bug, which it hasn't named, to break into an inference server. There's no fix yet, so keep SGLang off untrusted networks.",
   "status": {
     "exploit": "demonstrated",

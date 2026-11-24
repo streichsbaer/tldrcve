@@ -30,7 +30,7 @@
   "updated": "2026-11-20",
   "verdict": "if",
   "tile_line": "Rails or classic Sinatra on old Ruby. No public exploit.",
-  "tldr": "Ruby2Shell: a one-byte bug in how older Ruby changes the case of text in old Western encodings may let an attacker with no login run code. The researchers say default Rails and classic Sinatra apps reach it. Upgrade Ruby.",
+  "tldr": "Ruby2Shell: a one-byte bug in how unpatched Ruby changes the case of text in some single-byte encodings, such as ISO-8859-1, may let an attacker with no login run code. The researchers say default Rails and classic Sinatra apps reach it. Upgrade Ruby.",
   "summary": "A one-byte memory bug in how Ruby changes the case of text in older Western encodings (like ISO-8859-1) may let an attacker with no login run code on the server. The researchers who named it say default Rails and classic-style Sinatra apps reach it. The fix is a Ruby upgrade, which also fixes six related regex and string bugs.",
   "affected": [
     {
