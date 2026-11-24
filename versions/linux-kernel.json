@@ -1,7 +1,7 @@
 {
   "id": "linux-kernel",
   "name": "Linux kernel",
-  "about": "The newest release on each Linux kernel line we track. Each one fixes every Linux kernel bug we cover, except the SCTP bug below, which no distro kernel fixes yet.",
+  "about": "The newest release on each Linux kernel line we track. Each one fixes every Linux kernel bug we cover, except the bugs listed below as not fixed yet.",
   "feed": null,
   "latest_from": [
     "https://security-tracker.debian.org/tracker/source-package/linux",
@@ -9,12 +9,12 @@
     "https://access.redhat.com/hydra/rest/securitydata/csaf.json?package=kernel"
   ],
   "filter": "linux",
-  "checked": "2026-11-23",
+  "checked": "2026-11-24",
   "lines": [
     {
       "line": "Debian 13",
       "key": "Debian 13",
-      "latest": "6.12.117-1"
+      "latest": "6.12.118-1"
     },
     {
       "line": "Debian 12",
@@ -65,6 +65,13 @@
       "pages": [
         "linux-sctp-root"
       ]
+    },
+    {
+      "line": "All lines except Debian 13",
+      "note": "The socket race (CVE-2026-99676) is fixed upstream in 6.12.118, 6.18.64 and 7.3.5 and in Debian 13's 6.12.118-1; Debian 12 and Ubuntu still list it as vulnerable, and Red Hat has deferred the fix for RHEL 9 and 10 (RHEL 8 isn't affected).",
+      "pages": [
+        "linux-socket-race"
+      ]
     }
   ],
   "sources": [
@@ -107,6 +114,18 @@
     {
       "title": "GitHub: 7.4-rc4 includes the SCTP fix's merge (1e575bda)",
       "url": "https://github.com/torvalds/linux/compare/1e575bda30acc0bf01f799cee798d4a1c100d538...v7.4-rc4"
+    },
+    {
+      "title": "Debian tracker: socket race (CVE-2026-99676) fixed in Debian 13 6.12.118-1",
+      "url": "https://security-tracker.debian.org/tracker/CVE-2026-99676"
+    },
+    {
+      "title": "Ubuntu: socket race (CVE-2026-99676) still vulnerable",
+      "url": "https://ubuntu.com/security/CVE-2026-99676"
+    },
+    {
+      "title": "Red Hat: socket race (CVE-2026-99676) fix deferred",
+      "url": "https://access.redhat.com/security/cve/CVE-2026-99676"
     }
   ]
 }
