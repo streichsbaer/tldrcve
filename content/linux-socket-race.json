@@ -82,7 +82,7 @@
   "do": [
     {
       "label": "Update the kernel as usual",
-      "text": "Debian 13 has the fix in 6.12.118-1 (DSA-6652-1). Debian 12, Ubuntu 20.04 to 26.10 and Ubuntu 18.04's `linux-hwe-5.4` kernel are still listed as vulnerable, and Red Hat has deferred the fix for RHEL 9 and 10, so take it when your distro ships it. Red Hat, Ubuntu and Debian list no workaround.",
+      "text": "Debian 13 has the fix in 6.12.118-1 (DSA-6652-1). Debian 12, Ubuntu 20.04 to 26.10 and Ubuntu 18.04's 5.4 kernels (`linux-hwe-5.4` and the cloud and Raspberry Pi 5.4 kernels) are still listed as vulnerable, and Red Hat has deferred the fix for RHEL 9 and 10, so take it when your distro ships it. Red Hat, Ubuntu and Debian list no workaround.",
       "cite": [
         4,
         5,
@@ -158,14 +158,14 @@
     },
     {
       "title": "Linux netdev (patchwork): Eric Dumazet's reply naming the ordering bug lost on weakly ordered arches in 5.5",
-      "url": "https://patchwork.kernel.org/comment/27299127/",
+      "url": "https://lore.kernel.org/netdev/CAL4Wiipe-=JDzTvr5_SZaZ7b+QEkMyE0Tjh1x=ryJe50yFxKiw@mail.gmail.com/",
       "date": "21 Oct"
     }
   ],
   "changes": [
     {
       "date": "2026-11-24",
-      "text": "Disclosed date changed from 20 Nov (CVE published) to 21 Oct 2026, when the fix and the bug were first discussed on the public netdev list. Workaround and processor wording narrowed to what the sources say; Ubuntu 18.04 (linux-hwe-5.4) added to the vulnerable list."
+      "text": "Disclosed date changed from 20 Nov (CVE published) to 21 Oct 2026, when the fix and the bug were first discussed on the public netdev list. Workaround and processor wording narrowed to what the sources say; Ubuntu 18.04's 5.4 kernels added to the vulnerable list."
     },
     {
       "date": "2026-11-24",
