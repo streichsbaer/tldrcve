@@ -51,7 +51,7 @@
   },
   "affected": [
     {
-      "label": "Kernel 5.4.208+ or 5.5+, unpatched",
+      "label": "Kernel 5.4.208 or later, unpatched",
       "text": "The race came in with a refcount change in 5.5 (also backported to 5.4 from 5.4.208). Upstream fixes: 6.12.118, 6.18.64, 7.3.5 and 7.4-rc2; the CVE record lists no fix yet for the 6.6, 6.1, 5.15, 5.10 and 5.4 lines. Red Hat says RHEL 7 and 8 are not affected. Distro kernels backport, so compare with your distro's version under Update.",
       "cmd": "uname -r",
       "cite": [
