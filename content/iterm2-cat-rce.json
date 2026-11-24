@@ -22,8 +22,8 @@
   "updated": "2026-11-24",
   "verdict": "now",
   "tile_line": "Public exploit: displaying a file runs commands.",
-  "tldr": "Displaying a crafted file in iTerm2, say with cat, runs commands on your Mac. A full exploit is public; no attacks reported. On iTerm2 3.6.1 to 3.7.8, update to 3.7.9. macOS 12.4 to 12.x has no fixed release.",
-  "summary": "The trap is hidden in the file, and you only see some shell errors when it runs; it works on a default install, in bash, zsh and fish. The researcher first called it remote code execution (RCE), then retitled it arbitrary command execution; since you have to display the attacker's file, it isn't remote in the usual sense. iTerm2 fixed it on 20 Nov 2026; 3.6.11, the newest release for macOS 12.4 to 12.x, still has the flaw.",
+  "tldr": "Displaying a crafted file in iTerm2, say with cat, runs commands on your Mac. A full exploit is public; no attacks reported. On iTerm2 3.6.1 to 3.7.8, update to 3.7.9; macOS 12.4 to 12.x has no fixed release.",
+  "summary": "The escape sequence is hidden in the file; when it runs you see garbled shell errors, and the command runs between them. It works on a default install, in bash, zsh and fish. The researcher first called it remote code execution (RCE), then retitled it arbitrary command execution; since you have to display the attacker's file, it isn't remote in the usual sense. iTerm2 fixed it on 20 Nov 2026; 3.6.11, the newest release for macOS 12.4 to 12.x, still has the flaw.",
   "affected": [
     {
       "label": "iTerm2 3.6.1 to 3.7.8",
@@ -134,7 +134,7 @@
   "changes": [
     {
       "date": "2026-11-24",
-      "text": "3.7.9 also closes the same hole in Kitty drag-and-drop replies and hardens title reports.",
+      "text": "3.7.9 also closes the same hole in Kitty drag-and-drop replies and hardens title reports. The command's output shows between garbled shell errors; it isn't hidden.",
       "minor": true
     },
     {

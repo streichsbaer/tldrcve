@@ -81,7 +81,7 @@
     },
     {
       "label": "Check for a break-in",
-      "text": "Upgrading doesn't remove attackers who are already in, and CISA flags this one for forensic triage. F6's signs: the entry `nodeup,'wombat@127.0.0.1'` in Expressway's Erlang log (`erlang.log`), Python files matching `/mnt/harddisk/i{0-9}{4}[a-zA-Z]?/*.py`, and the addresses `66.179.31.32` and `18.130.47.116`. If you find the log entry, F6 says to check other logs and artifacts to confirm. In its case the attackers went on to scan the network, find open file shares, work with SQL Server and WinRM, and search GitLab repositories for credentials. Sources differ on whether it is exploited: CISA and F6 say it is, while Cisco's advisory, updated on 23 Nov 2026 to note the KEV listing, says Cisco \"does not have direct evidence of active exploitation\".",
+      "text": "Upgrading doesn't remove attackers who are already in, and CISA flags this one for forensic triage. F6's signs: the entry `nodeup,'wombat@127.0.0.1'` in Expressway's Erlang log (`erlang.log`), Python files matching `/mnt/harddisk/i{0-9}{4}[a-zA-Z]?/*.py`, and the addresses `66.179.31.32` and `18.130.47.116`. If you find the log entry, F6 says to check other logs and artifacts to confirm. In its case the attackers went on to scan the network, find open file shares, work with SQL Server and WinRM, and search GitLab repositories for credentials. CISA and F6 report exploitation; Cisco's advisory, updated on 23 Nov 2026 to note the KEV listing, says Cisco itself \"does not have direct evidence of active exploitation\".",
       "cite": [
         1,
         2,

@@ -288,8 +288,7 @@
   "changes": [
     {
       "date": "2026-11-24",
-      "text": "Corrected: the 13–16 Nov releases fix 9 of the 11 bugs, not 10; the EncryptInterceptor bug isn't fixed (Apache has deprecated it).",
-      "minor": true
+      "text": "Corrected: the 13–16 Nov releases fix 9 of the 11 bugs, not 10; the EncryptInterceptor bug isn't fixed (Apache has deprecated it)."
     },
     {
       "date": "2026-11-21",

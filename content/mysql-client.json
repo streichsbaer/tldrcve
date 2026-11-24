@@ -21,9 +21,9 @@
   "disclosed": "2026-11-17",
   "updated": "2026-11-24",
   "verdict": "if",
-  "tile_line": "Rated 9.1, no details or exploit yet; fix is out.",
-  "tldr": "Oracle rated a MySQL \"Client programs\" bug 9.1 but hasn't said how it works or whether servers or client tools are at risk. No exploit or attacks are reported. On MySQL 8.4, 9.7 or 26.10, install Oracle's free fixed release (Cluster: from 26 Nov).",
-  "summary": "Of the two GitHub \"exploits\" going around, one is a read-only version and exposure check; the other's author said, before the fixed releases, that Oracle's fix wasn't public, so nothing ties it to this bug.",
+  "tile_line": "Rated 9.1, no details or exploit; security releases out.",
+  "tldr": "Oracle rated a MySQL \"Client programs\" bug 9.1 but hasn't said how it works or who is at risk. No exploit or attacks are reported. On 8.4, 9.7 or 26.10, install Oracle's free fixed release; MySQL Cluster, 8.0 included, gets fixes on 26 Nov.",
+  "summary": "Of the two GitHub \"exploits\" going around, one is a read-only version and exposure check; the other claims to exploit this CVE, but its author hadn't seen Oracle's fix, so that link is unverified.",
   "status": {
     "exploit": "none",
     "attacks": "none",
@@ -33,7 +33,7 @@
   },
   "affected": [
     {
-      "label": "MySQL 8.4, 9.7 or 26.10",
+      "label": "MySQL 8.4, 9.7, 26.10 or Cluster 8.0",
       "text": "Oracle lists MySQL Server 8.4.0 to 8.4.13, 9.7.0 to 9.7.4 and 26.10, and MySQL Cluster 8.0.0 to 8.0.50, 8.4.0 to 8.4.13, 9.7.0 to 9.7.4 and 26.10. Server 8.0 isn't listed because Oracle no longer supports it, not because it was checked, so TuxCare treats it as possibly affected. Oracle files the bug under \"Client programs\", so machines with only the `mysql` command-line tools count too. MariaDB and Percona haven't said whether they're affected; Red Hat lists its hardened MariaDB 10.11 and 11.8 images as affected.",
       "cmd": "mysql --version",
       "cite": [
@@ -88,7 +88,7 @@
     },
     {
       "label": "No exploit or attacks yet",
-      "text": "There's no confirmed exploit and no reported attack, it isn't on CISA's exploited list, and CISA's own assessment says exploitation \"none\". The 19 Nov GitHub code is a fake MySQL server that captures passwords from clients connecting without encryption; its author says Oracle's fix isn't public, so nothing ties it to this bug. We'll update the page if Oracle, the researcher or a distro explains the bug, and raise the verdict if real exploit code or attacks appear or it lands on CISA's list.",
+      "text": "There's no confirmed exploit and no reported attack, it isn't on CISA's exploited list, and CISA's own assessment says exploitation \"none\". The 19 Nov GitHub code is a fake MySQL server that captures passwords from clients connecting without encryption; it claims to exploit this CVE, but its author hadn't seen Oracle's fix, so that link is unverified. We'll update the page if Oracle, the researcher or a distro explains the bug, and raise the verdict if real exploit code or attacks appear or it lands on CISA's list.",
       "cite": [
         2,
         14,

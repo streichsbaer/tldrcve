@@ -118,7 +118,7 @@
   "disclosed": "2026-11-19",
   "updated": "2026-11-24",
   "verdict": "if",
-  "tile_line": "90 advisories, mostly opt-in. Free fixes only on Boot 4.",
+  "tile_line": "90 advisories, mostly opt-in. Free Boot fixes on 4.x only.",
   "tldr": "Spring published 90 advisories on 19 Nov 2026. None has a public exploit or attacks, and most need an opt-in feature. On Boot 4, upgrade to the newest 4.x; Boot 3.5 and older get fixes only with paid support, so check which bugs apply.",
   "summary": "The advisories span Boot, Framework, Security, Spring AI, Integration, Web Services, Cloud and more.",
   "status": {

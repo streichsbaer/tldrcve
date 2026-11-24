@@ -60,11 +60,12 @@
     },
     {
       "label": "The image optimizer takes an attacker's SVG",
-      "text": "With `dangerouslyAllowSVG: true` it does by design. With the default `false`, self-hosted sites on 15.0.0 to 15.5.28 or 16.0.0 to 16.4.4 can still be made to parse an attacker-supplied SVG at `/_next/image` (CVE-2026-119347); its advisory doesn't cover versions before 15. The advisories don't say whether Vercel-hosted sites or apps with tight image source rules are exposed.",
+      "text": "With `dangerouslyAllowSVG: true`, Next.js passes SVGs through without optimizing them. With the default `false`, self-hosted sites on 15.0.0 to 15.5.28 or 16.0.0 to 16.4.4 can still be made to parse an attacker-supplied SVG at `/_next/image` (CVE-2026-119347); its advisory doesn't cover versions before 15. The advisories don't say whether Vercel-hosted sites or apps with tight image source rules are exposed.",
       "cmd": "grep -rn dangerouslyAllowSVG next.config.*",
       "cite": [
         1,
-        2
+        2,
+        11
       ]
     }
   ],
@@ -152,13 +153,16 @@
     {
       "title": "CISA KEV catalog: not listed",
       "url": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog"
+    },
+    {
+      "title": "Next.js docs: dangerouslyAllowSVG enables SVG pass-through",
+      "url": "https://nextjs.org/docs/app/api-reference/components/image#dangerouslyallowsvg"
     }
   ],
   "changes": [
     {
       "date": "2026-11-24",
-      "text": "Corrected the SVG bypass range (15.0.0 onwards). Vercel's claim that upgrading Next.js pulls in a fixed sharp conflicts with 15.x's dependency range. Explained why CISA's \"poc\" doesn't make the exploit public.",
-      "minor": true
+      "text": "Corrected the SVG bypass range (15.0.0 onwards). Vercel's claim that upgrading Next.js pulls in a fixed sharp conflicts with 15.x's dependency range. Explained why CISA's \"poc\" doesn't make the exploit public. With SVG support on, Next.js passes SVGs through instead of handing them to sharp."
     },
     {
       "date": "2026-11-22",

@@ -23,7 +23,7 @@
   "verdict": "now",
   "tile_line": "Exploited, no login, if the Legacy API is on.",
   "tldr": "A public exploit chain gives attackers root on on-prem N-able N-central servers with the Legacy API on, no login needed. Attacks are seen; its Axis bug is on CISA's exploited list. Patch now to 2026.4 HF4; until then, turn the Legacy API off.",
-  "summary": "The chain gets in through an Apache Axis bug (CVE-2026-90436); N-able hasn't said which of its CVEs, if any, covers the step to root. Security firm Huntback found crypto miners on 21 servers within hours, and saw attacks from 12 Nov; Rapid7 says N-able reported exploitation on 13 Nov, though Tenable says N-able hasn't confirmed it.",
+  "summary": "The chain gets in through an Apache Axis bug (CVE-2026-90436); N-able hasn't said which of its CVEs, if any, covers the step to root. Security firm Huntback found crypto miners on 21 servers within hours, and saw attacks from 12 Nov. N-able's 12 Nov update said it had seen no signs of compromise; Rapid7 later said N-able reported exploitation on 13 Nov.",
   "status": {
     "exploit": "public",
     "attacks": "seen",
@@ -160,7 +160,7 @@
   "changes": [
     {
       "date": "2026-11-24",
-      "text": "Corrected: the step to root may already have a CVE (N-able hasn't said which of its CVEs covers it), and Huntback saw attacks from 12 Nov; Rapid7 says N-able reported exploitation on 13 Nov, which Tenable says N-able hasn't confirmed. N-able's 20 Nov update says to upgrade servers, Agents and Probes to 2026.4 HF4 (2026.4.1.40) as soon as possible; HF4 also updates N-central's Java for CVE-2026-114938."
+      "text": "Corrected: the step to root may already have a CVE (N-able hasn't said which of its CVEs covers it), and Huntback saw attacks from 12 Nov; Rapid7 says N-able reported exploitation on 13 Nov, after N-able's 12 Nov update said it had seen no signs of compromise. N-able's 20 Nov update says to upgrade servers, Agents and Probes to 2026.4 HF4 (2026.4.1.40) as soon as possible; HF4 also updates N-central's Java for CVE-2026-114938."
     },
     {
       "date": "2026-11-20",

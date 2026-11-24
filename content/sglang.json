@@ -41,7 +41,7 @@
   "affected": [
     {
       "label": "You run SGLang (any version)",
-      "text": "The CVE record for CVE-2026-15969 lists v0.5.15 and earlier, but no fixed version has been named. As of 24 Nov 2026 the advisories still list no patched version, and v0.5.23 (2 Nov) is the newest release. Treat every version as affected.",
+      "text": "The CVE record for CVE-2026-15969 lists v0.5.15 and earlier, but no fixed version has been named. As of 24 Nov 2026 the advisories still list no patched version, and v0.5.23 (2 Nov) is the newest release. With no fixed release, treat every version as affected as a precaution.",
       "cmd": "pip show sglang",
       "cite": [
         3,

@@ -25,7 +25,7 @@
   "disclosed": "2026-11-20",
   "updated": "2026-11-23",
   "verdict": "cycle",
-  "tile_line": "Real bugs, low risk: one IP leak, two hard to reach.",
+  "tile_line": "An IP leak, a tap-needed bug and a Meta-internal one.",
   "tldr": "WhatsApp disclosed three bugs on 20 Nov 2026. One could reveal your IP address to a scammer and may have been abused with spam; one needs you to tap a message from an unofficial client, the other an attacker inside Meta. Update the app as usual.",
   "summary": "The IP leak came through a crafted ad-reply message and is fixed in 2.26.17.4. Meta says it has seen no sign either of the other two was exploited.",
   "status": {

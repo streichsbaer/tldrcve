@@ -18,7 +18,7 @@
   "updated": "2026-11-22",
   "verdict": "if",
   "tile_line": "Worst one needs an admin's click. No exploit, no attacks.",
-  "tldr": "The 18 Nov release fixes 19 advisories, backported down to WordPress 4.7. The worst creates an admin account for an attacker if a signed-in admin opens a crafted editor link. No exploit or attacks. Auto-updates fix it; check every site updated.",
+  "tldr": "The 18 Nov release fixes 19 advisories, backported down to WordPress 4.7. The worst creates an admin account for an attacker if a signed-in admin opens a crafted editor link; no exploit or attacks. Auto-updates fix it, so check every site updated.",
   "summary": "After creating the account, the attacker can run code on the site. No CVE IDs have been assigned yet, and the release adds one hardening change on top of the 19 fixes.",
   "status": {
     "exploit": "none",

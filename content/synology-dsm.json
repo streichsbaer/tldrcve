@@ -44,7 +44,7 @@
   "affected": [
     {
       "label": "DSM older than the 2024 fix",
-      "text": "DSM 7.2.2 before 7.2.2-72806 Update 1, 7.2.1 before 7.2.1-69057 Update 6, 7.2 before 7.2-64570 Update 4, or 7.1 before 7.1.1-42962 Update 7; BeeStation OS before 1.1-65374. DSM 7.3 and 7.4 came out later and aren't listed. For DSM 6.2 the CVE record says \"unknown\", while Synology's advisory lists a Moderate fix in 6.2.4-25556 Update 8, which its details tie to CVE-2024-10445, a separate bug. Synology's warning says the bug was \"patched in December 2024\"; the DSM 7 fixes shipped in Nov 2024. Control Panel > Info Center shows your version.",
+      "text": "DSM 7.2.2 before 7.2.2-72806 Update 1, 7.2.1 before 7.2.1-69057 Update 6, 7.2 before 7.2-64570 Update 4, 7.1 before 7.1.1-42962 Update 7; BeeStation OS before 1.1-65374. DSM 7.3 and 7.4 came out later and aren't listed. For DSM 6.2 the CVE record says \"unknown\", while Synology's advisory lists a Moderate fix in 6.2.4-25556 Update 8, which its details tie to CVE-2024-10445, a separate bug. Synology's warning says the bug was \"patched in December 2024\"; the DSM 7 fixes shipped in Nov 2024. Control Panel > Info Center shows your version.",
       "cite": [
         2,
         3,

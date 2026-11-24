@@ -63,7 +63,7 @@
   "do": [
     {
       "label": "Update when 4.1.1 / 4.0.4 ship",
-      "text": "OpenSSL's CVE record names 4.1.1 and 4.0.4 as the first fixed versions, and OpenSSL has scheduled those releases for 1 Dec 2026. On 23 Nov the fix was still unmerged, on hold for discussion with changes requested, so check the release notes. Debian and Ubuntu had not assessed their packages yet on 20 Nov.",
+      "text": "OpenSSL's CVE record names 4.1.1 and 4.0.4 as the first fixed versions, and OpenSSL has scheduled those releases for 1 Dec 2026. On 23 Nov the fix was still unmerged, on hold for discussion with changes requested, so check the release notes.",
       "pending": {
         "expected": "2026-12-01"
       },
@@ -137,7 +137,7 @@
   "changes": [
     {
       "date": "2026-11-24",
-      "text": "OpenSSL now rates it Low and says no attacker path is known; CISA lowered its score from 9.8 to 5.9."
+      "text": "OpenSSL now rates it Low and says no attacker path is known; CISA lowered its score from 9.8 to 5.9. Dropped an outdated note on Debian and Ubuntu."
     },
     {
       "date": "2026-11-20",

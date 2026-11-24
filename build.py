@@ -1292,6 +1292,7 @@ LEGACY_GUIDS = {
     "react-typed-array-rce-2026-11-21-0": "react-typed-array-rce-2026-11-21-1",
     "wordpress-7-1-5-2026-11-21-0": "wordpress-7-1-5-2026-11-21-1",
     "nextjs-image-rce-2026-11-21-0": "nextjs-image-rce-2026-11-21-1",
+    "brotli-2026-11-20-0": "brotli-2026-11-20-1",
 }
 
 

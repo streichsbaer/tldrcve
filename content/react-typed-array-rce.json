@@ -33,7 +33,7 @@
   "verdict": "if",
   "tile_line": "Only Next 16 apps returning typed arrays from use cache.",
   "tldr": "A React Server Components bug lets an attacker call a Server Action with their own arguments. Lab exploit public, no attacks. In Next.js only with Cache Components and a use cache function returning several typed arrays; upgrade to Next.js 16.4.1+.",
-  "summary": "The bug is in how React Server Components package several typed arrays (binary data) in one response; React says it only affects \"extremely rare cases\". The arguments only matter if a Server Action does something dangerous with them. The fix has been out since 14 Oct; the CVE ID came on 10 Nov.",
+  "summary": "The bug is in how React Server Components package several typed arrays (binary data) in one response; React says it only affects \"extremely rare cases\". Turning that into command execution depends on what the app's Server Actions do. The fix has been out since 14 Oct; the CVE ID came on 10 Nov.",
   "status": {
     "exploit": "public",
     "attacks": "none",

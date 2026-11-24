@@ -78,7 +78,7 @@ Copy the shape of an existing file (`content/nginx2root.json` is a good model).
 | `updated` | `YYYY-MM-DD` of the last edit |
 | `verdict` | `now`, `if`, `cycle` or `watch` (see below) |
 | `tile_line` | The reason for the verdict, about 55 chars max. It sits next to the verdict badge and on the link card, so never repeat the verdict or the action ("Exploited, no login. In CISA KEV.", not "Patch now.") |
-| `tldr` | **Required, ≤ 256 chars.** The answer, in up to three short, plain sentences, in this order: what it is, how scary (exploit, attacks, KEV), who is affected, what to do. Don't open with the page's nickname ("NoisyTCP: …"; the title is right above); the product as the subject ("SGLang, a popular AI model server, …") is fine. No commands, version lists or dates that go stale (KEV due dates). Used at the top of the page and as the meta description, the feed item and the "Copy TL;DR" text. Every claim must already be on the page; update it whenever the verdict, status or fix changes. When it corrects something the page said before, add a `changes[]` entry so feed readers see the correction |
+| `tldr` | **Required, ≤ 256 chars.** The answer, in up to three short, plain sentences, in this order: what it is, how scary (exploit, attacks, KEV), who is affected, what to do. Don't open with the page's nickname ("NoisyTCP: …"; the title is right above); the product as the subject ("SGLang, a popular AI model server, …") is fine. No commands, lists of several fixed versions, or dates that go stale (KEV due dates); one affected range or one version to update to is fine. Used at the top of the page and as the meta description, the feed item and the "Copy TL;DR" text. Every claim must already be on the page; update it whenever the verdict, status or fix changes. When it corrects something the page said before, add a `changes[]` entry so feed readers see the correction |
 | `summary` | **More details**, under the TL;DR: 1-3 sentences with only what the TL;DR leaves out, such as how the bug works, who found it, numbers, where sources disagree, related bugs, useful trivia and the one setting or command that matters most. Never repeat the TL;DR, but don't drop facts either: each one belongs in the TL;DR, here, or a section below |
 | `status.exploit` | `public` (working code anyone can download), `demonstrated` (shown, code not public) or `none` |
 | `status.attacks` | `seen` (a credible, named report) or `none` |
@@ -123,7 +123,7 @@ When a vulnerability gets attention but doesn't qualify yet, record it instead o
   - Never invent versions, flags, commands or dates.
   - When sources conflict, say so on the page.
 - **"Are you affected?"** lists only conditions that must all be true. No "or" items. Fold "not affected if…" details into the matching condition.
-- **Commands** must be read-only and exact.
+- **Commands** must be exact. Check commands (`cmd` fields, "Are you affected?") must be read-only; a fix step may name the vendor's own upgrade or restart command, quoted exactly.
 - Text fields support `code` and links to site pages only: `[label](/slug/)`.
 - **Verdict, checklist and scare level** must agree:
   - `now`: working exploit or attacks seen, and common setups are exposed.

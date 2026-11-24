@@ -19,7 +19,7 @@
   "updated": "2026-11-24",
   "verdict": "now",
   "tile_line": "Exploited, in CISA KEV. Alpine-style sshd only.",
-  "tldr": "A very long password logs in to key-only SSH accounts. Exploited within hours, on CISA's exploited list. Only on musl systems running sshd without PAM, mainly Alpine, if any account has a real password: upgrade openssh. Debian, Ubuntu, Fedora are safe.",
+  "tldr": "A very long password logs in to key-only SSH accounts. Exploited within hours, on CISA's exploited list. Only on musl systems running sshd without PAM, mainly Alpine, if any account has a real password: upgrade openssh (Debian, Ubuntu, Fedora are safe).",
   "summary": "Password lengths that work differ by source: Alpine says 257 to 1024 bytes, the CVE record 256 to 1024 characters. It was disclosed on 5 Nov 2026, when OpenSSH 10.6p2 shipped a workaround; Alpine's cloud `alpine` user is one of the key-only accounts at risk.",
   "affected": [
     {
@@ -160,8 +160,7 @@
   "changes": [
     {
       "date": "2026-11-24",
-      "text": "Clarified: the attack also needs another account with a real password hash, and OpenSSH calls 10.6p2 a workaround. Alpine and the CVE record give different working password lengths (257 vs 256 to 1024). musl itself hasn't changed crypt() yet.",
-      "minor": true
+      "text": "Clarified: the attack also needs another account with a real password hash, and OpenSSH calls 10.6p2 a workaround. Alpine and the CVE record give different working password lengths (257 vs 256 to 1024). musl itself hasn't changed crypt() yet."
     },
     {
       "date": "2026-11-20",

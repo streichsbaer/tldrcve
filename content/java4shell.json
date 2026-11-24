@@ -12,11 +12,11 @@
   ],
   "product": "OpenJDK",
   "disclosed": "2026-11-17",
-  "updated": "2026-11-20",
+  "updated": "2026-11-24",
   "verdict": "if",
   "tile_line": "Only on newer Intel/AMD CPUs.",
   "tldr": "A bug in Java's Base64 decoder can let an attacker with no login run code. Exploit shown, not public; no attacks. Patch if all three hold: Java 17.0.6+ or Oracle's Java 8 Performance Pack, unpatched; a CPU with AVX-512 VBMI; untrusted Base64 input.",
-  "summary": "On most systems a two-command check settles whether you need to rush, since only newer Intel and AMD CPUs have AVX-512 VBMI. Proof-of-concept code for the memory corruption is public, but the researchers keep their working exploit chains private.",
+  "summary": "A CPU check and a Java version check quickly narrow down whether you're exposed, since only newer Intel and AMD CPUs have AVX-512 VBMI; check every Java your apps actually use, including bundled ones. Proof-of-concept code for the memory corruption is public, but the researchers keep their working exploit chains private.",
   "affected": [
     {
       "label": "Java 17.0.6+, 21, 25 or 27",
@@ -203,6 +203,11 @@
     }
   ],
   "changes": [
+    {
+      "date": "2026-11-24",
+      "text": "Clarified that the CPU and version checks help narrow it down but don't settle it: check every Java your apps use.",
+      "minor": true
+    },
     {
       "date": "2026-11-20",
       "text": "Cisco, Palo Alto and Fortinet appliance advisories added; PoC code for the memory corruption is public; Temurin Windows and Docker images still pending."
