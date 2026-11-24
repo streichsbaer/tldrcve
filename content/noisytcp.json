@@ -84,13 +84,15 @@
   "do": [
     {
       "label": "Update the kernel and reboot",
-      "text": "Fixed in the current releases: Debian 12 6.1.192-1, Debian 13 6.12.117-1, RHEL 8 4.18.0-553.189.1.el8_10, RHEL 9.9 5.14.0-741.26.1.el9_9 and RHEL 10.3 6.12.0-264.19.1.el10_3. Older RHEL 9.x and 10.x update streams (such as 9.8 and 10.2) have no fixed kernel yet. Ubuntu lists fixes in progress for its main kernel on every release from 16.04 to 26.10; its cloud kernels on every release, and its HWE kernels, are listed as vulnerable with no fix in progress yet. On Arm and POWER, a netdev review bot asked for this fix to be backported together with the [Linux 9.8 race](/linux-socket-race/) fix, because without it the crash might still be reachable there; no maintainer has confirmed that, and older stable kernels (5.10 to 6.6) have only this fix so far.",
+      "text": "Fixed in the current releases: Debian 12 6.1.192-1, Debian 13 6.12.117-1, RHEL 8 4.18.0-553.189.1.el8_10, RHEL 9.9 5.14.0-741.26.1.el9_9 and RHEL 10.3 6.12.0-264.19.1.el10_3. Older RHEL update streams (such as 8.8, 9.8 and 10.2) have no fixed kernel yet. Ubuntu lists fixes in progress for its main kernel on every release from 16.04 to 26.10; its cloud kernels on every release, and its HWE kernels, are listed as vulnerable with no fix in progress yet. On Arm and POWER, a netdev review bot asked for this fix to be backported together with the [Linux 9.8 race](/linux-socket-race/) fix, because without it the crash might still be reachable there; no maintainer has confirmed that, and older stable kernels (5.10 to 6.6) have only this fix so far.",
       "cite": [
+        3,
         4,
         5,
         6,
         12,
-        13
+        13,
+        14
       ],
       "versions": [
         "linux-kernel"
@@ -113,6 +115,7 @@
         2,
         3,
         4,
+        5,
         8,
         11
       ]
@@ -162,7 +165,7 @@
     },
     {
       "title": "Linux netdev (lore): first public version of the fix with the crash report, 21 Oct 2026, and Eric Dumazet's reply disputing the full-socket path",
-      "url": "https://lore.kernel.org/netdev/ath58Egc-oI6p3Jl@v4bel/",
+      "url": "https://lore.kernel.org/netdev/ath58Egc-oI6p3Jl@v4bel/T/",
       "date": "21 Oct"
     },
     {
@@ -186,6 +189,11 @@
       "title": "Linux netdev (lore): the v5 two-patch series, with the review bot's note on backporting both together",
       "url": "https://lore.kernel.org/netdev/20261029214219.1035176-1-imv4bel@gmail.com/T/",
       "date": "2 Nov"
+    },
+    {
+      "title": "CVE record: CVE-2026-99676 (the sibling Linux 9.8 race), fixed only in 6.12.118, 6.18.64, 7.3.5 and 7.4-rc2",
+      "url": "https://www.cve.org/CVERecord?id=CVE-2026-99676",
+      "date": "22 Nov"
     }
   ],
   "changes": [
