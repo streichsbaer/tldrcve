@@ -20,7 +20,7 @@
     "CVE-2026-99676"
   ],
   "product": "Linux kernel",
-  "disclosed": "2026-10-29",
+  "disclosed": "2026-10-21",
   "news": "2026-11-23",
   "updated": "2026-11-24",
   "verdict": "cycle",
@@ -82,7 +82,7 @@
   "do": [
     {
       "label": "Update the kernel as usual",
-      "text": "Debian 13 has the fix in 6.12.118-1 (DSA-6652-1). Debian 12 and Ubuntu 20.04 to 26.10 are still listed as vulnerable, and Red Hat has deferred the fix for RHEL 9 and 10, so take it when your distro ships it. Red Hat, Ubuntu and Debian list no workaround.",
+      "text": "Debian 13 has the fix in 6.12.118-1 (DSA-6652-1). Debian 12, Ubuntu 20.04 to 26.10 and Ubuntu 18.04's `linux-hwe-5.4` kernel are still listed as vulnerable, and Red Hat has deferred the fix for RHEL 9 and 10, so take it when your distro ships it. Red Hat, Ubuntu and Debian list no workaround.",
       "cite": [
         4,
         5,
@@ -152,15 +152,20 @@
       "url": "https://developer.arm.com/documentation/102336/0100/Memory-ordering"
     },
     {
-      "title": "Linux kernel: the fix as posted, dated 30 Oct 2026 06:42 +0900 (29 Oct UTC), with a link to the netdev post",
-      "url": "https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/patch/?id=5b5d8f351dd96f56a58bb516a80e2d4d742fe4e2",
-      "date": "29 Oct"
+      "title": "Linux netdev (patchwork): first public version of the fix, 21 Oct 2026, using acquire ordering for the reference",
+      "url": "https://patchwork.kernel.org/project/netdevbpf/patch/ath58Egc-oI6p3Jl@v4bel/",
+      "date": "21 Oct"
+    },
+    {
+      "title": "Linux netdev (patchwork): Eric Dumazet's reply naming the ordering bug lost on weakly ordered arches in 5.5",
+      "url": "https://patchwork.kernel.org/comment/27299127/",
+      "date": "21 Oct"
     }
   ],
   "changes": [
     {
       "date": "2026-11-24",
-      "text": "Disclosed date changed from 20 Nov (CVE published) to 29 Oct 2026, when the fix was posted publicly. Workaround and processor wording narrowed to what the sources say."
+      "text": "Disclosed date changed from 20 Nov (CVE published) to 21 Oct 2026, when the fix and the bug were first discussed on the public netdev list. Workaround and processor wording narrowed to what the sources say; Ubuntu 18.04 (linux-hwe-5.4) added to the vulnerable list."
     },
     {
       "date": "2026-11-24",
