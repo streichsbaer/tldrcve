@@ -26,7 +26,7 @@
   "updated": "2026-11-24",
   "verdict": "if",
   "tile_line": "Remote crash of Linux servers; patch if TCP is exposed.",
-  "summary": "NoisyTCP (CVE-2026-99288) is an 11-year-old race in the Linux kernel's TCP code that lets anyone who can reach a listening TCP port crash the whole server, with no login. Its finder, Hyunwoo Kim, crashed default Nginx, Apache and SSH servers on virtual machines in about 5 seconds to 2 minutes; a quiet physical server took about 14 hours. He says it isn't practically remote code execution yet, and his exploit isn't public. Fixes are out for Debian and the current RHEL 8, 9 and 10 releases, and on the way for Ubuntu. The same patch series fixed a sibling bug, the [Linux 9.8 race](/linux-socket-race/), which only matters on Arm and POWER.",
+  "summary": "NoisyTCP (CVE-2026-99288) is an 11-year-old race in the Linux kernel's TCP code that lets anyone who can reach a listening TCP port crash the whole server, with no login; its finder, Hyunwoo Kim, crashed default Nginx, Apache and SSH servers on virtual machines in about 5 seconds to 2 minutes, while a quiet physical server took about 14 hours. He says it isn't practically remote code execution yet and his exploit isn't public; fixes are out for Debian and the current RHEL 8, 9 and 10 releases, and on the way for Ubuntu. Its sibling from the same patch series, the [Linux 9.8 race](/linux-socket-race/), only matters on weakly ordered processors such as Arm and POWER and has its own fixes, so a kernel fixed for NoisyTCP isn't necessarily fixed for it.",
   "status": {
     "exploit": "demonstrated",
     "attacks": "none",
@@ -72,7 +72,7 @@
     },
     {
       "label": "Packets spread across several CPUs",
-      "text": "Kim says the race needs packets handled on different CPUs. That happens when the interface the attacker's traffic arrives on has two or more receive queues, or when RPS (receive packet steering) is turned on for it. The command prints one line per receive queue with its RPS setting: more than one `rx-` line for that interface, or a setting that isn't all zeros, means you meet this condition. RPS is off by default.",
+      "text": "Kim says the race needs packets handled concurrently on different CPUs. That's possible when the interface the attacker's traffic arrives on has two or more receive queues, or when RPS (receive packet steering) is turned on for it. The command is a first check: it prints one line per receive queue with its RPS setting. One `rx-` line for that interface and a setting of all zeros (RPS's default) means you don't meet this condition. More lines, or a non-zero setting, means packets can be spread out; whether they actually land on different CPUs depends on which CPUs each queue's interrupt and the RPS setting point to.",
       "cmd": "grep . /sys/class/net/*/queues/rx-*/rps_cpus",
       "cite": [
         1,
@@ -84,7 +84,7 @@
   "do": [
     {
       "label": "Update the kernel and reboot",
-      "text": "Fixed in the current releases: Debian 12 6.1.192-1, Debian 13 6.12.117-1, RHEL 8 4.18.0-553.189.1.el8_10, RHEL 9.9 5.14.0-741.26.1.el9_9 and RHEL 10.3 6.12.0-264.19.1.el10_3. Older RHEL update streams (such as 8.8, 9.8 and 10.2) have no fixed kernel yet. Ubuntu lists fixes in progress for its main kernel on every release from 16.04 to 26.10; its cloud kernels on every release, and its HWE kernels, are listed as vulnerable with no fix in progress yet. On Arm and POWER, a netdev review bot asked for this fix to be backported together with the [Linux 9.8 race](/linux-socket-race/) fix, because without it the crash might still be reachable there; no maintainer has confirmed that, and older stable kernels (5.10 to 6.6) have only this fix so far.",
+      "text": "Fixed in the current releases: Debian 12 6.1.192-1, Debian 13 6.12.117-1, RHEL 8 4.18.0-553.189.1.el8_10, RHEL 9.9 5.14.0-741.26.1.el9_9 and RHEL 10.3 6.12.0-264.19.1.el10_3. Older RHEL update streams (such as 8.8, 9.8 and 10.2) have no fixed kernel yet. Ubuntu lists fixes in progress for its main kernel on every release from 16.04 to 26.10; most of its other kernels (cloud, HWE, Raspberry Pi and others) are still listed as vulnerable on the releases they ship for, with no fix in progress yet. On Arm and POWER, a netdev review bot asked for this fix to be backported together with the [Linux 9.8 race](/linux-socket-race/) fix, because without it the crash might still be reachable there; no maintainer has confirmed that, and older stable kernels (5.10 to 6.6) have only this fix so far.",
       "cite": [
         3,
         4,
