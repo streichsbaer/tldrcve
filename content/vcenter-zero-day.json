@@ -26,6 +26,7 @@
   "updated": "2026-11-22",
   "verdict": "now",
   "tile_line": "Exploited in the wild, on KEV. No workaround.",
+  "tldr": "Anyone who can reach VMware vCenter can get an admin session without a password. Exploited, on CISA's exploited list. No workaround: patch to 9.1.1.0200, 9.0.2.0200 or 8.0 U3m. vCenter 7.0 has no public fix.",
   "summary": "A bug in VMware vCenter's directory service lets anyone who can reach vCenter over the network get an administrator session without a password. Mandiant says a suspected China-nexus group, ARMORY CASTLE, exploited it in early September to create a rogue admin account and steal vCenter's login-signing key, and CISA added it to its exploited list on 20 Nov 2026. Broadcom fixed it on 19 Nov and gives no workaround; for vCenter 7.0 it lists no public fix and tells extended-support customers to contact Broadcom Support.",
   "affected": [
     {

@@ -27,6 +27,7 @@
   "updated": "2026-11-20",
   "verdict": "now",
   "tile_line": "Ransomware hits old DSM. In CISA KEV, due 21 Nov.",
+  "tldr": "A Synology DSM bug lets an attacker with no login run code on the NAS. It was fixed in Nov 2024, but ransomware is hitting boxes on old DSM, and it's on CISA's exploited list. Update DSM now and keep it off the internet.",
   "summary": "A bug in Synology's NAS software (DSM) lets an attacker with no login run code on the NAS. Synology fixed it in Nov 2024, but on 29 Oct 2026 it warned that ransomware (C3RB3R) is hitting NAS boxes on outdated DSM, and CISA added this bug to its exploited list on 18 Nov 2026. Current DSM builds are fixed.",
   "status": {
     "exploit": "demonstrated",

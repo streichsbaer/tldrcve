@@ -78,7 +78,8 @@ Copy the shape of an existing file (`content/nginx2root.json` is a good model).
 | `updated` | `YYYY-MM-DD` of the last edit |
 | `verdict` | `now`, `if`, `cycle` or `watch` (see below) |
 | `tile_line` | One line explaining the verdict, about 55 chars max |
-| `summary` | 2-3 plain-English sentences |
+| `tldr` | The page in one or two plain sentences, **≤ 256 chars**: what it is, who is affected, how bad, what to do. Shown at the top of the page, and it is the X post text (plus a line break and the link: 280). Every claim must already be on the page; update it whenever the verdict, status or fix changes |
+| `summary` | 2-3 plain-English sentences, under "More details" below the TL;DR |
 | `status.exploit` | `public` (working code anyone can download), `demonstrated` (shown, code not public) or `none` |
 | `status.attacks` | `seen` (a credible, named report) or `none` |
 | `status.kev` | `{"added": "...", "due": "..."}` from CISA's KEV catalog, or `null` |

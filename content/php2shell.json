@@ -20,6 +20,7 @@
   "updated": "2026-11-21",
   "verdict": "now",
   "tile_line": "Exploited in the wild. In CISA KEV.",
+  "tldr": "PHP2Shell: two bugs in PHP itself let an attacker with no login run code on web servers running PHP. Exploited, on CISA's exploited list. Update PHP now, to the 19 Nov 2026 releases or later, and restart it.",
   "summary": "Two bugs in PHP itself let an attacker with no login run code on web servers that run PHP. Attacks are already happening, so if you serve PHP on the web, update now.",
   "affected": [
     {

@@ -23,6 +23,7 @@
   "updated": "2026-11-20",
   "verdict": "cycle",
   "tile_line": "Needs ~1.6 GB of input you supply. No remote path known.",
+  "tldr": "OpenSSL 4.0 and 4.1 can write past a buffer when asked to base64-encode about 1.6 GB at once. The only known trigger is a huge proxy password typed into openssl s_client by its own user. The 9.8 is CISA's score. Update when fixes ship.",
   "summary": "A bug in OpenSSL 4.0 and 4.1 can write past the end of a buffer when a program asks it to base64-encode about 1.6 GB or more in one go. The only trigger described so far is the openssl s_client command given a huge proxy password by the person running it. The Critical 9.8 score comes from CISA, which assumes a remote attacker with no login; OpenSSL hasn't rated it yet, and Ubuntu rates it Medium.",
   "status": {
     "exploit": "none",

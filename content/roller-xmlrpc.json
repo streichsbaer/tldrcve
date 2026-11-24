@@ -25,6 +25,7 @@
   "updated": "2026-11-22",
   "verdict": "now",
   "tile_line": "Exploited, on CISA's list. No login. Fixed in 6.1.6.",
+  "tldr": "One crafted request to Apache Roller's XML-RPC address can, at worst, run code with no login. Apache says it's being exploited, and it's on CISA's exploited list. Roller 4.0.0 to 6.1.5 are affected: upgrade to 6.1.7.",
   "summary": "A bug in Apache Roller, a Java blog server, lets anyone who can reach the site send one crafted request to its XML-RPC address and, in the worst case, run their own code, without logging in. Default installs from 4.0.0 through 6.1.5 are affected, even with XML-RPC switched off. Apache rates it Critical (CVSS 9.8) and says it is being actively exploited, and CISA added it to its exploited list (KEV) on 20 Nov 2026; one researcher's public code reaches the bug but says running code on a stock, up-to-date setup needs extra work. 6.1.6 (24 Sep 2026) and later fix it.",
   "status": {
     "exploit": "public",

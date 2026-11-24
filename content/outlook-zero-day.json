@@ -21,6 +21,7 @@
   "updated": "2026-11-20",
   "verdict": "now",
   "tile_line": "Exploited, in CISA KEV (due 24 Nov). Update Office.",
+  "tldr": "Opening a crafted Office file in classic Outlook hands the user's NTLMv2 hash to an attacker, who can sign in as them. Exploited, on CISA's exploited list. Fixed in the 10 Nov 2026 Office update: update Office, not just Windows.",
   "summary": "If a user opens a crafted Office file in classic Outlook, Outlook connects to an attacker's server without its usual warning and hands over the user's NTLMv2 hash. Attackers can use that hash to sign in as the user. Microsoft says it is being exploited; it is fixed in the 10 Nov 2026 Office update, not a Windows update.",
   "status": {
     "exploit": "demonstrated",

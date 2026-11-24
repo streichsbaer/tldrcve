@@ -19,6 +19,7 @@
   "updated": "2026-11-20",
   "verdict": "now",
   "tile_line": "Public exploit. In CISA KEV, due 1 Dec.",
+  "tldr": "Anyone with a signed Puppet agent certificate can run code on your Puppet Server, which signs every node's certificate; with autosign on, anyone who reaches it can get one. Public exploit, attacks seen, on CISA's exploited list. Upgrade now.",
   "summary": "Anyone with a signed Puppet agent certificate can send a crafted report and run code on your Puppet Server, which holds the key that signs every node's certificate. Any compromised agent is enough, and autosigning lets anyone who can reach the server get a certificate.",
   "affected": [
     {

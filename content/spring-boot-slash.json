@@ -21,6 +21,7 @@
   "updated": "2026-11-20",
   "verdict": "if",
   "tile_line": "Only bites if a configured path ends in /. No exploit.",
+  "tldr": "A Spring Boot bug can leave Actuator endpoints or the H2 console unsecured, but only if a configured path ends in a slash. No exploit, no attacks. Upgrade to 4.1.3 or 4.0.10, or drop the trailing slash. Boot 3.x has no free fix.",
   "summary": "Spring rates this Spring Boot bug Critical. Spring Boot builds security rules for Actuator endpoints and the H2 console from paths in your configuration; if such a path ends in a slash, the rule comes out wrong and doesn't match the real endpoint, which can then be left unsecured. The fix only strips that slash, so paths without one behave the same before and after. Free fixes exist only for Spring Boot 4.0 and 4.1.",
   "status": {
     "exploit": "none",

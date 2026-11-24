@@ -23,6 +23,7 @@
   "updated": "2026-11-20",
   "verdict": "if",
   "tile_line": "Only if FastCGI connections are reused. Fixed 19 Nov.",
+  "tldr": "A PHP-FPM bug can let an attacker with no login hide a second request and run code, but only if the web server reuses FPM connections (off by default) and the app leaves the body unread. Public test code. Fixed in PHP's 19 Nov 2026 releases.",
   "summary": "A bug in PHP-FPM can let an attacker with no login sneak a second, hidden request to PHP in one web request and run their own code. It only works where the web server reuses its connections to PHP-FPM (off by default in nginx and Apache) and the app opens the request body without reading all of it. PHP rates it Critical (CVSS 9.2); public test code runs PHP on a target, and the 19 Nov 2026 releases fix it.",
   "status": {
     "exploit": "public",

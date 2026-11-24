@@ -40,6 +40,7 @@
   "updated": "2026-11-21",
   "verdict": "if",
   "tile_line": "Public exploit for HTTP/2. Same fix covers 9 more bugs.",
+  "tldr": "nginx2root: a public exploit crashes nginx over HTTP/2 with no login. Running code needs ASLR off or bypassed, and runs as the worker user, not root. No attacks reported. Upgrade to 1.31.9 or 1.30.7, which also fix nine more bugs.",
   "summary": "A bug in nginx's HTTP/2 handling lets an attacker with no login crash nginx or run code as the nginx worker user, and a public exploit is out. Despite the name, it doesn't give root by itself (Xint got root by chaining it with a separate Linux kernel bug, covered on our [Linux SCTP root](/linux-sctp-root/) page), and code execution needs ASLR to be off or bypassed. The same 18 Nov releases fix nine more nginx bugs, including the other four Xint groups as nginx2root (a second HTTP/2 bug, HTTP/3, resolver and mail proxy) and a TLS 1.3 hang; turning off HTTP/2 covers only the two HTTP/2 bugs.",
   "affected": [
     {

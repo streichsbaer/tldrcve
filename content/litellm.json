@@ -26,6 +26,7 @@
   "updated": "2026-11-20",
   "verdict": "now",
   "tile_line": "In CISA KEV, due 2 Dec. Public PoC, needs admin key.",
+  "tldr": "A sandbox escape in the LiteLLM proxy runs any command, as root in the default Docker image. It needs an admin key, but attackers are guessing default ones. Public exploit, on CISA's exploited list. Upgrade to the newest on your line.",
   "summary": "LiteLLM's proxy has an endpoint for testing custom guardrail code, and its home-made sandbox can be escaped to run any command, as root in the default Docker image. It needs a proxy-admin key, but attackers have been guessing default keys, and two other bugs let ordinary users become admin on older versions.",
   "status": {
     "exploit": "public",

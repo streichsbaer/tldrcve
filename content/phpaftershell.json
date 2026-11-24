@@ -24,6 +24,7 @@
   "updated": "2026-11-21",
   "verdict": "if",
   "tile_line": "Needs a crashed session write and a gadget. Fixed 19 Nov.",
+  "tldr": "phpAfterShell: a PHP session file cut short mid-write can let an attacker run code, if sessions are in files, hold the attacker's data and the app has a usable code library. Lab exploit public, no attacks. Fixed in PHP's 19 Nov 2026 releases.",
   "summary": "PHP's default file-based session storage can leave a half-old, half-new session file if a write is cut short, and an attacker can use that to make PHP rebuild objects of their choice and run code. It also needs the attacker's data in the session, a worker killed mid-write and a suitable code library in the app; lab exploit code is public, no attacks are reported, and the 19 Nov 2026 releases fix it. It's a separate bug from [PHP2Shell](/php2shell/), not a bypass: the October releases just don't include this fix.",
   "status": {
     "exploit": "public",

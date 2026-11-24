@@ -29,6 +29,7 @@
   "updated": "2026-11-20",
   "verdict": "if",
   "tile_line": "If SAP's web ports are reachable. No attacks yet.",
+  "tldr": "A WebSocket bug in SAP's web server (ICM and Web Dispatcher) lets an attacker with no login leak memory or run code as the SAP admin user. SAP rates it 10.0. Exploits exist but aren't public; no attacks. If its web ports are reachable, patch.",
   "summary": "A memory bug in how SAP's built-in web server handles WebSocket traffic lets an attacker with no login leak server memory or run code as the SAP admin user (<sid>adm). It hits the ICM in NetWeaver AS ABAP and every SAP Web Dispatcher, including the one in HANA XS, and WebSocket support is on by default. SAP rates it 10.0 and fixed it on 10 Nov 2026; Onapsis (\"ICM2SHELL\") and nullFaktor (\"SAPBleed\") both built working exploits but haven't published them, and no attacks are reported.",
   "status": {
     "exploit": "demonstrated",

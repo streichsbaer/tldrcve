@@ -23,6 +23,7 @@
   "updated": "2026-11-20",
   "verdict": "if",
   "tile_line": "Only with mixed session serializers. Fixed 19 Nov.",
+  "tldr": "PHP's session upload progress can let an attacker with no login run code, but only where sessions are written with one serializer and read with another. Lab exploit public, no attacks. Fixed in PHP's 19 Nov 2026 releases.",
   "summary": "PHP's session upload-progress feature can let an attacker with no login run code, but only where sessions are written with one serializer and read with another, and the app has a suitable code library. PHP rates it Critical; exploit code for a test lab is public, and the 19 Nov 2026 releases fix it. It's a sibling of PHP2Shell (CVE-2026-109618/109619).",
   "status": {
     "exploit": "public",

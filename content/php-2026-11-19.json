@@ -38,6 +38,7 @@
   "updated": "2026-11-21",
   "verdict": "if",
   "tile_line": "17 advisories, 7 critical. All need uncommon setups.",
+  "tldr": "PHP's 19 Nov 2026 releases fix 17 advisories, 7 critical. Each critical one needs a non-default setting or an uncommon setup, and none is reported exploited. One update fixes all: 8.6.0, 8.5.13, 8.4.28, 8.3.37 or 8.2.36.",
   "summary": "PHP's 19 Nov releases fix 17 security advisories: 7 critical, 4 high and 6 medium (plus a bundled uriparser update, CVE-2026-48841, which is why some count 18). PHP says every critical one needs a non-default setting or an uncommon setup, and none is reported exploited, though four have public lab or test exploits. Two of them close gaps in October's exploited [PHP2Shell](/php2shell/) fix. One update fixes all of them.",
   "status": {
     "exploit": "public",

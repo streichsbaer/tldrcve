@@ -30,6 +30,7 @@
   "updated": "2026-11-20",
   "verdict": "now",
   "tile_line": "Exploited via web pages. In CISA KEV, due 24 Nov.",
+  "tldr": "A crafted web page can run code inside Chrome's sandbox, and Google says it's exploited. Update Chrome and relaunch (fixed from 157.0.8103.50); Edge, Brave, Opera and Electron apps need their own updates.",
   "summary": "A use-after-free bug in Chromium's XML handling lets a crafted web page run code inside the browser's sandbox. Google says an exploit exists in the wild. It's fixed in Chrome 157.0.8103.50 (9 Nov 2026), and Edge, Brave, Opera and Electron have shipped fixes too.",
   "status": {
     "exploit": "demonstrated",
