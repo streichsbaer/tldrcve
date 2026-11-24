@@ -248,6 +248,12 @@ def cve_list(c: dict) -> str:
     return ", ".join(ids) if len(ids) <= 3 else f"{len(ids)} CVEs"
 
 
+def cve_paren(c: dict) -> str:
+    """" (CVE-…)" after a page name, or nothing when no CVE is assigned yet (no empty brackets)."""
+    ids = cve_list(c)
+    return f" ({ids})" if ids else ""
+
+
 SEVERITY_ORDER = ("critical", "high", "medium", "low")
 ROUNDUP_OF = {}  # bug page slug -> the release roundup that lists it; filled in main()
 ROUNDUP_TAG = '<span class="tag">Roundup</span>'
@@ -337,7 +343,7 @@ def versions_embed(pids: list) -> str:
 
 def toolbar(c: dict) -> str:
     url = f"{SITE_URL}/{c['slug']}/"
-    post = quote(f"{c['name']} ({cve_list(c)}): {VERDICTS[c['verdict']]}. Are you affected?")
+    post = quote(f"{c['name']}{cve_paren(c)}: {VERDICTS[c['verdict']]}. Are you affected?")
     x = f"https://x.com/intent/post?text={post}&url={quote(url, safe='')}"
     li = f"https://www.linkedin.com/sharing/share-offsite/?url={quote(url, safe='')}"
     return f"""    <div class="toolbar">
@@ -423,7 +429,7 @@ def brief(c: dict) -> str:
     </details>
   </main>
 """
-    title = f'{c["name"]} ({cve_list(c)}) in plain English · tldrcve'
+    title = f'{c["name"]}{cve_paren(c)} in plain English · tldrcve'
     return page(title, c["summary"], body, path=f"/{c['slug']}/", data=f"/{c['slug']}.json")
 
 
@@ -931,7 +937,7 @@ def cves_page(all_c: list) -> str:
           <span class="row__meter">{mini_meter(c["status"]["scare"])}</span>
           <span class="row__main">
             <span class="row__name">{html.escape(c["name"])}</span>
-            <span class="row__meta">{html.escape(product_short(c))} · {html.escape(cve_list(c))}</span>
+            <span class="row__meta">{html.escape(product_short(c))} · {html.escape(cve_list(c) or "No CVE yet")}</span>
           </span>
           <span class="row__line">{text(c["tile_line"])}</span>
           <span class="row__verdict"><span class="verdict verdict--{v}">{VERDICTS[v]}</span>{roundup_tag(c)}</span>
