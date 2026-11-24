@@ -26,7 +26,7 @@
   "updated": "2026-11-24",
   "verdict": "if",
   "tile_line": "Remote crash of Linux servers; patch if TCP is exposed.",
-  "summary": "NoisyTCP (CVE-2026-99288) is an 11-year-old race in the Linux kernel's TCP code that lets anyone who can reach a listening TCP port crash the whole server, with no login. Its finder, Hyunwoo Kim, crashed default Nginx, Apache and SSH servers on virtual machines in about 5 seconds to 2 minutes; a quiet physical server took about 14 hours. He says it isn't a remote code execution bug, and his exploit isn't public. Fixes are out for Debian and most RHEL versions and on the way for Ubuntu. The same patch series fixed a sibling bug, the [Linux 9.8 race](/linux-socket-race/), which only matters on Arm and POWER.",
+  "summary": "NoisyTCP (CVE-2026-99288) is an 11-year-old race in the Linux kernel's TCP code that lets anyone who can reach a listening TCP port crash the whole server, with no login. Its finder, Hyunwoo Kim, crashed default Nginx, Apache and SSH servers on virtual machines in about 5 seconds to 2 minutes; a quiet physical server took about 14 hours. He says it isn't practically remote code execution yet, and his exploit isn't public. Fixes are out for Debian and the current RHEL 8, 9 and 10 releases, and on the way for Ubuntu. The same patch series fixed a sibling bug, the [Linux 9.8 race](/linux-socket-race/), which only matters on Arm and POWER.",
   "status": {
     "exploit": "demonstrated",
     "attacks": "none",
@@ -71,9 +71,9 @@
       ]
     },
     {
-      "label": "Two or more receive queues, or RPS",
-      "text": "Kim says the race needs packets handled on different CPUs: a network interface with two or more receive queues, or RPS (receive packet steering) spreading packets across CPUs. The command lists each interface's receive queues; RPS is off when every `rps_cpus` file under them is zero, the kernel's default.",
-      "cmd": "ls -d /sys/class/net/*/queues/rx-*",
+      "label": "Packets spread across several CPUs",
+      "text": "Kim says the race needs packets handled on different CPUs. That happens when the interface the attacker's traffic arrives on has two or more receive queues, or when RPS (receive packet steering) is turned on for it. The command prints one line per receive queue with its RPS setting: more than one `rx-` line for that interface, or a setting that isn't all zeros, means you meet this condition. RPS is off by default.",
+      "cmd": "grep . /sys/class/net/*/queues/rx-*/rps_cpus",
       "cite": [
         1,
         2,
@@ -84,11 +84,13 @@
   "do": [
     {
       "label": "Update the kernel and reboot",
-      "text": "Fixed: Debian 12 6.1.192-1, Debian 13 6.12.117-1, RHEL 8 4.18.0-553.189.1.el8_10, RHEL 9.9 5.14.0-741.26.1.el9_9 and RHEL 10.3 6.12.0-264.19.1.el10_3. Ubuntu lists fixes in progress for its main kernel on every release from 16.04 to 26.10; its HWE and cloud kernels on older releases are listed as needing a fix. RHEL 10.2 and RHEL 9.8 have no fixed kernel yet.",
+      "text": "Fixed in the current releases: Debian 12 6.1.192-1, Debian 13 6.12.117-1, RHEL 8 4.18.0-553.189.1.el8_10, RHEL 9.9 5.14.0-741.26.1.el9_9 and RHEL 10.3 6.12.0-264.19.1.el10_3. Older RHEL 9.x and 10.x update streams (such as 9.8 and 10.2) have no fixed kernel yet. Ubuntu lists fixes in progress for its main kernel on every release from 16.04 to 26.10; its cloud kernels on every release, and its HWE kernels, are listed as vulnerable with no fix in progress yet. On Arm and POWER, a netdev review bot asked for this fix to be backported together with the [Linux 9.8 race](/linux-socket-race/) fix, because without it the crash might still be reachable there; no maintainer has confirmed that, and older stable kernels (5.10 to 6.6) have only this fix so far.",
       "cite": [
         4,
         5,
-        6
+        6,
+        12,
+        13
       ],
       "versions": [
         "linux-kernel"
@@ -105,12 +107,13 @@
     },
     {
       "label": "Why it isn't Patch now",
-      "text": "It crashes servers; it doesn't leak or change data. Kim describes a second, much harder path that can reach freed memory, but on remote code execution he says \"Not yet. and basically, no\": he has only \"a very limited, lab-specific exploit that targets VM servers\", and his GitHub page has no exploit code. No attacks are reported and it isn't on CISA's list of exploited bugs. Ratings differ: the kernel CVE team gives 7.5, Ubuntu High, Red Hat Important (its 7.5 score assumes a logged-in attacker who can change data, which its own statement rules out), and CISA's entry in the CVE record 5.9, rating the timing hard. We'd change the verdict to Patch now if working exploit code is published or attacks are reported.",
+      "text": "The easy path only crashes servers: Red Hat says it \"does not allow data alteration or arbitrary code execution\", and the kernel CVE team scores no data impact. Kim calls it remote corruption and describes a second, much harder path that can reach freed memory, which kernel maintainer Eric Dumazet disputed when the fix was first posted. On code execution Kim says \"Not yet. and basically, no\": he has only \"a very limited, lab-specific exploit that targets VM servers\", and his GitHub page has no exploit code. No attacks are reported and it isn't on CISA's list of exploited bugs. Ratings differ: the kernel CVE team gives 7.5, Ubuntu High, Red Hat Important (its 7.5 vector assumes an attacker with some privileges who can read and change data, which its own statement rules out), and CISA's entry in the CVE record 5.9, rating the timing hard. We'd change the verdict to Patch now if working exploit code is published or attacks are reported.",
       "cite": [
+        1,
         2,
         3,
         4,
-        5,
+        8,
         11
       ]
     }
@@ -123,7 +126,7 @@
       "RHEL 8": "4.18.0-553.189.1.el8_10"
     }
   },
-  "slack": "NoisyTCP (CVE-2026-99288), Linux kernel, public 15 Nov 2026: a TCP race that lets anyone who can reach a listening TCP port crash the whole server, no login, default configs (Nginx, Apache, SSH). Needs two or more receive queues or RPS. The finder crashed VMs in 5 s to 2 min; a quiet physical server took 14 h. Crash only, not RCE per the finder; his exploit isn't public; no attacks, not on CISA KEV. Fixed: Debian 12 6.1.192-1, Debian 13 6.12.117-1, RHEL 8, 9.9, 10.3; Ubuntu in progress; RHEL 10.2 and 9.8 not yet. Stopgaps: SYN cookies off (net.ipv4.tcp_syncookies=0, per namespace) or a single receive queue with RPS/RFS off.",
+  "slack": "NoisyTCP (CVE-2026-99288), Linux kernel, write-up published 15 Nov 2026: a TCP race that lets anyone who can reach a listening TCP port crash the whole server, no login, default configs (Nginx, Apache, SSH). Needs two or more receive queues or RPS. The finder crashed VMs in 5 s to 2 min; a quiet physical server took 14 h. The easy path only crashes the host; the finder says it isn't practically RCE yet; his exploit isn't public; no attacks, not on CISA KEV. Fixed: Debian 12 6.1.192-1, Debian 13 6.12.117-1, RHEL 8, 9.9, 10.3; Ubuntu in progress; older RHEL 9.x and 10.x streams not yet. Stopgaps: SYN cookies off (net.ipv4.tcp_syncookies=0, per namespace) or a single receive queue with RPS/RFS off.",
   "sources": [
     {
       "title": "oss-security: Hyunwoo Kim's NoisyTCP advisory, trigger paths, timings, mitigations",
@@ -158,8 +161,8 @@
       "url": "https://git.kernel.org/stable/c/4e2b3ef19e0e04adca38442f07dd6bc93c712bf1"
     },
     {
-      "title": "Linux netdev (patchwork): first public version of the fix with the crash report, 21 Oct 2026",
-      "url": "https://patchwork.kernel.org/project/netdevbpf/patch/ath58Egc-oI6p3Jl@v4bel/",
+      "title": "Linux netdev (lore): first public version of the fix with the crash report, 21 Oct 2026, and Eric Dumazet's reply disputing the full-socket path",
+      "url": "https://lore.kernel.org/netdev/ath58Egc-oI6p3Jl@v4bel/",
       "date": "21 Oct"
     },
     {
@@ -174,6 +177,15 @@
     {
       "title": "CISA KEV catalog: not listed",
       "url": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog"
+    },
+    {
+      "title": "Red Hat: kernel errata (CSAF), which builds include the fix",
+      "url": "https://access.redhat.com/hydra/rest/securitydata/csaf.json?package=kernel"
+    },
+    {
+      "title": "Linux netdev (lore): the v5 two-patch series, with the review bot's note on backporting both together",
+      "url": "https://lore.kernel.org/netdev/20261029214219.1035176-1-imv4bel@gmail.com/T/",
+      "date": "2 Nov"
     }
   ],
   "changes": [
