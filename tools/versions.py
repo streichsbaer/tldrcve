@@ -17,8 +17,14 @@ Feeds (the `feed` field in versions/<id>.json):
   pypi:<package>[:major]           the same from PyPI
   github:<owner/repo>[:major]      the same from GitHub releases (drafts and pre-releases skipped)
   npm-latest:<a>,<b> / pypi-latest:<a>,<b>   newest release of each package, keyed by package name
+  distro-kernel                    the distributions' own kernel packages, keyed like the linux-kernel lines:
+                                   "Debian 13" (Debian's archive, main + security + updates), "Ubuntu 24.04"
+                                   (Launchpad, LTS releases of the last five years; Release, Security and Updates
+                                   pockets, not Proposed),
+                                   "RHEL 10.3" per minor stream and "RHEL 9" for the newest of a major (Red Hat's
+                                   security data API, the `kernel` package)
 """
-import json, os, re, sys, urllib.request
+import json, os, re, sys, urllib.parse, urllib.request
 from datetime import date, datetime
 from pathlib import Path
 
@@ -27,12 +33,17 @@ DIR = ROOT / "versions"
 UA = {"User-Agent": "tldrcve-versions"}
 
 
-def get_json(url):
+def get_json(url, timeout=30):
     headers = dict(UA)
     if url.startswith("https://api.github.com/") and os.environ.get("GITHUB_TOKEN"):
         headers["Authorization"] = f"Bearer {os.environ['GITHUB_TOKEN']}"  # only raises the rate limit
-    with urllib.request.urlopen(urllib.request.Request(url, headers=headers), timeout=30) as r:
+    with urllib.request.urlopen(urllib.request.Request(url, headers=headers), timeout=timeout) as r:
         return json.loads(r.read())
+
+
+def get_text(url):
+    with urllib.request.urlopen(urllib.request.Request(url, headers=dict(UA)), timeout=30) as r:
+        return r.read().decode("utf-8", "replace")
 
 
 PRE = re.compile(r"(rc|alpha|beta|preview|candidate|snapshot|dev|canary|nightly|next|\bM\d)", re.I)
@@ -135,11 +146,75 @@ def feed_nodejs(_):
     return out
 
 
+DEBIAN = {"11": "bullseye", "12": "bookworm", "13": "trixie", "14": "forky"}
+RHEL_KERNEL = re.compile(r"^kernel-0:(\d+\.\d+\.\d+-[\d.]+\.el(\d+)(?:_(\d+))?)\.src$")
+
+
+def kernel_debian():
+    """Debian's archive (madison): the newest linux source per release, from its main, security and updates suites."""
+    out = {}
+    for number, name in DEBIAN.items():
+        suites = f"{name},{name}-security,{name}-updates"
+        text = get_text(f"https://qa.debian.org/madison.php?package=linux&table=debian&text=on&s={suites}")
+        vers = [row.split("|")[1].strip() for row in text.splitlines() if row.count("|") >= 3 and row.split("|")[0].strip() == "linux"]
+        if vers:
+            out[f"Debian {number}"] = (max(vers, key=vkey), "")
+    return out
+
+
+def kernel_ubuntu():
+    """Launchpad: the newest published linux source per LTS release of the last five years (standard support), from its
+    Release, Security and Updates pockets. Launchpad answers slowly (about 10 s a release), hence the longer timeout."""
+    out = {}
+    for series in get_json("https://api.launchpad.net/1.0/ubuntu/series", timeout=90)["entries"]:
+        version = series["version"]
+        year, month = (int(x) for x in version.split("."))
+        if series["status"] == "Obsolete" or month != 4 or year % 2 or year < date.today().year % 100 - 5:
+            continue
+        query = urllib.parse.urlencode({"ws.op": "getPublishedSources", "source_name": "linux", "exact_match": "true",
+                                        "status": "Published", "distro_series": series["self_link"]})
+        pubs = [e for e in get_json(f"https://api.launchpad.net/1.0/ubuntu/+archive/primary?{query}", timeout=90)["entries"]
+                if e["pocket"] in ("Release", "Security", "Updates")]
+        if pubs:
+            newest = max(pubs, key=lambda e: vkey(e["source_package_version"]))
+            out[f"Ubuntu {version}"] = (newest["source_package_version"], (newest.get("date_published") or "")[:10])
+    return out
+
+
+def kernel_redhat():
+    """Red Hat's security data: the newest `kernel` build per RHEL minor stream (el9_9 -> "RHEL 9.9") and per major
+    ("RHEL 9", the newest of any of its streams), from the last year's advisories."""
+    after = date.fromordinal(date.today().toordinal() - 365).isoformat()
+    advisories, page = [], 1
+    while True:
+        batch = get_json(f"https://access.redhat.com/hydra/rest/securitydata/csaf.json?package=kernel&after={after}&per_page=1000&page={page}")
+        advisories += batch
+        if len(batch) < 1000:
+            break
+        page += 1
+    out = {}
+    for a in advisories:
+        for pkg in a.get("released_packages", []):
+            m = RHEL_KERNEL.match(pkg)
+            if not m:
+                continue
+            ver, major, minor = m.groups()
+            for key in ([f"RHEL {major}.{minor}"] if minor else []) + [f"RHEL {major}"]:
+                if key not in out or vkey(ver) > vkey(out[key][0]):
+                    out[key] = (ver, a.get("released_on", "")[:10])
+    return out
+
+
+def feed_distro_kernel(_):
+    return {**kernel_debian(), **kernel_ubuntu(), **kernel_redhat()}
+
+
 def feed(name):
     kind, _, arg = name.partition(":")
     return {"php": feed_php, "nodejs": feed_nodejs, "endoflife": feed_endoflife, "dotnet": feed_dotnet,
             "wordpress": feed_wordpress, "npm": feed_npm, "pypi": feed_pypi, "github": feed_github,
-            "npm-latest": lambda a: feed_latest("npm", a), "pypi-latest": lambda a: feed_latest("pypi", a)}[kind](arg)
+            "npm-latest": lambda a: feed_latest("npm", a), "pypi-latest": lambda a: feed_latest("pypi", a),
+            "distro-kernel": feed_distro_kernel}[kind](arg)
 
 
 def report():

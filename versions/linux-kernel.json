@@ -2,7 +2,7 @@
   "id": "linux-kernel",
   "name": "Linux kernel",
   "about": "The newest release on each Linux kernel line we track. Each one fixes every Linux kernel bug we cover, except the bugs listed below as not fixed yet.",
-  "feed": null,
+  "feed": "distro-kernel",
   "latest_from": [
     "https://security-tracker.debian.org/tracker/source-package/linux",
     "https://launchpad.net/ubuntu/+source/linux",
