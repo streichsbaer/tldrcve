@@ -378,3 +378,10 @@ sup.cite a:hover { color: var(--brand); }
 .changes li[hidden] { display: none; }
 .search--week { margin: 4px 0 20px; max-width: 34rem; }
 [data-week-section][hidden], [data-search][hidden] { display: none; }
+
+/* TL;DR panel on vulnerability pages */
+.tldr .pane__body { padding: 16px 20px 18px; display: grid; gap: 12px; }
+.tldr__text { font-size: 1.125rem; line-height: 1.55; color: var(--ink); margin: 0; max-width: none; }
+.tldr__more { border-top: 1px solid var(--rule); padding-top: 10px; }
+.tldr__more > summary { cursor: pointer; font-weight: 700; color: var(--ink-2); width: fit-content; }
+.tldr__more p { margin: 10px 0 0; line-height: 1.6; color: var(--ink-2); }

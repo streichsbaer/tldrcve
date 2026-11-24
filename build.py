@@ -382,6 +382,28 @@ def part_of(c: dict) -> str:
             f'<a href="/{r["slug"]}/#h-bugs">see all {len(r["bugs"])} advisories →</a></p>')
 
 
+# The TL;DR is the page in one or two sentences, and the X post is built from it, so it must fit a post with the link
+# (280 characters, the link counts as 23, plus a line break).
+TLDR_MAX = 256
+
+
+def tldr_pane(c: dict) -> str:
+    """TL;DR panel: the short "tldr" text, with the longer summary under "More details".
+    Pages without a tldr yet show their summary here instead."""
+    if not c.get("tldr"):
+        body = f'        <p class="tldr__text">{text(c["summary"])}</p>'
+    else:
+        body = (f'        <p class="tldr__text">{text(c["tldr"])}</p>\n'
+                f'        <details class="tldr__more"><summary>More details</summary><p>{text(c["summary"])}</p></details>')
+    return f"""    <section class="pane tldr" aria-labelledby="h-tldr">
+      <div class="pane__head"><h2 id="h-tldr">TL;DR</h2></div>
+      <div class="pane__body">
+{body}
+      </div>
+    </section>
+"""
+
+
 def brief(c: dict) -> str:
     v = c["verdict"]
     s = c["status"]
@@ -405,8 +427,10 @@ def brief(c: dict) -> str:
       <p class="kicker">{html.escape(" · ".join(kicker))}</p>
       <h1>{html.escape(c["name"])}</h1>
       <p class="verdict-line"><span class="verdict verdict--{v} verdict--lg">{VERDICTS[v]}</span>{roundup_tag(c)}<span>{text(c["tile_line"])}</span></p>
-      <p class="summary">{text(c["summary"])}</p>{part_of(c)}
+{part_of(c)}
     </header>
+
+{tldr_pane(c)}
 
     <section class="pane" aria-labelledby="h-scare">
       <div class="pane__head"><h2 id="h-scare">How scary is it?</h2><span class="pane__meta">updated {nice_date(c["updated"])}</span></div>
@@ -446,7 +470,7 @@ def brief(c: dict) -> str:
   </main>
 """
     title = f'{c["name"]}{cve_paren(c)} in plain English · tldrcve'
-    return page(title, c["summary"], body, path=f"/{c['slug']}/", data=f"/{c['slug']}.json")
+    return page(title, c.get("tldr") or c["summary"], body, path=f"/{c['slug']}/", data=f"/{c['slug']}.json")
 
 
 # ---------- Versions (latest safe version per product line) ----------
@@ -1128,6 +1152,8 @@ def editor_checks(all_c: list) -> list:
                 yield from strings(v, f"{path}[{i}]")
 
     for c in all_c:
+        if c.get("tldr") and len(c["tldr"]) > TLDR_MAX:
+            warnings.append(f'{c["slug"]}.tldr is {len(c["tldr"])} chars, keep it to {TLDR_MAX} so the X post with its link fits 280')
         if len(product_short(c)) > PRODUCT_MAX:
             warnings.append(f'{c["slug"]}: card label "{product_short(c)}" is {len(product_short(c))} chars, keep it to {PRODUCT_MAX} so it fits without "…"')
         newest = max(ch["date"] for ch in c["changes"])
@@ -1381,7 +1407,7 @@ def index_row(c: dict) -> dict:
     row.update({"verdict_label": VERDICTS[c["verdict"]], "tile_line": c["tile_line"], "scare": s["scare"],
                 "scare_label": scare_label(s["scare"]), "exploit": s["exploit"], "attacks": s["attacks"],
                 "kev": s["kev"]})
-    row.update({k: c[k] for k in ("ghsa", "also_in") if c.get(k)})
+    row.update({k: c[k] for k in ("tldr", "ghsa", "also_in") if c.get(k)})
     if "no_login" in s:
         row["no_login"] = s["no_login"]
     row.update({k: c[k] for k in ("disclosed", "news", "updated") if c.get(k)})
