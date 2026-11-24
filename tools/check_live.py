@@ -107,6 +107,16 @@ def main():
         status, headers, _ = get(BASE + name)
         if status != 200:
             problems.append(f"{name}: HTTP {status}")
+    status, _, data = get(BASE + "/feed.json")
+    try:
+        feed = json.loads(data)
+        if feed.get("version") != "https://jsonfeed.org/version/1.1" or not feed.get("items"):
+            problems.append("/feed.json: not a JSON Feed 1.1 with items")
+        for item in feed.get("items", []):
+            if not all(item.get(k) for k in ("id", "url", "title", "content_text", "date_published")):
+                problems.append(f"/feed.json: item {item.get('id')} is missing a required field")
+    except (ValueError, TypeError) as e:
+        problems.append(f"/feed.json: not valid JSON ({e})")
     for f in sorted((ROOT / "content").glob("*.json")):
         c = json.loads(f.read_text())
         for cid in c["cves"] + c.get("ghsa", []):
