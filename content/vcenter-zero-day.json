@@ -23,11 +23,11 @@
   "product": "VMware vCenter",
   "disclosed": "2026-11-19",
   "news": "2026-11-20",
-  "updated": "2026-11-22",
+  "updated": "2026-11-24",
   "verdict": "now",
   "tile_line": "Exploited in the wild, on KEV. No workaround.",
   "tldr": "Anyone who can reach VMware vCenter can get an admin session without a password. Exploited, on CISA's exploited list. Patch now; there's no workaround, and vCenter 7.0 has no public fix.",
-  "summary": "The bug is in vCenter's directory service. Mandiant says a suspected China-nexus group, ARMORY CASTLE, used it in early September to create a rogue admin account and steal vCenter's login-signing key. Broadcom fixed it on 19 Nov; for vCenter 7.0 it tells extended-support customers to contact Broadcom Support.",
+  "summary": "The bug is in vCenter's directory service. Mandiant says a suspected China-nexus group, ARMORY CASTLE, used it in early September to create a rogue admin account and steal vCenter's login-signing key. Broadcom fixed it on 19 Nov; for vCenter 7.0 it tells extended-support customers to contact Broadcom Support; a second, separate login bypass in the same service followed on 24 Nov 2026 ([VMware Nov fixes](/vmsa-2026-0011/)).",
   "affected": [
     {
       "label": "vCenter before the fix",
@@ -51,11 +51,13 @@
   "do": [
     {
       "label": "Patch now",
-      "text": "Install 9.1.1.0200, 9.0.2.0200 or 8.0 U3m (on VCF 5.x, patch vCenter to 8.0 U3m or move to VCF 5.2.5); Broadcom's patches are cumulative, so later versions also fix it. Broadcom gives no workaround. CISA's deadline for US agencies is 23 Nov 2026. Heads-up from Broadcom: 8.0 U3m and 9.0.2.0200 block upgrades to VCF 9.1.1, so patch now and wait for 9.1.2 before that upgrade (or move vCenter to 9.1.1 first and patch there). The same advisory also covers four lesser bugs that need an account or local access, in SDDC Manager and VMware Tools for Windows (CVE-2026-123891 to CVE-2026-123894), with their own fixed versions.",
+      "text": "Install 9.1.1.0200, 9.0.2.0200 or 8.0 U3m (on VCF 5.x, patch vCenter to 8.0 U3m or move to VCF 5.2.5); Broadcom's patches are cumulative, so later versions also fix it. Broadcom gives no workaround. CISA's deadline for US agencies is 23 Nov 2026. 8.0 U3m and 9.0.2.0200 blocked upgrades to VCF 9.1.1; VCF 9.1.2 (24 Nov 2026) removes that block. The same advisory also covers four lesser bugs that need an account or local access, in SDDC Manager and VMware Tools for Windows (CVE-2026-123891 to CVE-2026-123894), with their own fixed versions. Broadcom's 24 Nov advisory fixes a second login bypass in the same service ([VMware Nov fixes](/vmsa-2026-0011/)): vCenter 8.0 U3m covers both, but 9.1 and 9.0 need 9.1.2 or 9.0.2.0300.",
       "cite": [
         1,
         3,
-        5
+        5,
+        6,
+        7
       ],
       "versions": [
         "vcenter"
@@ -115,9 +117,23 @@
     {
       "title": "Broadcom: VMSA-2026-0009 FAQ, patches are cumulative",
       "url": "https://github.com/vmware/vcf-security-and-compliance-guidelines/blob/main/security-advisories/vmsa-2026-0009/README.md"
+    },
+    {
+      "title": "Broadcom VMSA-2026-0011: second vCenter directory-service bypass, CVE-2026-123903, fixed in 9.1.2, 9.0.2.0300 and 8.0 U3m",
+      "url": "https://support.broadcom.com/web/ecx/support-content-notification/-/external/content/SecurityAdvisories/0/39626",
+      "date": "24 Nov"
+    },
+    {
+      "title": "Broadcom: VMSA-2026-0011 Q&A, VCF 9.1.2 removes the 9.1.1 upgrade block",
+      "url": "https://github.com/vmware/vcf-security-and-compliance-guidelines/blob/main/security-advisories/vmsa-2026-0011/README.md",
+      "date": "24 Nov"
     }
   ],
   "changes": [
+    {
+      "date": "2026-11-24",
+      "text": "Broadcom fixed a second, separate vCenter login bypass in the same service (CVE-2026-123903). vCenter 8.0 U3m covers both; on 9.1 and 9.0, update again to 9.1.2 or 9.0.2.0300. VCF 9.1.2 also removes the upgrade block that 8.0 U3m and 9.0.2.0200 created."
+    },
     {
       "date": "2026-11-22",
       "text": "Published."

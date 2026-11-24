@@ -1,0 +1,62 @@
+{
+  "id": "esx",
+  "name": "VMware ESX",
+  "about": "The newest ESX (ESXi) release on each line. Each one fixes every ESX bug we cover, except where a fix is listed as pending below; Broadcom's patches are cumulative.",
+  "feed": null,
+  "latest_from": [
+    "https://support.broadcom.com/web/ecx/support-content-notification/-/external/content/SecurityAdvisories/0/39626",
+    "https://techdocs.broadcom.com/us/en/vmware-cis/vsphere/vsphere/8-0/release-notes/esxi-update-and-patch-release-notes/vsphere-esxi-80u3m-release-notes.html"
+  ],
+  "filter": "esx",
+  "checked": "2026-11-24",
+  "lines": [
+    {
+      "line": "9.1",
+      "key": "9.1",
+      "latest": "9.1.2",
+      "released": "2026-11-24",
+      "note": "ESXi-9.1.2.0-25946735"
+    },
+    {
+      "line": "9.0",
+      "key": "9.0",
+      "latest": "9.0.2.0200",
+      "released": "2026-11-24",
+      "note": "ESXi-9.0.2.0200-25953133"
+    },
+    {
+      "line": "8.0",
+      "key": "8.0",
+      "latest": "8.0 U3m",
+      "released": "2026-11-19",
+      "note": "ESXi80U3m-25926933"
+    }
+  ],
+  "unfixed": [
+    {
+      "line": "9.0 (two moderate bugs)",
+      "note": "Broadcom lists the 9.0 fix for CVE-2026-123914 and CVE-2026-123915 as patch pending.",
+      "pages": [
+        "vmsa-2026-0011"
+      ]
+    },
+    {
+      "line": "7.0",
+      "note": "Broadcom lists no public fix; customers with an extended support contract are told to contact Broadcom Support.",
+      "pages": [
+        "vmsa-2026-0011"
+      ]
+    }
+  ],
+  "sources": [
+    {
+      "title": "Broadcom VMSA-2026-0011: fixed ESX builds per line, 9.0 patch pending for two moderate bugs",
+      "url": "https://support.broadcom.com/web/ecx/support-content-notification/-/external/content/SecurityAdvisories/0/39626"
+    },
+    {
+      "title": "Broadcom: VMSA-2026-0011 Q&A, ESX wasn't in VMSA-2026-0009, patches are cumulative",
+      "url": "https://github.com/vmware/vcf-security-and-compliance-guidelines/blob/main/security-advisories/vmsa-2026-0011/README.md"
+    }
+  ],
+  "older": "VMware Cloud Foundation 5.x: patch ESX to 8.0 U3m through Broadcom's asynchronous patching guide (KB 88287), or move all of VCF to 5.2.5, including ESX; updating SDDC Manager alone doesn't update ESX."
+}

@@ -1,0 +1,352 @@
+{
+  "slug": "vmsa-2026-0011",
+  "name": "VMware Nov fixes",
+  "aliases": [
+    "vmware",
+    "vcenter",
+    "vcenter server",
+    "esx",
+    "esxi",
+    "vsphere",
+    "vmware cloud foundation",
+    "vcf",
+    "workstation",
+    "fusion",
+    "vmware tools",
+    "avi load balancer",
+    "vmsa-2026-0011",
+    "vmdir",
+    "iofiltervp",
+    "vm escape"
+  ],
+  "cves": [
+    "CVE-2026-123903",
+    "CVE-2026-123910",
+    "CVE-2026-123911",
+    "CVE-2026-123912",
+    "CVE-2026-123913",
+    "CVE-2026-123904",
+    "CVE-2026-123905",
+    "CVE-2026-123906",
+    "CVE-2026-123907",
+    "CVE-2026-123908",
+    "CVE-2026-123909",
+    "CVE-2026-123914",
+    "CVE-2026-123915",
+    "CVE-2026-123916",
+    "CVE-2026-123918",
+    "CVE-2026-123919",
+    "CVE-2026-123920",
+    "CVE-2026-123921",
+    "CVE-2026-123922",
+    "CVE-2026-123926",
+    "CVE-2026-123923",
+    "CVE-2026-123924",
+    "CVE-2026-123925"
+  ],
+  "product": "VMware vCenter / ESX",
+  "disclosed": "2026-11-24",
+  "updated": "2026-11-24",
+  "verdict": "if",
+  "tile_line": "No-login vCenter bypass, ESX takeover. No attacks yet.",
+  "tldr": "Broadcom fixed 23 VMware bugs on 24 Nov 2026; three let anyone who can reach vCenter or an ESX host in with no login. No exploit or attacks yet. Patch vCenter and ESX, starting with any that untrusted networks or many machines can reach.",
+  "summary": "The vCenter bypass (9.8) is in the VMware Directory Service, the same service as the exploited [vCenter zero-day](/vcenter-zero-day/), but Broadcom calls it \"a new and distinct issue\"; vCenter 8.0 U3m fixes both. The two ESX bugs (9.8 each) are in the I/O filter service, port 9080 on ESX 8, and need no access to any VM; CrowdStrike and DEVCORE reported them. Workstation and Fusion get a 9.3-rated VM escape for attackers with admin rights inside a VM.",
+  "status": {
+    "exploit": "none",
+    "attacks": "none",
+    "kev": null,
+    "no_login": true,
+    "scare": 2.9
+  },
+  "status_cite": {
+    "exploit": [
+      1,
+      2
+    ],
+    "attacks": [
+      1,
+      2
+    ],
+    "kev": [
+      4
+    ],
+    "no_login": [
+      1
+    ]
+  },
+  "affected": [
+    {
+      "label": "An unpatched vSphere system",
+      "text": "vCenter below 9.1.2, 9.0.2.0300 or 8.0 U3m; ESX below 9.1.2, 9.0.2.0200 or 8.0 U3m (ESXi80U3m-25926933). If you installed vCenter 8.0 U3m for VMSA-2026-0009 (19 Nov 2026), vCenter is already fixed, but ESX wasn't part of that advisory. vSphere 7.0 is affected, with fixes only for extended-support customers, and Broadcom says to presume 6.5 and 6.7 are too. VMware Cloud Foundation 5.x is fixed in 5.2.5. vCenter shows its build on the vSphere Client's Summary tab; the command lists your ESX hosts' builds.",
+      "cmd": "Get-VMHost | Select-Object Name, Version, Build",
+      "cite": [
+        1,
+        2
+      ]
+    },
+    {
+      "label": "An attacker can reach that system",
+      "text": "The vCenter bypass needs network access to vCenter; the ESX bugs need network access to the host's I/O filter service (the IOFilterVP firewall rule, port 9080 on ESX 8). No login, no user action and no VM access are needed. On ESX 8, the command lists which addresses may reach that service; Broadcom's KB uses it to check the restriction.",
+      "cmd": "esxcli network firewall ruleset allowedip list -r iofiltervp",
+      "cite": [
+        1,
+        2,
+        3
+      ]
+    }
+  ],
+  "do": [
+    {
+      "label": "Patch vCenter and ESX",
+      "text": "vCenter: 9.1.2, 9.0.2.0300 or 8.0 U3m. ESX: 9.1.2 (ESXi-9.1.2.0-25946735), 9.0.2.0200 (ESXi-9.0.2.0200-25953133) or 8.0 U3m (ESXi80U3m-25926933), including vSAN Witness Appliances. VMware Cloud Foundation 5.x applies vCenter and ESX 8.0 U3m through Broadcom's asynchronous patching guide (KB 88287). Updating ESX 9.1 or 8.0 restarts each host, and the vCenter updates can't use Quick Patch. Broadcom's Q&A says no ESX update here can be live-patched, but the ESX 9.0.2.0200 release notes call it live-patchable with no reboot. On ESX 9.0, two moderate bugs (CVE-2026-123914 and CVE-2026-123915) are still waiting for a patch. Start with any vCenter or ESX that untrusted networks or many machines can reach.",
+      "cite": [
+        1,
+        2,
+        5
+      ],
+      "versions": [
+        "vcenter",
+        "esx"
+      ]
+    },
+    {
+      "label": "Can't patch ESX 8 yet? Limit port 9080",
+      "text": "Broadcom's KB 463535 says to let only vCenter's address reach the IOFilterVP service on ESX 8: `esxcli network firewall ruleset set -r iofiltervp --allowed-all false`, then `esxcli network firewall ruleset allowedip add -r iofiltervp -i <vCenter-IP>`. Its Q&A warns that limiting this service covers only part of the advisory and may affect the cluster and workload availability, so patch anyway.",
+      "cite": [
+        3,
+        2
+      ]
+    },
+    {
+      "label": "Also update Workstation, Fusion, Tools and Avi",
+      "text": "Workstation and Fusion 26H1u1 fix the VM escape (CVE-2026-123912). VMware Tools 13.1.10 or 12.5.6 fixes a denial of service in the VGAuth service; updating ESX doesn't update Tools inside VMs. Avi Load Balancer 32.1.4 fixes all eight Avi bugs, each of which needs an Avi login, most of them admin rights.",
+      "cite": [
+        1,
+        2
+      ]
+    },
+    {
+      "label": "Why it isn't Patch now",
+      "text": "Broadcom's advisory and Q&A mention no exploitation, no exploit code is public, and it isn't on CISA's exploited list (catalog of 23 Nov 2026). But the vCenter bug sits in the same service as the zero-day exploited since early September, and both critical paths need nothing but network access. We'll move it to Patch now if an exploit or attacks appear.",
+      "cite": [
+        1,
+        2,
+        4
+      ]
+    }
+  ],
+  "fixed_in": {
+    "vcenter": {
+      "9.1": "9.1.2",
+      "9.0": "9.0.2.0300",
+      "8.0": "8.0 U3m"
+    },
+    "esx": {
+      "9.1": "9.1.2",
+      "9.0": "9.0.2.0200",
+      "8.0": "8.0 U3m"
+    }
+  },
+  "bugs": [
+    {
+      "cve": "CVE-2026-123903",
+      "project": "vCenter",
+      "severity": "critical",
+      "url": "https://support.broadcom.com/web/ecx/support-content-notification/-/external/content/SecurityAdvisories/0/39626",
+      "title": "Login bypass in the directory service",
+      "text": "Anyone with network access to vCenter can bypass authentication and get into the system (9.8). It's in the VMware Directory Service, like the exploited [vCenter zero-day](/vcenter-zero-day/), but Broadcom calls it a new and distinct bug.",
+      "verdict": "if"
+    },
+    {
+      "cve": "CVE-2026-123910",
+      "project": "ESX",
+      "severity": "critical",
+      "url": "https://support.broadcom.com/web/ecx/support-content-notification/-/external/content/SecurityAdvisories/0/39626",
+      "title": "I/O filter service heap overflow",
+      "text": "Anyone with network access to an ESX host can run code on it (9.8), with no login and no VM needed. On ESX 8 the I/O filter service listens on port 9080.",
+      "verdict": "if"
+    },
+    {
+      "cve": "CVE-2026-123911",
+      "project": "ESX",
+      "severity": "critical",
+      "url": "https://support.broadcom.com/web/ecx/support-content-notification/-/external/content/SecurityAdvisories/0/39626",
+      "title": "I/O filter service use-after-free",
+      "text": "A second bug in the same ESX service, with the same impact: network access to the host is enough to run code on it (9.8).",
+      "verdict": "if"
+    },
+    {
+      "cve": "CVE-2026-123912",
+      "project": "Workstation, Fusion, ESX",
+      "severity": "critical",
+      "url": "https://support.broadcom.com/web/ecx/support-content-notification/-/external/content/SecurityAdvisories/0/39626",
+      "title": "USB controller VM escape",
+      "text": "An attacker with admin rights inside a VM can run code as the VM's VMX process. On Workstation and Fusion that can reach the machine they run on (9.3); on ESX it stays inside the VMX sandbox (8.4 in the advisory; its Q&A says 8.5). Removing the XHCI USB controller from a VM avoids it.",
+      "verdict": "if"
+    },
+    {
+      "cve": "CVE-2026-123913",
+      "project": "ESX",
+      "severity": "high",
+      "url": "https://support.broadcom.com/web/ecx/support-content-notification/-/external/content/SecurityAdvisories/0/39626",
+      "title": "VMkernel stack overflow",
+      "text": "An attacker who already has privileges in a VM's VMX process can raise them (8.2). It needs existing privileges in the VMX process.",
+      "verdict": "cycle"
+    },
+    {
+      "cve": "CVE-2026-123904",
+      "project": "vCenter",
+      "severity": "high",
+      "url": "https://support.broadcom.com/web/ecx/support-content-notification/-/external/content/SecurityAdvisories/0/39626",
+      "title": "File write from a backup archive",
+      "text": "An attacker with access to vCenter's backup repository can write files anywhere on the appliance as root, which may lead to code execution (7.5).",
+      "verdict": "cycle"
+    },
+    {
+      "cve": "CVE-2026-123905",
+      "project": "vCenter",
+      "severity": "high",
+      "url": "https://support.broadcom.com/web/ecx/support-content-notification/-/external/content/SecurityAdvisories/0/39626",
+      "title": "Directory service crash",
+      "text": "Network access to vCenter is enough to crash the VMware Directory Service (7.5).",
+      "verdict": "cycle"
+    },
+    {
+      "cve": "CVE-2026-123906",
+      "project": "vCenter",
+      "severity": "high",
+      "url": "https://support.broadcom.com/web/ecx/support-content-notification/-/external/content/SecurityAdvisories/0/39626",
+      "title": "Directory service crash",
+      "text": "A second way to crash the VMware Directory Service over the network (7.5).",
+      "verdict": "cycle"
+    },
+    {
+      "cve": "CVE-2026-123907",
+      "project": "vCenter",
+      "severity": "high",
+      "url": "https://support.broadcom.com/web/ecx/support-content-notification/-/external/content/SecurityAdvisories/0/39626",
+      "title": "Directory service crash",
+      "text": "A third way to crash the VMware Directory Service over the network (7.5).",
+      "verdict": "cycle"
+    },
+    {
+      "cve": "CVE-2026-123908",
+      "project": "vCenter",
+      "severity": "high",
+      "url": "https://support.broadcom.com/web/ecx/support-content-notification/-/external/content/SecurityAdvisories/0/39626",
+      "title": "Root from the vpxd service account",
+      "text": "An attacker who already controls vCenter's vpxd service account can become root on the appliance (6.7).",
+      "verdict": "cycle"
+    },
+    {
+      "cve": "CVE-2026-123909",
+      "project": "vCenter",
+      "severity": "medium",
+      "url": "https://support.broadcom.com/web/ecx/support-content-notification/-/external/content/SecurityAdvisories/0/39626"
+    },
+    {
+      "cve": "CVE-2026-123914",
+      "project": "ESX",
+      "severity": "medium",
+      "url": "https://support.broadcom.com/web/ecx/support-content-notification/-/external/content/SecurityAdvisories/0/39626"
+    },
+    {
+      "cve": "CVE-2026-123915",
+      "project": "ESX",
+      "severity": "medium",
+      "url": "https://support.broadcom.com/web/ecx/support-content-notification/-/external/content/SecurityAdvisories/0/39626"
+    },
+    {
+      "cve": "CVE-2026-123916",
+      "project": "ESX, Workstation, Fusion",
+      "severity": "medium",
+      "url": "https://support.broadcom.com/web/ecx/support-content-notification/-/external/content/SecurityAdvisories/0/39626"
+    },
+    {
+      "cve": "CVE-2026-123918",
+      "project": "VMware Tools",
+      "severity": "medium",
+      "url": "https://support.broadcom.com/web/ecx/support-content-notification/-/external/content/SecurityAdvisories/0/39626"
+    },
+    {
+      "cve": "CVE-2026-123919",
+      "project": "Avi Load Balancer",
+      "severity": "medium",
+      "url": "https://support.broadcom.com/web/ecx/support-content-notification/-/external/content/SecurityAdvisories/0/39626"
+    },
+    {
+      "cve": "CVE-2026-123920",
+      "project": "Avi Load Balancer",
+      "severity": "medium",
+      "url": "https://support.broadcom.com/web/ecx/support-content-notification/-/external/content/SecurityAdvisories/0/39626"
+    },
+    {
+      "cve": "CVE-2026-123921",
+      "project": "Avi Load Balancer",
+      "severity": "medium",
+      "url": "https://support.broadcom.com/web/ecx/support-content-notification/-/external/content/SecurityAdvisories/0/39626"
+    },
+    {
+      "cve": "CVE-2026-123922",
+      "project": "Avi Load Balancer",
+      "severity": "medium",
+      "url": "https://support.broadcom.com/web/ecx/support-content-notification/-/external/content/SecurityAdvisories/0/39626"
+    },
+    {
+      "cve": "CVE-2026-123926",
+      "project": "Avi Load Balancer",
+      "severity": "medium",
+      "url": "https://support.broadcom.com/web/ecx/support-content-notification/-/external/content/SecurityAdvisories/0/39626"
+    },
+    {
+      "cve": "CVE-2026-123923",
+      "project": "Avi Load Balancer",
+      "severity": "low",
+      "url": "https://support.broadcom.com/web/ecx/support-content-notification/-/external/content/SecurityAdvisories/0/39626"
+    },
+    {
+      "cve": "CVE-2026-123924",
+      "project": "Avi Load Balancer",
+      "severity": "low",
+      "url": "https://support.broadcom.com/web/ecx/support-content-notification/-/external/content/SecurityAdvisories/0/39626"
+    },
+    {
+      "cve": "CVE-2026-123925",
+      "project": "Avi Load Balancer",
+      "severity": "low",
+      "url": "https://support.broadcom.com/web/ecx/support-content-notification/-/external/content/SecurityAdvisories/0/39626"
+    }
+  ],
+  "sources": [
+    {
+      "title": "Broadcom VMSA-2026-0011: 23 CVEs, scores, fixed versions, workarounds, acknowledgments",
+      "url": "https://support.broadcom.com/web/ecx/support-content-notification/-/external/content/SecurityAdvisories/0/39626",
+      "date": "24 Nov"
+    },
+    {
+      "title": "Broadcom: VMSA-2026-0011 Q&A, scope, 8.0 U3m already fixes vCenter, ESX needs this update, no exploitation stated",
+      "url": "https://github.com/vmware/vcf-security-and-compliance-guidelines/blob/main/security-advisories/vmsa-2026-0011/README.md",
+      "date": "24 Nov"
+    },
+    {
+      "title": "Broadcom KB 463535: interim ESX 8 workaround, IOFilterVP on port 9080",
+      "url": "https://knowledge.broadcom.com/external/article/463535",
+      "date": "24 Nov"
+    },
+    {
+      "title": "CISA KEV catalog: none of the 23 listed (catalog 2026.11.23)",
+      "url": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog"
+    },
+    {
+      "title": "Broadcom: ESX 9.0.2.0200 release notes, live-patchable, no reboot",
+      "url": "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-0/release-notes/patch-releases-9-0-0-x/vsphere/esx/esx-9-0-2-0200-release-notes.html",
+      "date": "24 Nov"
+    }
+  ],
+  "changes": [
+    {
+      "date": "2026-11-24",
+      "text": "Published."
+    }
+  ]
+}
