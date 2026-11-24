@@ -32,8 +32,8 @@
   "updated": "2026-11-22",
   "verdict": "if",
   "tile_line": "Only Next 16 apps returning typed arrays from use cache.",
-  "tldr": "A React Server Components bug lets an attacker call a Server Action with their own arguments, but in Next.js only with Cache Components and a use cache function returning several typed arrays. Lab exploit public, no attacks. Upgrade to Next.js 16.4.1+.",
-  "summary": "A bug in how React Server Components package several typed arrays (binary data) in one response can let an attacker with no login call one of the app's Server Actions with arguments they choose. React says it only affects \"extremely rare cases\"; in Next.js it needs Cache Components and a `use cache` function that returns several typed arrays. A lab exploit is public, no attacks are reported, and the fix has been out since 14 Oct; the CVE ID came on 10 Nov.",
+  "tldr": "A React Server Components bug lets an attacker call a Server Action with their own arguments. Lab exploit public, no attacks. In Next.js only with Cache Components and a use cache function returning several typed arrays; upgrade to Next.js 16.4.1+.",
+  "summary": "The bug is in how React Server Components package several typed arrays (binary data) in one response; React says it only affects \"extremely rare cases\". The arguments only matter if a Server Action does something dangerous with them. The fix has been out since 14 Oct; the CVE ID came on 10 Nov.",
   "status": {
     "exploit": "public",
     "attacks": "none",
@@ -112,7 +112,6 @@
       "19.0": "19.0.9"
     }
   },
-  "slack": "React Server Components typed-array RCE (CVE-2026-126187; Next.js GHSA-673q): unauthenticated attacker can call a Server Action with chosen arguments, but only in \"extremely rare\" apps: Next.js 16.0.0–16.4.0 with Cache Components and a use cache function returning several typed arrays (or react-server-dom-* 19.x elsewhere). Lab exploit public, no attacks, not in KEV. Fix: Next.js 16.4.1+ / react-server-dom-* 19.0.9, 19.1.10, 19.2.9, 19.3.1. Next.js 15.x not affected.",
   "sources": [
     {
       "title": "React GHSA-xqc2: affected and fixed react-server-dom versions, 'extremely rare'",

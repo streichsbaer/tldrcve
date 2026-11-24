@@ -12,7 +12,7 @@ tldrcve.com explains the vulnerabilities people are talking about in plain Engli
 | `build.py` | Builds the static site into `site/`, plus files for agents: `/llms.txt`, `/<slug>.json`, `/versions/<product>.json` and the `/api/cves.json` index. Python standard library only |
 | `assets/` | `site.css`, `site.js`, and `og/` (link-preview images) |
 | `versions/<product>.json` | Latest safe version per product line, shared by every page that embeds it. Edit once, every page updates |
-| `calendar.json` | Scheduled release and patch days (Patch Tuesday, Chrome, Firefox, Oracle, PHP…), each with a source that states the date or the rule. Mark unannounced dates `"expected": true` |
+| `calendar.json` | Scheduled release and patch days (Patch Tuesday, Chrome, Firefox, Oracle, PHP…), each with a source that states the date or the rule, and a `note`: one line on whose schedule it is and what it means for readers ("Google's scheduled stable release day. Chrome updates itself; relaunch it to finish."). Mark unannounced dates `"expected": true` |
 | `weeks/<yyyy>-w<nn>.json` | One file per weekly review (`week`, optional `intro`). The rest of `/week/…` is built from the data: new pages, changes, safe releases and the next 30 days (calendar, pending fixes, CISA deadlines). On the Monday after a week ends, freeze it with `python3 build.py --freeze-week YYYY-Www` so its page stops changing; the build prints a reminder |
 | `watch/<id>.json` | Vulnerabilities we evaluated but haven't written a page for, with the facts, sources, what would change our mind, and a recheck date |
 | `tools/versions.py` | Refreshes `versions/` from release feeds (vendor indexes, npm, PyPI, GitHub releases, endoflife.date). Never lowers a version or adds a line by itself. `--check` writes nothing and lists what to look at (the daily digest runs it); `--report` lists every product, how it's refreshed, when it was last checked and where we look |
@@ -52,7 +52,7 @@ The build warns about:
 - overdue pending items
 - a missing `needs` field when `no_login` is false
 - a page not tied to any Safe versions product and without `versions_skip`
-- a calendar event without an https source, or an `expected` date that has passed
+- a calendar event without an https source or a `note`, or an `expected` date that has passed
 
 A change is only done when `--strict` passes.
 
@@ -74,12 +74,12 @@ Copy the shape of an existing file (`content/nginx2root.json` is a good model).
 | `product` | Main product. The card label must stay ≤ 26 chars |
 | `also_in` | Optional: other products that bundle it, shown as "Product (First +N more)" |
 | `disclosed` | `YYYY-MM-DD`, when the bug was made public (drives the All CVEs date filter) |
-| `news` | Optional: when it became news, if later than `disclosed` (drives "Latest" on the homepage) |
+| `news` | Optional: when it became news, if later than `disclosed` (the date on All CVEs tiles; "Latest" on the homepage is ordered by the newest `changes[]` entry that isn't `minor`) |
 | `updated` | `YYYY-MM-DD` of the last edit |
 | `verdict` | `now`, `if`, `cycle` or `watch` (see below) |
-| `tile_line` | One line explaining the verdict, about 55 chars max |
-| `tldr` | The page in one or two plain sentences, **≤ 256 chars**: what it is, who is affected, how bad, what to do. Shown at the top of the page, and it is the X post text (plus a line break and the link: 280). Every claim must already be on the page; update it whenever the verdict, status or fix changes |
-| `summary` | 2-3 plain-English sentences, under "More details" below the TL;DR |
+| `tile_line` | The reason for the verdict, about 55 chars max. It sits next to the verdict badge and on the link card, so never repeat the verdict or the action ("Exploited, no login. In CISA KEV.", not "Patch now.") |
+| `tldr` | **Required, ≤ 256 chars.** The answer, in up to three short, plain sentences, in this order: what it is, how scary (exploit, attacks, KEV), who is affected, what to do. Don't open with the page's nickname ("NoisyTCP: …"; the title is right above); the product as the subject ("SGLang, a popular AI model server, …") is fine. No commands, version lists or dates that go stale (KEV due dates). Used at the top of the page and as the meta description, the feed item and the "Copy TL;DR" text. Every claim must already be on the page; update it whenever the verdict, status or fix changes. When it corrects something the page said before, add a `changes[]` entry so feed readers see the correction |
+| `summary` | **More details**, under the TL;DR: 1-3 sentences with only what the TL;DR leaves out, such as how the bug works, who found it, numbers, where sources disagree, related bugs, useful trivia and the one setting or command that matters most. Never repeat the TL;DR, but don't drop facts either: each one belongs in the TL;DR, here, or a section below |
 | `status.exploit` | `public` (working code anyone can download), `demonstrated` (shown, code not public) or `none` |
 | `status.attacks` | `seen` (a credible, named report) or `none` |
 | `status.kev` | `{"added": "...", "due": "..."}` from CISA's KEV catalog, or `null` |
@@ -92,9 +92,20 @@ Copy the shape of an existing file (`content/nginx2root.json` is a good model).
 | `fixed_in` | Optional: first fixed version per product line, e.g. `{"php": {"8.5": "8.5.13"}}`. Keys match `versions/<product>.json`. Leave it out when there is no fix |
 | `versions_skip` | Optional: why the page has no Safe versions product, e.g. fixes exist only as distro packages. Every other page must be tied to one: `fixed_in` when a fix is released, or an `unfixed` entry in `versions/<product>.json` while it's pending |
 | `bugs` | Optional, makes the page a release roundup: one entry per advisory with `cve`, `project`, `severity`, `url`; critical and high ones also get `title`, `text`, `verdict` and optional `page` (slug of the bug's own page, which then links back). Leave a bug's CVE out of `cves` when it has its own page |
-| `slack` | Paste-ready summary paragraph, no URL |
 | `sources[]` | `title` ("Publisher: what it supports"), `url`, optional `date`. `cite` numbers are 1-based indexes into this list |
-| `changes[]` | `date` and `text`, newest first; the last entry is "Published." |
+| `changes[]` | `date` and `text`, newest first; the last entry is "Published." One entry per page per day: add to today's entry rather than starting a second one. Every entry becomes an RSS/JSON Feed item ("What changed" plus the current TL;DR) and moves the page up in "Latest", **unless** it has `"minor": true`. Leave `minor` off when the verdict or scare level changes, exploit, attack or KEV status changes, a fix is released or the advice changes, who is affected changes, or it corrects something a reader could have acted on. Set it for wording, sources, aliases and rechecks that changed nothing |
+
+### Card, TL;DR and More details
+
+Each layer has one job, from a glance to the proof:
+
+| | Link card | TL;DR | More details |
+|---|---|---|---|
+| Job | The verdict at a glance wherever a link is shared | The answer for someone on the page | What the answer leaves out |
+| Text we write | `name`, `tile_line` (the card also shows the CVEs, verdict and scare level) | `tldr` | `summary` |
+| Time | Redrawn when it changes, but platforms cache it when shared | Always current | Current; dated facts carry their dates |
+
+Below them, the checklist, "Are you affected?", "What to do" and the sources hold the detail and the proof. Social posts are written per post, outside this repo; they start from the TL;DR but add a headline line with the name, CVE and decision.
 
 ### Product version files (`versions/<product>.json`)
 

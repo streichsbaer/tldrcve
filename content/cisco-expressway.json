@@ -24,11 +24,11 @@
   "product": "Cisco Expressway",
   "disclosed": "2026-10-21",
   "news": "2026-11-20",
-  "updated": "2026-11-23",
+  "updated": "2026-11-24",
   "verdict": "now",
-  "tile_line": "Exploited for root on clustered systems. Patch now.",
-  "tldr": "A secret built into Cisco Expressway lets anyone who can reach a clustered system run commands as root, no login. Exploit public, attacks seen, on CISA's exploited list. No workaround: upgrade to X15.5.20 or later.",
-  "summary": "Cisco Expressway's cluster database accepts a secret that is built into the software, so anyone who can reach a clustered Expressway-C or Expressway-E over the network can run commands on it as root, with no login. Exploit code has been public since 5 Nov 2026, F6 reported attackers exploiting it against a company in Russia on 18 Nov, and on 20 Nov CISA added it to its exploited list with a 3-day deadline for US federal civilian agencies. Cisco fixed it in X15.5.20 on 21 Oct 2026 and gives no workaround.",
+  "tile_line": "Exploited for root on clustered systems, no login.",
+  "tldr": "A secret built into Cisco Expressway lets anyone who can reach a cluster run commands as root, no login. Exploit public, attacks seen, on CISA's exploited list. If yours is clustered and below X15.5.20, upgrade now; there's no workaround.",
+  "summary": "Exploit code has been public since 5 Nov 2026, on 18 Nov F6 reported attackers using it against a company in Russia, and on 20 Nov CISA gave US federal civilian agencies three days to fix it. Cisco fixed it in X15.5.20 on 21 Oct 2026.",
   "affected": [
     {
       "label": "Expressway before X15.5.20",
@@ -81,7 +81,7 @@
     },
     {
       "label": "Check for a break-in",
-      "text": "Upgrading doesn't remove attackers who are already in, and CISA flags this one for forensic triage. F6's signs: the entry `nodeup,'wombat@127.0.0.1'` in Expressway's Erlang log (`erlang.log`), Python files matching `/mnt/harddisk/i{0-9}{4}[a-zA-Z]?/*.py`, and the addresses `66.179.31.32` and `18.130.47.116`. If you find the log entry, F6 says to check other logs and artifacts to confirm. In its case the attackers went on to scan the network, find open file shares, work with SQL Server and WinRM, and search GitLab repositories for credentials. Sources differ on whether it is exploited: Cisco's advisory (21 Oct, not updated since) says Cisco knows of no malicious use, while CISA and F6 say it is being exploited.",
+      "text": "Upgrading doesn't remove attackers who are already in, and CISA flags this one for forensic triage. F6's signs: the entry `nodeup,'wombat@127.0.0.1'` in Expressway's Erlang log (`erlang.log`), Python files matching `/mnt/harddisk/i{0-9}{4}[a-zA-Z]?/*.py`, and the addresses `66.179.31.32` and `18.130.47.116`. If you find the log entry, F6 says to check other logs and artifacts to confirm. In its case the attackers went on to scan the network, find open file shares, work with SQL Server and WinRM, and search GitLab repositories for credentials. Sources differ on whether it is exploited: CISA and F6 say it is, while Cisco's advisory, updated on 23 Nov 2026 to note the KEV listing, says Cisco \"does not have direct evidence of active exploitation\".",
       "cite": [
         1,
         2,
@@ -94,12 +94,11 @@
       "X15.5": "X15.5.20"
     }
   },
-  "slack": "Cisco Expressway CVE-2026-76466 (cisco-sa-vcs-static-cred-hr7EWZ8t, 9.8): a secret built into the cluster database lets anyone who can reach a clustered Expressway-C or Expressway-E run commands as root, no login needed. Public exploit since 5 Nov; F6 reported attacks on a Russian company on 18 Nov; on CISA KEV since 20 Nov with a 3-day deadline for US federal civilian agencies (23 Nov). Only clustered systems are affected. Fix: X15.5.20 or later (X14 and earlier: migrate); no workaround. Stopgap: allow TCP 4371-4372 only from cluster peers. Then check erlang.log for nodeup,'wombat@127.0.0.1'.",
   "sources": [
     {
-      "title": "Cisco advisory cisco-sa-vcs-static-cred-hr7EWZ8t: clustered systems, X15.5.20, no workaround, TLS Verify Mode",
+      "title": "Cisco advisory cisco-sa-vcs-static-cred-hr7EWZ8t: clustered systems, X15.5.20, no workaround, TLS Verify Mode, v1.1 23 Nov: on KEV, no direct evidence of exploitation",
       "url": "https://sec.cloudapps.cisco.com/security/center/content/CiscoSecurityAdvisory/cisco-sa-vcs-static-cred-hr7EWZ8t",
-      "date": "21 Oct"
+      "date": "23 Nov"
     },
     {
       "title": "CISA KEV catalog: CVE-2026-76466 added 20 Nov, due 23 Nov, forensic triage",
@@ -146,6 +145,10 @@
     }
   ],
   "changes": [
+    {
+      "date": "2026-11-24",
+      "text": "Cisco updated its advisory on 23 Nov to note the KEV listing; it says it has no direct evidence of active exploitation."
+    },
     {
       "date": "2026-11-23",
       "text": "Published."

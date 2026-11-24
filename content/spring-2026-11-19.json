@@ -116,11 +116,11 @@
   ],
   "product": "Spring",
   "disclosed": "2026-11-19",
-  "updated": "2026-11-20",
+  "updated": "2026-11-24",
   "verdict": "if",
-  "tile_line": "90 advisories, 5 critical. Free fixes only on Boot 4.",
-  "tldr": "Spring published 90 advisories on 19 Nov 2026. None has a public exploit or attacks, and most need an opt-in feature. Free fixes are only on the newest lines, such as Boot 4.1.3 and 4.0.10; Boot 3.5 and older need paid support.",
-  "summary": "Spring published 90 security advisories on 19 Nov across Boot, Framework, Security, Spring AI, Integration, Web Services, Cloud and more: 5 critical, 24 high, 49 medium and 12 low. None has a public exploit or reported attacks, and most need an opt-in feature. The catch is who gets fixes for free: only the newest lines, such as Spring Boot 4.0.10 and 4.1.3. Boot 3.5 and older get fixes only through Spring's paid Enterprise support.",
+  "tile_line": "90 advisories, mostly opt-in. Free fixes only on Boot 4.",
+  "tldr": "Spring published 90 advisories on 19 Nov 2026. None has a public exploit or attacks, and most need an opt-in feature. On Boot 4, upgrade to the newest 4.x; Boot 3.5 and older get fixes only with paid support, so check which bugs apply.",
+  "summary": "The advisories span Boot, Framework, Security, Spring AI, Integration, Web Services, Cloud and more.",
   "status": {
     "exploit": "none",
     "attacks": "none",
@@ -197,10 +197,9 @@
     },
     {
       "label": "Check the critical ones first",
-      "text": "[Spring Boot configured paths ending in /](/spring-boot-slash/) and [Spring Security ELRequestMatcher](/spring-security-el/) each have a full page with checks. Spring Boot on Cloud Foundry: define your own security configuration. Spring AI Redis semantic cache: don't share the cache advisor across users. The LDAP one only affects test servers.",
+      "text": "[Spring Boot configured paths ending in /](/spring-boot-slash/) has a full page with checks. Spring Boot on Cloud Foundry: define your own security configuration. Spring AI Redis semantic cache: don't share the cache advisor across users. The LDAP one only affects test servers.",
       "cite": [
         6,
-        7,
         8,
         11
       ]
@@ -216,7 +215,6 @@
       ]
     }
   ],
-  "slack": "Spring published 90 security advisories on 19 Nov (5 critical, 24 high), across Boot, Framework, Security, Spring AI, Integration, Web Services and Cloud. No public exploits or reported attacks, and most need an opt-in feature. Free fixes only exist for the newest lines: Boot 4.1.3 / 4.0.10, Spring AI 2.0.3. Boot 3.5 and older, Framework 6.x and Security 6.x get fixes only with paid Enterprise support. On Boot 4: upgrade. On Boot 3: check the critical ones and the workarounds.",
   "sources": [
     {
       "title": "Spring: security advisories (90 published 19 Nov, with free and Enterprise-only fixes)",
@@ -312,10 +310,10 @@
     {
       "cve": "CVE-2026-59273",
       "project": "Spring Security",
-      "severity": "critical",
+      "severity": "medium",
       "url": "https://spring.io/security/cve-2026-59273",
       "title": "ELRequestMatcher runs attacker-supplied code",
-      "text": "Only if the app binds outside input onto a `RequestMatcher` property, a conversion meant for XML bean definitions, not user input. Free fix only in 7.0.9 and 7.1.3.",
+      "text": "Only if the app binds outside input onto a `RequestMatcher` property, a conversion meant for XML bean definitions, not user input. Spring lowered it to medium on 23 Nov: the attacker needs high privileges. Free fix only in 7.0.9 and 7.1.3.",
       "verdict": "if",
       "page": "spring-security-el"
     },
@@ -912,6 +910,10 @@
     }
   ],
   "changes": [
+    {
+      "date": "2026-11-24",
+      "text": "CVE-2026-59273 (ELRequestMatcher) is now medium: Spring lowered it on 23 Nov. Four critical advisories remain."
+    },
     {
       "date": "2026-11-20",
       "text": "Published."

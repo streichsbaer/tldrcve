@@ -26,11 +26,11 @@
   ],
   "product": "SGLang",
   "disclosed": "2026-07-30",
-  "updated": "2026-11-20",
+  "updated": "2026-11-24",
   "verdict": "if",
   "tile_line": "Exploited, no fix yet. Risky if the port is reachable.",
-  "tldr": "SGLang, a popular AI model server, has unfixed bugs that let anyone who reaches its port run code or steal API keys, mostly with no login. NEAR AI says an unnamed SGLang bug was used to break into a server. No fix yet: keep SGLang off untrusted networks.",
-  "summary": "SGLang, a popular server for running AI models, has unfixed bugs that let anyone who can reach its port run code or steal its API keys, mostly without logging in. On 9 Nov 2026 NEAR AI said an attacker used an SGLang code-execution bug, which it hasn't named, to break into an inference server. There's no fix yet, so keep SGLang off untrusted networks.",
+  "tldr": "SGLang, a popular AI model server, has bugs that let anyone who reaches its port run code or steal API keys, mostly with no login. NEAR AI says an unnamed SGLang bug was used to break into a server. No fixed release yet: keep it off untrusted networks.",
+  "summary": "NEAR AI reported it on 9 Nov 2026 and has patched its own inference servers; SGLang itself hasn't released a fix.",
   "status": {
     "exploit": "demonstrated",
     "attacks": "seen",
@@ -41,7 +41,7 @@
   "affected": [
     {
       "label": "You run SGLang (any version)",
-      "text": "The CVE record for CVE-2026-15969 lists v0.5.15 and earlier, but no fixed version has been named. As of 20 Nov 2026 the advisories still list no patched version, and v0.5.23 (2 Nov) is the newest release. Treat every version as affected.",
+      "text": "The CVE record for CVE-2026-15969 lists v0.5.15 and earlier, but no fixed version has been named. As of 24 Nov 2026 the advisories still list no patched version, and v0.5.23 (2 Nov) is the newest release. Treat every version as affected.",
       "cmd": "pip show sglang",
       "cite": [
         3,
@@ -98,7 +98,6 @@
       ]
     }
   ],
-  "slack": "SGLang (LLM inference server) has unfixed bugs that let anyone who can reach its HTTP port run code or steal API keys, mostly with no login (CERT/CC VU#281278, CVE-2026-15969 and others). NEAR AI said on 9 Nov 2026 that an attacker used an unnamed SGLang code-execution bug to break into its inference servers. No fixed release exists. If you run SGLang, make sure port 30000 isn't reachable from untrusted networks (default bind is 127.0.0.1), set both --api-key and --admin-api-key, set SGLANG_USE_PICKLE_IPC=false, and rotate keys if it was exposed.",
   "sources": [
     {
       "title": "NEAR AI: incident report, SGLang RCE used",
@@ -156,6 +155,11 @@
     }
   ],
   "changes": [
+    {
+      "date": "2026-11-24",
+      "text": "NEAR AI has patched its own servers; SGLang still has no release with a fix (newest v0.5.23), and its partial fixes are merged but unreleased.",
+      "minor": true
+    },
     {
       "date": "2026-11-20",
       "text": "Still no fixed release (newest v0.5.23). Partial fixes merged on 7 and 14 Nov, not yet released; this explains the docs conflict. Safe versions added."

@@ -7,17 +7,17 @@
     "https://www.n-able.com/blog/n-able-vulnerability-remediation-update"
   ],
   "filter": "n-central",
-  "checked": "2026-11-20",
+  "checked": "2026-11-24",
   "lines": [
     {
       "line": "Server 2026.4",
       "key": "server",
-      "latest": "2026.4.1.39 (HF3)"
+      "latest": "2026.4.1.40 (HF4)"
     },
     {
       "line": "Agents and Probes",
       "key": "agents",
-      "latest": "2026.4.1 HF3"
+      "latest": "2026.4.1.40"
     },
     {
       "line": "Patch Management Engine",
@@ -25,14 +25,13 @@
       "latest": "2.14.4.5829"
     }
   ],
-  "older": "Agents and Probes have no published build number.",
   "sources": [
     {
       "title": "Huntress: timeline, HF3 build, actions",
       "url": "https://www.huntress.com/blog/n-able-disables-cloud-services-following-disclosure-of-able2shell-exploit-chains"
     },
     {
-      "title": "N-able: remediation update, HF3 removes Legacy API",
+      "title": "N-able: remediation update, HF3 removes Legacy API, HF4 (2026.4.1.40) as soon as possible",
       "url": "https://www.n-able.com/blog/n-able-vulnerability-remediation-update"
     },
     {

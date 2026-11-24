@@ -27,11 +27,11 @@
   ],
   "disclosed": "2026-11-18",
   "news": "2026-11-19",
-  "updated": "2026-11-20",
+  "updated": "2026-11-24",
   "verdict": "if",
-  "tile_line": "Rails or classic Sinatra on old Ruby. No public exploit.",
-  "tldr": "Ruby2Shell: a one-byte bug in how unpatched Ruby changes the case of text in some single-byte encodings, such as ISO-8859-1, may let an attacker with no login run code. The researchers say default Rails and classic Sinatra apps reach it. Upgrade Ruby.",
-  "summary": "A one-byte memory bug in how Ruby changes the case of text in older Western encodings (like ISO-8859-1) may let an attacker with no login run code on the server. The researchers who named it say default Rails and classic-style Sinatra apps reach it. The fix is a Ruby upgrade, which also fixes six related regex and string bugs.",
+  "tile_line": "Researchers: default Rails, classic Sinatra reach it.",
+  "tldr": "A one-byte memory bug in how Ruby changes the case of text in some single-byte encodings like ISO-8859-1 may let an attacker with no login run code. Exploit shown, not public. Researchers say default Rails and classic Sinatra apps reach it: upgrade Ruby.",
+  "summary": "The fix is a Ruby upgrade, which also fixes six related regex and string bugs. Veria Labs plans to publish its proof of concept on 25 Nov 2026.",
   "affected": [
     {
       "label": "Ruby older than the fix",
@@ -47,14 +47,15 @@
     },
     {
       "label": "Web input gets case-changed",
-      "text": "Veria Labs says default Rails and classic-style Sinatra apps reach the bug with no login, but hasn't said through which code path. Other frameworks and plain Rack aren't exposed by default, unless your code calls `upcase`, `swapcase`, `downcase(:fold)` or `casecmp?` on ISO-8859 or Windows-125x text; UTF-8 isn't affected. Sources disagree on reach: Ruby rates it Critical, the CVE record scores it 7.4 (local), and Sekurak thinks a crash is likelier than code execution. Run the check in your app's folder.",
+      "text": "Veria Labs says default Rails and classic-style Sinatra apps reach the bug with no login, but hasn't said through which code path. Other frameworks and plain Rack aren't exposed by default, unless your code calls `upcase`, `swapcase`, `downcase(:fold)` or `casecmp?` on ISO-8859 or Windows-125x text; UTF-8 isn't affected by this bug. A separate case-conversion bug fixed in the same releases (GHSA-87fm-7w84-j2px) needs text whose case-changed result is over 4 GiB, and Ruby doesn't limit it to these encodings. Sources disagree on reach: Ruby rates it Critical, the CVE record scores it 7.4 (local), and Sekurak thinks a crash is likelier than code execution. Run the check in your app's folder.",
       "cmd": "bundle list | grep -E '\\* (rails|sinatra) \\('",
       "cite": [
         2,
         3,
         4,
         6,
-        7
+        7,
+        11
       ]
     }
   ],
@@ -80,12 +81,15 @@
     },
     {
       "label": "Update self-hosted apps",
-      "text": "Some bundle their own Ruby, which a system upgrade doesn't touch. On 19 Nov, Veria listed GitLab 19.6.0, GitHub Enterprise Server 3.22.5 and Chatwoot 4.20.0 as still affected, and Mastodon 4.7.6, OpenProject 17.9.8 and the Discourse base image 2.0.20261119-0203 as fixed. Aikido's list, made earlier, shows older versions of the last three as affected. For GitLab, check its bundled Ruby with the command below.",
+      "text": "Some bundle their own Ruby, which a system upgrade doesn't touch. Fixed: GitLab 19.6.1, 19.5.8 and 19.4.10 (20 Nov), Chatwoot 4.20.1 (20 Nov), Mastodon 4.7.6, 4.6.12, 4.5.22 and 4.4.29, OpenProject 17.9.8 and 17.8.3, and the Discourse base image 2.0.20261119-0203. GitHub Enterprise Server 3.22.6 (22 Nov) updated Ruby \"to fix several announced vulnerabilities\" without naming this one; Veria's list, last updated 21 Nov before that release, shows it as vulnerable. For GitLab, check its bundled Ruby with the command below.",
       "cmd": "/opt/gitlab/embedded/bin/ruby -v",
       "cite": [
         4,
         5,
-        6
+        6,
+        12,
+        13,
+        14
       ]
     },
     {
@@ -113,7 +117,6 @@
       "3.3": "3.3.14"
     }
   },
-  "slack": "Ruby2Shell (CVE-2026-132825, GHSA-34m4-m9fh-gqp5): one-byte heap overflow in Ruby's case conversion for legacy encodings like ISO-8859-1. Ruby rates it Critical; the researchers say default Rails and classic Sinatra apps are reachable with no login. Affects Ruby up to 3.3.13, 3.4.0–3.4.12 and 4.0.0–4.0.9; 3.2 and older are end of life with no fix. Ruby knows of RCE proof-of-concepts, none public yet (Veria plans 25 Nov), no attacks seen, not in KEV. Check: ruby -v. Fix: Ruby 3.3.14 / 3.4.13 / 4.0.10, then restart and rebuild images; updating Rails won't help.",
   "sources": [
     {
       "title": "Ruby: security advisory, versions, PoCs known",
@@ -161,9 +164,33 @@
     {
       "title": "CISA KEV catalog: not listed",
       "url": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog"
+    },
+    {
+      "title": "GitHub: GHSA-87fm-7w84-j2px, separate case-conversion overflow over 4 GiB",
+      "url": "https://github.com/ruby/ruby/security/advisories/GHSA-87fm-7w84-j2px",
+      "date": "19 Nov"
+    },
+    {
+      "title": "GitLab: 19.6.1, 19.5.8, 19.4.10 patch Ruby for CVE-2026-132825",
+      "url": "https://docs.gitlab.com/releases/patches/patch-release-gitlab-19-6-1-released/",
+      "date": "20 Nov"
+    },
+    {
+      "title": "Chatwoot: v4.20.1 upgrades to Ruby 3.4.13",
+      "url": "https://github.com/chatwoot/chatwoot/releases/tag/v4.20.1",
+      "date": "20 Nov"
+    },
+    {
+      "title": "GitHub Enterprise Server: 3.22.6 release notes, Ruby updated",
+      "url": "https://docs.github.com/en/enterprise-server@latest/admin/release-notes",
+      "date": "22 Nov"
     }
   ],
   "changes": [
+    {
+      "date": "2026-11-24",
+      "text": "GitLab and Chatwoot shipped fixed releases; GitHub Enterprise Server 3.22.6 updated Ruby without naming this bug. The UTF-8 note now mentions a separate 4 GiB case-conversion bug fixed in the same releases. Added Mastodon and OpenProject backport versions."
+    },
     {
       "date": "2026-11-20",
       "text": "Rechecked: no fixed GitLab, GitHub Enterprise Server or Chatwoot release yet; Veria's 25 Nov plan unchanged."

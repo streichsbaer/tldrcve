@@ -17,9 +17,9 @@
   "disclosed": "2026-11-18",
   "updated": "2026-11-22",
   "verdict": "if",
-  "tile_line": "Worst one needs an admin's click. Auto-updates fix it.",
-  "tldr": "WordPress 7.1.5 fixes 19 advisories, backported down to 4.7. The worst creates an admin account for an attacker if a signed-in admin opens a crafted editor link. No exploit or attacks. Auto-updates fix it; check every site updated.",
-  "summary": "WordPress 7.1.5 (18 Nov) fixes 19 security advisories plus one hardening change, and the fixes were backported to every branch down to 4.7. The worst one can create an Administrator account for an attacker, and then run code, if a signed-in Administrator opens a crafted editor link. No exploit or attacks are reported, no CVE IDs have been assigned yet, and sites with automatic background updates get the fix on their own.",
+  "tile_line": "Worst one needs an admin's click. No exploit, no attacks.",
+  "tldr": "The 18 Nov release fixes 19 advisories, backported down to WordPress 4.7. The worst creates an admin account for an attacker if a signed-in admin opens a crafted editor link. No exploit or attacks. Auto-updates fix it; check every site updated.",
+  "summary": "After creating the account, the attacker can run code on the site. No CVE IDs have been assigned yet, and the release adds one hardening change on top of the 19 fixes.",
   "status": {
     "exploit": "none",
     "attacks": "none",
@@ -211,7 +211,6 @@
       "url": "https://github.com/WordPress/wordpress-develop/security/advisories/GHSA-v7qc-72mg-wgpc"
     }
   ],
-  "slack": "WordPress 7.1.5 (18 Nov) fixes 19 advisories (5 high), backported to every branch down to 4.7 (7.0.9, 6.9.12, ...). Worst: a signed-in Administrator opening a crafted editor link can create an attacker admin account, then code execution via plugin upload. No exploit, no attacks, no CVEs yet, not in KEV. Auto-updates deliver it; check sites with them off (wp core version).",
   "sources": [
     {
       "title": "WordPress.org: 7.1.5 release, 20 security fixes, automatic updates",

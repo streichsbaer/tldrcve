@@ -7,23 +7,29 @@
     "https://docs.nginx.com/nginx/releases/"
   ],
   "filter": "nginx plus",
-  "checked": "2026-11-20",
+  "checked": "2026-11-24",
   "lines": [
     {
       "line": "37.x (CR)",
       "key": "37.x",
-      "latest": "37.3.0.1"
+      "latest": "37.3.1.1",
+      "released": "2026-11-23"
     },
     {
       "line": "37.0 (LTS)",
       "key": "37.0",
-      "latest": "37.0.8.1"
+      "latest": "37.0.9.1",
+      "released": "2026-11-23"
     }
   ],
   "sources": [
     {
       "title": "Rapid7: NGINX Plus versions, exploit limits",
       "url": "https://www.rapid7.com/blog/post/ve-cve-2026-123007-critical-nginx-http-2-integer-underflow-leads-to-rce-fixed/"
+    },
+    {
+      "title": "NGINX docs: NGINX Plus releases",
+      "url": "https://docs.nginx.com/nginx/releases/"
     }
   ]
 }

@@ -24,9 +24,9 @@
   "news": "2026-11-23",
   "updated": "2026-11-24",
   "verdict": "cycle",
-  "tile_line": "9.8 on paper; Red Hat says crash only. Update as usual.",
-  "tldr": "Linux CVE-2026-99676 is scored 9.8, but it only matters on weakly ordered CPUs such as Arm and POWER, and Red Hat says it needs hard timing and can only crash the machine. No exploit, no attacks. Update your kernel as usual.",
-  "summary": "The Linux kernel's own CVE team rated this TCP race 9.8 out of 10 on 22 Nov 2026, and the patch author's answer was \"don't sweat it, go to bed\". It only matters on weakly ordered processors such as Arm and POWER, and Red Hat rates it Moderate (5.9), limited to crashing the machine. No exploit or attacks are known, so take the fix with your normal kernel updates; its sibling from the same patch series, [NoisyTCP](/noisytcp/), also hits x86 servers and can crash them remotely.",
+  "tile_line": "Scored 9.8; Red Hat: weak-order CPUs only, crash only.",
+  "tldr": "A Linux TCP race is scored 9.8, but it only matters on weakly ordered CPUs such as Arm and POWER, and Red Hat says it needs hard timing and can only crash the machine. No exploit, no attacks. Update your kernel as usual.",
+  "summary": "The kernel's own CVE team gave it 9.8 on 22 Nov 2026, arguing the race can lead to use of freed memory; the patch author's answer was \"don't sweat it, go to bed\". Red Hat rates it Moderate (5.9). Its sibling from the same patch series, [NoisyTCP](/noisytcp/), also hits x86 servers and can crash them remotely.",
   "status": {
     "exploit": "none",
     "attacks": "none",
@@ -111,7 +111,6 @@
       "Debian 13": "6.12.118-1"
     }
   },
-  "slack": "Linux kernel CVE-2026-99676 (published 20 Nov 2026): a TCP socket lookup race the kernel CVE team scored 9.8. It only matters on weakly ordered processors such as Arm and POWER, needs hard-to-win timing, and Red Hat rates it Moderate (5.9), denial of service only; Ubuntu rates it Medium. The patch author: \"don't sweat it, go to bed\". No exploit, no attacks, not on CISA KEV. Fixed upstream in 6.12.118, 6.18.64, 7.3.5; Debian 13 in 6.12.118-1; Ubuntu, Debian 12 and RHEL 9 and 10 not yet (RHEL 7 and 8 aren't affected). Take it with normal kernel updates.",
   "sources": [
     {
       "title": "CVE record (kernel CNA): weakly ordered architectures, 9.8 and its reasoning, fixed versions",

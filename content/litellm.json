@@ -25,9 +25,9 @@
   "disclosed": "2026-04-08",
   "updated": "2026-11-20",
   "verdict": "now",
-  "tile_line": "In CISA KEV, due 2 Dec. Public PoC, needs admin key.",
-  "tldr": "A sandbox escape in the LiteLLM proxy runs any command, as root in the default Docker image. It needs an admin key, but attackers are guessing default ones. Public exploit, on CISA's exploited list. Upgrade to the newest on your line.",
-  "summary": "LiteLLM's proxy has an endpoint for testing custom guardrail code, and its home-made sandbox can be escaped to run any command, as root in the default Docker image. It needs a proxy-admin key, but attackers have been guessing default keys, and two other bugs let ordinary users become admin on older versions.",
+  "tile_line": "Needs an admin key, and attackers guess default ones.",
+  "tldr": "A sandbox escape in the LiteLLM proxy runs any command, as root in the default Docker image. It needs an admin key, but attackers are guessing default ones; public exploit, on CISA's exploited list. Upgrade to the newest release on your line.",
+  "summary": "The bug is in the proxy's endpoint for testing custom guardrail code, whose home-made sandbox can be escaped. On older versions, two other bugs let ordinary users become admin.",
   "status": {
     "exploit": "public",
     "attacks": "seen",
@@ -123,7 +123,6 @@
       "1.106": "1.106.9"
     }
   },
-  "slack": "LiteLLM CVE-2026-40217: a sandbox escape in the proxy's /guardrails/test_custom_code endpoint lets anyone with an admin key run commands, as root in the default Docker image. Public PoC, attempts seen, added to CISA KEV on 18 Nov (due 2 Dec). Affected: 1.81.8 through 1.83.10. Upgrade to at least 1.106.9, 1.108.6 or 1.109.1, since later releases had their own admin-takeover bugs. Until then, block that endpoint and rotate any weak master key. Check with `pip show litellm`.",
   "sources": [
     {
       "title": "CISA KEV: CVE-2026-40217 added 18 Nov, due 2 Dec",

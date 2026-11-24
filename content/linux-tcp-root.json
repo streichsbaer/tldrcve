@@ -22,8 +22,8 @@
   "updated": "2026-11-20",
   "verdict": "if",
   "tile_line": "Any IPv4 TCP server. Root shown only via MPTCP.",
-  "tldr": "A race in the Linux kernel's IPv4 TCP handshake (4.4 or later) lets a remote attacker corrupt kernel memory, no login. Root was shown via MPTCP, but turning MPTCP off doesn't make you safe. No full exploit is public. Update and reboot.",
-  "summary": "A race in the kernel's IPv4 TCP handshake code lets a remote attacker with no login corrupt kernel memory by sending connection requests that carry IP options. On 27 Oct, Anthropic showed remote root against a server with a Multipath TCP (MPTCP) listener, but the bug is in plain TCP, so turning off MPTCP doesn't make you safe. Full exploit code isn't public and no attacks are reported.",
+  "tldr": "A race in the Linux kernel's IPv4 TCP handshake lets a remote attacker corrupt kernel memory, no login. Root was shown via MPTCP, but no full exploit is public. On kernel 4.4 or later accepting IPv4 TCP, update and reboot; turning MPTCP off isn't enough.",
+  "summary": "The attacker triggers the race with connection requests that carry IP options. On 27 Oct, Anthropic showed remote root against a server with a Multipath TCP (MPTCP) listener, but the bug itself is in plain TCP.",
   "affected": [
     {
       "label": "Kernel 4.4 or later, not yet patched",
@@ -96,7 +96,6 @@
       "RHEL 8": "4.18.0-553.182.1.el8_10"
     }
   },
-  "slack": "Linux TCP remote root (CVE-2026-98432): use-after-free race in IPv4 TCP handshake code, kernels 4.4+, triggerable remotely with no login via SYNs carrying IP options. Anthropic showed remote root on 27 Oct against an MPTCP listener, but any IPv4 TCP listener has the bug, so disabling MPTCP is not a fix. No full public exploit, no attacks, not in CISA KEV. Fix: patched distro kernel + reboot (Debian, Ubuntu 22.04+, RHEL 8–10 out; Ubuntu 20.04/18.04 via Ubuntu Pro; RHEL kpatch available). Stopgap: nftables drop of IPv4 TCP with IP options.",
   "sources": [
     {
       "title": "CVE record (kernel CNA): bug, 9.8, fixed versions",

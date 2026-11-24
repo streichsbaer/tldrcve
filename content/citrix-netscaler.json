@@ -23,9 +23,9 @@
   "disclosed": "2026-09-27",
   "updated": "2026-11-22",
   "verdict": "now",
-  "tile_line": "Exploited since September. Patch, then hunt for shells.",
-  "tldr": "Anyone who can reach a Citrix NetScaler ADC or Gateway can run commands on it, no login, and default setups are affected. Exploited since September, on CISA's exploited list. Update now; if you were late, check for web shells.",
-  "summary": "A bug in Citrix NetScaler ADC and Gateway lets anyone who can reach the appliance run commands on it with no login, and default setups are affected. Attackers have used it since at least 20 Sep, public exploit code came out on 28 Sep, and it's on CISA's exploited list. Updating doesn't remove an attacker who already got in, so appliances that were late to patch also need checking for web shells and stolen keys.",
+  "tile_line": "Exploited since September; patching won't evict intruders.",
+  "tldr": "Anyone who can reach a Citrix NetScaler ADC or Gateway can run commands on it, no login, and default setups are affected. Exploited since September, on CISA's exploited list. If you run your own, update now; if you were late, check for a break-in.",
+  "summary": "Attackers have used it since at least 20 Sep, and public exploit code came out on 28 Sep. Rapid7 found a web shell and an attacker command that archives the config, keys and certificates.",
   "status": {
     "exploit": "public",
     "attacks": "seen",
@@ -112,7 +112,6 @@
       "13.1-FIPS": "13.1-37.279"
     }
   },
-  "slack": "Citrix NetScaler ADC/Gateway CVE-2026-88771 (plus CVE-2026-88772): unauthenticated command execution, default configs affected. Exploited since about 20 Sep, public exploit since 28 Sep, CISA KEV (27 Sep). Update to 14.1-73.46 / 13.1-64.29 (FIPS: 14.1-73.46 FIPS, 13.1.37.283), which also fix the later CVE-2026-88779 and CVE-2026-107406. If you patched late, assume compromise: end sessions, rotate keys and credentials, hunt for web shells.",
   "sources": [
     {
       "title": "Citrix CTX697096: affected and fixed builds, attacks seen, default config, cloud scope",

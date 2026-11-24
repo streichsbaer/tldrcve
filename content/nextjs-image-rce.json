@@ -26,11 +26,11 @@
     "librsvg"
   ],
   "disclosed": "2026-10-14",
-  "updated": "2026-11-22",
+  "updated": "2026-11-24",
   "verdict": "if",
   "tile_line": "Only with sharp below 0.35.5 on glibc Linux.",
-  "tldr": "A memory bug in the SVG library inside sharp may let an attacker with no login run code through Next.js image optimization on glibc Linux. No attacks reported. Make sure sharp is 0.35.5 or later; a Next.js upgrade may not pull it in.",
-  "summary": "A memory bug in librsvg, the SVG library bundled inside `sharp`, may let an attacker with no login run code through Next.js image optimization on glibc-based Linux. Almost every Next.js version is affected, and a separate bug fixed on 3 Nov let self-hosted sites parse an attacker's SVG even with SVG support off (the default). The fix is a newer `sharp`, which upgrading Next.js doesn't always pull in on 15.x; no exploit or attacks are reported.",
+  "tldr": "A memory bug in the SVG library inside sharp may let an attacker with no login run code through Next.js image optimization. No attacks reported. On glibc Linux, make sure sharp is 0.35.5 or later; a Next.js upgrade may not pull it in.",
+  "summary": "The bug is in librsvg, the SVG library bundled inside `sharp`, and almost every Next.js version is affected. A separate bug fixed on 3 Nov let self-hosted sites parse an attacker's SVG even with SVG support off (the default). CISA's entry on the CVE record marks a proof of concept: the public librsvg report includes a file that triggers the bug, but no code-execution exploit is published.",
   "status": {
     "exploit": "none",
     "attacks": "none",
@@ -60,7 +60,7 @@
     },
     {
       "label": "The image optimizer takes an attacker's SVG",
-      "text": "With `dangerouslyAllowSVG: true` it does by design. With the default `false`, self-hosted sites before 15.5.29 or 16.4.5 can still be made to parse an attacker-supplied SVG at `/_next/image` (CVE-2026-119347). The advisories don't say whether Vercel-hosted sites or apps with tight image source rules are exposed.",
+      "text": "With `dangerouslyAllowSVG: true` it does by design. With the default `false`, self-hosted sites on 15.0.0 to 15.5.28 or 16.0.0 to 16.4.4 can still be made to parse an attacker-supplied SVG at `/_next/image` (CVE-2026-119347); its advisory doesn't cover versions before 15. The advisories don't say whether Vercel-hosted sites or apps with tight image source rules are exposed.",
       "cmd": "grep -rn dangerouslyAllowSVG next.config.*",
       "cite": [
         1,
@@ -71,7 +71,7 @@
   "do": [
     {
       "label": "Upgrade Next.js and check sharp",
-      "text": "Go to 16.4.5 or 15.5.29, which fix this and the SVG bypass, then check that `npm ls sharp` shows 0.35.5 or later; on 15.x, update `sharp` yourself if it doesn't. Rebuild and redeploy.",
+      "text": "Go to 16.4.5 or 15.5.29, which fix this and the SVG bypass, then check that `npm ls sharp` shows 0.35.5 or later. Vercel says upgrading Next.js makes package managers provide a fixed `sharp`, but 15.5.28 and 15.5.29 still accept 0.34.x, so on 15.x update `sharp` yourself if it doesn't. Rebuild and redeploy.",
       "cmd": "npm ls next sharp",
       "cite": [
         1,
@@ -104,7 +104,6 @@
       "0.35": "0.35.5"
     }
   },
-  "slack": "Next.js image optimization RCE (CVE-2026-96889, a librsvg bug inside sharp; sharp: CVE-2026-114111): possible unauthenticated code execution on glibc Linux when the optimizer parses an attacker's SVG. Self-hosted sites could be made to parse SVGs even with dangerouslyAllowSVG off until 15.5.29 / 16.4.5 (CVE-2026-119347). No exploit, no attacks, not in KEV. Fix: Next.js 16.4.5 / 15.5.29 and sharp ≥ 0.35.5 (check npm ls sharp; 15.x can keep sharp 0.34).",
   "sources": [
     {
       "title": "Next.js GHSA-2464: image optimization RCE, versions, sharp 0.35.5 workaround",
@@ -122,7 +121,7 @@
       "date": "14 Oct"
     },
     {
-      "title": "CVE record: CVE-2026-96889, librsvg use-after-free (Red Hat)",
+      "title": "CVE record: CVE-2026-96889, librsvg use-after-free (Red Hat); CISA marks \"poc\"",
       "url": "https://www.cve.org/CVERecord?id=CVE-2026-96889",
       "date": "23 Sep"
     },
@@ -157,6 +156,11 @@
   ],
   "changes": [
     {
+      "date": "2026-11-24",
+      "text": "Corrected the SVG bypass range (15.0.0 onwards). Vercel's claim that upgrading Next.js pulls in a fixed sharp conflicts with 15.x's dependency range. Explained why CISA's \"poc\" doesn't make the exploit public.",
+      "minor": true
+    },
+    {
       "date": "2026-11-22",
       "text": "Added Safe versions."
     },
@@ -167,6 +171,7 @@
   ],
   "status_cite": {
     "exploit": [
+      4,
       8,
       9
     ],

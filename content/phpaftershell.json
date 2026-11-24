@@ -23,9 +23,9 @@
   "disclosed": "2026-11-19",
   "updated": "2026-11-21",
   "verdict": "if",
-  "tile_line": "Needs a crashed session write and a gadget. Fixed 19 Nov.",
-  "tldr": "phpAfterShell: a PHP session file cut short mid-write can let an attacker run code, if sessions are in files, hold the attacker's data and the app has a usable code library. Lab exploit public, no attacks. Fixed in PHP's 19 Nov 2026 releases.",
-  "summary": "PHP's default file-based session storage can leave a half-old, half-new session file if a write is cut short, and an attacker can use that to make PHP rebuild objects of their choice and run code. It also needs the attacker's data in the session, a worker killed mid-write and a suitable code library in the app; lab exploit code is public, no attacks are reported, and the 19 Nov 2026 releases fix it. It's a separate bug from [PHP2Shell](/php2shell/), not a bypass: the October releases just don't include this fix.",
+  "tile_line": "Needs a cut-short session write and a gadget.",
+  "tldr": "A PHP session file cut short mid-write can let an attacker run code. Lab exploit public, no attacks. Only if sessions are in files, hold the attacker's data and the app has a usable code library; PHP's 19 Nov 2026 releases fix it.",
+  "summary": "PHP's default file-based session storage can leave a half-old, half-new session file if a write is cut short, and PHP then rebuilds objects of the attacker's choice from it. It's a separate bug from [PHP2Shell](/php2shell/), not a bypass: the October releases just don't include this fix.",
   "status": {
     "exploit": "public",
     "attacks": "none",
@@ -122,7 +122,6 @@
       "8.2": "8.2.36"
     }
   },
-  "slack": "phpAfterShell, PHP CVE-2026-126714 (Critical 9.2): PHP's default file session handler can leave a half-old, half-new session file when a write is cut short, letting an attacker inject objects and run code if the app has a usable gadget chain. Needs attacker data in the session (session upload progress, or the app storing user input) and a worker killed mid-write. Separate bug from PHP2Shell; the October releases don't fix it. Lab exploit code is public, no attacks reported, not in CISA KEV. Fix: 8.6.0, 8.5.13, 8.4.28, 8.3.37 or 8.2.36 (19 Nov 2026). Stopgap: session.upload_progress.enabled = 0.",
   "sources": [
     {
       "title": "PHP GHSA-fm2m: full advisory, conditions, fix and mitigation",

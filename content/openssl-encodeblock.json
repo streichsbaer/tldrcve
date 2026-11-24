@@ -22,9 +22,9 @@
   "news": "2026-11-19",
   "updated": "2026-11-24",
   "verdict": "cycle",
-  "tile_line": "Needs ~1.6 GB of input you supply. No remote path known.",
-  "tldr": "OpenSSL 4.0 and 4.1 can write past a buffer if a program base64-encodes about 1.6 GB in one call. OpenSSL rates it Low: no attacker path is known. CISA lowered its score from 9.8 to 5.9. Take the fix with normal updates when it ships.",
-  "summary": "A bug in OpenSSL 4.0 and 4.1 can write past the end of a buffer when a program asks it to base64-encode about 1.6 GB or more in one go. OpenSSL now rates it Low: it knows no way for an attacker to trigger it, and says its own TLS, QUIC and CMS code and command-line tools can't practically reach it. CISA first scored it 9.8 and lowered that to 5.9 on 20 Nov; Ubuntu rates it Medium.",
+  "tile_line": "OpenSSL rates it Low. No attacker path known.",
+  "tldr": "OpenSSL 4.0 and 4.1 can write past a buffer if a program base64-encodes about 1.6 GB in one call. OpenSSL rates it Low because no attacker path is known, and CISA lowered its score from 9.8 to 5.9. Take the fix with normal updates when it ships.",
+  "summary": "The bug is in `EVP_EncodeBlock()`. OpenSSL says its own TLS, QUIC and CMS code never encode that much and its command-line tools can't practically be made to; only an app that passes an attacker-controlled length without its own check is exposed. CISA's change came on 20 Nov; Ubuntu rates it Medium.",
   "status": {
     "exploit": "none",
     "attacks": "none",
@@ -91,7 +91,6 @@
       ]
     }
   ],
-  "slack": "OpenSSL CVE-2026-121481 (EVP_EncodeBlock heap overflow): OpenSSL 4.0.0-4.0.3 and 4.1.0 can write past a buffer when asked to base64-encode about 1.6 GB or more in one call. OpenSSL rates it Low: no attacker path is known, and its TLS, QUIC and CMS code and command-line tools can't practically reach it. CISA's score dropped from 9.8 to 5.9; Ubuntu says Medium. No public exploit, no attacks, not on KEV. Fix expected in 4.1.1 and 4.0.4 (scheduled 1 Dec 2026); patch on your normal cycle.",
   "sources": [
     {
       "title": "CVE record: OpenSSL rates it Low, no attacker path known, tools can't practically reach it; CISA scores 5.9",

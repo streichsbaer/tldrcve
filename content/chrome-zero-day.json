@@ -13,7 +13,8 @@
     "chromeos",
     "xml",
     "use after free",
-    "chrome zero-day"
+    "chrome zero-day",
+    "cve-2026-125346"
   ],
   "cves": [
     "CVE-2026-125350"
@@ -27,11 +28,11 @@
     "ChromeOS"
   ],
   "disclosed": "2026-11-09",
-  "updated": "2026-11-20",
+  "updated": "2026-11-24",
   "verdict": "now",
-  "tile_line": "Exploited via web pages. In CISA KEV, due 24 Nov.",
-  "tldr": "A crafted web page can run code inside Chrome's sandbox, and Google says it's exploited. Update Chrome and relaunch (fixed from 157.0.8103.50, Extended Stable 156.0.8078.96); Edge, Brave, Opera and Electron apps need their own updates.",
-  "summary": "A use-after-free bug in Chromium's XML handling lets a crafted web page run code inside the browser's sandbox. Google says an exploit exists in the wild. It's fixed in Chrome 157.0.8103.50 (9 Nov 2026), and Edge, Brave, Opera and Electron have shipped fixes too.",
+  "tile_line": "Exploited via web pages. On CISA's exploited list.",
+  "tldr": "A crafted web page can run code inside Chrome's sandbox, and Google says it's exploited. Every Chromium-based browser needs its fix: update Chrome and relaunch (fixed from 157.0.8103.50), then Edge, Brave, Opera and Electron apps.",
+  "summary": "The bug is a use-after-free in libxslt, the XSLT library Chromium bundles, fixed on 9 Nov 2026; each of those ships its own copy of Chromium. Extended Stable is fixed from 156.0.8078.96. Upstream libxslt hadn't taken the fix by 24 Nov 2026, and another ID, CVE-2026-125346, was rejected as a duplicate.",
   "status": {
     "exploit": "demonstrated",
     "attacks": "seen",
@@ -131,7 +132,6 @@
       "43": "43.8.8"
     }
   },
-  "slack": "Chrome zero-day (CVE-2026-125350): use-after-free in Chromium's XML code, exploited in the wild via crafted web pages. CISA KEV added 10 Nov, due 24 Nov. Fixed in Chrome 157.0.8103.50/.51 (9 Nov); Extended Stable 156.0.8078.96. Edge 157.0.4341.46, Brave 1.99.56 and Opera 140.0.6074.17 also fixed. Check chrome://settings/help and relaunch. Electron 45.3.0 / 44.11.1 / 43.8.8 include the fix; Electron apps must ship it.",
   "sources": [
     {
       "title": "Chrome Releases: Stable fix, exploit in the wild",
@@ -214,9 +214,29 @@
     {
       "title": "Brave: releases",
       "url": "https://github.com/brave/brave-browser/releases"
+    },
+    {
+      "title": "CVE record: CVE-2026-125346 rejected, duplicate of CVE-2026-125350",
+      "url": "https://cveawg.mitre.org/api/cve/CVE-2026-125346",
+      "date": "11 Nov"
+    },
+    {
+      "title": "Chromium: libxslt use-after-free fix for issue 582442907",
+      "url": "https://chromium-review.googlesource.com/c/chromium/src/+/8762073",
+      "date": "7 Nov"
+    },
+    {
+      "title": "libxslt issue 183: Chromium's fix, still open",
+      "url": "https://gitlab.gnome.org/GNOME/libxslt/-/work_items/183",
+      "date": "10 Nov"
     }
   ],
   "changes": [
+    {
+      "date": "2026-11-24",
+      "text": "The bug is in libxslt, and upstream libxslt hasn't taken the fix. Added the rejected duplicate CVE-2026-125346 as a search term.",
+      "minor": true
+    },
     {
       "date": "2026-11-20",
       "text": "Electron sources corrected. ChromeOS 158 confirmed fixed. Safe versions added."

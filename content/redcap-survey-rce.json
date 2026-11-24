@@ -18,11 +18,11 @@
   "product": "REDCap",
   "disclosed": "2026-09-20",
   "news": "2026-11-18",
-  "updated": "2026-11-20",
+  "updated": "2026-11-24",
   "verdict": "now",
-  "tile_line": "Attacks since 7 Oct. In CISA KEV, due 21 Nov.",
-  "tldr": "Anyone with a public REDCap survey link can run code on the server, no login. Exploit public since 1 Oct 2026, attacks reported 7 Oct, on CISA's exploited list. Upgrade to 16.0.49, 17.3.10 or 17.4.4 and check for signs of attack.",
-  "summary": "A bug in REDCap, the research survey and data tool used by over 8,500 institutions, lets anyone who has a public survey link run code on the server, with no login. Exploit code has been public since 1 Oct 2026, Palo Alto's Unit 42 reported attackers using it to install crypto miners on 7 Oct, and CISA added it to its exploited list on 18 Nov. REDCap 16.0.49, 17.3.10 and 17.4.4 fix it.",
+  "tile_line": "A public survey link is enough. Exploited, in KEV.",
+  "tldr": "Anyone with a public REDCap survey link can run code on the server, no login. Exploit public since 1 Oct 2026, attacks reported 7 Oct, on CISA's exploited list. Upgrade to a fixed release now and check for signs of attack.",
+  "summary": "REDCap is a research survey and data tool used by over 8,500 institutions. Palo Alto's Unit 42 reported attackers using the bug to install crypto miners, and CISA added it to its exploited list on 18 Nov.",
   "status": {
     "exploit": "public",
     "attacks": "seen",
@@ -95,7 +95,6 @@
       "16.0": "16.0.49"
     }
   },
-  "slack": "REDCap CVE-2026-90817: anyone with a public survey link can run code on a REDCap server (13.3.0 and later), no login needed. Public exploit since 1 Oct 2026, Unit 42 saw crypto-miner attacks on 7 Oct, and CISA added it to KEV on 18 Nov (due 21 Nov). Fixed in 16.0.49 / 17.3.10 (LTS) and 17.4.4 (Standard). Until you upgrade, restrict public surveys and check logs for encoded __passthru requests to DataImportController.",
   "sources": [
     {
       "title": "CISA KEV: added 18 Nov, due 21 Nov",
@@ -128,6 +127,11 @@
     }
   ],
   "changes": [
+    {
+      "date": "2026-11-24",
+      "text": "Corrected the headline: Unit 42 reported the attacks on 7 Oct; it didn't say they started that day.",
+      "minor": true
+    },
     {
       "date": "2026-11-20",
       "text": "Published."

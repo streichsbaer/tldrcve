@@ -20,15 +20,15 @@
   "product": "Linux kernel",
   "disclosed": "2026-11-10",
   "news": "2026-11-18",
-  "updated": "2026-11-23",
+  "updated": "2026-11-24",
   "verdict": "if",
   "tile_line": "Needs code on the box. No stable kernel fix yet.",
-  "tldr": "A Linux kernel SCTP bug lets any local user, even one inside a container, take over the machine. No stable kernel has the fix yet. If untrusted code runs on your servers and you don't use SCTP, block the sctp module.",
-  "summary": "A bug in the Linux kernel's SCTP code lets any local user, including one inside a container, free the same kernel memory twice and take over the machine. Xint chained it with nginx2root to get root on the host and escape a Docker container. The fix reached the main kernel tree on 19 Nov, but no stable kernel has it yet and the only distro kernels we found with it are Gentoo's and an unshipped Fedora Rawhide test build, so blocking the sctp module is the stopgap.",
+  "tldr": "A Linux kernel SCTP bug lets any local user, even one inside a container, take over the machine. It was shown working, and no stable kernel has the fix yet. If untrusted code runs on your servers and you don't use SCTP, block the sctp module.",
+  "summary": "Xint chained it with [nginx2root](/nginx2root/) to get root on the host and escape a Docker container. The fix reached the main kernel tree on 19 Nov; the only distro kernels we found with it are Gentoo's and a Fedora Rawhide 7.4-rc4 build still in testing. The bug makes the kernel free memory twice or use it after freeing it.",
   "affected": [
     {
       "label": "Kernel 4.15 or later",
-      "text": "The bug arrived in 4.15 (Jan 2018). The fix was merged into the main kernel tree on 19 Nov and first came out in 7.4-rc4 (22 Nov), a test release. The newest stable kernels (7.3.5, 6.18.64, 6.12.118, released 17 Nov) don't have it, and on 23 Nov it wasn't queued for the next ones either; the only distro kernels we found carrying it are Gentoo's kernel sources and a Fedora Rawhide test build that hasn't shipped yet. Xint hasn't named the fix, but the commit credits Xint's tool and matches its description.",
+      "text": "The bug arrived in 4.15 (Jan 2018). The fix was merged into the main kernel tree on 19 Nov and first came out in 7.4-rc4 (22 Nov), a test release. The newest stable kernels (7.3.6, 6.18.65, 6.12.119, released 23 Nov) don't have it, and on 24 Nov it wasn't queued for the next ones either; the only distro kernels we found carrying it are Gentoo's kernel sources and a Fedora Rawhide 7.4-rc4 build still in testing. Xint hasn't named the fix, but the commit credits Xint's tool and matches its description.",
       "cmd": "uname -r",
       "cite": [
         1,
@@ -40,7 +40,9 @@
         18,
         20,
         21,
-        22
+        22,
+        24,
+        25
       ]
     },
     {
@@ -82,14 +84,17 @@
     },
     {
       "label": "Update the kernel and reboot",
-      "text": "Install your distro's kernel with the fix (\"sctp: do not free a new asoc peeled off while sendmsg slept\") once it ships, then reboot. No stable release has it as of 23 Nov, and it isn't queued for the next stable releases yet; Debian unstable's 7.3.5-1 doesn't have it either. No release date is announced and the fix has no CVE yet; we'll check again by 27 Nov 2026.",
+      "text": "Install your distro's kernel with the fix (\"sctp: do not free a new asoc peeled off while sendmsg slept\") once it ships, then reboot. The 23 Nov stable releases (7.3.6, 6.18.65, 6.12.119) don't have it, and on 24 Nov it wasn't queued for the next ones; Debian unstable's 7.3.5-1 doesn't have it either. No release date is announced and the fix has no CVE yet; we'll check again by 27 Nov 2026.",
       "cite": [
         2,
         3,
         4,
         18,
         19,
-        23
+        21,
+        23,
+        24,
+        25
       ],
       "pending": {
         "expected": "2026-11-27"
@@ -104,7 +109,6 @@
       ]
     }
   ],
-  "slack": "Linux SCTP local root / container escape (no CVE yet): double free in the kernel's SCTP send path, in kernels since 4.15 (2018), reachable by any unprivileged local user, including inside a container. Xint chained it with nginx2root to get host root and escape Docker. Fix merged into mainline on 19 Nov (7.4-rc4); no stable kernel has it yet (23 Nov). Docker's default seccomp doesn't block SCTP. No public exploit, no attacks reported. Stopgap: `install sctp /bin/false` in /etc/modprobe.d/ (doesn't unload a loaded module, useless if SCTP is built in); check with `lsmod | grep sctp`.",
   "sources": [
     {
       "title": "Xint: nginx-to-root chain, Docker escape, since 4.15, module block",
@@ -122,7 +126,7 @@
       "date": "19 Nov"
     },
     {
-      "title": "kernel.org: newest stable kernels, all from 17 Nov or earlier",
+      "title": "kernel.org: newest stable kernels, released 23 Nov",
       "url": "https://www.kernel.org/releases.json"
     },
     {
@@ -192,24 +196,40 @@
       "date": "18 Nov"
     },
     {
-      "title": "Fedora: Rawhide kernel test build of snapshot 65e4fd942f72, not shipped yet (FEDORA-2026-af8fecb210)",
-      "url": "https://bodhi.fedoraproject.org/updates/FEDORA-2026-af8fecb210",
-      "date": "20 Nov"
+      "title": "Fedora: Rawhide kernel 7.4.0-0.rc4.33.fc46 in testing (FEDORA-2026-a150bd5da1); the earlier snapshot build is obsolete",
+      "url": "https://bodhi.fedoraproject.org/updates/FEDORA-2026-a150bd5da1",
+      "date": "23 Nov"
     },
     {
-      "title": "GitHub: snapshot 65e4fd942f72 comes after the fix's merge (1e575bda)",
-      "url": "https://github.com/torvalds/linux/compare/1e575bda30acc0bf01f799cee798d4a1c100d538...65e4fd942f72"
+      "title": "kernel.org: 7.3.6 changelog, no SCTP peel-off fix",
+      "url": "https://cdn.kernel.org/pub/linux/kernel/v7.x/ChangeLog-7.3.6",
+      "date": "23 Nov"
     },
     {
       "title": "GitHub: 7.4-rc4 includes the fix's merge (1e575bda)",
       "url": "https://github.com/torvalds/linux/compare/1e575bda30acc0bf01f799cee798d4a1c100d538...v7.4-rc4"
     },
     {
-      "title": "Linux kernel CNA: CVE records, none for the SCTP fix on 23 Nov",
+      "title": "Linux kernel CNA: CVE records, none for the SCTP fix on 24 Nov",
       "url": "https://git.kernel.org/pub/scm/linux/security/vulns.git/"
+    },
+    {
+      "title": "kernel.org: 6.18.65 changelog, no SCTP peel-off fix",
+      "url": "https://cdn.kernel.org/pub/linux/kernel/v6.x/ChangeLog-6.18.65",
+      "date": "23 Nov"
+    },
+    {
+      "title": "kernel.org: 6.12.119 changelog, no SCTP peel-off fix",
+      "url": "https://cdn.kernel.org/pub/linux/kernel/v6.x/ChangeLog-6.12.119",
+      "date": "23 Nov"
     }
   ],
   "changes": [
+    {
+      "date": "2026-11-24",
+      "text": "Rechecked: the 23 Nov stable kernels (7.3.6, 6.18.65, 6.12.119, 6.6.163, 6.1.193) don't have the fix and it isn't queued; Fedora Rawhide's build carrying it is now 7.4-rc4, still in testing. Still no CVE.",
+      "minor": true
+    },
     {
       "date": "2026-11-23",
       "text": "Rechecked: the fix is in the 7.4-rc4 test release, but still in no stable kernel or stable queue, and it has no CVE yet. Summary now names the only distro kernels we found with it."

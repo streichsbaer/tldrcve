@@ -1,20 +1,40 @@
 {
   "id": "mysql",
   "name": "MySQL",
-  "about": "No public fixed MySQL release yet for the bug we cover. Little is known about it: see the bug's page before you rush.",
+  "about": "Oracle's November security release on each MySQL Server line we track. Oracle hasn't said how the bug we cover works: see its page.",
   "feed": null,
   "latest_from": [
     "https://dev.mysql.com/doc/relnotes/mysql/8.4/en/",
     "https://dev.mysql.com/doc/relnotes/mysql/9.7/en/",
-    "https://dev.mysql.com/doc/relnotes/mysql/26.10/en/"
+    "https://dev.mysql.com/doc/relnotes/mysql/26.10/en/",
+    "https://dev.mysql.com/downloads/mysql/"
   ],
   "filter": "mysql",
-  "checked": "2026-11-20",
-  "lines": [],
+  "checked": "2026-11-24",
+  "lines": [
+    {
+      "line": "8.4",
+      "key": "8.4",
+      "latest": "8.4.13.1",
+      "released": "2026-11-24"
+    },
+    {
+      "line": "9.7",
+      "key": "9.7",
+      "latest": "9.7.4.1",
+      "released": "2026-11-24"
+    },
+    {
+      "line": "26.10",
+      "key": "26.10",
+      "latest": "26.10.0.1",
+      "released": "2026-11-24"
+    }
+  ],
   "unfixed": [
     {
-      "line": "8.4.0 to 8.4.13, 9.7.0 to 9.7.4, 26.10",
-      "note": "Fixed builds 8.4.13.1, 9.7.4.1 and 26.10.0.1 are listed as not yet released, with no date; until then the fix is only via My Oracle Support. Server 8.0 isn't listed because Oracle no longer supports it.",
+      "line": "MySQL Cluster 8.0, 8.4, 9.7, 26.10",
+      "note": "Fixed NDB Cluster releases 8.0.51, 8.4.13.1, 9.7.4.1 and 26.10.0.1 are listed for 26 Nov 2026, not yet out. Server 8.0 isn't listed by Oracle because it's no longer supported.",
       "pages": [
         "mysql-client"
       ]
@@ -26,20 +46,20 @@
       "url": "https://www.oracle.com/security-alerts/cspunov2026.html"
     },
     {
-      "title": "MySQL: 8.4 release notes (8.4.13.1 not yet released)",
-      "url": "https://dev.mysql.com/doc/relnotes/mysql/8.4/en/"
+      "title": "MySQL: 8.4.13.1 release note, a Critical Security Patch Update",
+      "url": "https://dev.mysql.com/doc/relnotes/mysql/8.4/en/news-8-4-13-1.html"
     },
     {
-      "title": "MySQL: 9.7 release notes (9.7.4.1 not yet released)",
-      "url": "https://dev.mysql.com/doc/relnotes/mysql/9.7/en/"
+      "title": "MySQL: 9.7.4.1 release note, a Critical Security Patch Update",
+      "url": "https://dev.mysql.com/doc/relnotes/mysql/9.7/en/news-9-7-4-1.html"
     },
     {
-      "title": "MySQL: 26.10 release notes (26.10.0.1 not yet released)",
-      "url": "https://dev.mysql.com/doc/relnotes/mysql/26.10/en/"
+      "title": "MySQL: 26.10.0.1 release note, a Critical Security Patch Update",
+      "url": "https://dev.mysql.com/doc/relnotes/mysql/26.10/en/news-26-10-0-1.html"
     },
     {
-      "title": "TuxCare: fix only via My Oracle Support",
-      "url": "https://tuxcare.com/blog/mysql-cve-2026-114952/"
+      "title": "MySQL: downloads offer 8.4.13.1, 9.7.4.1 and 26.10.0.1",
+      "url": "https://dev.mysql.com/downloads/mysql/"
     }
   ]
 }

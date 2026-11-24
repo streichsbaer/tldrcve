@@ -24,9 +24,9 @@
   "news": "2026-11-17",
   "updated": "2026-11-22",
   "verdict": "now",
-  "tile_line": "Exploited, on CISA's list. No login. Fixed in 6.1.6.",
-  "tldr": "One crafted request to Apache Roller's XML-RPC address can, at worst, run code with no login. Apache says it's being exploited, and it's on CISA's exploited list. Roller 4.0.0 to 6.1.5 are affected: upgrade to 6.1.7.",
-  "summary": "A bug in Apache Roller, a Java blog server, lets anyone who can reach the site send one crafted request to its XML-RPC address and, in the worst case, run their own code, without logging in. Default installs from 4.0.0 through 6.1.5 are affected, even with XML-RPC switched off. Apache rates it Critical (CVSS 9.8) and says it is being actively exploited, and CISA added it to its exploited list (KEV) on 20 Nov 2026; one researcher's public code reaches the bug but says running code on a stock, up-to-date setup needs extra work. 6.1.6 (24 Sep 2026) and later fix it.",
+  "tile_line": "Exploited, no login, one crafted request.",
+  "tldr": "One crafted request to Apache Roller's XML-RPC address can, at worst, run code with no login. Apache says it's being exploited, and it's on CISA's exploited list. If you run Roller 4.0.0 to 6.1.5, upgrade to 6.1.7.",
+  "summary": "Apache Roller is a Java blog server, and default installs are affected even with XML-RPC switched off; Apache rates it Critical (CVSS 9.8). One researcher's public exploit runs code in a lab, but its author says two Java protections block that on a stock, up-to-date setup. 6.1.6 (24 Sep 2026) fixed it; 6.1.7 is the newest.",
   "status": {
     "exploit": "public",
     "attacks": "seen",
@@ -103,7 +103,6 @@
       "6.1": "6.1.6"
     }
   },
-  "slack": "Apache Roller CVE-2026-129448 (same bug as CVE-2026-82384): anyone who can reach a Roller blog can run code on it without logging in, via crafted XML-RPC requests to /roller-services/xmlrpc. Default installs from 4.0.0 through 6.1.5 are affected, even with XML-RPC turned off in the admin UI. Apache rates it Critical (CVSS 9.8) and says it is being actively exploited (no details given); on CISA KEV since 20 Nov (due 23 Nov). Public proof-of-concept code reaches the bug; the researcher says code execution on a stock, up-to-date setup needs a gadget chain public tools don't provide. Fixed in 6.1.6; upgrade to 6.1.7, the newest. Stopgap: set enabledForExtensions to false in WEB-INF/web.xml or remove the XML-RPC servlet mapping, then restart.",
   "sources": [
     {
       "title": "Apache: CVE-2026-129448 advisory, 4.0.0-6.1.4, actively exploited",

@@ -19,11 +19,11 @@
   ],
   "product": "N-able N-central",
   "disclosed": "2026-11-12",
-  "updated": "2026-11-20",
+  "updated": "2026-11-24",
   "verdict": "now",
-  "tile_line": "Exploited, no login. Axis bug in KEV, due 21 Nov.",
-  "tldr": "4EverAble2Shell gives attackers root on on-prem N-able N-central servers with the Legacy API on, no login needed. Exploit public, attacks seen, its Axis bug is on CISA's exploited list. Patch now to 2026.4 HF3 or later; until then, turn off the Legacy API.",
-  "summary": "A public exploit chain gives an attacker root on on-prem N-central servers that have the old Legacy API turned on, with no login. It gets in through an Apache Axis bug (CVE-2026-90436); the N-central root step has no CVE yet. Security firm Huntback found crypto miners on 21 servers within hours, and N-able reported attacks on 13 Nov.",
+  "tile_line": "Exploited, no login, if the Legacy API is on.",
+  "tldr": "A public exploit chain gives attackers root on on-prem N-able N-central servers with the Legacy API on, no login needed. Attacks are seen; its Axis bug is on CISA's exploited list. Patch now to 2026.4 HF4; until then, turn the Legacy API off.",
+  "summary": "The chain gets in through an Apache Axis bug (CVE-2026-90436); N-able hasn't said which of its CVEs, if any, covers the step to root. Security firm Huntback found crypto miners on 21 servers within hours, and saw attacks from 12 Nov; Rapid7 says N-able reported exploitation on 13 Nov, though Tenable says N-able hasn't confirmed it.",
   "status": {
     "exploit": "public",
     "attacks": "seen",
@@ -38,7 +38,7 @@
   "affected": [
     {
       "label": "On-prem N-central below 2026.4 HF3",
-      "text": "Hotfix 2 (2026.4.1.26, 10 Nov) does not stop this chain; the exploit was tested on it. Hotfix 3 (2026.4.1.39, 16 Nov) removes the Legacy API. N-able says hosted N-central is not vulnerable to the server chain and gets HF3 automatically.",
+      "text": "Hotfix 2 (2026.4.1.26, 10 Nov) does not stop this chain; the exploit was tested on it. Hotfix 3 (2026.4.1.39, 16 Nov) removes the Legacy API. N-able says hosted N-central is not vulnerable to the server chain, and N-able upgrades hosted servers itself.",
       "cite": [
         3,
         4,
@@ -66,8 +66,8 @@
   ],
   "do": [
     {
-      "label": "Upgrade to 2026.4 HF3 (2026.4.1.39)",
-      "text": "Rapid7 says apply it as an emergency, outside normal patch cycles. HF3 permanently blocks the Legacy API and fixes 17 new CVEs. Also update all Agents and Probes to 2026.4.1 HF3, and Patch Management Engine to 2.14.4.5829 or later.",
+      "label": "Upgrade to 2026.4 HF4 (2026.4.1.40)",
+      "text": "N-able's 20 Nov update says to upgrade on-prem servers to HF4 \"as soon as possible\". HF4 builds on HF3, which permanently blocks the Legacy API and fixes 17 new CVEs; HF4 also updates N-central's Java for CVE-2026-114938. Rapid7 said to apply HF3 as an emergency, outside normal patch cycles. Also update all Agents and Probes to 2026.4.1.40, and Patch Management Engine to 2.14.4.5829 or later.",
       "cite": [
         4,
         5,
@@ -111,7 +111,6 @@
       "pme": "2.14.4.5829"
     }
   },
-  "slack": "4EverAble2Shell (N-able N-central): public exploit chain gives unauthenticated root on on-prem N-central servers with Legacy API enabled. It uses Apache Axis CVE-2026-90436 (CISA KEV, added 18 Nov, due 21 Nov). Huntback found miners on 21 servers within hours (most on Hotfix 2); N-able reported attacks on 13 Nov. Fix: upgrade the server to 2026.4 HF3 (2026.4.1.39), which removes the Legacy API, and update Agents and Probes. Until then, make sure Legacy API is off, and check for xvd.service or /tmp/.xvd. Hosted N-central: N-able says not vulnerable.",
   "sources": [
     {
       "title": "CISA KEV: CVE-2026-90436 added 18 Nov, due 21 Nov",
@@ -139,9 +138,9 @@
       "date": "17 Nov"
     },
     {
-      "title": "N-able: remediation update, HF3 removes Legacy API",
+      "title": "N-able: remediation update, HF3 removes Legacy API, HF4 (2026.4.1.40) as soon as possible",
       "url": "https://www.n-able.com/blog/n-able-vulnerability-remediation-update",
-      "date": "16 Nov"
+      "date": "20 Nov"
     },
     {
       "title": "NVD: CVE-2026-90436, Axis 1.x through 1.4, no fix release",
@@ -159,6 +158,10 @@
     }
   ],
   "changes": [
+    {
+      "date": "2026-11-24",
+      "text": "Corrected: the step to root may already have a CVE (N-able hasn't said which of its CVEs covers it), and Huntback saw attacks from 12 Nov; Rapid7 says N-able reported exploitation on 13 Nov, which Tenable says N-able hasn't confirmed. N-able's 20 Nov update says to upgrade servers, Agents and Probes to 2026.4 HF4 (2026.4.1.40) as soon as possible; HF4 also updates N-central's Java for CVE-2026-114938."
+    },
     {
       "date": "2026-11-20",
       "text": "Safe versions added; nothing else changed."

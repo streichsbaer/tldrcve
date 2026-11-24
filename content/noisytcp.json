@@ -25,9 +25,9 @@
   "news": "2026-11-15",
   "updated": "2026-11-24",
   "verdict": "if",
-  "tile_line": "Remote crash of Linux servers; patch if TCP is exposed.",
-  "tldr": "NoisyTCP: anyone who can reach a TCP port can crash a Linux server that spreads packets across CPUs, no login needed. No code execution so far, the researcher's exploit isn't public, and no attacks are seen. Patch if that's you.",
-  "summary": "NoisyTCP (CVE-2026-99288) is an 11-year-old race in the Linux kernel's TCP code that lets anyone who can reach a listening TCP port crash a server that spreads incoming packets across CPUs, with no login; its finder, Hyunwoo Kim, crashed default Nginx, Apache and SSH servers on virtual machines in about 5 seconds to 2 minutes, while a quiet physical server took about 14 hours. He says it isn't practically remote code execution yet and his exploit isn't public; fixes are out for Debian and the current RHEL 8, 9 and 10 releases, and on the way for Ubuntu. Its sibling from the same patch series, the [Linux 9.8 race](/linux-socket-race/), only matters on weakly ordered processors such as Arm and POWER and has its own fixes, so a kernel fixed for NoisyTCP isn't necessarily fixed for it.",
+  "tile_line": "Remote crash, no login, if packets spread across CPUs.",
+  "tldr": "Anyone who can reach a TCP port can crash a Linux server that spreads packets across CPUs, no login needed. No code execution so far, the researcher's exploit isn't public, and no attacks are seen. Patch if that's you.",
+  "summary": "An 11-year-old race in the kernel's TCP code: the researcher, Hyunwoo Kim, crashed default Nginx, Apache and SSH servers on virtual machines in about 5 seconds to 2 minutes; a quiet physical server took about 14 hours. Fixes are out for Debian and the current RHEL 8, 9 and 10 releases, and on the way for Ubuntu's main kernel. Its sibling from the same patch series, the [Linux 9.8 race](/linux-socket-race/), only matters on weakly ordered CPUs such as Arm and POWER and has its own fixes, so a kernel fixed for NoisyTCP isn't necessarily fixed for it.",
   "status": {
     "exploit": "demonstrated",
     "attacks": "none",
@@ -130,7 +130,6 @@
       "RHEL 8": "4.18.0-553.189.1.el8_10"
     }
   },
-  "slack": "NoisyTCP (CVE-2026-99288), Linux kernel, write-up published 15 Nov 2026: a TCP race that lets anyone who can reach a listening TCP port crash the whole server, no login, default configs (Nginx, Apache, SSH). Needs two or more receive queues or RPS. The finder crashed VMs in 5 s to 2 min; a quiet physical server took 14 h. The easy path only crashes the host; the finder says it isn't practically RCE yet; his exploit isn't public; no attacks, not on CISA KEV. Fixed: Debian 12 6.1.192-1, Debian 13 6.12.117-1, RHEL 8, 9.9, 10.3; Ubuntu in progress; older RHEL streams (such as 8.8, 9.8 and 10.2) not yet. Stopgaps: SYN cookies off (net.ipv4.tcp_syncookies=0, per namespace) or a single receive queue with RPS/RFS off.",
   "sources": [
     {
       "title": "oss-security: Hyunwoo Kim's NoisyTCP advisory, trigger paths, timings, mitigations",
