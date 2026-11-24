@@ -59,6 +59,20 @@ def text(s: str) -> str:
     return re.sub(r"\[([^\]]+)\]\((/[a-z0-9/-]*)\)", r'<a href="\2">\1</a>', out)
 
 
+def plain(s: str) -> str:
+    """Text for places without HTML (meta descriptions, the RSS feed): drop `backticks`, keep a link's label only."""
+    return re.sub(r"\[([^\]]+)\]\((/[a-z0-9/-]*)\)", r"\1", s.replace("`", ""))
+
+
+def og_image(path: str) -> tuple:
+    """The link-preview image for a page path: (url, bytes). Falls back to the site default."""
+    card = (path or "/").strip("/") or "default"
+    if not (ASSETS / "og" / f"{card}.png").exists():
+        card = "default"
+    name = f"og/{card}.png"
+    return f"{SITE_URL}/assets/{name}?v={asset_version(name)}", (ASSETS / name).stat().st_size
+
+
 def nice_date(iso: str) -> str:
     d = date.fromisoformat(iso)
     return f"{d.day} {d.strftime('%b')}"
@@ -106,6 +120,7 @@ def write_fingerprinted() -> None:
 
 
 def page(title: str, description: str, body: str, current: str = "", path: str = "", data: str = "") -> str:
+    description = plain(description)
     seo = social_tags(title, description, path)
     data_link = f'\n  <link rel="alternate" type="application/json" title="This page as JSON" href="{data}">' if data else ""
     cur = {k: ' aria-current="page"' if k == current else "" for k in ("cves", "versions", "week", "how")}
@@ -1193,10 +1208,7 @@ def social_tags(title: str, description: str, path: str) -> str:
         return '  <meta name="robots" content="noindex">'
     url = SITE_URL + (path or "/")
     t, d = html.escape(title), html.escape(description)
-    card = (path or "/").strip("/") or "default"
-    if not (ASSETS / "og" / f"{card}.png").exists():
-        card = "default"
-    img = f"{SITE_URL}/assets/og/{card}.png?v={asset_version(f'og/{card}.png')}"
+    img, _ = og_image(path)
     return "\n".join([
         f'  <link rel="canonical" href="{url}">',
         f'  <meta property="og:type" content="website">',
@@ -1229,6 +1241,14 @@ def write_sitemap(all_c: list) -> None:
 FEED_ITEMS = 60
 
 
+def item_image(url: str, size: int) -> str:
+    """An item's preview image: <enclosure> for RSS readers, media:content and media:thumbnail for chat apps."""
+    u = html.escape(url)
+    return (f'      <enclosure url="{u}" length="{size}" type="image/png"/>\n'
+            f'      <media:content url="{u}" medium="image" type="image/png" width="1200" height="630"/>\n'
+            f'      <media:thumbnail url="{u}" width="1200" height="630"/>')
+
+
 def write_feed(all_c: list) -> None:
     """RSS 2.0: one item per changelog entry across all pages, newest first."""
     from email.utils import format_datetime
@@ -1245,12 +1265,14 @@ def write_feed(all_c: list) -> None:
         verb = "New" if t == "Published." else "Update"
         title = f'{verb}: {c["name"]} ({cve_list(c) or "no CVE yet"})'
         desc = c["summary"] if t == "Published." else t
+        img, size = og_image(f'/{c["slug"]}/')
         items.append(f"""    <item>
       <title>{html.escape(title)}</title>
       <link>{url}</link>
       <guid isPermaLink="false">{c["slug"]}-{d}-{-neg_i}</guid>
       <pubDate>{rfc822(d)}</pubDate>
-      <description>{html.escape(desc.replace("`", ""))} Verdict: {html.escape(VERDICTS[c["verdict"]])}</description>
+      <description>{html.escape(plain(desc))} Verdict: {html.escape(VERDICTS[c["verdict"]])}</description>
+{item_image(img, size)}
     </item>""")
     for wk in WEEKS:
         w = wk["week"]
@@ -1259,12 +1281,13 @@ def write_feed(all_c: list) -> None:
       <title>{html.escape(f"{week_title(w)} review ({week_label(w)})")}</title>
       <link>{SITE_URL}/week/{week_slug(w)}/</link>
       <guid isPermaLink="false">week-{week_slug(w)}</guid>
+{item_image(*og_image(f"/week/{week_slug(w)}/"))}
       <pubDate>{rfc822(d["end"])}</pubDate>
       <description>{html.escape(f'{len(d["new"])} new pages, {len({c["slug"] for _, c, _ in d["changed"]})} pages updated, and {len(d["ahead"])} dates coming up.')}</description>
     </item>""")
     newest = entries[0][0] if entries else date.today().isoformat()
     (OUT / "feed.xml").write_text(f"""<?xml version="1.0" encoding="UTF-8"?>
-<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:media="http://search.yahoo.com/mrss/">
   <channel>
     <title>tldrcve</title>
     <link>{SITE_URL}/</link>
