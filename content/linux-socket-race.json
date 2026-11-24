@@ -25,7 +25,7 @@
   "updated": "2026-11-24",
   "verdict": "cycle",
   "tile_line": "9.8 on paper; Red Hat says crash only. Update as usual.",
-  "summary": "The Linux kernel's own CVE team rated this TCP race 9.8 out of 10 on 20 Nov 2026, and the patch author's answer was \"don't sweat it, go to bed\". It only matters on processors that reorder memory accesses, such as Arm and POWER, and Red Hat rates it Moderate (5.9), limited to crashing the machine. No exploit or attacks are known; take the fix with your normal kernel updates.",
+  "summary": "The Linux kernel's own CVE team rated this TCP race 9.8 out of 10 on 22 Nov 2026, and the patch author's answer was \"don't sweat it, go to bed\". It only matters on weakly ordered processors such as Arm and POWER, and Red Hat rates it Moderate (5.9), limited to crashing the machine. No exploit or attacks are known; take the fix with your normal kernel updates.",
   "status": {
     "exploit": "none",
     "attacks": "none",
@@ -39,7 +39,7 @@
       4
     ],
     "exploit": [
-      3,
+      1,
       4
     ],
     "attacks": [
@@ -51,8 +51,8 @@
   },
   "affected": [
     {
-      "label": "Kernel 5.5 or later, not patched",
-      "text": "The race came in with a refcount change in 5.5 (also backported to 5.4 from 5.4.208). Upstream fixes: 6.12.118, 6.18.64, 7.3.5 and 7.4-rc2; the CVE record lists no fix yet for the 6.6, 6.1, 5.15 and 5.10 lines. Red Hat says RHEL 7 and 8 are not affected. Distro kernels backport, so compare with your distro's version under Update.",
+      "label": "Kernel 5.4.208+ or 5.5+, unpatched",
+      "text": "The race came in with a refcount change in 5.5 (also backported to 5.4 from 5.4.208). Upstream fixes: 6.12.118, 6.18.64, 7.3.5 and 7.4-rc2; the CVE record lists no fix yet for the 6.6, 6.1, 5.15, 5.10 and 5.4 lines. Red Hat says RHEL 7 and 8 are not affected. Distro kernels backport, so compare with your distro's version under Update.",
       "cmd": "uname -r",
       "cite": [
         1,
@@ -60,18 +60,19 @@
       ]
     },
     {
-      "label": "A processor that reorders memory",
-      "text": "The CVE record says the bug only exists on weakly ordered architectures, and Red Hat says it needs weakly ordered hardware. Arm and POWER processors are weakly ordered; x86 (most PCs and many servers) has a much stronger ordering. `uname -m` shows the architecture, for example `aarch64` (Arm) or `ppc64le` (POWER).",
+      "label": "A weakly ordered processor",
+      "text": "The CVE record says the change behind the bug removed the ordering on weakly ordered architectures, and Red Hat says triggering it needs weakly ordered hardware. Arm says 64-bit Arm (Armv8-A) is weakly ordered, and POWER is too; x86 (most PCs and many servers) has the strongest ordering of the common architectures. `uname -m` shows the architecture, for example `aarch64` (Arm) or `ppc64le` (POWER).",
       "cmd": "uname -m",
       "cite": [
         1,
         4,
-        7
+        7,
+        9
       ]
     },
     {
       "label": "An attacker who can reach a TCP port",
-      "text": "The kernel CVE team's scoring says an attacker wins the race by opening and closing connections and sending more TCP segments while sockets are being reused, with no login. Red Hat calls the timing high-complexity.",
+      "text": "The kernel CVE team's scoring says an attacker produces the race by opening and closing connections and sending more TCP segments while sockets are being reused, with no login. Red Hat calls the timing high-complexity.",
       "cite": [
         1,
         4
@@ -81,7 +82,7 @@
   "do": [
     {
       "label": "Update the kernel as usual",
-      "text": "Debian 13 has the fix in 6.12.118-1 (DSA-6652-1). Debian 12 and every Ubuntu release are still listed as vulnerable, and Red Hat has deferred the fix for RHEL 9 and 10, so take it when your distro ships it. No workaround is needed.",
+      "text": "Debian 13 has the fix in 6.12.118-1 (DSA-6652-1). Debian 12 and Ubuntu 20.04 to 26.10 are still listed as vulnerable, and Red Hat has deferred the fix for RHEL 9 and 10, so take it when your distro ships it. No vendor lists a workaround.",
       "cite": [
         4,
         5,
@@ -93,7 +94,7 @@
     },
     {
       "label": "Why it isn't Patch now",
-      "text": "The kernel CVE team scored it 9.8, arguing the race can lead to use of freed memory. Red Hat rates it 5.9 (Moderate): \"restricting the impact strictly to a denial of service\", and says it can't be used to run code or expose data. Ubuntu rates it Medium. Hyunwoo Kim, who wrote the fix, asked \"Who slapped a 9.8 on this?\" No exploit or attacks are known, and it isn't on CISA's list of exploited bugs. We'd change the verdict if anyone shows it working against a real system.",
+      "text": "The kernel CVE team scored it 9.8, arguing the race can lead to use of freed memory. Red Hat currently rates it 5.9 (Moderate): \"restricting the impact strictly to a denial of service\", and says it can't be used to run code or expose data. Ubuntu rates it Medium. Hyunwoo Kim, who wrote the fix, asked \"Who slapped a 9.8 on this?\" No exploit or attacks are known, and it isn't on CISA's list of exploited bugs. We'd change the verdict if anyone shows it working against a real system.",
       "cite": [
         1,
         2,
@@ -109,12 +110,12 @@
       "Debian 13": "6.12.118-1"
     }
   },
-  "slack": "Linux kernel CVE-2026-99676 (published 20 Nov 2026): a TCP socket lookup race the kernel CVE team scored 9.8. It only matters on weakly ordered processors such as Arm and POWER, needs hard-to-win timing, and Red Hat rates it Moderate (5.9), denial of service only; Ubuntu rates it Medium. The patch author: \"don't sweat it, go to bed\". No exploit, no attacks, not on CISA KEV. Fixed upstream in 6.12.118, 6.18.64, 7.3.5; Debian 13 in 6.12.118-1; Ubuntu, Debian 12 and RHEL not yet. Take it with normal kernel updates.",
+  "slack": "Linux kernel CVE-2026-99676 (published 20 Nov 2026): a TCP socket lookup race the kernel CVE team scored 9.8. It only matters on weakly ordered processors such as Arm and POWER, needs hard-to-win timing, and Red Hat rates it Moderate (5.9), denial of service only; Ubuntu rates it Medium. The patch author: \"don't sweat it, go to bed\". No exploit, no attacks, not on CISA KEV. Fixed upstream in 6.12.118, 6.18.64, 7.3.5; Debian 13 in 6.12.118-1; Ubuntu, Debian 12 and RHEL 9 and 10 not yet (RHEL 7 and 8 aren't affected). Take it with normal kernel updates.",
   "sources": [
     {
       "title": "CVE record (kernel CNA): weakly ordered architectures, 9.8 and its reasoning, fixed versions",
       "url": "https://www.cve.org/CVERecord?id=CVE-2026-99676",
-      "date": "20 Nov"
+      "date": "22 Nov"
     },
     {
       "title": "Linux kernel: the fix, written by Hyunwoo Kim",
@@ -139,12 +140,16 @@
       "url": "https://security-tracker.debian.org/tracker/CVE-2026-99676"
     },
     {
-      "title": "Wikipedia: memory ordering, x86 strongly ordered, Arm and POWER weakly ordered",
+      "title": "Wikipedia: memory ordering, x86-64 has the strongest order of the common architectures, POWER is weakly ordered",
       "url": "https://en.wikipedia.org/wiki/Memory_ordering"
     },
     {
       "title": "CISA KEV catalog: not listed",
       "url": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog"
+    },
+    {
+      "title": "Arm: Armv8-A implements a weakly-ordered memory architecture",
+      "url": "https://developer.arm.com/documentation/102336/0100/Memory-ordering"
     }
   ],
   "changes": [
