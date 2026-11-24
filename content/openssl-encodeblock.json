@@ -30,7 +30,7 @@
     "attacks": "none",
     "kev": null,
     "no_login": false,
-    "needs": "an app that base64-encodes ~1.6 GB of attacker-supplied data in one call",
+    "needs": "an app that passes an attacker-controlled length of ~1.6 GB to EVP_EncodeBlock() without its own check",
     "scare": 0.5
   },
   "affected": [

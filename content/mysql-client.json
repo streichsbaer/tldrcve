@@ -22,7 +22,7 @@
   "updated": "2026-11-20",
   "verdict": "watch",
   "tile_line": "Rated 9.1, but no details or fix yet. Nothing to do.",
-  "tldr": "Oracle rated a MySQL \"Client programs\" bug 9.1 on 17 Nov 2026 but hasn't said how it works or who is at risk. The GitHub \"exploits\" are a version checker and a guess, and no attacks are reported. Update when the fix reaches your MySQL.",
+  "tldr": "Oracle rated a MySQL \"Client programs\" bug 9.1 on 17 Nov 2026 but hasn't said how it works or whether servers or client tools are at risk. The GitHub \"exploits\" are a version checker and a guess, and no attacks are reported. Update when the fix ships.",
   "summary": "Oracle fixed a MySQL bug on 17 Nov in the part it calls \"Client programs\" and rated it Critical 9.1, but it hasn't said how the attack works or whether servers or the client tools are at risk. The free MySQL releases don't have the fix yet. The two GitHub \"exploits\" going around are a version checker and an unverified guess written without seeing Oracle's fix, and no attacks have been reported.",
   "status": {
     "exploit": "none",
