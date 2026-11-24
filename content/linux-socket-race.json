@@ -25,7 +25,7 @@
   "updated": "2026-11-24",
   "verdict": "cycle",
   "tile_line": "9.8 on paper; Red Hat says crash only. Update as usual.",
-  "summary": "The Linux kernel's own CVE team rated this TCP race 9.8 out of 10 on 22 Nov 2026, and the patch author's answer was \"don't sweat it, go to bed\". It only matters on weakly ordered processors such as Arm and POWER, and Red Hat rates it Moderate (5.9), limited to crashing the machine. No exploit or attacks are known; take the fix with your normal kernel updates.",
+  "summary": "The Linux kernel's own CVE team rated this TCP race 9.8 out of 10 on 22 Nov 2026, and the patch author's answer was \"don't sweat it, go to bed\". It only matters on weakly ordered processors such as Arm and POWER, and Red Hat rates it Moderate (5.9), limited to crashing the machine. No exploit or attacks are known; take the fix with your normal kernel updates. A sibling bug fixed in the same patch series, [NoisyTCP](/noisytcp/), also hits x86 servers and can crash them remotely.",
   "status": {
     "exploit": "none",
     "attacks": "none",
@@ -153,6 +153,10 @@
     }
   ],
   "changes": [
+    {
+      "date": "2026-11-24",
+      "text": "Linked the sibling bug NoisyTCP (CVE-2026-99288), fixed in the same patch series."
+    },
     {
       "date": "2026-11-24",
       "text": "Published."

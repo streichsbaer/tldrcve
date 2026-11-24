@@ -1,0 +1,185 @@
+{
+  "slug": "noisytcp",
+  "name": "NoisyTCP",
+  "aliases": [
+    "noisytcp",
+    "linux",
+    "linux kernel",
+    "tcp",
+    "syn cookies",
+    "tcp_syncookies",
+    "kernel panic",
+    "remote crash",
+    "denial of service",
+    "rps",
+    "nginx",
+    "apache",
+    "ssh",
+    "cve-2026-99288"
+  ],
+  "cves": [
+    "CVE-2026-99288"
+  ],
+  "product": "Linux kernel",
+  "disclosed": "2026-10-21",
+  "news": "2026-11-15",
+  "updated": "2026-11-24",
+  "verdict": "if",
+  "tile_line": "Remote crash of Linux servers; patch if TCP is exposed.",
+  "summary": "NoisyTCP (CVE-2026-99288) is an 11-year-old race in the Linux kernel's TCP code that lets anyone who can reach a listening TCP port crash the whole server, with no login. Its finder, Hyunwoo Kim, crashed default Nginx, Apache and SSH servers on virtual machines in about 5 seconds to 2 minutes; a quiet physical server took about 14 hours. He says it isn't a remote code execution bug, and his exploit isn't public. Fixes are out for Debian and most RHEL versions and on the way for Ubuntu. The same patch series fixed a sibling bug, the [Linux 9.8 race](/linux-socket-race/), which only matters on Arm and POWER.",
+  "status": {
+    "exploit": "demonstrated",
+    "attacks": "none",
+    "kev": null,
+    "no_login": true,
+    "scare": 2.5
+  },
+  "status_cite": {
+    "exploit": [
+      1,
+      2
+    ],
+    "attacks": [
+      3
+    ],
+    "kev": [
+      11
+    ],
+    "no_login": [
+      1,
+      2,
+      4
+    ]
+  },
+  "affected": [
+    {
+      "label": "Kernel 4.4 or later, unpatched",
+      "text": "The bug came in with a 2015 change in kernel 4.4. Upstream fixed it in 5.10.275, 5.15.226, 6.1.193, 6.6.163, 6.12.117, 6.18.63, 7.3.4 and 7.4-rc2. Red Hat says RHEL 6 and 7 are not affected. Distro kernels backport, so compare with your distro's version under Update.",
+      "cmd": "uname -r",
+      "cite": [
+        2,
+        3,
+        4
+      ]
+    },
+    {
+      "label": "A TCP port the attacker can reach",
+      "text": "Any service that listens on TCP, such as Nginx, Apache or SSH in their default setup, with no login needed. The attack uses SYN cookies, which Kim says are on by default on most distributions. If the service runs in a container, the whole host goes down, not just the container.",
+      "cite": [
+        1,
+        2
+      ]
+    },
+    {
+      "label": "Two or more receive queues, or RPS",
+      "text": "Kim says the race needs packets handled on different CPUs: a network interface with two or more receive queues, or RPS (receive packet steering) spreading packets across CPUs. The command lists each interface's receive queues; RPS is off when every `rps_cpus` file under them is zero, the kernel's default.",
+      "cmd": "ls -d /sys/class/net/*/queues/rx-*",
+      "cite": [
+        1,
+        2,
+        9
+      ]
+    }
+  ],
+  "do": [
+    {
+      "label": "Update the kernel and reboot",
+      "text": "Fixed: Debian 12 6.1.192-1, Debian 13 6.12.117-1, RHEL 8 4.18.0-553.189.1.el8_10, RHEL 9.9 5.14.0-741.26.1.el9_9 and RHEL 10.3 6.12.0-264.19.1.el10_3. Ubuntu lists fixes in progress for its main kernel on every release from 16.04 to 26.10; its HWE and cloud kernels on older releases are listed as needing a fix. RHEL 10.2 and RHEL 9.8 have no fixed kernel yet.",
+      "cite": [
+        4,
+        5,
+        6
+      ],
+      "versions": [
+        "linux-kernel"
+      ]
+    },
+    {
+      "label": "Can't update yet? Two stopgaps",
+      "text": "Both come from Kim and Red Hat. Turn SYN cookies off by setting `net.ipv4.tcp_syncookies` to 0; it blocks the SYN cookie path the crash uses, has to be set in each network namespace (so in each container too), and weakens protection against SYN floods. Or cut the receive queues of the internet-facing interface to one and turn RPS and RFS off.",
+      "cite": [
+        1,
+        2,
+        4
+      ]
+    },
+    {
+      "label": "Why it isn't Patch now",
+      "text": "It crashes servers; it doesn't leak or change data. Kim describes a second, much harder path that can reach freed memory, but on remote code execution he says \"Not yet. and basically, no\": he has only \"a very limited, lab-specific exploit that targets VM servers\", and his GitHub page has no exploit code. No attacks are reported and it isn't on CISA's list of exploited bugs. Ratings differ: the kernel CVE team gives 7.5, Ubuntu High, Red Hat Important (its 7.5 score assumes a logged-in attacker who can change data, which its own statement rules out), and CISA's entry in the CVE record 5.9, rating the timing hard. We'd change the verdict to Patch now if working exploit code is published or attacks are reported.",
+      "cite": [
+        2,
+        3,
+        4,
+        5,
+        11
+      ]
+    }
+  ],
+  "fixed_in": {
+    "linux-kernel": {
+      "Debian 13": "6.12.117-1",
+      "Debian 12": "6.1.192-1",
+      "RHEL 10.3": "6.12.0-264.19.1.el10_3",
+      "RHEL 8": "4.18.0-553.189.1.el8_10"
+    }
+  },
+  "slack": "NoisyTCP (CVE-2026-99288), Linux kernel, public 15 Nov 2026: a TCP race that lets anyone who can reach a listening TCP port crash the whole server, no login, default configs (Nginx, Apache, SSH). Needs two or more receive queues or RPS. The finder crashed VMs in 5 s to 2 min; a quiet physical server took 14 h. Crash only, not RCE per the finder; his exploit isn't public; no attacks, not on CISA KEV. Fixed: Debian 12 6.1.192-1, Debian 13 6.12.117-1, RHEL 8, 9.9, 10.3; Ubuntu in progress; RHEL 10.2 and 9.8 not yet. Stopgaps: SYN cookies off (net.ipv4.tcp_syncookies=0, per namespace) or a single receive queue with RPS/RFS off.",
+  "sources": [
+    {
+      "title": "oss-security: Hyunwoo Kim's NoisyTCP advisory, trigger paths, timings, mitigations",
+      "url": "https://www.openwall.com/lists/oss-security/2026/11/15/2",
+      "date": "15 Nov"
+    },
+    {
+      "title": "Hyunwoo Kim (GitHub): NoisyTCP write-up, SYN cookies on by default, FAQ: not RCE, lab-only exploit",
+      "url": "https://github.com/V4bel/NoisyTCP",
+      "date": "15 Nov"
+    },
+    {
+      "title": "CVE record (kernel CNA): CVE-2026-99288, fixed versions, 7.5, CISA 5.9 and no exploitation",
+      "url": "https://www.cve.org/CVERecord?id=CVE-2026-99288",
+      "date": "23 Nov"
+    },
+    {
+      "title": "Red Hat: Important, crash only, RHEL 6 and 7 not affected, fixed kernels, mitigations",
+      "url": "https://access.redhat.com/security/cve/CVE-2026-99288"
+    },
+    {
+      "title": "Ubuntu: priority High, fixes in progress",
+      "url": "https://ubuntu.com/security/CVE-2026-99288",
+      "date": "23 Nov"
+    },
+    {
+      "title": "Debian tracker: fixed in Debian 12 6.1.192-1 and Debian 13 6.12.117-1",
+      "url": "https://security-tracker.debian.org/tracker/CVE-2026-99288"
+    },
+    {
+      "title": "Linux kernel: the fix (4e2b3ef19e0e)",
+      "url": "https://git.kernel.org/stable/c/4e2b3ef19e0e04adca38442f07dd6bc93c712bf1"
+    },
+    {
+      "title": "Linux netdev (patchwork): first public version of the fix with the crash report, 21 Oct 2026",
+      "url": "https://patchwork.kernel.org/project/netdevbpf/patch/ath58Egc-oI6p3Jl@v4bel/",
+      "date": "21 Oct"
+    },
+    {
+      "title": "Linux kernel docs: receive queues and RPS, rps_cpus is zero by default",
+      "url": "https://docs.kernel.org/networking/scaling.html"
+    },
+    {
+      "title": "BleepingComputer: NoisyTCP lets attackers crash Linux servers",
+      "url": "https://www.bleepingcomputer.com/news/linux/new-noisytcp-linux-kernel-flaw-lets-attackers-crash-servers/",
+      "date": "16 Nov"
+    },
+    {
+      "title": "CISA KEV catalog: not listed",
+      "url": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog"
+    }
+  ],
+  "changes": [
+    {
+      "date": "2026-11-24",
+      "text": "Published."
+    }
+  ]
+}

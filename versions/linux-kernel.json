@@ -39,12 +39,12 @@
     {
       "line": "RHEL 10.3",
       "key": "RHEL 10.3",
-      "latest": "6.12.0-264.16.1.el10_3"
+      "latest": "6.12.0-264.20.1.el10_3"
     },
     {
       "line": "RHEL 10.2",
       "key": "RHEL 10.2",
-      "latest": "6.12.0-211.75.1.el10_2"
+      "latest": "6.12.0-211.76.1.el10_2"
     },
     {
       "line": "RHEL 9",
@@ -54,7 +54,7 @@
     {
       "line": "RHEL 8",
       "key": "RHEL 8",
-      "latest": "4.18.0-553.186.1.el8_10"
+      "latest": "4.18.0-553.189.1.el8_10"
     }
   ],
   "older": "Ubuntu 26.10: 7.3.0-10.10. Cloud and HWE kernels have their own versions.",
@@ -71,6 +71,13 @@
       "note": "The socket race (CVE-2026-99676) is fixed upstream in 6.12.118, 6.18.64 and 7.3.5 and in Debian 13's 6.12.118-1; Debian 12 and Ubuntu still list it as vulnerable, and Red Hat has deferred the fix for RHEL 9 and 10 (RHEL 8 isn't affected).",
       "pages": [
         "linux-socket-race"
+      ]
+    },
+    {
+      "line": "Ubuntu, RHEL 10.2 and RHEL 9",
+      "note": "NoisyTCP (CVE-2026-99288) has no released fix yet for Ubuntu (in progress) or RHEL 10.2. For RHEL 9, Red Hat ships it in 9.9's 5.14.0-741.26.1.el9_9, not in the 9.8 kernel listed here.",
+      "pages": [
+        "noisytcp"
       ]
     }
   ],
@@ -126,6 +133,18 @@
     {
       "title": "Red Hat: socket race (CVE-2026-99676) fix deferred",
       "url": "https://access.redhat.com/security/cve/CVE-2026-99676"
+    },
+    {
+      "title": "Red Hat: NoisyTCP (CVE-2026-99288) fixed kernels",
+      "url": "https://access.redhat.com/security/cve/CVE-2026-99288"
+    },
+    {
+      "title": "Debian tracker: NoisyTCP (CVE-2026-99288) fixed versions",
+      "url": "https://security-tracker.debian.org/tracker/CVE-2026-99288"
+    },
+    {
+      "title": "Ubuntu: NoisyTCP (CVE-2026-99288) fixes in progress",
+      "url": "https://ubuntu.com/security/CVE-2026-99288"
     }
   ]
 }
