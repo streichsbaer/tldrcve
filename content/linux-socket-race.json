@@ -20,7 +20,7 @@
     "CVE-2026-99676"
   ],
   "product": "Linux kernel",
-  "disclosed": "2026-11-20",
+  "disclosed": "2026-10-21",
   "news": "2026-11-23",
   "updated": "2026-11-24",
   "verdict": "cycle",
@@ -61,7 +61,7 @@
     },
     {
       "label": "A weakly ordered processor",
-      "text": "The CVE record says the change behind the bug removed the ordering on weakly ordered architectures, and Red Hat says triggering it needs weakly ordered hardware. Arm says 64-bit Arm (Armv8-A) is weakly ordered, and POWER is too; x86 (most PCs and many servers) has the strongest ordering of the common architectures. `uname -m` shows the architecture, for example `aarch64` (Arm) or `ppc64le` (POWER).",
+      "text": "The CVE record says the change behind the bug removed the ordering on weakly ordered architectures, and Red Hat says triggering it needs weakly ordered hardware. Arm says 64-bit Arm (Armv8-A) is weakly ordered, and POWER is too; x86 has the strongest ordering of the common architectures. `uname -m` shows the architecture, for example `aarch64` (Arm) or `ppc64le` (POWER).",
       "cmd": "uname -m",
       "cite": [
         1,
@@ -82,7 +82,7 @@
   "do": [
     {
       "label": "Update the kernel as usual",
-      "text": "Debian 13 has the fix in 6.12.118-1 (DSA-6652-1). Debian 12 and Ubuntu 20.04 to 26.10 are still listed as vulnerable, and Red Hat has deferred the fix for RHEL 9 and 10, so take it when your distro ships it. No vendor lists a workaround.",
+      "text": "Debian 13 has the fix in 6.12.118-1 (DSA-6652-1). Debian 12, Ubuntu 20.04 to 26.10 and Ubuntu 18.04's 5.4 kernels (`linux-hwe-5.4` and the cloud and Raspberry Pi 5.4 kernels) are still listed as vulnerable, and Red Hat has deferred the fix for RHEL 9 and 10, so take it when your distro ships it. Red Hat, Ubuntu and Debian list no workaround.",
       "cite": [
         4,
         5,
@@ -150,12 +150,26 @@
     {
       "title": "Arm: Armv8-A implements a weakly-ordered memory architecture",
       "url": "https://developer.arm.com/documentation/102336/0100/Memory-ordering"
+    },
+    {
+      "title": "Linux netdev (patchwork): first public version of the fix, 21 Oct 2026, using acquire ordering for the reference",
+      "url": "https://patchwork.kernel.org/project/netdevbpf/patch/ath58Egc-oI6p3Jl@v4bel/",
+      "date": "21 Oct"
+    },
+    {
+      "title": "Linux netdev (lore archive): Eric Dumazet's reply naming the ordering bug lost on weakly ordered arches in 5.5",
+      "url": "https://lore.kernel.org/netdev/CAL4Wiipe-=JDzTvr5_SZaZ7b+QEkMyE0Tjh1x=ryJe50yFxKiw@mail.gmail.com/",
+      "date": "21 Oct"
     }
   ],
   "changes": [
     {
       "date": "2026-11-24",
       "text": "Linked the sibling bug NoisyTCP (CVE-2026-99288), fixed in the same patch series."
+    },
+    {
+      "date": "2026-11-24",
+      "text": "Disclosed date changed from 20 Nov (CVE published) to 21 Oct 2026, when the fix and the bug were first discussed on the public netdev list. Workaround and processor wording narrowed to what the sources say; Ubuntu 18.04's 5.4 kernels added to the vulnerable list."
     },
     {
       "date": "2026-11-24",
