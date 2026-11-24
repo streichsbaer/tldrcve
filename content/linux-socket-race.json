@@ -14,43 +14,36 @@
     "arm64",
     "power",
     "9.8",
-    "cve-2026-99676",
-    "syn cookies",
-    "tcp_syncookies",
-    "kernel crash",
-    "cve-2026-99288"
+    "cve-2026-99676"
   ],
   "cves": [
-    "CVE-2026-99676",
-    "CVE-2026-99288"
+    "CVE-2026-99676"
   ],
   "product": "Linux kernel",
   "disclosed": "2026-10-21",
   "news": "2026-11-23",
   "updated": "2026-11-24",
   "verdict": "cycle",
-  "tile_line": "9.8 is overrated; a sibling crash bug hits x86 too.",
-  "summary": "The Linux kernel's CVE team rated CVE-2026-99676, a TCP race, 9.8 out of 10 on 22 Nov 2026, and the patch author's answer was \"don't sweat it, go to bed\". It only matters on weakly ordered processors such as Arm and POWER, and Red Hat rates it Moderate (5.9), crash only. The same patch series also fixed CVE-2026-99288, which affects every processor, x86 included: an attacker who can reach a TCP port can crash the kernel, and the patch author reproduced it. Red Hat rates that one Important and Ubuntu High. Neither has a public exploit or known attacks; take the fixes with your normal kernel updates.",
+  "tile_line": "9.8 on paper; Red Hat says crash only. Update as usual.",
+  "summary": "The Linux kernel's own CVE team rated this TCP race 9.8 out of 10 on 22 Nov 2026, and the patch author's answer was \"don't sweat it, go to bed\". It only matters on weakly ordered processors such as Arm and POWER, and Red Hat rates it Moderate (5.9), limited to crashing the machine. No exploit or attacks are known; take the fix with your normal kernel updates.",
   "status": {
-    "exploit": "demonstrated",
+    "exploit": "none",
     "attacks": "none",
     "kev": null,
     "no_login": true,
-    "scare": 1.8
+    "scare": 1.0
   },
   "status_cite": {
     "no_login": [
       1,
-      4,
-      12,
-      13
+      4
     ],
     "exploit": [
-      12
+      1,
+      4
     ],
     "attacks": [
-      4,
-      12
+      4
     ],
     "kev": [
       8
@@ -58,68 +51,57 @@
   },
   "affected": [
     {
-      "label": "Kernel 4.4 or later, unpatched",
-      "text": "CVE-2026-99288 is in kernels from 4.4 on, on every processor; upstream fixed it in 5.10.275, 5.15.226, 6.1.193, 6.6.163, 6.12.117, 6.18.63, 7.3.4 and 7.4-rc2. CVE-2026-99676 is in kernels from 5.5 (and 5.4 from 5.4.208), but only on weakly ordered processors: Arm says 64-bit Arm (Armv8-A) is weakly ordered, and POWER is too, while x86 has the strongest ordering of the common architectures (`uname -m` shows yours). Its upstream fixes are 6.12.118, 6.18.64, 7.3.5 and 7.4-rc2, and the CVE record lists none yet for the 6.6, 6.1, 5.15, 5.10 and 5.4 lines. Red Hat says RHEL 7 is affected by neither and RHEL 8 only by CVE-2026-99288. Distro kernels backport, so compare with your distro's version under Update.",
+      "label": "Kernel 5.4.208 or later, unpatched",
+      "text": "The race came in with a refcount change in 5.5 (also backported to 5.4 from 5.4.208). Upstream fixes: 6.12.118, 6.18.64, 7.3.5 and 7.4-rc2; the CVE record lists no fix yet for the 6.6, 6.1, 5.15, 5.10 and 5.4 lines. Red Hat says RHEL 7 and 8 are not affected. Distro kernels backport, so compare with your distro's version under Update.",
       "cmd": "uname -r",
+      "cite": [
+        1,
+        4
+      ]
+    },
+    {
+      "label": "A weakly ordered processor",
+      "text": "The CVE record says the change behind the bug removed the ordering on weakly ordered architectures, and Red Hat says triggering it needs weakly ordered hardware. Arm says 64-bit Arm (Armv8-A) is weakly ordered, and POWER is too; x86 has the strongest ordering of the common architectures. `uname -m` shows the architecture, for example `aarch64` (Arm) or `ppc64le` (POWER).",
+      "cmd": "uname -m",
       "cite": [
         1,
         4,
         7,
-        9,
-        12,
-        13
+        9
       ]
     },
     {
       "label": "An attacker who can reach a TCP port",
-      "text": "For CVE-2026-99288, the kernel CVE team says an attacker floods a listening port so SYN cookies kick in (on by default), then races a cookie reply against another packet for the same connection; the patch author's proof of concept crashed the kernel this way, and Red Hat says it needs no login. For CVE-2026-99676, its scoring says the attacker opens and closes connections while sockets are reused. Red Hat rates the timing for both as high-complexity, and CISA's entry does the same for CVE-2026-99288.",
+      "text": "The kernel CVE team's scoring says an attacker produces the race by opening and closing connections and sending more TCP segments while sockets are being reused, with no login. Red Hat calls the timing high-complexity.",
       "cite": [
         1,
-        4,
-        12,
-        13
+        4
       ]
     }
   ],
   "do": [
     {
       "label": "Update the kernel as usual",
-      "text": "CVE-2026-99288 is fixed in Debian 12 6.1.192-1, Debian 13 6.12.117-1, RHEL 8 4.18.0-553.189.1.el8_10, RHEL 9.9 5.14.0-741.26.1.el9_9 and RHEL 10.3 6.12.0-264.19.1.el10_3; Ubuntu lists fixes in progress for every release from 16.04 on. CVE-2026-99676 is fixed only in Debian 13 6.12.118-1 so far: Debian 12, Ubuntu 20.04 to 26.10 and Ubuntu 18.04's 5.4 kernels (`linux-hwe-5.4` and the cloud and Raspberry Pi 5.4 kernels) are still listed as vulnerable, and Red Hat has deferred the fix for RHEL 9 and 10. Take both when your distro ships them.",
+      "text": "Debian 13 has the fix in 6.12.118-1 (DSA-6652-1). Debian 12, Ubuntu 20.04 to 26.10 and Ubuntu 18.04's 5.4 kernels (`linux-hwe-5.4` and the cloud and Raspberry Pi 5.4 kernels) are still listed as vulnerable, and Red Hat has deferred the fix for RHEL 9 and 10, so take it when your distro ships it. Red Hat, Ubuntu and Debian list no workaround.",
       "cite": [
         4,
         5,
-        6,
-        13,
-        14,
-        15
+        6
       ],
       "versions": [
         "linux-kernel"
       ]
     },
     {
-      "label": "Can't update yet? Red Hat's stopgaps",
-      "text": "For CVE-2026-99288 only, Red Hat lists two: turn SYN cookies off with `sysctl -w net.ipv4.tcp_syncookies=0` (per network namespace, so in each container too, and it weakens protection against SYN floods), or cut the receiving network card to a single receive queue with RPS and RFS off. For CVE-2026-99676, Red Hat, Ubuntu and Debian list no workaround.",
-      "cite": [
-        4,
-        5,
-        6,
-        13
-      ]
-    },
-    {
       "label": "Why it isn't Patch now",
-      "text": "Both bugs end in a crash at worst. The kernel CVE team scored CVE-2026-99676 9.8, arguing the race can lead to use of freed memory; Red Hat currently rates it 5.9 (Moderate): \"restricting the impact strictly to a denial of service\", Ubuntu rates it Medium, and Hyunwoo Kim, who wrote the fix, asked \"Who slapped a 9.8 on this?\" For CVE-2026-99288 the kernel CVE team and Red Hat give 7.5 (Red Hat: Important, \"it does not allow data alteration or arbitrary code execution\"), Ubuntu rates it High and CISA's entry in the CVE record 5.9. Its proof of concept isn't public, no attacks are known, and neither is on CISA's list of exploited bugs. We'd change the verdict if either is shown working against real systems.",
+      "text": "The kernel CVE team scored it 9.8, arguing the race can lead to use of freed memory. Red Hat currently rates it 5.9 (Moderate): \"restricting the impact strictly to a denial of service\", and says it can't be used to run code or expose data. Ubuntu rates it Medium. Hyunwoo Kim, who wrote the fix, asked \"Who slapped a 9.8 on this?\" No exploit or attacks are known, and it isn't on CISA's list of exploited bugs. We'd change the verdict if anyone shows it working against a real system.",
       "cite": [
         1,
         2,
         3,
         4,
         5,
-        8,
-        12,
-        13,
-        14
+        8
       ]
     }
   ],
@@ -128,7 +110,7 @@
       "Debian 13": "6.12.118-1"
     }
   },
-  "slack": "Linux kernel, two sibling TCP lookup bugs fixed in one patch series: CVE-2026-99676 (kernel CVE team: 9.8) only matters on weakly ordered processors such as Arm and POWER; Red Hat rates it Moderate (5.9), crash only, and the patch author asks \"Who slapped a 9.8 on this?\". CVE-2026-99288 affects every processor including x86: a remote attacker who reaches a TCP port can crash the kernel via SYN cookies (patch author's PoC reproduced it; Red Hat Important 7.5, Ubuntu High, CISA 5.9). No public exploit, no attacks, neither on CISA KEV. CVE-2026-99288 is fixed in Debian 12 and 13, RHEL 8, 9.9 and 10.3; Ubuntu fixes in progress. CVE-2026-99676 is fixed only in Debian 13 (6.12.118-1) so far. Take both with normal kernel updates.",
+  "slack": "Linux kernel CVE-2026-99676 (published 20 Nov 2026): a TCP socket lookup race the kernel CVE team scored 9.8. It only matters on weakly ordered processors such as Arm and POWER, needs hard-to-win timing, and Red Hat rates it Moderate (5.9), denial of service only; Ubuntu rates it Medium. The patch author: \"don't sweat it, go to bed\". No exploit, no attacks, not on CISA KEV. Fixed upstream in 6.12.118, 6.18.64, 7.3.5; Debian 13 in 6.12.118-1; Ubuntu, Debian 12 and RHEL 9 and 10 not yet (RHEL 7 and 8 aren't affected). Take it with normal kernel updates.",
   "sources": [
     {
       "title": "CVE record (kernel CNA): weakly ordered architectures, 9.8 and its reasoning, fixed versions",
@@ -175,37 +157,15 @@
       "date": "21 Oct"
     },
     {
-      "title": "Linux netdev (lore archive): Eric Dumazet's reply naming the ordering bug lost on weakly ordered arches in 5.5, and asking to split the fix in two",
+      "title": "Linux netdev (lore archive): Eric Dumazet's reply naming the ordering bug lost on weakly ordered arches in 5.5",
       "url": "https://lore.kernel.org/netdev/CAL4Wiipe-=JDzTvr5_SZaZ7b+QEkMyE0Tjh1x=ryJe50yFxKiw@mail.gmail.com/",
       "date": "21 Oct"
-    },
-    {
-      "title": "CVE record (kernel CNA): CVE-2026-99288, unhashed sockets, PoC crash, 7.5, fixed versions, CISA 5.9 and no exploitation",
-      "url": "https://www.cve.org/CVERecord?id=CVE-2026-99288",
-      "date": "23 Nov"
-    },
-    {
-      "title": "Red Hat: CVE-2026-99288 Important 7.5, crash only, RHEL 7 not affected, RHEL 8, 9.9 and 10.3 fixes, stopgaps",
-      "url": "https://access.redhat.com/security/cve/CVE-2026-99288"
-    },
-    {
-      "title": "Ubuntu: CVE-2026-99288 priority High, fixes in progress",
-      "url": "https://ubuntu.com/security/CVE-2026-99288",
-      "date": "23 Nov"
-    },
-    {
-      "title": "Debian tracker: CVE-2026-99288 fixed in Debian 12 6.1.192-1 and Debian 13 6.12.117-1",
-      "url": "https://security-tracker.debian.org/tracker/CVE-2026-99288"
-    },
-    {
-      "title": "Linux kernel: the CVE-2026-99288 fix, the commit just before the CVE-2026-99676 fix",
-      "url": "https://git.kernel.org/stable/c/4e2b3ef19e0e04adca38442f07dd6bc93c712bf1"
     }
   ],
   "changes": [
     {
       "date": "2026-11-24",
-      "text": "Disclosed date changed from 20 Nov (CVE published) to 21 Oct 2026, when the fix and the bug were first discussed on the public netdev list. Workaround and processor wording narrowed to what the sources say; Ubuntu 18.04's 5.4 kernels added to the vulnerable list. Added the sibling bug CVE-2026-99288, fixed in the same patch series, which affects every processor and can crash the kernel; scare level raised from 1.0 to 1.8."
+      "text": "Disclosed date changed from 20 Nov (CVE published) to 21 Oct 2026, when the fix and the bug were first discussed on the public netdev list. Workaround and processor wording narrowed to what the sources say; Ubuntu 18.04's 5.4 kernels added to the vulnerable list."
     },
     {
       "date": "2026-11-24",
