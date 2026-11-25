@@ -1,0 +1,235 @@
+{
+  "slug": "checkpoint-gt13",
+  "name": "Check Point Mgmt",
+  "aliases": [
+    "check point",
+    "checkpoint",
+    "check point management",
+    "gt13",
+    "greynoise threat 13",
+    "smartconsole",
+    "smartconsole authentication bypass",
+    "path traversal",
+    "directory traversal",
+    "file upload",
+    "security management server",
+    "multi-domain security management",
+    "mds",
+    "log server",
+    "smartevent",
+    "quantum security management",
+    "jumbo hotfix",
+    "trusted clients",
+    "firewall management",
+    "cve-2026-16232",
+    "cve-2026-93616",
+    "sk185169",
+    "sk1000171"
+  ],
+  "cves": [
+    "CVE-2026-16232",
+    "CVE-2026-93616"
+  ],
+  "product": "Check Point Management",
+  "disclosed": "2026-07-22",
+  "news": "2026-11-23",
+  "updated": "2026-11-25",
+  "verdict": "now",
+  "tile_line": "Two bugs exploited, no login, public exploit. In KEV.",
+  "tldr": "Two bugs let attackers with no login take over Check Point firewall management servers they can reach. Both are exploited and in CISA KEV; one has a public exploit, and a campaign hit 24 servers. Install the latest Jumbo Hotfix and check for compromise.",
+  "summary": "CVE-2026-16232 (fixed 22 Jul) lets an attacker log in through SmartConsole as a full admin; CVE-2026-93616 (fixed 22 Sep, attacks seen 23 Jul) is a path traversal in the management web service that lets an attacker run their own scripts. From 17 Oct to 2 Nov, a group GreyNoise calls GT13 stole data from 24 management servers at no fewer than 22 organisations in 17 countries, using a script \"purportedly an adaptation of the Metasploit module\" for CVE-2026-16232 to run over 100 management tasks: copying firewall databases and the Internal CA, minting a certificate and unloading security policies, which would turn the firewall off. GreyNoise couldn't tell when or how the attacker got in, doesn't say whether the victims had patched, and expects the campaign is ongoing; Check Point says the attackers used CVE-2026-16232, and that the bug and the Metasploit method were already known.",
+  "status": {
+    "exploit": "public",
+    "attacks": "seen",
+    "kev": {
+      "added": "2026-07-22",
+      "due": "2026-07-25"
+    },
+    "no_login": true,
+    "scare": 3.4
+  },
+  "affected": [
+    {
+      "label": "Management server without the latest fix",
+      "text": "Security Management Server or Multi-Domain Security Management (MDS) on R82.20 without its Security Hotfix or Jumbo Hotfix Take 10, or below R82.10 Take 45, R82 Take 127 or R81.20 Take 170 (the CVE-2026-93616 record lists only R82.20 with no Jumbo Hotfix as affected); Log Server, Multi-Domain Log Server and SmartEvent have CVE-2026-93616 too; CVE-2026-16232's advisory doesn't list R82.20. R81.10 Take 192 fixes only CVE-2026-93616. No fix is listed for R81, R80.40, R80.30, R80.20, R80.10, R80 or R77.30: CVE-2026-16232 affects R77.30, R80, R80.10, R80.20, R80.30, R81 and R81.10, and CVE-2026-93616 affects R80 to R81.10, R80.40 included. Check Point says Smart-1 Cloud is already protected from both.",
+      "cite": [
+        1,
+        11,
+        3,
+        13,
+        7,
+        2
+      ]
+    },
+    {
+      "label": "Attacker can reach it over the network",
+      "text": "No login is needed for either bug. CVE-2026-93616 is in the management web service, and Check Point's fix-in-the-meantime is to allow TCP 19009 only from trusted IPs. CVE-2026-16232 needs internet access to the server's IP and Trusted Clients (GUI clients) that aren't restricted to trusted addresses; Rapid7 found that was the default in its testing. The Metasploit module for it uses TCP 18190 and 19009.",
+      "cite": [
+        11,
+        12,
+        1,
+        8,
+        9
+      ]
+    }
+  ],
+  "do": [
+    {
+      "label": "Why it's Patch now",
+      "text": "Both bugs are exploited, need no login and sit on the same server. For CVE-2026-93616, Check Point names no setting that blocks it, only limiting who can reach the server, and TCP 19009 is the management web service SmartConsole connects to for login, so we'd expect it on every management server. For CVE-2026-16232, the Trusted Clients setting it needs was the default in Rapid7's tests. So we treat any unpatched management server an attacker can reach as exposed.",
+      "cite": [
+        11,
+        12,
+        1,
+        8
+      ]
+    },
+    {
+      "label": "Install the latest Jumbo Hotfix",
+      "text": "Rapid7 says customers \"should install the latest Jumbo Hotfix on an emergency basis\". The first takes that fix both bugs are R82.20 Take 10 (or the R82.20 Security Hotfix, no reboot), R82.10 Take 45, R82 Take 127 and R81.20 Take 170; Check Point says LivePatch Take 28/29 doesn't fix CVE-2026-93616. On R81.10, Take 192 fixes CVE-2026-93616 but Check Point lists no fix for CVE-2026-16232, and older versions get neither, so the only full fix is moving to a supported version.",
+      "cite": [
+        7,
+        11,
+        1,
+        12
+      ],
+      "versions": [
+        "checkpoint"
+      ]
+    },
+    {
+      "label": "Limit who can reach it",
+      "text": "In SmartConsole, under Manage & Settings > Permissions & Administrators > Trusted Clients, allow only specific trusted IPs or subnets, never the Type \"Any\". Allow TCP 19009 only from trusted IPs, put the management server behind a firewall, and if implied rules for control connections are on, keep Trusted Clients to trusted internal addresses. For CVE-2026-16232, Check Point also says to make sure implied rules for control connections are enabled. Rapid7 notes this lowers exposure but doesn't fix the bugs.",
+      "cite": [
+        1,
+        11,
+        2,
+        7
+      ]
+    },
+    {
+      "label": "Check the logs for both bugs",
+      "text": "CVE-2026-16232: in SmartConsole's Audit Logs (Logs & Monitor, or Logs & Events), search for `Authentication method: application token` and `Authentication method: Password based application token`; Check Point says to treat any hit as suspicious and check for admin names or IPs you don't know, and lists attacker IPs for events before 23 Jul 2026. CVE-2026-93616: in Expert mode, search the `cpm.elg*` logs under `$MDS_FWDIR/log` for login requests with usernames over 1,000 characters (then look for FWM or MDS core dumps from the same time in `/var/log/dump/usermode/`), and for \"Invoking method\", \"Uploading file\" or \"The path to the jars\" entries with `../` or encoded traversal. Check Point says a match isn't proof. Rapid7 says to check even after patching if the server was reachable.",
+      "cite": [
+        1,
+        11,
+        7
+      ]
+    },
+    {
+      "label": "Look for GT13's traces",
+      "text": "GreyNoise's signs: a preload entry for `/usr/lib/.libproc.so` in `/etc/ld.so.preload` (it says this may mean an implant), a certificate named `pivot.p12`, and unexpected policy unloads. It also lists GT13's domain newpayapp[.]com and its subdomains, and the IPs it used, \"either egresses through ExpressVPN or compromised victim Check Point devices\".",
+      "cite": [
+        5
+      ]
+    },
+    {
+      "label": "If you find signs",
+      "text": "Neither Check Point nor GreyNoise gives clean-up steps; Check Point points to its support team for help. GT13 copied firewall databases and the Internal CA and made a new certificate (`pivot.p12`), so we would treat the firewall configuration, admin credentials and Internal CA as stolen: rotate admin credentials, remove admins and certificates you don't recognise, and make sure your security policies are installed again.",
+      "cite": [
+        2,
+        5
+      ]
+    }
+  ],
+  "fixed_in": {
+    "checkpoint": {
+      "R82.20": "R82.20 Take 10",
+      "R82.10": "R82.10 Take 45",
+      "R82": "R82 Take 127",
+      "R81.20": "R81.20 Take 170"
+    }
+  },
+  "sources": [
+    {
+      "title": "Check Point sk185169: CVE-2026-16232 versions, fixed takes, Trusted Clients, audit log checks",
+      "url": "https://support.checkpoint.com/results/sk/sk185169/",
+      "date": "24 Sep"
+    },
+    {
+      "title": "Check Point: CVE-2026-16232 advisory, \"a handful of customers\", Smart-1 Cloud protected",
+      "url": "https://blog.checkpoint.com/security/security-advisory-action-required-active-exploitation-of-check-point-smartconsole-authentication-bypass-cve-2026-16232",
+      "date": "22 Jul"
+    },
+    {
+      "title": "CVE record (Check Point): CVE-2026-16232 affected versions",
+      "url": "https://www.cve.org/CVERecord?id=CVE-2026-16232",
+      "date": "22 Jul"
+    },
+    {
+      "title": "CISA KEV: CVE-2026-16232 added 22 Jul (due 25 Jul), CVE-2026-93616 added 22 Sep (due 25 Sep)",
+      "url": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog",
+      "date": "22 Sep"
+    },
+    {
+      "title": "GreyNoise: GT13 campaign, 24 servers, 22 organisations, indicators",
+      "url": "https://www.greynoise.io/blog/check-point-security-management-servers-intrusion-campaign",
+      "date": "23 Nov"
+    },
+    {
+      "title": "BleepingComputer: Check Point statement on the GT13 campaign (added 25 Nov)",
+      "url": "https://www.bleepingcomputer.com/news/security/hackers-compromise-check-point-servers-in-22-organizations/",
+      "date": "25 Nov"
+    },
+    {
+      "title": "Rapid7: \"install the latest Jumbo Hotfix on an emergency basis\", fixed takes",
+      "url": "https://www.rapid7.com/blog/post/etr-cve-2026-16232-critical-check-point-smartconsole-authentication-bypass-exploited-in-the-wild/",
+      "date": "23 Jul"
+    },
+    {
+      "title": "Rapid7: CVE-2026-16232 technical analysis, exploitable by default in its tests",
+      "url": "https://www.rapid7.com/blog/post/ra-check-point-smartconsole-authentication-bypass-technical-analysis-cve-2026-16232/",
+      "date": "28 Jul"
+    },
+    {
+      "title": "Metasploit: public CVE-2026-16232 module, ports 18190 and 19009",
+      "url": "https://github.com/rapid7/metasploit-framework/blob/master/modules/exploits/linux/misc/checkpoint_smartconsole_cve_2026_16232_rce.rb",
+      "date": "25 Aug"
+    },
+    {
+      "title": "Rapid7: public CVE-2026-16232 proof-of-concept code",
+      "url": "https://github.com/sfewer-r7/CVE-2026-16232",
+      "date": "28 Jul"
+    },
+    {
+      "title": "Check Point sk1000171: CVE-2026-93616 versions, fixed takes, TCP 19009, log checks",
+      "url": "https://support.checkpoint.com/results/sk/sk1000171",
+      "date": "13 Oct"
+    },
+    {
+      "title": "Check Point: CVE-2026-93616 advisory, attacks seen 23 Jul, LivePatch doesn't fix it",
+      "url": "https://blog.checkpoint.com/security/security-advisory-action-required-active-exploitation-of-cve-2026-85102-and-a-management-pre-authentication-vulnerability-cve-2026-93616/",
+      "date": "22 Sep"
+    },
+    {
+      "title": "CVE record (Check Point): CVE-2026-93616 affected versions",
+      "url": "https://www.cve.org/CVERecord?id=CVE-2026-93616",
+      "date": "22 Sep"
+    }
+  ],
+  "changes": [
+    {
+      "date": "2026-11-25",
+      "text": "Published."
+    }
+  ],
+  "status_cite": {
+    "no_login": [
+      3,
+      13
+    ],
+    "exploit": [
+      9,
+      10
+    ],
+    "attacks": [
+      2,
+      12,
+      5,
+      6
+    ],
+    "kev": [
+      4
+    ]
+  }
+}

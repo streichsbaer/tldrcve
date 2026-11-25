@@ -1,0 +1,66 @@
+{
+  "id": "checkpoint",
+  "name": "Check Point Security Management",
+  "about": "The first Jumbo Hotfix take on each Security Management and Multi-Domain Security Management line that fixes every Check Point bug we cover, as Check Point's advisories list them. Any later take is also fixed. We don't track the newest take on each line.",
+  "feed": null,
+  "latest_from": [
+    "https://support.checkpoint.com/results/sk/sk1000171",
+    "https://support.checkpoint.com/results/sk/sk185169/"
+  ],
+  "filter": "check point",
+  "checked": "2026-11-25",
+  "lines": [
+    {
+      "line": "R82.20",
+      "key": "R82.20",
+      "latest": "R82.20 Take 10",
+      "note": "The R82.20 Security Hotfix (no reboot) also fixes it, per sk1000171; the CVE-2026-93616 record lists only R82.20 with no Jumbo Hotfix as affected."
+    },
+    {
+      "line": "R82.10",
+      "key": "R82.10",
+      "latest": "R82.10 Take 45"
+    },
+    {
+      "line": "R82",
+      "key": "R82",
+      "latest": "R82 Take 127"
+    },
+    {
+      "line": "R81.20",
+      "key": "R81.20",
+      "latest": "R81.20 Take 170"
+    }
+  ],
+  "older": "Check Point says Smart-1 Cloud is already protected.",
+  "unfixed": [
+    {
+      "line": "R81.10",
+      "note": "End of support. Take 192 fixes CVE-2026-93616, but no fix is listed for CVE-2026-16232. Move to a supported version.",
+      "pages": [
+        "checkpoint-gt13"
+      ]
+    },
+    {
+      "line": "R81, R80.40, R80.30, R80.20, R80.10, R80, R77.30",
+      "note": "End of support or older, no fix listed. Move to a supported version.",
+      "pages": [
+        "checkpoint-gt13"
+      ]
+    }
+  ],
+  "sources": [
+    {
+      "title": "Check Point sk1000171: Jumbo Hotfix takes that fix CVE-2026-93616, end-of-support versions",
+      "url": "https://support.checkpoint.com/results/sk/sk1000171"
+    },
+    {
+      "title": "Check Point sk185169: Jumbo Hotfix takes that fix CVE-2026-16232, versions with no fix",
+      "url": "https://support.checkpoint.com/results/sk/sk185169/"
+    },
+    {
+      "title": "Check Point: Smart-1 Cloud customers already protected",
+      "url": "https://blog.checkpoint.com/security/security-advisory-action-required-active-exploitation-of-check-point-smartconsole-authentication-bypass-cve-2026-16232"
+    }
+  ]
+}
