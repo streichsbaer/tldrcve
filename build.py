@@ -257,12 +257,13 @@ def gauge(scare: float, zones: list = None) -> str:
         </div>"""
 
 
-def mini_meter(scare: float) -> str:
-    # Same zones as the big gauge, so the tile and the page always agree.
-    filled = next((i + 1 for i, (limit, _, _) in enumerate(ZONES) if scare < limit), len(ZONES))
+def mini_meter(scare: float, zones: list = None) -> str:
+    # Same zones as the big gauge, so the tile and the page always agree (incidents use their own).
+    zones = zones or ZONES
+    filled = next((i + 1 for i, (limit, _, _) in enumerate(zones) if scare < limit), len(zones))
     segs = "".join(f'<span class="{"on" if i < filled else ""}"></span>' for i in range(4))
-    label, _ = zone(scare)
-    return f'<span class="mini-meter" data-level="{filled}" role="img" aria-label="Scare-o-meter: {label}">{segs}</span>'
+    label, _ = zone(scare, zones)
+    return f'<span class="mini-meter" data-level="{filled}" role="img" aria-label="{"How bad" if zones is INCIDENT_ZONES else "Scare-o-meter"}: {label}">{segs}</span>'
 
 
 # ---------- Brief page ----------
@@ -482,7 +483,7 @@ def versions_embed(pids: list) -> str:
 
 def toolbar(c: dict) -> str:
     url = f"{SITE_URL}/{c['slug']}/"
-    post = quote(f"{c['name']}{cve_paren(c)}: {VERDICTS[c['verdict']]}. Are you affected?")
+    post = quote(f"{c['name']}{cve_paren(c)}: {badge_text(c)}. Are you affected?")
     x = f"https://x.com/intent/post?text={post}&url={quote(url, safe='')}"
     li = f"https://www.linkedin.com/sharing/share-offsite/?url={quote(url, safe='')}"
     return f"""    <div class="toolbar">
@@ -695,7 +696,7 @@ def versions_page(v: dict, all_c: list) -> str:
         else:
             fix = '<span class="nofix">No fix yet</span>'
         bugs.append(f'''      <li class="vbug"><a href="/{c["slug"]}/">
-        <span class="vbug__top"><span class="vbug__name">{html.escape(c["name"])}</span><span class="verdict verdict--{c["verdict"]}">{VERDICTS[c["verdict"]]}</span></span>
+        <span class="vbug__top"><span class="vbug__name">{html.escape(c["name"])}</span>{badge(c)}</span>
         <span class="vbug__meta">{html.escape(cve_list(c) or "No CVE yet")} · {nice_date(c["disclosed"])}</span>
         <span class="vbug__fix">{fix}</span>
       </a></li>''')
@@ -913,7 +914,7 @@ def week_page(wk: dict, all_c: list) -> str:
     new_block = f'    <ul class="tiles">\n{new_tiles}\n    </ul>' if top else '    <p class="muted">No new pages.</p>'
     if rest:
         rest_rows = "\n".join(
-            f'        <li data-search="{html.escape(page_search(c) + " " + c["tile_line"].lower())}"><span class="verdict verdict--{c["verdict"]}">{VERDICTS[c["verdict"]]}</span><span><a href="/{c["slug"]}/">{html.escape(c["name"])}</a> <span class="muted">{text(c["tile_line"])}</span></span></li>'
+            f'        <li data-search="{html.escape(page_search(c) + " " + c["tile_line"].lower())}">{badge(c)}<span><a href="/{c["slug"]}/">{html.escape(c["name"])}</a> <span class="muted">{text(c["tile_line"])}</span></span></li>'
             for c in rest)
         rest_block = f"""
     <section class="pane" data-week-section>
@@ -1055,7 +1056,7 @@ def tile(c: dict, attrs: str = "", when: str = "") -> str:
           <span class="tile__meta"><span class="tile__product">{html.escape(product_short(c))}</span><span>· {when}</span></span>
           <span class="tile__name">{html.escape(c["name"])}</span>
           <span class="tile__line">{text(c["tile_line"])}</span>
-          <span class="tile__foot">{badge(c)}{roundup_tag(c)}{mini_meter(c["status"]["scare"])}</span>
+          <span class="tile__foot">{badge(c)}{roundup_tag(c)}{mini_meter(c["status"]["scare"], INCIDENT_ZONES if is_incident(c) else None)}</span>
         </a>
       </li>"""
 
@@ -1114,7 +1115,7 @@ def cves_page(all_c: list) -> str:
         rows.append(
             f"""      <li class="row{" row--incident" if is_incident(c) else ""}" data-search="{html.escape(search)}" data-scare="{c["status"]["scare"]}" data-disclosed="{c["disclosed"]}"{' data-incident="1" hidden' if is_incident(c) else ""}>
         <a href="/{c["slug"]}/">
-          <span class="row__meter">{mini_meter(c["status"]["scare"])}</span>
+          <span class="row__meter">{mini_meter(c["status"]["scare"], INCIDENT_ZONES if is_incident(c) else None)}</span>
           <span class="row__main">
             <span class="row__name">{html.escape(c["name"])}</span>
             <span class="row__meta">{html.escape(product_short(c))} · {html.escape(cve_list(c) or "No CVE yet")}</span>
@@ -1176,7 +1177,7 @@ def incidents_page(all_c: list) -> str:
                            *c.get("aliases", [])]).lower()
         rows.append(f"""      <li class="row" data-search="{html.escape(search)}" data-scare="{c["status"]["scare"]}" data-disclosed="{when}">
         <a href="/{c["slug"]}/">
-          <span class="row__meter">{mini_meter(c["status"]["scare"])}</span>
+          <span class="row__meter">{mini_meter(c["status"]["scare"], INCIDENT_ZONES if is_incident(c) else None)}</span>
           <span class="row__main">
             <span class="row__name">{html.escape(c["name"])}</span>
             <span class="row__meta">{html.escape(product_short(c))} · {html.escape(cve_list(c) or "No CVE")}</span>
@@ -1607,7 +1608,7 @@ def feed_entries(all_c: list, weeks: bool = True) -> list:
         new = t == "Published."
         s = c["status"]
         tags = [("type", "New page" if new else "Update"), ("verdict", badge_text(c)),
-                ("scare", zone(s["scare"])[0]), ("exploit", EXPLOIT_LABELS[s["exploit"]][1]),
+                ("scare", scare_label(c)), ("exploit", EXPLOIT_LABELS[s["exploit"]][1]),
                 ("attacks", ATTACK_LABELS[s["attacks"]][1])]
         if s.get("kev"):
             tags.append(("kev", "On CISA's exploited list"))
@@ -1711,8 +1712,9 @@ def write_redirects(all_c: list) -> None:
 
 # ---------- Data for agents: /llms.txt, /<slug>.json, /versions/<id>.json, /api/cves.json ----------
 
-def scare_label(scare: float) -> str:
-    return zone(scare)[0]
+def scare_label(c: dict) -> str:
+    """The meter's label: patch urgency for vulnerabilities, how bad it is for incidents."""
+    return zone_for(c)[0]
 
 
 def version_data(pid: str, all_c: list) -> dict:
@@ -1730,7 +1732,7 @@ def page_data(c: dict) -> dict:
              "lines": [{k: l[k] for k in ("line", "latest", "released", "note") if k in l} for l in VERSIONS[pid]["lines"]],
              **({"older": VERSIONS[pid]["older"]} if VERSIONS[pid].get("older") else {})} for pid in pids]
     return {"url": f'{SITE_URL}/{c["slug"]}/', "json": f'{SITE_URL}/{c["slug"]}.json',
-            "verdict_label": VERDICTS[c["verdict"]], "scare_label": scare_label(c["status"]["scare"]),
+            "verdict_label": badge_text(c), "scare_label": scare_label(c),
             **c, **({"safe_versions": safe} if safe else {})}
 
 
@@ -1738,7 +1740,7 @@ def index_row(c: dict) -> dict:
     s = c["status"]
     row = {k: c[k] for k in ("slug", "name", "cves", "product", "verdict") if k in c}
     row.update({"kind": c.get("kind", "vulnerability"), "verdict_label": badge_text(c), "tile_line": c["tile_line"], "scare": s["scare"],
-                "scare_label": scare_label(s["scare"]), "exploit": s["exploit"], "attacks": s["attacks"],
+                "scare_label": scare_label(c), "exploit": s["exploit"], "attacks": s["attacks"],
                 "kev": s["kev"]})
     row.update({k: c[k] for k in ("tldr", "ghsa", "also_in") if c.get(k)})
     if "no_login" in s:
@@ -1773,7 +1775,7 @@ def write_data(all_c: list) -> None:
     dump("api/cves.json", {
         "site": SITE_URL, "updated": max(c["updated"] for c in all_c),
         "about": "Every page on tldrcve.com, newest update first. Each page's full data is at its json URL.",
-        "verdicts": VERDICTS, "scare_labels": [z[1] for z in ZONES],
+        "verdicts": VERDICTS, "scare_labels": [z[1] for z in ZONES], "incident_scare_labels": [z[1] for z in INCIDENT_ZONES],
         "pages": [index_row(c) for c in by_update],
         "safe_versions": [{"id": pid, "name": v["name"], "checked": v["checked"], "url": f"{SITE_URL}/versions/{pid}/",
                            "json": f"{SITE_URL}/versions/{pid}.json"} for pid, v in VERSIONS.items()],
@@ -1816,7 +1818,7 @@ def write_data(all_c: list) -> None:
     for c in by_update:
         ids = ", ".join(c["cves"][:3]) + (f" +{len(c['cves']) - 3} more" if len(c["cves"]) > 3 else "")
         lines.append(f'- [{c["name"]}]({SITE_URL}/{c["slug"]}/): {product_full(c)}'
-                     + (f" ({ids})" if ids else "") + f'. {VERDICTS[c["verdict"]]} · {scare_label(c["status"]["scare"])}. '
+                     + (f" ({ids})" if ids else "") + f'. {badge_text(c)} · {scare_label(c)}. '
                      + flat(c["tile_line"]) + f' Updated {c["updated"]}.')
     if WEEKS:
         lines += ["", "## Weekly reviews", "", f"- [All weeks]({SITE_URL}/week/): new pages, changes and the dates coming up, week by week"]

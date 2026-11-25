@@ -1,0 +1,240 @@
+{
+  "slug": "todoist-breach",
+  "kind": "incident",
+  "name": "Todoist breach",
+  "aliases": [
+    "todoist",
+    "doist",
+    "todoist breach",
+    "todoist hack",
+    "todoist security incident",
+    "todoist for outlook",
+    "outlook add-in",
+    "slack integration",
+    "todoist api token",
+    "sha1",
+    "salted sha1",
+    "password hash",
+    "data breach",
+    "stolen credential",
+    "amir salihefendic",
+    "amix3k"
+  ],
+  "cves": [],
+  "product": "Todoist",
+  "disclosed": "2026-11-24",
+  "updated": "2026-11-25",
+  "verdict": "if",
+  "tile_line": "Emails and old password hashes of 6% of users taken.",
+  "tldr": "An attacker with a stolen credential broke into Todoist on 22–23 Nov 2026 and took emails and salted SHA1 password hashes for about 6% of users, plus some tokens and secrets. If Todoist emailed you, follow it and change that password where you reused it.",
+  "summary": "The attacker changed automated workflows in three Todoist repositories to collect more credentials, then used one to take over an employee's work account and reach Todoist's cloud; it could read the source code, but Todoist found no changes to application code. Beyond the 6%, it took Todoist API and Slack tokens (about 0.003% of users), searched tasks, comments and attachment names on one database shard for credential-like text, getting up to 320 characters per match (about 0.001%), and requested subjects, senders, the first 255 characters and attachment names from Outlook mailboxes connected through Todoist's add-in (about 0.001%). Todoist gives only percentages, not counts, and doesn't mention payment data.",
+  "incident": {
+    "checks": {
+      "confirmed": {
+        "state": "yes",
+        "cite": [
+          1,
+          2
+        ]
+      },
+      "taken": {
+        "state": "yes",
+        "cite": [
+          1,
+          2
+        ]
+      },
+      "reach": {
+        "state": "yes",
+        "cite": [
+          1
+        ]
+      },
+      "entry": {
+        "state": "part",
+        "cite": [
+          1
+        ]
+      },
+      "contained": {
+        "state": "part",
+        "cite": [
+          1
+        ]
+      }
+    }
+  },
+  "root_cause": {
+    "tags": [
+      "stolen-login"
+    ],
+    "text": "A stolen credential associated with Todoist's version control system, with its earliest known use on 22 Nov 2026. Todoist hasn't said how it was stolen, and names no vulnerability, product or outside vendor. With it the attacker changed automated workflows to collect more credentials, including an admin credential for Todoist's employee sign-in system. The 6% had old salted SHA1 hashes because their passwords hadn't changed since Todoist stopped using that method over a decade ago; Todoist says it should have retired it sooner and now has.",
+    "cite": [
+      1
+    ]
+  },
+  "timeline": [
+    {
+      "date": "2026-11-22",
+      "who": "record",
+      "text": "14:04 UTC: earliest identified use of the stolen development credential. The attacker starts changing automated workflows to obtain more credentials.",
+      "cite": [
+        1
+      ]
+    },
+    {
+      "date": "2026-11-23",
+      "who": "record",
+      "text": "06:06 UTC: the attacker gets an admin credential for Todoist's employee sign-in system through an infrastructure automation workflow. 06:33 to 06:54: it changes an employee's authentication settings and signs in to Todoist's cloud as that employee. 08:20 to 08:22: it creates more accounts to keep access.",
+      "cite": [
+        1
+      ]
+    },
+    {
+      "date": "2026-11-23",
+      "who": "record",
+      "text": "From 09:08 UTC the attacker reaches production databases and runs commands. 12:45 to 12:51: it exports and downloads the account records with email addresses and old password hashes. 13:05 to 17:12: it queries account tokens, reads connected Outlook mailboxes and searches Todoist content for credentials.",
+      "cite": [
+        1
+      ]
+    },
+    {
+      "date": "2026-11-23",
+      "who": "record",
+      "text": "17:01 UTC: Todoist starts investigating an unexpected admin account flagged by its security monitoring. 17:10 to 17:42: it disables an attacker-created access key, removes the attacker's accounts and restricts remote command execution.",
+      "cite": [
+        1
+      ]
+    },
+    {
+      "date": "2026-11-24",
+      "who": "record",
+      "text": "05:06 UTC: Todoist disables the affected Todoist for Outlook add-in. 14:19: it finishes protecting affected accounts. 16:11: it starts notifying affected users and publishes its notice.",
+      "cite": [
+        1
+      ]
+    },
+    {
+      "date": "2026-11-25",
+      "who": "record",
+      "text": "04:22 UTC: Todoist adds an FAQ to its notice. 04:41: Todoist's founder and CEO Amir Salihefendić posts that affected accounts are secured and that the emails go out in batches and may take until the end of the day to arrive.",
+      "cite": [
+        1,
+        2,
+        4
+      ]
+    }
+  ],
+  "status": {
+    "exploit": "none",
+    "attacks": "seen",
+    "kev": null,
+    "scare": 3.1
+  },
+  "status_cite": {
+    "exploit": [
+      1
+    ],
+    "attacks": [
+      1,
+      2
+    ],
+    "kev": [
+      3
+    ]
+  },
+  "affected": [
+    {
+      "label": "Todoist emailed you",
+      "text": "Todoist is emailing every affected account, from `no-reply@notify.todoist.com`, and says that if you didn't get an email there is nothing to do. On 25 Nov 2026 Amir Salihefendić said the emails go out in batches and may take until the end of the day to arrive. The groups, with minimal overlap: about 6% of users (email, password hash, account creation date; Todoist's review of new sign-in sessions found no sign the attacker signed in to these accounts), about 0.003% (Todoist API and Slack tokens), about 0.001% (task and comment text that looked like credentials) and about 0.001% (connected Outlook mailboxes).",
+      "cite": [
+        1,
+        2
+      ]
+    }
+  ],
+  "do": [
+    {
+      "label": "Follow Todoist's email",
+      "text": "Todoist has already acted on affected accounts, depending on what was exposed: it disabled affected passwords, revoked API tokens, disconnected connected OAuth apps and ended active sessions. If your password was disabled, reset it on Todoist's password reset page to get back in.",
+      "cite": [
+        1
+      ]
+    },
+    {
+      "label": "Change reused passwords",
+      "text": "The hashes are salted SHA1, which Todoist says can be vulnerable to password guessing. If you used your Todoist password anywhere else, change it there too.",
+      "cite": [
+        1
+      ]
+    },
+    {
+      "label": "Google or Apple sign-in",
+      "text": "Your Google and Apple passwords weren't affected. If Todoist emailed you that your password hash was affected, that's a separate Todoist password on your account: Todoist reset it and signed you out, and signing in with Google may not work until you set a new Todoist password through the reset page.",
+      "cite": [
+        1
+      ]
+    },
+    {
+      "label": "Replace your API token",
+      "text": "If you used a Todoist API token in scripts or services, update them with your new token, under Settings → Integrations → Developer in Todoist on the web.",
+      "cite": [
+        1
+      ]
+    },
+    {
+      "label": "Reconnect Slack and Outlook",
+      "text": "Reconnect the Slack integration if it was disconnected. For the Todoist for Outlook add-in, you'll be asked to approve a new app, which may show as unverified while Todoist completes Microsoft's verification; on a work or school account your organisation may block reconnecting until then.",
+      "cite": [
+        1
+      ]
+    },
+    {
+      "label": "Revoke secrets kept in Todoist",
+      "text": "If you stored API keys, access tokens, recovery phrases or other credentials in Todoist comments, revoke and replace them with the service they belong to. Deleting the comment doesn't cancel a secret that may already have been copied.",
+      "cite": [
+        1
+      ]
+    },
+    {
+      "label": "Watch for fake emails",
+      "text": "Todoist's notification comes from `no-reply@notify.todoist.com`. Todoist says it won't ask you to send your password or install software because of this incident; if you're unsure about a message, contact Todoist through its own site.",
+      "cite": [
+        1
+      ]
+    }
+  ],
+  "versions_skip": "Todoist is a hosted service and names no software flaw: the attacker used a stolen credential. There's nothing for users to install.",
+  "sources": [
+    {
+      "title": "Todoist: security incident notice (24 Nov, FAQ added 25 Nov), what happened, timeline, data involved, what users should do",
+      "url": "https://www.todoist.com/help/todoist/get-started/security-incident-in-november-2026-cG0EIACNU",
+      "date": "25 Nov"
+    },
+    {
+      "title": "Amir Salihefendić on X: attacker took some customer data, affected accounts secured, emails going out in batches",
+      "url": "https://x.com/amix3k/status/2125449691739328535",
+      "date": "25 Nov"
+    },
+    {
+      "title": "CISA KEV catalog: no CVE involved, so nothing listed",
+      "url": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog"
+    },
+    {
+      "title": "Todoist: About us, Amir S. listed as Founder & CEO, linked to @amix3k",
+      "url": "https://www.todoist.com/about-us"
+    }
+  ],
+  "changes": [
+    {
+      "date": "2026-11-25",
+      "text": "Published."
+    }
+  ],
+  "orgs": [
+    {
+      "name": "Todoist, the task management app",
+      "url": "https://www.todoist.com/"
+    }
+  ]
+}
