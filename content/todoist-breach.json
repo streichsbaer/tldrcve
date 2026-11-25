@@ -145,8 +145,8 @@
   },
   "affected": [
     {
-      "label": "Todoist emailed you",
-      "text": "Todoist is emailing every affected account, from `no-reply@notify.todoist.com`, and says that if you didn't get an email there is nothing to do. On 25 Nov 2026 Amir Salihefendić said the emails go out in batches and may take until the end of the day to arrive. The groups, with minimal overlap: about 6% of users (email, password hash, account creation date; Todoist's review of new sign-in sessions found no sign the attacker signed in to these accounts), about 0.003% (Todoist API and Slack tokens), about 0.001% (task and comment text that looked like credentials) and about 0.001% (connected Outlook mailboxes).",
+      "label": "Your account is in an affected group",
+      "text": "The groups, with minimal overlap: about 6% of users (email, password hash, account creation date; Todoist's review of new sign-in sessions found no sign the attacker signed in to these accounts), about 0.003% (Todoist API and Slack tokens), about 0.001% (task and comment text that looked like credentials) and about 0.001% (connected Outlook mailboxes). Todoist is emailing every affected account from `no-reply@notify.todoist.com`; on 25 Nov 2026 Amir Salihefendić said the emails go out in batches and may take until the end of the day to arrive. Todoist says that if you didn't get an email there is nothing to do.",
       "cite": [
         1,
         2
@@ -217,11 +217,11 @@
       "date": "25 Nov"
     },
     {
-      "title": "CISA KEV catalog: no CVE involved, so nothing listed",
+      "title": "CISA KEV catalog: Todoist not listed",
       "url": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog"
     },
     {
-      "title": "Todoist: About us, Amir S. listed as Founder & CEO, linked to @amix3k",
+      "title": "Todoist: About us, Amir S. listed as Founder & CEO",
       "url": "https://www.todoist.com/about-us"
     }
   ],
