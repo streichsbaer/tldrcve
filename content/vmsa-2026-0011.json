@@ -46,22 +46,21 @@
   ],
   "product": "VMware vCenter / ESX",
   "disclosed": "2026-11-24",
-  "updated": "2026-11-24",
-  "verdict": "if",
-  "tile_line": "No-login vCenter bypass, ESX takeover. No attacks yet.",
-  "tldr": "Broadcom fixed 23 VMware bugs on 24 Nov 2026; three let anyone who can reach vCenter or an ESX host in with no login. No exploit or attacks yet. Patch vCenter and ESX, starting with any that untrusted networks or many machines can reach.",
-  "summary": "The vCenter bypass (9.8) is in the VMware Directory Service, the same service as the exploited [vCenter zero-day](/vcenter-zero-day/), but Broadcom calls it \"a new and distinct issue\"; vCenter 8.0 U3m fixes both. The two ESX bugs (9.8 each) are in the I/O filter service, port 9080 on ESX 8, and need no access to any VM; CrowdStrike and DEVCORE reported them. Workstation and Fusion get a 9.3-rated VM escape for attackers with admin rights inside a VM.",
+  "updated": "2026-11-25",
+  "verdict": "now",
+  "tile_line": "No-login vCenter bypass, public exploit. No attacks yet.",
+  "tldr": "Broadcom fixed 23 VMware bugs on 24 Nov 2026; three let anyone who can reach vCenter or an ESX host in with no login. Exploit code for the vCenter one is public; no attacks reported yet. Patch vCenter first, then ESX.",
+  "summary": "The vCenter bypass (9.8) is in the VMware Directory Service, like the exploited [vCenter zero-day](/vcenter-zero-day/), but Broadcom calls it \"a new and distinct issue\"; vCenter 8.0 U3m fixes both. The exploit code, posted on GitHub on 24 Nov 2026, makes a deliberately failed directory login that leaves the connection acting as the account it named, by default `administrator@vsphere.local`, then can add a new admin account; we found no independent report yet that it works. The two ESX bugs (9.8 each) are in the I/O filter service, port 9080 on ESX 8, and need no access to any VM; CrowdStrike and DEVCORE reported them.",
   "status": {
-    "exploit": "none",
+    "exploit": "public",
     "attacks": "none",
     "kev": null,
     "no_login": true,
-    "scare": 2.9
+    "scare": 3.3
   },
   "status_cite": {
     "exploit": [
-      1,
-      2
+      7
     ],
     "attacks": [
       1,
@@ -87,23 +86,25 @@
     },
     {
       "label": "An attacker can reach that system",
-      "text": "The vCenter bypass needs network access to vCenter; the ESX bugs need network access to the host's I/O filter service (the IOFilterVP firewall rule, port 9080 on ESX 8). No login, no user action and no VM access are needed. On ESX 8, the command lists which addresses may reach that service; Broadcom's KB uses it to check the restriction.",
+      "text": "The vCenter bypass needs network access to vCenter (Broadcom doesn't say which port; the public exploit talks to its directory service on LDAP port 389, or 636 with TLS); the ESX bugs need network access to the host's I/O filter service (the IOFilterVP firewall rule, port 9080 on ESX 8). No login, no user action and no VM access are needed. On ESX 8, the command lists which addresses may reach that service; Broadcom's KB uses it to check the restriction.",
       "cmd": "esxcli network firewall ruleset allowedip list -r iofiltervp",
       "cite": [
         1,
         2,
-        3
+        3,
+        7
       ]
     }
   ],
   "do": [
     {
       "label": "Patch vCenter and ESX",
-      "text": "vCenter: 9.1.2, 9.0.2.0300 or 8.0 U3m. ESX: 9.1.2 (ESXi-9.1.2.0-25946735), 9.0.2.0200 (ESXi-9.0.2.0200-25953133) or 8.0 U3m (ESXi80U3m-25926933), including vSAN Witness Appliances. VMware Cloud Foundation 5.x applies vCenter and ESX 8.0 U3m through Broadcom's asynchronous patching guide (KB 88287). Updating ESX 9.1 or 8.0 restarts each host, and the vCenter updates can't use Quick Patch. Broadcom's Q&A says no ESX update here can be live-patched, but the ESX 9.0.2.0200 release notes call it live-patchable with no reboot. On ESX 9.0, two moderate bugs (CVE-2026-123914 and CVE-2026-123915) are still waiting for a patch. Start with any vCenter or ESX that untrusted networks or many machines can reach.",
+      "text": "vCenter: 9.1.2, 9.0.2.0300 or 8.0 U3m. ESX: 9.1.2 (ESXi-9.1.2.0-25946735), 9.0.2.0200 (ESXi-9.0.2.0200-25953133) or 8.0 U3m (ESXi80U3m-25926933), including vSAN Witness Appliances. VMware Cloud Foundation 5.x applies vCenter and ESX 8.0 U3m through Broadcom's asynchronous patching guide (KB 88287). Updating ESX 9.1 or 8.0 restarts each host, and the vCenter updates can't use Quick Patch. Broadcom's Q&A says no ESX update here can be live-patched, but the ESX 9.0.2.0200 release notes call it live-patchable with no reboot. On ESX 9.0, two moderate bugs (CVE-2026-123914 and CVE-2026-123915) are still waiting for a patch. Broadcom's advisory gives no order; we'd patch vCenter first: its bypass has public exploit code, and Broadcom lists no workaround for it; its Q&A leaves firewall limits to you. Then ESX, starting with hosts that untrusted networks or many machines can reach. After patching, we'd also check the `Administrators` group in vCenter's single sign-on domain for accounts you don't recognise, since the public exploit can add one there.",
       "cite": [
         1,
         2,
-        5
+        5,
+        7
       ],
       "versions": [
         "vcenter",
@@ -127,11 +128,13 @@
       ]
     },
     {
-      "label": "Why it isn't Patch now",
-      "text": "Broadcom's advisory and Q&A mention no exploitation, no exploit code is public, and it isn't on CISA's exploited list (catalog of 23 Nov 2026). But the vCenter bug sits in the same service as the zero-day exploited since early September, and both critical paths need nothing but network access. We'll move it to Patch now if an exploit or attacks appear.",
+      "label": "Why it's Patch now",
+      "text": "Exploit code for the vCenter bypass has been public on GitHub since 24 Nov 2026. It needs only network access to vCenter and no password; the account it names by default, `administrator@vsphere.local`, is one Broadcom advises keeping. Broadcom says the bug is in vCenter itself, whether or not you use Enhanced Linked Mode, and lists no workaround. Broadcom's advisory and Q&A still mention no exploitation, and none of the 23 bugs is on CISA's exploited list (catalog of 24 Nov 2026). We found no public exploit for the ESX bugs, and no independent confirmation yet that the vCenter one works.",
       "cite": [
-        1,
+        7,
+        8,
         2,
+        1,
         4
       ]
     }
@@ -155,8 +158,8 @@
       "severity": "critical",
       "url": "https://support.broadcom.com/web/ecx/support-content-notification/-/external/content/SecurityAdvisories/0/39626",
       "title": "Login bypass in the directory service",
-      "text": "Anyone with network access to vCenter can bypass authentication and get into the system (9.8). It's in the VMware Directory Service, like the exploited [vCenter zero-day](/vcenter-zero-day/), but Broadcom calls it a new and distinct bug.",
-      "verdict": "if"
+      "text": "Anyone with network access to vCenter can bypass authentication and get into the system (9.8). Exploit code has been public since 24 Nov 2026 and can add an admin account. It's in the VMware Directory Service, like the exploited [vCenter zero-day](/vcenter-zero-day/), but Broadcom calls it a new and distinct bug.",
+      "verdict": "now"
     },
     {
       "cve": "CVE-2026-123910",
@@ -334,7 +337,7 @@
       "url": "https://knowledge.broadcom.com/external/article/463535"
     },
     {
-      "title": "CISA KEV catalog: none of the 23 listed (catalog 2026.11.23)",
+      "title": "CISA KEV catalog: none of the 23 listed (catalog 2026.11.24)",
       "url": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog"
     },
     {
@@ -346,9 +349,22 @@
       "title": "Broadcom: ESXi 8.0 U3m release notes, 19 Nov 2026, build 25926933",
       "url": "https://techdocs.broadcom.com/us/en/vmware-cis/vsphere/vsphere/8-0/release-notes/esxi-update-and-patch-release-notes/vsphere-esxi-80u3m-release-notes.html",
       "date": "19 Nov"
+    },
+    {
+      "title": "dinosn on GitHub: CVE-2026-123903 exploit code, failed SASL bind, claims administrator@vsphere.local, adds an admin account",
+      "url": "https://github.com/dinosn/CVE-2026-123903",
+      "date": "24 Nov"
+    },
+    {
+      "title": "Broadcom KB 446352: keep the administrator@vsphere.local account",
+      "url": "https://knowledge.broadcom.com/external/article/446352"
     }
   ],
   "changes": [
+    {
+      "date": "2026-11-25",
+      "text": "Exploit code for the vCenter login bypass (CVE-2026-123903) was posted on GitHub on 24 Nov 2026. Raised to Patch now, scare 2.9 to 3.3; patch vCenter first. Still no attacks reported and none of the 23 on CISA's exploited list."
+    },
     {
       "date": "2026-11-24",
       "text": "Published."
