@@ -48,7 +48,7 @@
   "affected": [
     {
       "label": "Grafana before the 24 Nov 2026 release",
-      "text": "Self-managed Grafana OSS or Enterprise below 13.3.2, 13.2.7, 13.1.11, 13.0.14 or 12.4.16. Lines 12.3 and older are out of support and get no fix. The code doesn't say whether Grafana Cloud was affected.",
+      "text": "Self-managed Grafana OSS or Enterprise below 13.3.2, 13.2.7, 13.1.11, 13.0.14 or 12.4.16. Lines 12.3 and older are out of support and get no fix. The code doesn't say whether Grafana Cloud was affected. This checklist covers the worst bug, on the login page; the other two are under What to do.",
       "cite": [
         1,
         5
@@ -56,14 +56,15 @@
     },
     {
       "label": "An attacker can reach the login page",
-      "text": "`GET /login` needs no login, and the cookie was decrypted before any sign-in logic ran, so this doesn't depend on OAuth or other settings.",
+      "text": "`GET /login` needs no login. The page decrypted the `login_error` cookie before it tried OAuth auto-login, and the decryption doesn't need OAuth to be set up.",
       "cite": [
+        10,
         2
       ]
     },
     {
       "label": "They already have Grafana's encrypted data",
-      "text": "The bug only turns ciphertext the instance produced back into plaintext: for example data source passwords and contact point credentials. On its own it reveals nothing, so it matters where a database copy, backup or leaked row is in someone else's hands. The contact point and snapshot bugs don't need this, only an Editor login: see What to do.",
+      "text": "The bug only turns ciphertext the instance produced back into plaintext: for example data source passwords and contact point credentials. On its own it reveals nothing, so it matters where a database copy, backup or leaked row is in someone else's hands.",
       "cite": [
         2,
         9
@@ -83,18 +84,20 @@
       ]
     },
     {
-      "label": "Rotate secrets if your data ever leaked",
-      "text": "If a copy of Grafana's database or a backup has ever left your control, rotate the data source and contact point credentials stored in Grafana: the login bug could have turned them into plaintext. If you have Editors you don't fully trust, rotate contact point credentials too.",
+      "label": "Our precaution: rotate secrets",
+      "text": "Grafana hasn't said to rotate anything; this is our advice. If a copy of Grafana's database or a backup has ever left your control, we'd rotate the data source and contact point credentials stored in Grafana, because the login bug could have turned them into plaintext. If Editors you don't fully trust could test contact points, we'd rotate contact point credentials too, because the contact point bug could have sent them to their own URL.",
       "cite": [
+        1,
         2
       ]
     },
     {
       "label": "The other two fixes",
-      "text": "Contact point tests: an Editor could test an existing contact point under a different schema version or type, point it at their own URL and have its stored secrets sent there; secrets echoed in notifier errors also came back to the caller. Snapshots (12.4 to 13.2): the newer snapshot API checked only the delete permission Editors have, not \"creator or can edit the dashboard\" like the old API; on 13.2 that API is behind an experimental flag that's off by default, and 13.3 fixed it in 13.3.0. Both need a login.",
+      "text": "These matter if someone you don't fully trust has Editor access. Contact point tests: an Editor could test an existing contact point under a different schema version or type, point it at their own URL and have its stored secrets sent there; secrets echoed in notifier errors also came back to the caller. Snapshots (12.4 to 13.2): the newer snapshot API checked only the delete permission Editors have, not \"creator or can edit the dashboard\" like the old API. The 24 Nov releases add that check; 13.3 fixed it in 13.3.0.",
       "cite": [
         2,
         3,
+        11,
         4,
         7,
         8
@@ -170,6 +173,16 @@
       "title": "Grafana source (v13.3.1): data source secrets are stored encrypted with the secrets service",
       "url": "https://github.com/grafana/grafana/blob/v13.3.1/pkg/services/secrets/kvstore/sql.go",
       "date": "10 Nov"
+    },
+    {
+      "title": "Grafana source (v13.3.1): the login page decrypts the login_error cookie before trying OAuth auto-login",
+      "url": "https://github.com/grafana/grafana/blob/v13.3.1/pkg/api/login.go",
+      "date": "10 Nov"
+    },
+    {
+      "title": "GitHub: 13.2.7 release commit, adds the snapshot delete check, also on the delete key lookup",
+      "url": "https://github.com/grafana/grafana/commit/19c0190bc45d13529e1a986a20247c832d469895",
+      "date": "24 Nov"
     }
   ],
   "changes": [

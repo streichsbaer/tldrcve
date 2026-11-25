@@ -14,7 +14,9 @@
     "remote code execution",
     "sa-core-2026-017",
     "ant-2026-gmrpk0bu",
-    "cve-2026-132165"
+    "cve-2026-132165",
+    "translation import",
+    "install_import_translations"
   ],
   "cves": [
     "CVE-2026-132165"
@@ -76,10 +78,12 @@
     },
     {
       "label": "A setup Drupal calls uncommon",
-      "text": "Drupal says only uncommon module configurations are exploitable, but hasn't said which, so you can't easily rule your site out. One path, shown by the public proof of concept, is a finished site whose installer never recorded its last step as done. If the web server can't write to or change permissions on `settings.php`, some exploit paths are blocked, but not all.",
+      "text": "Drupal says only uncommon module configurations are exploitable and doesn't list them. A related, older hole is public: on Drupal's issue 3455853, a site whose translation import was left pending or failed lets `install.php` run again and replace the admin account. Drupal release manager catch says this fix closes it \"as a by-product\", and a later comment there lists it apart from the advisory's own attack vectors. A 2025 report of `install.php` offering to reinstall a finished site, not translation-related, was closed by catch, who said the fix \"should have resolved this issue too\". The proof of concept plants a similar unfinished installer state by hand. If the web server can't write to or change permissions on `settings.php`, some exploit paths are blocked, but not all.",
       "cite": [
         1,
-        5,
+        12,
+        14,
+        13,
         6
       ]
     }
@@ -87,7 +91,7 @@
   "do": [
     {
       "label": "Update Drupal",
-      "text": "11.4.13, 11.3.22 or 10.6.22 (18 Nov 2026), security-only releases. 11.3 and 10.6 get security fixes only until Drupal 11.5.0 comes out in December 2026; on 11.2, 10.5 or older, move to a supported line. Known issue: some modules, Search API among them, can show \"Theme hook field not found\" after updating; Drupal plans a fix in 11.4.14 and suggests affected 11.3 and 10.6 sites move to 11.4.",
+      "text": "11.4.13, 11.3.22 or 10.6.22 (18 Nov 2026), security-only releases. 11.3 and 10.6 get security fixes only until Drupal 11.5.0 comes out in December 2026; on 11.2, 10.5 or older, move to a supported line. Known issue: these releases broke the theme registry for some modules, Search API among them (\"Theme hook field not found\"). Drupal says it \"will be fixed in Drupal 11.4.14\", which isn't out as of 25 Nov 2026, and that affected sites on 11.3.22 or 10.6.22 should move to 11.4 now so they can take that release.",
       "cite": [
         1,
         8,
@@ -118,12 +122,13 @@
     },
     {
       "label": "Why it's Patch now",
-      "text": "Drupal's rating says only uncommon setups are exploitable, which alone would make this Patch if. But it's exploited on live sites, needs no login, and Drupal hasn't said which setups count, so most sites can't rule themselves out. The fix is a security-only release and the workaround is one web server rule.",
+      "text": "Drupal rates the setups that are exploitable as uncommon (`TD:Uncommon`) but doesn't list them, so you can't rule your site out. `install.php` stays reachable unless you block it, attacks on live sites are reported, and it's in CISA KEV. A related, older hole in the installer, which this fix also closes, was already being probed: on 28 Oct 2025 someone on Drupal's issue 3455853 reported automated requests trying to exploit it. The fix is a security-only release and the workaround is one web server rule.",
       "cite": [
         1,
-        2,
+        5,
+        12,
         3,
-        5
+        2
       ]
     }
   ],
@@ -186,6 +191,20 @@
     {
       "title": "Drush docs: core:status and its drupal-version field",
       "url": "https://www.drush.org/13.x/commands/core_status/"
+    },
+    {
+      "title": "Drupal core issue 3455853: a related, older hole (pending or failed translation imports let install.php rerun and replace the admin), automated attempts reported 28 Oct 2025, SA-CORE-2026-017 \"fixes this as a by-product\"",
+      "url": "https://www.drupal.org/project/drupal/issues/3455853",
+      "date": "19 Nov"
+    },
+    {
+      "title": "Drupal core issue 3504327: install.php offered to reinstall an installed site (2025, not translation-related), closed by catch, who said the SA fix \"should have resolved this issue too\"",
+      "url": "https://www.drupal.org/project/drupal/issues/3504327",
+      "date": "19 Nov"
+    },
+    {
+      "title": "Drupal core MAINTAINERS.txt: catch is a core release manager",
+      "url": "https://github.com/drupal/drupal/blob/11.x/core/MAINTAINERS.txt"
     }
   ],
   "changes": [
