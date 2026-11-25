@@ -126,14 +126,16 @@ When a vulnerability gets attention but doesn't qualify yet, record it instead o
 - **Sources:**
   - Every claim has a source that actually says it.
   - Prefer primary sources: vendor advisories, the CISA KEV catalog, the CVE/NVD record, the researcher's write-up, distro trackers.
+  - A CVE or GHSA ID named in the vendor's advisory or release notes counts, even before the CVE record is published or the GHSA reaches GitHub's reviewed database.
+  - Our own advice is allowed when the text says it's ours ("Grafana doesn't say to rotate anything; we would, because…"). The facts it rests on still need sources.
 - **No invention:**
   - Never invent versions, flags, commands or dates.
   - When sources conflict, say so on the page.
 - **"Are you affected?"** lists only conditions that must all be true. No "or" items. Fold "not affected if…" details into the matching condition.
-- **Commands** must be exact. Check commands (`cmd` fields, "Are you affected?") must be read-only; a fix step may name the vendor's own upgrade or restart command, quoted exactly.
+- **Commands** must be exact. Commands that check something ("Are you affected?" and any step that only looks) must be read-only. A fix step may quote the vendor's own upgrade, install or restart command exactly as the vendor gives it (`mix local.hex --force`).
 - Text fields support `code` and links to site pages only: `[label](/slug/)`.
 - **Verdict, checklist and scare level** must agree:
-  - `now`: working exploit or attacks seen, and common setups are exposed.
+  - `now`: working exploit or attacks seen (a CISA KEV listing counts), and either common setups are exposed or readers can't rule themselves out: the vendor doesn't say which setups are exposed and the vulnerable part is reachable by default. When it's the second, the page says so in a "Why it's Patch now" step.
   - `if`: serious, but only under conditions the page lists.
   - `cycle`: real, but hard to reach or low impact.
   - `watch`: getting attention, but too little is known to act on (no details, no fix, no exploit). Never a softer `now`. The page must say what would change the verdict.
@@ -141,7 +143,7 @@ When a vulnerability gets attention but doesn't qualify yet, record it instead o
   - Plain English and short. No hype words unless quoting an official rating.
   - Loaded terms (RCE, zero-day, wormable) follow common usage, not just the source's wording. RCE means an attacker reaches the target over the network without the user doing something like opening a file; if the user has to open or display something, call it code or command execution. Keep the source's term as an alias so people can still find the page. When a vendor's official title says RCE, quote it as the vendor's wording.
   - Absolute dates only ("19 Nov 2026").
-  - Mark anything still expected as `pending` with an expected date.
+  - `pending` is for something a source says is coming (a fix, release or advisory), with the date that source gives. If the source gives no date, there's no `pending`: say it in the text ("in the coming days, no date given"). Our own recheck dates ("We'll check again by 1 Dec 2026") are plain text, never `pending`.
 
 Maintainers run an additional review before anything is merged.
 
