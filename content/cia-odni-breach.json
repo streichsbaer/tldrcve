@@ -20,7 +20,7 @@
   "verdict": "watch",
   "tile_line": "Intelligence analysis system breached. Entry unknown.",
   "tldr": "Attackers breached an unclassified system the CIA and the Office of the Director of National Intelligence (ODNI) use for open-source intelligence, reported on 24 Nov 2026. No one has said how they got in; no product or CVE is named, so nothing to patch.",
-  "summary": "The New York Times broke it, citing US officials and people familiar with the matter; it says the system pulls in public material, social media, satellite imagery and bought data, and that information at other federal agencies was likely exposed too. A source told CyberScoop it \"did not involve our classified networks or classified information\", but said there was a disruption, which an ODNI representative denies. The CIA declined to comment.",
+  "summary": "The New York Times broke it, citing US officials and people familiar with the matter; it says the system pulls in public material, social media, satellite imagery and bought data, and that information at other federal agencies was likely exposed too. A source told CyberScoop it \"did not involve our classified networks or classified information\", but said there was a disruption; an ODNI representative says there were \"no disruptions to critical capabilities or classified systems\". The CIA declined to comment.",
   "incident": {
     "checks": {
       "confirmed": {
@@ -97,7 +97,7 @@
     {
       "date": "2026-11-24",
       "who": "official",
-      "text": "An ODNI representative says \"there have been no disruptions to critical capabilities or classified systems\", which conflicts with CyberScoop's source, who said there was a disruption.",
+      "text": "An ODNI representative says \"there have been no disruptions to critical capabilities or classified systems\". That doesn't rule out the disruption CyberScoop's source described.",
       "cite": [
         4,
         1
@@ -134,7 +134,7 @@
   "do": [
     {
       "label": "Nothing to clean up yet",
-      "text": "No product, vendor or bug has been linked to this breach, so there's no update to install and no setting to change. All three reports list it among other recent federal incidents, but none says they're connected.",
+      "text": "None of the reports names a product, flaw or fix, so there's nothing known to install or change. All three reports list it among other recent federal incidents, but none says they're connected.",
       "cite": [
         1,
         2,
@@ -147,10 +147,7 @@
       "cite": [
         1,
         2
-      ],
-      "pending": {
-        "expected": "2026-12-01"
-      }
+      ]
     }
   ],
   "versions_skip": "No product, vendor or fix has been named.",
