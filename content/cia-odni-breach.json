@@ -19,7 +19,7 @@
   "updated": "2026-11-25",
   "verdict": "watch",
   "tile_line": "Intelligence analysis system breached. Entry unknown.",
-  "tldr": "Attackers breached an unclassified system the CIA and the Office of the Director of National Intelligence (ODNI) use for open-source intelligence, reported on 24 Nov 2026. No one has said how they got in; no product or CVE is named, so nothing to patch.",
+  "tldr": "Attackers breached an unclassified system the CIA and the Office of the Director of National Intelligence (ODNI) use for open-source intelligence, reported on 24 Nov 2026. No entry point, product or CVE is named, so nothing known to patch yet.",
   "summary": "The New York Times broke it, citing US officials and people familiar with the matter; it says the system pulls in public material, social media, satellite imagery and bought data, and that information at other federal agencies was likely exposed too. A source told CyberScoop it \"did not involve our classified networks or classified information\", but said there was a disruption; an ODNI representative says there were \"no disruptions to critical capabilities or classified systems\". The CIA declined to comment.",
   "incident": {
     "checks": {
