@@ -84,15 +84,20 @@ def page_card(c):
 <span class="meter">{meter}</span><span class="zone">{html.escape(label)}</span></div>"""
 
 
-def default_card():
+def count(n, word):
+    return f"{n} {word}{'' if n == 1 else 's'}"
+
+
+def default_card(n_cve, n_inc):
     return f"""{header("tldrcve.com")}
-<div class="main"><p class="tag">The vulnerabilities everyone's talking about, <b>in plain English.</b>
-How scary is it, are you affected, and what to do.</p></div>"""
+<div class="main"><p class="tag">The vulnerabilities and attacks everyone's talking about, <b>in plain English.</b>
+How scary is it, are you affected, and what to do.</p>
+<p class="line">{count(n_cve, "CVE")} and {count(n_inc, "incident")} covered so far.</p></div>"""
 
 
 def text_card(right, kicker, title, line):
     return f"""{header(right)}
-<div class="main"><div class="kick">{html.escape(kicker)}</div><h1>{html.escape(title)}</h1>
+<div class="main">{f'<div class="kick">{html.escape(kicker)}</div>' if kicker else ""}<h1>{html.escape(title)}</h1>
 <p class="line">{html.escape(line)}</p></div>"""
 
 
@@ -136,9 +141,12 @@ def shoot(browser, html_file, png, profile):
 
 
 def documents(all_c):
-    cards = {"default": default_card(), **{c["slug"]: page_card(c) for c in all_c}}
-    cards["cves"] = text_card("tldrcve.com/cves", "All CVEs", f"{len(all_c)} vulnerabilities",
-                              "Only the ones people are actually talking about, in plain English.")
+    n_inc = sum(1 for c in all_c if build.is_incident(c))
+    n_cve = len(all_c) - n_inc
+    cards = {"default": default_card(n_cve, n_inc), **{c["slug"]: page_card(c) for c in all_c}}
+    talked = "The ones people are actually talking about, in plain English."
+    cards["cves"] = text_card("tldrcve.com/cves", None, count(n_cve, "CVE"), talked)
+    cards["incidents"] = text_card("tldrcve.com/incidents", None, count(n_inc, "incident"), talked)
     cards["how-we-rate"] = text_card("tldrcve.com/how-we-rate", "How we rate", "The scare-o-meter",
                                      "Attacks, exploits and exposure count. A scary CVSS score alone doesn't.")
     cards["versions"] = text_card("tldrcve.com/versions", "Safe versions", "Latest safe versions",

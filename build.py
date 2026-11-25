@@ -1074,7 +1074,7 @@ def home(all_c: list) -> str:
     body = f"""  <main class="wrap home">
     <section class="hero">
       <h1>CVEs in plain English</h1>
-      <p class="hero__lede">The vulnerabilities everyone's panicking about.<br>Are you affected, and what should you do?</p>
+      <p class="hero__lede">The vulnerabilities and attacks everyone's panicking about.<br>Are you affected, and what should you do?</p>
       <form class="search" role="search" action="/cves/" method="get">
         <label for="q" class="visually-hidden">Search all CVEs</label>
         {SEARCH_ICON}
@@ -1097,7 +1097,7 @@ def home(all_c: list) -> str:
   </main>
 """
     return page("tldrcve: CVEs in plain English",
-                "The vulnerabilities everyone's talking about, in plain English: are you affected, and what to do.",
+                "The vulnerabilities and attacks everyone's talking about, in plain English: are you affected, and what to do.",
                 body, current="home", path="/")
 
 
@@ -1828,7 +1828,8 @@ def write_data(all_c: list) -> None:
         lines.append(f'- [{v["name"]}]({SITE_URL}/versions/{pid}/): {latest} (checked {v["checked"]})')
     lines += ["", "## About", "",
               f"- [Home]({SITE_URL}/): latest pages",
-              f"- [All CVEs]({SITE_URL}/cves/): every page, filterable by product and date",
+              f"- [All CVEs]({SITE_URL}/cves/): every CVE page, filterable by product and date",
+              f"- [Incidents]({SITE_URL}/incidents/): attacks that already happened: how bad, who says so, what to clean up",
               f"- [How we rate]({SITE_URL}/how-we-rate/): what the verdicts and scare levels mean",
               f"- [Source on GitHub]({REPO_URL}): content files, corrections welcome", ""]
     (OUT / "llms.txt").write_text("\n".join(lines))
