@@ -1,0 +1,197 @@
+{
+  "slug": "drupal-installer",
+  "name": "Drupal installer",
+  "aliases": [
+    "drupal",
+    "drupal core",
+    "drupal 10",
+    "drupal 11",
+    "install.php",
+    "installer",
+    "reinstall",
+    "site takeover",
+    "rce",
+    "remote code execution",
+    "sa-core-2026-017",
+    "ant-2026-gmrpk0bu",
+    "cve-2026-132165"
+  ],
+  "cves": [
+    "CVE-2026-132165"
+  ],
+  "product": "Drupal core",
+  "disclosed": "2026-11-18",
+  "updated": "2026-11-25",
+  "verdict": "now",
+  "tile_line": "Exploited via install.php, no login. In CISA KEV.",
+  "tldr": "Drupal's installer, `install.php`, can let someone with no login take over an installed site or run code on it, on uncommon setups Drupal hasn't named. Exploited on live sites; in CISA KEV. Update Drupal 10 or 11 now and block `install.php`.",
+  "summary": "Drupal rates it Highly critical (20 of 25) on its own scale, but the same rating says the attack is complex and only uncommon module configurations are exploitable. A proof of concept posted on GitHub on 20 Nov replaces the main admin account on 11.4.12, but only after planting a half-finished installer state itself, and shows no code execution; Drupal has reports of attacks from 19 Nov, the day before the proof of concept appeared. The fix makes the installer refuse to run once an install has recorded its finish time, ties an unfinished install to the browser that started it and stops it changing `settings.php` permissions. Horizon3's write-up still says Drupal reports no exploitation and quotes an older Critical 18/25 rating; Drupal's advisory now reports exploitation, and credits Anthropic's OSS Scanner with finding the bug.",
+  "status": {
+    "exploit": "public",
+    "attacks": "seen",
+    "kev": {
+      "added": "2026-11-24",
+      "due": "2026-11-27"
+    },
+    "no_login": true,
+    "scare": 3.0
+  },
+  "status_cite": {
+    "no_login": [
+      1,
+      2,
+      4
+    ],
+    "exploit": [
+      6
+    ],
+    "attacks": [
+      1,
+      2
+    ],
+    "kev": [
+      2
+    ]
+  },
+  "affected": [
+    {
+      "label": "Drupal core, not updated",
+      "text": "Drupal's affected range: before 10.6.22, 11.0.0 up to 11.3.21, and 11.4.0 up to 11.4.12; 11.3.22, 11.4.13 and 10.6.22 are fixed. Drupal 11.2 and below, 10.5 and below, and Drupal 8 and 9 are end-of-life and get no fix. The command prints your version.",
+      "cmd": "drush status --field=drupal-version",
+      "cite": [
+        1,
+        4,
+        11
+      ]
+    },
+    {
+      "label": "An attacker can reach install.php",
+      "text": "Attacks go through the installer at `/core/install.php`, which stays reachable after installation unless you block it. Horizon3 notes this isn't only about internet-facing sites: internal and staging sites count if an attacker can reach them. Drupal's check: each of these URLs on your site should end with `403` or `404`; a `200` means the installer isn't blocked. Also try `/core/install.php/foo` and, following redirects (`curl -IL`), `/install.php`.",
+      "cmd": "curl -I https://example.com/core/install.php",
+      "cite": [
+        1,
+        3,
+        4
+      ]
+    },
+    {
+      "label": "A setup Drupal calls uncommon",
+      "text": "Drupal says only uncommon module configurations are exploitable, but hasn't said which, so you can't easily rule your site out. One path, shown by the public proof of concept, is a finished site whose installer never recorded its last step as done. If the web server can't write to or change permissions on `settings.php`, some exploit paths are blocked, but not all.",
+      "cite": [
+        1,
+        5,
+        6
+      ]
+    }
+  ],
+  "do": [
+    {
+      "label": "Update Drupal",
+      "text": "11.4.13, 11.3.22 or 10.6.22 (18 Nov 2026), security-only releases. 11.3 and 10.6 get security fixes only until Drupal 11.5.0 comes out in December 2026; on 11.2, 10.5 or older, move to a supported line. Known issue: some modules, Search API among them, can show \"Theme hook field not found\" after updating; Drupal plans a fix in 11.4.14 and suggests affected 11.3 and 10.6 sites move to 11.4.",
+      "cite": [
+        1,
+        8,
+        9,
+        10
+      ],
+      "versions": [
+        "drupal"
+      ]
+    },
+    {
+      "label": "Block install.php, even after updating",
+      "text": "Drupal recommends blocking the installer in the web server, which survives core updates. nginx: add the block below to the HTTPS `server` block; Drupal says to use `^~`, not an exact match (`=`), which on some servers doesn't block `/core/install.php/foo`. Apache: in the virtual host, `<Location \"/core/install.php\">` with `Require all denied`. Apache without access to the virtual host: Drupal's docs also give an `.htaccess` rule (`<Files \"install.php\">` with `Require all denied`), but Composer overwrites `.htaccess`, so lines added by hand are lost. Test with `nginx -t` or `apachectl configtest` before reloading, then rerun the check above. Drupal Steward sites are already protected from the known attack paths, but should still update.",
+      "cmd": "location ^~ /core/install.php { return 404; }",
+      "cite": [
+        3,
+        1
+      ]
+    },
+    {
+      "label": "Check for a takeover",
+      "text": "The public proof of concept replaces user 1, the site's first admin account, with a new name, email and password, so the old admin password stops working; content is left in place. Anonymous `POST` requests to `/core/install.php` in your web logs after the site went live deserve a look. If you find signs, assume the attacker had admin rights and may have run code on the server. US federal agencies must also do CISA's forensic triage.",
+      "cite": [
+        6,
+        1,
+        2
+      ]
+    },
+    {
+      "label": "Why it's Patch now",
+      "text": "Drupal's rating says only uncommon setups are exploitable, which alone would make this Patch if. But it's exploited on live sites, needs no login, and Drupal hasn't said which setups count, so most sites can't rule themselves out. The fix is a security-only release and the workaround is one web server rule.",
+      "cite": [
+        1,
+        2,
+        3,
+        5
+      ]
+    }
+  ],
+  "fixed_in": {
+    "drupal": {
+      "11.4": "11.4.13",
+      "11.3": "11.3.22",
+      "10.6": "10.6.22"
+    }
+  },
+  "sources": [
+    {
+      "title": "Drupal SA-CORE-2026-017: affected versions, fixes, exploited on live sites from 19 Nov 2026 19:00 UTC, settings.php note",
+      "url": "https://www.drupal.org/sa-core-2026-017",
+      "date": "18 Nov"
+    },
+    {
+      "title": "CISA KEV catalog: added 24 Nov 2026, due 27 Nov, forensic triage required",
+      "url": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog",
+      "date": "24 Nov"
+    },
+    {
+      "title": "Drupal docs: securing the installer, web server rules and checks",
+      "url": "https://www.drupal.org/docs/administering-a-drupal-site/security-in-drupal/securing-the-installer-installphp",
+      "date": "21 Nov"
+    },
+    {
+      "title": "Horizon3: affected range, reachable install.php, no exploitation reported at the time",
+      "url": "https://horizon3.ai/attack-research/vulnerabilities/cve-2026-132165/"
+    },
+    {
+      "title": "Drupal Security Team: risk levels, \"Uncommon\" and \"Complex\" defined",
+      "url": "https://www.drupal.org/drupal-security-team/security-risk-levels-defined"
+    },
+    {
+      "title": "Abraxas Labs: public proof of concept, admin takeover on 11.4.12 with a planted installer state",
+      "url": "https://github.com/abraxas/drupal-install-takeover",
+      "date": "20 Nov"
+    },
+    {
+      "title": "Drupal core: the SA-CORE-2026-017 fix",
+      "url": "https://github.com/drupal/core/commit/e301840e6164301a71d83005bad312dc4daa2d7a",
+      "date": "18 Nov"
+    },
+    {
+      "title": "Drupal 11.4.13 release: security-only, installer no longer fixes settings.php permissions, known theme issue",
+      "url": "https://www.drupal.org/project/drupal/releases/11.4.13",
+      "date": "18 Nov"
+    },
+    {
+      "title": "Drupal 11.3.22 release: security coverage until Drupal 11.5.0, move to 11.4 if hit by the theme issue",
+      "url": "https://www.drupal.org/project/drupal/releases/11.3.22",
+      "date": "18 Nov"
+    },
+    {
+      "title": "Drupal 10.6.22 release: security coverage until Drupal 11.5.0",
+      "url": "https://www.drupal.org/project/drupal/releases/10.6.22",
+      "date": "18 Nov"
+    },
+    {
+      "title": "Drush docs: core:status and its drupal-version field",
+      "url": "https://www.drush.org/13.x/commands/core_status/"
+    }
+  ],
+  "changes": [
+    {
+      "date": "2026-11-25",
+      "text": "Published."
+    }
+  ]
+}

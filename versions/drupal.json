@@ -1,0 +1,57 @@
+{
+  "id": "drupal",
+  "name": "Drupal core",
+  "about": "The newest Drupal core release on each line that still gets security fixes.",
+  "feed": "endoflife:drupal",
+  "latest_from": [
+    "https://www.drupal.org/project/drupal/releases",
+    "https://www.drupal.org/security/core"
+  ],
+  "filter": "drupal",
+  "checked": "2026-11-25",
+  "lines": [
+    {
+      "line": "11.4",
+      "key": "11.4",
+      "latest": "11.4.13",
+      "released": "2026-11-18"
+    },
+    {
+      "line": "11.3",
+      "key": "11.3",
+      "latest": "11.3.22",
+      "released": "2026-11-18",
+      "note": "Security fixes end when Drupal 11.5.0 comes out in December 2026."
+    },
+    {
+      "line": "10.6",
+      "key": "10.6",
+      "latest": "10.6.22",
+      "released": "2026-11-18",
+      "note": "Security fixes end when Drupal 11.5.0 comes out in December 2026."
+    }
+  ],
+  "older": "Drupal 11.2 and below, 10.5 and below, and Drupal 8 and 9 are end-of-life and get no security fixes: move to a supported line.",
+  "sources": [
+    {
+      "title": "Drupal SA-CORE-2026-017: fixed in 11.4.13, 11.3.22 and 10.6.22; 11.2 and 10.5 and below end-of-life",
+      "url": "https://www.drupal.org/sa-core-2026-017"
+    },
+    {
+      "title": "Drupal 11.4.13 release, 18 Nov 2026",
+      "url": "https://www.drupal.org/project/drupal/releases/11.4.13"
+    },
+    {
+      "title": "Drupal 11.3.22 release, 18 Nov 2026: security coverage until Drupal 11.5.0 in December 2026",
+      "url": "https://www.drupal.org/project/drupal/releases/11.3.22"
+    },
+    {
+      "title": "Drupal 10.6.22 release, 18 Nov 2026: security coverage until Drupal 11.5.0 in December 2026",
+      "url": "https://www.drupal.org/project/drupal/releases/10.6.22"
+    },
+    {
+      "title": "endoflife.date: Drupal release cycles and end-of-life dates",
+      "url": "https://endoflife.date/drupal"
+    }
+  ]
+}

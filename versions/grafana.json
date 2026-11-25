@@ -1,0 +1,60 @@
+{
+  "id": "grafana",
+  "name": "Grafana",
+  "about": "The newest release on each Grafana line that Grafana still supports, for self-managed Grafana OSS and Enterprise.",
+  "feed": "github:grafana/grafana",
+  "latest_from": [
+    "https://github.com/grafana/grafana/releases",
+    "https://grafana.com/grafana/download",
+    "https://grafana.com/docs/grafana/latest/upgrade-guide/when-to-upgrade/"
+  ],
+  "filter": "grafana",
+  "checked": "2026-11-25",
+  "lines": [
+    {
+      "line": "13.3",
+      "key": "13.3",
+      "latest": "13.3.2",
+      "released": "2026-11-24"
+    },
+    {
+      "line": "13.2",
+      "key": "13.2",
+      "latest": "13.2.7",
+      "released": "2026-11-24"
+    },
+    {
+      "line": "13.1",
+      "key": "13.1",
+      "latest": "13.1.11",
+      "released": "2026-11-24"
+    },
+    {
+      "line": "13.0",
+      "key": "13.0",
+      "latest": "13.0.14",
+      "released": "2026-11-24"
+    },
+    {
+      "line": "12.4",
+      "key": "12.4",
+      "latest": "12.4.16",
+      "released": "2026-11-24"
+    }
+  ],
+  "older": "Grafana supports each minor release for 9 months, and the last minor release of a major version (12.4) for 15 months. Older lines, such as 12.3, get no more patches: upgrade to a supported line.",
+  "sources": [
+    {
+      "title": "GitHub: Grafana releases, 24 Nov 2026 security releases 13.3.2, 13.2.7, 13.1.11, 13.0.14 and 12.4.16",
+      "url": "https://github.com/grafana/grafana/releases"
+    },
+    {
+      "title": "Grafana docs: support policy, 9 months per minor release, 15 months for the last minor of a major",
+      "url": "https://grafana.com/docs/grafana/latest/upgrade-guide/when-to-upgrade/"
+    },
+    {
+      "title": "endoflife.date: Grafana release cycles and end-of-life dates",
+      "url": "https://endoflife.date/grafana"
+    }
+  ]
+}

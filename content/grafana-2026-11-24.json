@@ -1,0 +1,181 @@
+{
+  "slug": "grafana-2026-11-24",
+  "name": "Grafana Nov fixes",
+  "aliases": [
+    "grafana",
+    "grafana oss",
+    "grafana enterprise",
+    "login_error",
+    "decryption oracle",
+    "contact point",
+    "alerting",
+    "snapshot",
+    "cve-2026-107561",
+    "cve-2026-88943",
+    "cve-2026-88960"
+  ],
+  "cves": [
+    "CVE-2026-107561",
+    "CVE-2026-88943",
+    "CVE-2026-88960"
+  ],
+  "product": "Grafana",
+  "disclosed": "2026-11-24",
+  "updated": "2026-11-25",
+  "verdict": "if",
+  "tile_line": "Login page decrypts leaked secrets; needs a stolen copy.",
+  "tldr": "Grafana's 24 Nov 2026 releases quietly fix three bugs; the worst lets anyone who can open the login page decrypt Grafana's stored secrets, if they already hold a copy of the encrypted data. No exploit or attacks. Update to the 24 Nov release on your line.",
+  "summary": "Grafana's release notes only say \"Security: Fix CVE-…\" and there's no advisory yet, so the details come from the code. The login page decrypted a `login_error` cookie with Grafana's general secrets service, which the fix's own comment says \"turns the endpoint into a decryption oracle\"; the same pattern is already in Grafana 6.0. The releases also stop Editors from copying a contact point's stored secrets to their own URL during a test, and on 12.4 to 13.2 from deleting other people's snapshots through the newer API.",
+  "status": {
+    "exploit": "none",
+    "attacks": "none",
+    "kev": null,
+    "scare": 2.0
+  },
+  "status_cite": {
+    "exploit": [
+      1,
+      2
+    ],
+    "attacks": [
+      1,
+      2
+    ],
+    "kev": [
+      6
+    ]
+  },
+  "affected": [
+    {
+      "label": "Grafana before the 24 Nov 2026 release",
+      "text": "Self-managed Grafana OSS or Enterprise below 13.3.2, 13.2.7, 13.1.11, 13.0.14 or 12.4.16. Lines 12.3 and older are out of support and get no fix. The code doesn't say whether Grafana Cloud was affected.",
+      "cite": [
+        1,
+        5
+      ]
+    },
+    {
+      "label": "An attacker can reach the login page",
+      "text": "`GET /login` needs no login, and the cookie was decrypted before any sign-in logic ran, so this doesn't depend on OAuth or other settings.",
+      "cite": [
+        2
+      ]
+    },
+    {
+      "label": "They already have Grafana's encrypted data",
+      "text": "The bug only turns ciphertext the instance produced back into plaintext: for example data source passwords and contact point credentials. On its own it reveals nothing, so it matters where a database copy, backup or leaked row is in someone else's hands. The contact point and snapshot bugs don't need this, only an Editor login: see What to do.",
+      "cite": [
+        2,
+        9
+      ]
+    }
+  ],
+  "do": [
+    {
+      "label": "Update Grafana",
+      "text": "Update to 13.3.2, 13.2.7, 13.1.11, 13.0.14 or 12.4.16 (24 Nov 2026), which fix all three bugs. On 12.3 or older, move to a supported line.",
+      "cite": [
+        1,
+        5
+      ],
+      "versions": [
+        "grafana"
+      ]
+    },
+    {
+      "label": "Rotate secrets if your data ever leaked",
+      "text": "If a copy of Grafana's database or a backup has ever left your control, rotate the data source and contact point credentials stored in Grafana: the login bug could have turned them into plaintext. If you have Editors you don't fully trust, rotate contact point credentials too.",
+      "cite": [
+        2
+      ]
+    },
+    {
+      "label": "The other two fixes",
+      "text": "Contact point tests: an Editor could test an existing contact point under a different schema version or type, point it at their own URL and have its stored secrets sent there; secrets echoed in notifier errors also came back to the caller. Snapshots (12.4 to 13.2): the newer snapshot API checked only the delete permission Editors have, not \"creator or can edit the dashboard\" like the old API; on 13.2 that API is behind an experimental flag that's off by default, and 13.3 fixed it in 13.3.0. Both need a login.",
+      "cite": [
+        2,
+        3,
+        4,
+        7,
+        8
+      ]
+    },
+    {
+      "label": "Which CVE is which",
+      "text": "Grafana hasn't published advisories or CVE records yet. Our reading of the code: the snapshot fix matches CVE-2026-88943, the one ID missing from 13.3.2's notes; the login and contact point fixes are CVE-2026-107561 and CVE-2026-88960, in an order Grafana hasn't said. We'll check again for Grafana's advisory by 2 Dec 2026.",
+      "cite": [
+        1,
+        2
+      ]
+    },
+    {
+      "label": "Why it isn't Patch now",
+      "text": "No exploit or attacks are known, it isn't on CISA's exploited list, the login bug needs data the attacker would already have to have stolen, and the other two need an Editor login. We'd raise it if an exploit appears or attacks are reported.",
+      "cite": [
+        1,
+        2,
+        6
+      ]
+    }
+  ],
+  "fixed_in": {
+    "grafana": {
+      "13.3": "13.3.2",
+      "13.2": "13.2.7",
+      "13.1": "13.1.11",
+      "13.0": "13.0.14",
+      "12.4": "12.4.16"
+    }
+  },
+  "sources": [
+    {
+      "title": "GitHub: Grafana releases 13.3.2, 13.2.7, 13.1.11, 13.0.14 and 12.4.16 (24 Nov), \"Security: Fix CVE-…\" notes",
+      "url": "https://github.com/grafana/grafana/releases",
+      "date": "24 Nov"
+    },
+    {
+      "title": "GitHub: 13.3.2 release commit, the login cookie fix (\"decryption oracle\") and the contact point test checks",
+      "url": "https://github.com/grafana/grafana/commit/b8e90ef2a9",
+      "date": "24 Nov"
+    },
+    {
+      "title": "GitHub: 12.4.16 release commit, adds the snapshot delete check",
+      "url": "https://github.com/grafana/grafana/commit/1f855f700a",
+      "date": "24 Nov"
+    },
+    {
+      "title": "GitHub: PR 134745, Snapshots: align API access with legacy snapshot policy (in 13.3.0)",
+      "url": "https://github.com/grafana/grafana/pull/134745",
+      "date": "12 Oct"
+    },
+    {
+      "title": "Grafana docs: support policy, which lines get patches",
+      "url": "https://grafana.com/docs/grafana/latest/upgrade-guide/when-to-upgrade/"
+    },
+    {
+      "title": "CISA KEV catalog: none of the three listed",
+      "url": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog"
+    },
+    {
+      "title": "Grafana source (v13.3.1): alerting roles, Editors can test contact points, only Admins change protected fields",
+      "url": "https://github.com/grafana/grafana/blob/v13.3.1/pkg/services/ngalert/accesscontrol/roles.go",
+      "date": "10 Nov"
+    },
+    {
+      "title": "Grafana source (v12.4.15): snapshot roles, Editors get the delete permission",
+      "url": "https://github.com/grafana/grafana/blob/v12.4.15/pkg/api/accesscontrol.go",
+      "date": "10 Nov"
+    },
+    {
+      "title": "Grafana source (v13.3.1): data source secrets are stored encrypted with the secrets service",
+      "url": "https://github.com/grafana/grafana/blob/v13.3.1/pkg/services/secrets/kvstore/sql.go",
+      "date": "10 Nov"
+    }
+  ],
+  "changes": [
+    {
+      "date": "2026-11-25",
+      "text": "Published."
+    }
+  ]
+}

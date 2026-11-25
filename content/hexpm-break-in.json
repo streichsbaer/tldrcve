@@ -1,0 +1,280 @@
+{
+  "slug": "hexpm-break-in",
+  "kind": "incident",
+  "name": "hex.pm break-in",
+  "aliases": [
+    "hex",
+    "hex.pm",
+    "hexpm",
+    "hex package manager",
+    "elixir",
+    "erlang",
+    "gleam",
+    "rebar3",
+    "mix local.hex",
+    "repo.hex.pm",
+    "application/vnd.hex+erlang",
+    "binary_to_term",
+    "struct deserialization",
+    "remote code execution",
+    "rce",
+    "zero-day",
+    "ash",
+    "cve-2026-124283",
+    "db_connection",
+    "cve-2026-133555",
+    "eef"
+  ],
+  "cves": [
+    "CVE-2026-129514"
+  ],
+  "ghsa": [
+    "GHSA-9pmm-hf4r-27pg"
+  ],
+  "product": "hex.pm",
+  "disclosed": "2026-11-24",
+  "updated": "2026-11-25",
+  "verdict": "now",
+  "tile_line": "Commands ran on hex.pm servers. Data may have been read.",
+  "tldr": "An attacker ran commands on hex.pm's servers on 23 Nov 2026 through a flaw in its request decoder, fixed within 20 minutes. No package tampering found, but account data may have been read. If you have a hex.pm account, change your password and reset 2FA.",
+  "summary": "Any unauthenticated POST with Hex's Erlang term content type could slip fake Elixir structs past its decoder; when error reporting inspected them, a chain through Ecto and DBConnection ran OS commands. The flaw dated from 23 Feb 2016, the attacker sent 69 requests and hit six web servers, and a security report describing the same bug reached hex.pm at 19:07 UTC, after the attack. While investigating, hex.pm found the same class of bug in Ash's keyset pagination (CVE-2026-124283).",
+  "incident": {
+    "checks": {
+      "confirmed": {
+        "state": "yes",
+        "cite": [
+          1,
+          2
+        ]
+      },
+      "taken": {
+        "state": "part",
+        "cite": [
+          1
+        ]
+      },
+      "reach": {
+        "state": "part",
+        "cite": [
+          1
+        ]
+      },
+      "entry": {
+        "state": "yes",
+        "cite": [
+          1,
+          2,
+          3
+        ]
+      },
+      "contained": {
+        "state": "part",
+        "cite": [
+          1,
+          3
+        ]
+      }
+    }
+  },
+  "root_cause": {
+    "tags": [
+      "vendor-flaw",
+      "zero-day"
+    ],
+    "text": "A flaw in hex.pm's own server code (the open-source hexpm project), attacked before any fix or advisory existed. The decoder for `application/vnd.hex+erlang` request bodies ran before routing and login checks and let through maps with a `__struct__` key, which the attacker chained into OS command execution. The fix, commit 379b0a2, rejects any such map with a 400.",
+    "cite": [
+      1,
+      2,
+      3,
+      8
+    ]
+  },
+  "timeline": [
+    {
+      "date": "2016-02-23",
+      "who": "record",
+      "text": "The safety check in hex.pm's request decoder is removed (commit ab1bbce), the start of the affected range.",
+      "cite": [
+        1,
+        2
+      ]
+    },
+    {
+      "date": "2026-11-23",
+      "who": "record",
+      "text": "18:16 to 18:29 UTC: the attacker sends 69 malicious requests and runs commands on six hex.pm web servers. Three of them were new servers that a restart at 18:28 brought up on the vulnerable build.",
+      "cite": [
+        1
+      ]
+    },
+    {
+      "date": "2026-11-23",
+      "who": "record",
+      "text": "18:27 UTC: hex.pm adds a firewall rule (in full effect by 18:33); by 18:31 every server runs a patched build that rejects the payloads.",
+      "cite": [
+        1
+      ]
+    },
+    {
+      "date": "2026-11-23",
+      "who": "record",
+      "text": "19:07 UTC: hex.pm receives an emailed security report describing the same vulnerability.",
+      "cite": [
+        1
+      ]
+    },
+    {
+      "date": "2026-11-23",
+      "who": "record",
+      "text": "hex.pm rotates most infrastructure credentials by 20:21 UTC and reports a personal data breach to IMY, Sweden's data protection authority, and the incident to CISA and ENISA.",
+      "cite": [
+        1
+      ]
+    },
+    {
+      "date": "2026-11-24",
+      "who": "record",
+      "text": "Ash ships 3.38.0 with a fix for the related bug. By 10:42 UTC every credential the attacker could have read is rotated except the registry signing key and a few low-impact secrets. At 13:48 UTC hex.pm publishes CVE-2026-129514 and the GitHub advisory.",
+      "cite": [
+        1,
+        2,
+        3
+      ]
+    }
+  ],
+  "status": {
+    "exploit": "demonstrated",
+    "attacks": "seen",
+    "kev": null,
+    "no_login": true,
+    "scare": 2.8
+  },
+  "status_cite": {
+    "exploit": [
+      1
+    ],
+    "attacks": [
+      1,
+      2
+    ],
+    "kev": [
+      4
+    ],
+    "no_login": [
+      2,
+      3
+    ]
+  },
+  "affected": [
+    {
+      "label": "You have a hex.pm account",
+      "text": "hex.pm found no package changes, no database changes and no lasting access, but database reads aren't logged, so it can't rule out that the attacker read email addresses, password hashes, API key hashes, 2FA secrets, sessions and audit logs. For organisations with private packages, reads of private documentation aren't logged and a read from a compromised server would look like hex.pm's own; hex.pm says it will contact affected organisations directly.",
+      "cite": [
+        1
+      ]
+    }
+  ],
+  "do": [
+    {
+      "label": "Change your hex.pm password",
+      "text": "Passwords are stored as bcrypt hashes, which slow guessing but don't stop it for a weak password. hex.pm also replaced the keys that sign sessions and access tokens, which logged everyone out of hex.pm and Hex clients. It doesn't ask you to rotate API keys: they are 128-bit random values stored as HMAC-SHA256, which it considers beyond brute force.",
+      "cite": [
+        1
+      ]
+    },
+    {
+      "label": "Reset your 2FA",
+      "text": "At hex.pm/dashboard/security, under \"Authenticator App\", choose \"Setup New App\" and verify a code from the new entry. You get a new secret and new recovery codes, so store the new codes. hex.pm says this works even when an organisation requires 2FA, where turning 2FA off is refused.",
+      "cite": [
+        1
+      ]
+    },
+    {
+      "label": "Fetch only from repo.hex.pm",
+      "text": "The attacker could read the server's environment, which held the registry signing key, and hex.pm hadn't rotated that key by 10:42 UTC on 24 Nov 2026. It is building a new signing system that supports key rotation, with new Hex client releases \"in the coming days\". Until then, don't trust third-party mirrors. Once that release is out, update Hex with this command, and update rebar3 or Gleam if you use them. No version or date has been announced; the newest Hex client release on 25 Nov 2026 is still v2.7.0 from 6 Nov. We'll check again by 1 Dec 2026.",
+      "cmd": "mix local.hex --force",
+      "cite": [
+        1,
+        3,
+        7
+      ]
+    },
+    {
+      "label": "Watch for fake Hex emails",
+      "text": "Because email addresses may have been exposed, hex.pm says to be careful with emails that claim to come from Hex, check that their links lead to hex.pm, and forward suspicious ones to security@hex.pm.",
+      "cite": [
+        1
+      ]
+    },
+    {
+      "label": "Ash users: update to 3.38.0",
+      "text": "While investigating, hex.pm found that Ash's keyset pagination accepted crafted structs in client-supplied cursors, which could lead to command execution or SQL injection (CVE-2026-124283). It affects ash 3.31.3 up to, but not including, 3.38.0, released 24 Nov 2026. A related record, CVE-2026-133555, covers the db_connection struct used in the chain; it says it's not exploitable in db_connection alone and is fixed in 2.10.3, which hex.pm's post still listed as hardening work in progress.",
+      "cite": [
+        1,
+        5,
+        6
+      ]
+    },
+    {
+      "label": "Self-hosting the hexpm server",
+      "text": "The flaw is in the open-source hexpm server. If you run your own copy, every build from commit ab1bbce up to the fix is affected; update to a build that includes commit 379b0a2.",
+      "cite": [
+        2,
+        8
+      ]
+    }
+  ],
+  "versions_skip": "hex.pm is a hosted service that its team fixed on its side on 23 Nov 2026. The new Hex client release it promises has no version or date announced yet.",
+  "sources": [
+    {
+      "title": "hex.pm: security incident post, timeline, what may have been read, what users should do, the Ash bug",
+      "url": "https://hex.pm/blog/security-incident-on-hexpm",
+      "date": "24 Nov"
+    },
+    {
+      "title": "CVE record: CVE-2026-129514, assigned by the EEF, unauthenticated, exploited against hex.pm on 23 Nov, affected hexpm commits",
+      "url": "https://www.cve.org/CVERecord?id=CVE-2026-129514",
+      "date": "24 Nov"
+    },
+    {
+      "title": "GitHub advisory GHSA-9pmm-hf4r-27pg: the attack chain, the fix, environment holds the registry signing key",
+      "url": "https://github.com/hexpm/hexpm/security/advisories/GHSA-9pmm-hf4r-27pg",
+      "date": "24 Nov"
+    },
+    {
+      "title": "CISA KEV catalog: CVE-2026-129514 not listed (catalog version 2026.11.24)",
+      "url": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog"
+    },
+    {
+      "title": "CVE record: CVE-2026-124283, Ash keyset pagination cursors, affects 3.31.3 to before 3.38.0",
+      "url": "https://www.cve.org/CVERecord?id=CVE-2026-124283",
+      "date": "24 Nov"
+    },
+    {
+      "title": "CVE record: CVE-2026-133555, db_connection stream structs, not exploitable alone, fixed in 2.10.3",
+      "url": "https://www.cve.org/CVERecord?id=CVE-2026-133555",
+      "date": "24 Nov"
+    },
+    {
+      "title": "GitHub: Hex client releases, newest is v2.7.0 from 6 Nov",
+      "url": "https://github.com/hexpm/hex/releases"
+    },
+    {
+      "title": "GitHub: hexpm fix commit 379b0a2, refuse structs in Erlang term request bodies",
+      "url": "https://github.com/hexpm/hexpm/commit/379b0a29bcc95164249f38ad7d772a37a8ff9533",
+      "date": "23 Nov"
+    }
+  ],
+  "changes": [
+    {
+      "date": "2026-11-25",
+      "text": "Published."
+    }
+  ],
+  "orgs": [
+    {
+      "name": "Hex (hex.pm), the package manager for the Erlang ecosystem",
+      "url": "https://hex.pm/"
+    }
+  ]
+}
