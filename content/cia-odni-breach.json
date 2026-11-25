@@ -1,0 +1,194 @@
+{
+  "slug": "cia-odni-breach",
+  "kind": "incident",
+  "name": "CIA/ODNI breach",
+  "aliases": [
+    "cia",
+    "odni",
+    "office of the director of national intelligence",
+    "osint",
+    "open-source intelligence",
+    "us intelligence",
+    "breach",
+    "hack",
+    "unclassified"
+  ],
+  "cves": [],
+  "product": "CIA and ODNI",
+  "disclosed": "2026-11-24",
+  "updated": "2026-11-25",
+  "verdict": "watch",
+  "tile_line": "Intelligence analysis system breached. Entry unknown.",
+  "tldr": "Attackers breached an unclassified system the CIA and the Office of the Director of National Intelligence (ODNI) use for open-source intelligence, reported on 24 Nov 2026. No one has said how they got in; no product or CVE is named, so nothing to patch.",
+  "summary": "The New York Times broke it, citing US officials and people familiar with the matter; it says the system pulls in public material, social media, satellite imagery and bought data, and that information at other federal agencies was likely exposed too. A source told CyberScoop it \"did not involve our classified networks or classified information\", but said there was a disruption, which an ODNI representative denies. The CIA declined to comment.",
+  "incident": {
+    "checks": {
+      "confirmed": {
+        "state": "part",
+        "cite": [
+          1,
+          4
+        ]
+      },
+      "taken": {
+        "state": "part",
+        "cite": [
+          2
+        ]
+      },
+      "reach": {
+        "state": "part",
+        "cite": [
+          2
+        ]
+      },
+      "entry": {
+        "state": "no",
+        "cite": [
+          1,
+          2
+        ]
+      },
+      "contained": {
+        "state": "part",
+        "cite": [
+          1,
+          4
+        ]
+      }
+    }
+  },
+  "root_cause": {
+    "tags": [
+      "unknown"
+    ],
+    "text": "Not disclosed. Investigators haven't said who did it or what data was taken, and no report says how they got in.",
+    "cite": [
+      2
+    ]
+  },
+  "timeline": [
+    {
+      "date": "2026-11-24",
+      "who": "press",
+      "text": "The New York Times reports the breach of an unclassified open-source intelligence analysis system used by the CIA and the ODNI, citing US officials and people familiar with the matter, and says it likely exposed information at other federal agencies.",
+      "cite": [
+        2
+      ]
+    },
+    {
+      "date": "2026-11-24",
+      "who": "anonymous",
+      "text": "A source tells CyberScoop there was a disruption but the exposure was limited: \"no other systems are currently at risk.\"",
+      "cite": [
+        1
+      ]
+    },
+    {
+      "date": "2026-11-24",
+      "who": "record",
+      "text": "The CIA declines to comment.",
+      "cite": [
+        1,
+        2,
+        4
+      ]
+    },
+    {
+      "date": "2026-11-24",
+      "who": "official",
+      "text": "An ODNI representative says \"there have been no disruptions to critical capabilities or classified systems\", which conflicts with CyberScoop's source, who said there was a disruption.",
+      "cite": [
+        4,
+        1
+      ]
+    },
+    {
+      "date": "2026-11-24",
+      "who": "anonymous",
+      "text": "Bloomberg, citing a person familiar with the incident, says the system doesn't handle classified information and the technical issue has been resolved.",
+      "cite": [
+        4
+      ]
+    }
+  ],
+  "status": {
+    "exploit": "none",
+    "attacks": "seen",
+    "kev": null,
+    "scare": 2.5
+  },
+  "status_cite": {
+    "attacks": [
+      1,
+      2
+    ],
+    "exploit": [
+      1,
+      2
+    ],
+    "kev": [
+      3
+    ]
+  },
+  "do": [
+    {
+      "label": "Nothing to clean up yet",
+      "text": "No product, vendor or bug has been linked to this breach, so there's no update to install and no setting to change. All three reports list it among other recent federal incidents, but none says they're connected.",
+      "cite": [
+        1,
+        2,
+        4
+      ]
+    },
+    {
+      "label": "What would change this",
+      "text": "We'll update this page, and link the right vulnerability page, if officials or researchers name how the attackers got in, a product or CVE, or who did it. We'll check again by 1 Dec 2026.",
+      "cite": [
+        1,
+        2
+      ],
+      "pending": {
+        "expected": "2026-12-01"
+      }
+    }
+  ],
+  "versions_skip": "No product, vendor or fix has been named.",
+  "sources": [
+    {
+      "title": "CyberScoop: confirms the breach of an open-source intelligence analysis system; source says no classified networks; CIA declined to comment",
+      "url": "https://cyberscoop.com/cia-odni-osint-data-breach/",
+      "date": "24 Nov"
+    },
+    {
+      "title": "Anadolu Agency: summarises the New York Times report, other federal agencies likely exposed, no attribution or data named",
+      "url": "https://www.aa.com.tr/en/americas/cybersecurity-breach-exposes-unclassified-data-at-cia-us-intelligence-office-report/4136479",
+      "date": "25 Nov"
+    },
+    {
+      "title": "CISA KEV catalog: no CVE named, so nothing listed",
+      "url": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog"
+    },
+    {
+      "title": "Investing.com: summarises the NYT and Bloomberg; an ODNI representative says no disruptions to critical capabilities or classified systems; Bloomberg's source says the issue is resolved",
+      "url": "https://www.investing.com/news/economy-news/hackers-breach-unclassified-cia-and-odni-intelligence-system-reports-say-5049305",
+      "date": "24 Nov"
+    }
+  ],
+  "changes": [
+    {
+      "date": "2026-11-25",
+      "text": "Published."
+    }
+  ],
+  "orgs": [
+    {
+      "name": "Central Intelligence Agency (CIA)",
+      "url": "https://www.cia.gov/"
+    },
+    {
+      "name": "Office of the Director of National Intelligence (ODNI)",
+      "url": "https://www.dni.gov/"
+    }
+  ]
+}

@@ -12,6 +12,7 @@ tldrcve.com explains the vulnerabilities people are talking about in plain Engli
 | `build.py` | Builds the static site into `site/`, plus files for agents: `/llms.txt`, `/<slug>.json`, `/versions/<product>.json` and the `/api/cves.json` index. Python standard library only |
 | `assets/` | `site.css`, `site.js`, and `og/` (link-preview images) |
 | `versions/<product>.json` | Latest safe version per product line, shared by every page that embeds it. Edit once, every page updates |
+| `/incidents/` | The Incidents list, built from pages with `"kind": "incident"`. They are left out of All CVEs, but its search finds them |
 | `calendar.json` | Scheduled release and patch days (Patch Tuesday, Chrome, Firefox, Oracle, PHP…), each with a source that states the date or the rule, and a `note`: one line on whose schedule it is and what it means for readers ("Google's scheduled stable release day. Chrome updates itself; relaunch it to finish."). Mark unannounced dates `"expected": true` |
 | `weeks/<yyyy>-w<nn>.json` | One file per weekly review (`week`, optional `intro`). The rest of `/week/…` is built from the data: new pages, changes, safe releases and the next 30 days (calendar, pending fixes, CISA deadlines). On the Monday after a week ends, freeze it with `python3 build.py --freeze-week YYYY-Www` so its page stops changing; the build prints a reminder |
 | `watch/<id>.json` | Vulnerabilities we evaluated but haven't written a page for, with the facts, sources, what would change our mind, and a recheck date |
@@ -67,6 +68,12 @@ Copy the shape of an existing file (`content/nginx2root.json` is a good model).
 | Field | What it is |
 |---|---|
 | `slug` | URL path, kebab-case |
+| `kind` | Optional: `vulnerability` (default) or `incident`. An incident already happened to someone (a vendor-side compromise, a breach). Its page shows an "Incident" badge instead of a patch verdict, "How bad is it?" with the incident meter, "Were you hit?" only when there's something readers can check, and "Clean up" instead of "What to do". Incidents are listed under Incidents, not All CVEs. See How we rate |
+| `incident` | Incidents only: `checks`, each of `confirmed`, `taken`, `reach`, `entry`, `contained` as `{"state": "yes" \| "part" \| "no", "cite": [...]}`. They set the "How bad is it?" checklist and must agree with `status.scare` (Minor, Notable, Serious, Severe). `entry` also gives the badge's "Entry point known / named / unknown" |
+| `orgs` | Optional: the organisations a page is about, spelled out and linked: `[{"name": "Office of the Director of National Intelligence (ODNI)", "url": "https://www.dni.gov/"}]`. Shown at the top of the page; use it on every incident |
+| `related` | Optional: slugs of our own pages to link under "Clean up" (or "What to do"), for example the CVE page an incident is tied to |
+| `root_cause` | Incidents only: `tags` (one or more of `vendor-flaw`, `supply-chain`, `known-bug`, `zero-day`, `stolen-login`, `misconfig`, `unknown`), optional `text` and `cite`. |
+| `timeline` | Optional, mainly for incidents: "What's confirmed", `date`, `text`, `cite` and `who`: `record` (on the record), `official` (unnamed official), `anonymous` (anonymous source) or `press` (press report only). Label every line by who says it |
 | `name` | Display name or nickname, **≤ 18 chars** (one line on every card) |
 | `aliases` | Lowercase search terms: products, nicknames, related CVE IDs |
 | `cves` | CVE IDs; `[]` if none assigned yet |
@@ -87,13 +94,13 @@ Copy the shape of an existing file (`content/nginx2root.json` is a good model).
 | `status.no_login` | Optional `true`/`false`; leave out when it depends |
 | `status.needs` | Required when `no_login` is `false`: exactly what access the attacker needs |
 | `status.scare` | 0-4: 0-1 Shrug, 1-2 Keep an eye on it, 2-3 Check today, 3-4 Drop everything |
-| `affected[]` | Conditions that must **all** be true: `label`, `text`, optional `cmd`, `cite` |
+| `affected[]` | Conditions that must **all** be true: `label`, `text`, optional `cmd`, `cite`. Optional on incidents: leave it out when readers have nothing to check |
 | `do[]` | Steps: `label`, `text`, optional `cmd`, `cite`, optional `pending: {"expected": "YYYY-MM-DD"}`, optional `versions: ["php"]` to show that product's latest safe versions in the step |
 | `fixed_in` | Optional: first fixed version per product line, e.g. `{"php": {"8.5": "8.5.13"}}`. Keys match `versions/<product>.json`. Leave it out when there is no fix |
 | `versions_skip` | Optional: why the page has no Safe versions product, e.g. fixes exist only as distro packages. Every other page must be tied to one: `fixed_in` when a fix is released, or an `unfixed` entry in `versions/<product>.json` while it's pending |
 | `bugs` | Optional, makes the page a release roundup: one entry per advisory with `cve`, `project`, `severity`, `url`; critical and high ones also get `title`, `text`, `verdict` and optional `page` (slug of the bug's own page, which then links back). Leave a bug's CVE out of `cves` when it has its own page |
 | `sources[]` | `title` ("Publisher: what it supports"), `url`, optional `date`. `cite` numbers are 1-based indexes into this list |
-| `changes[]` | `date` and `text`, newest first; the last entry is "Published." One entry per page per day: add to today's entry rather than starting a second one. Every entry becomes an RSS/JSON Feed item ("What changed" plus the current TL;DR) and moves the page up in "Latest", **unless** it has `"minor": true`. Leave `minor` off when the verdict or scare level changes, exploit, attack or KEV status changes, a fix is released or the advice changes, who is affected changes, or it corrects something a reader could have acted on. Set it for wording, sources, aliases and rechecks that changed nothing |
+| `changes[]` | `date` and `text`, newest first; the last entry is "Published." One entry per page per day: add to today's entry rather than starting a second one. Every entry becomes an RSS/JSON Feed item ("What changed" plus the current TL;DR; CVE pages in `/feed.xml`, incidents in `/incidents/feed.xml`, both in `/all/feed.xml`) and moves the page up in "Latest", **unless** it has `"minor": true`. Leave `minor` off when the verdict or scare level changes, exploit, attack or KEV status changes, a fix is released or the advice changes, who is affected changes, or it corrects something a reader could have acted on. Set it for wording, sources, aliases and rechecks that changed nothing |
 
 ### Card, TL;DR and More details
 

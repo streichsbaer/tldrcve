@@ -68,9 +68,9 @@ def header(right):
 
 
 def page_card(c):
-    fg, bg = VERDICT_COLORS[c["verdict"]]
+    fg, bg = ("#5b3fa0", "#ece6f8") if build.is_incident(c) else VERDICT_COLORS[c["verdict"]]
     scare = c["status"]["scare"]
-    label, _ = build.zone(scare)
+    label, _ = build.zone_for(c)
     filled = next((i + 1 for i, (limit, _, _) in enumerate(build.ZONES) if scare < limit), len(build.ZONES))
     meter = "".join(f'<i style="background:{METER[i] if i < filled else "#fff"}"></i>' for i in range(4))
     if c.get("bugs"):  # a release roundup: count every bug instead of listing IDs
@@ -80,7 +80,7 @@ def page_card(c):
     return f"""{header("tldrcve.com/" + c["slug"])}
 <div class="main"><div class="ids">{html.escape(ids)}</div><h1>{html.escape(c["name"])}</h1>
 <p class="line">{html.escape(c["tile_line"])}</p></div>
-<div class="bottom"><span class="verdict" style="color:{fg};background:{bg}">{html.escape(build.VERDICTS[c["verdict"]])}</span>
+<div class="bottom"><span class="verdict" style="color:{fg};background:{bg}">{html.escape(build.badge_text(c))}</span>
 <span class="meter">{meter}</span><span class="zone">{html.escape(label)}</span></div>"""
 
 

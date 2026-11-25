@@ -31,12 +31,65 @@ EXPLOIT_LABELS = {"public": ("yes", "Public exploit code is out"), "demonstrated
                   "none": ("no", "No public exploit")}
 ATTACK_LABELS = {"seen": ("yes", "Attacks seen in the wild"), "none": ("no", "No attacks seen yet")}
 
+# Page kinds. A vulnerability page asks "am I exposed, what do I patch?"; an incident page asks "was I hit, what do I
+# clean up?" for something that already happened to someone (a vendor-side compromise, a breach).
+KINDS = ("vulnerability", "incident")
+# What sets an incident's place on the meter. Each page gives a state (yes, part, no) and a cite for every check.
+INCIDENT_CHECKS = [
+    ("confirmed", {"yes": "Confirmed on the record", "part": "Confirmed only by unnamed sources", "no": "Not confirmed"}),
+    ("taken", {"yes": "Data, money or secrets taken", "part": "Data exposed; what was taken is unclear", "no": "Nothing reported taken"}),
+    ("reach", {"yes": "Reached other organisations or the public", "part": "May have reached others", "no": "Limited to one organisation"}),
+    ("entry", {"yes": "How they got in is known", "part": "Entry point named, details missing", "no": "How they got in is unknown"}),
+    ("contained", {"yes": "Attackers shut out", "part": "Partly contained", "no": "Not contained"}),
+]
+ENTRY_TAGS = {"yes": "Entry point known", "part": "Entry point named", "no": "Entry point unknown"}
+INCIDENT_CHECK_HELP = {
+    "confirmed": "A named person, the victim, the vendor or an official body says it happened. Partly: only unnamed sources.",
+    "taken": "A source says data, money or secrets were taken, not just exposed. Partly: exposed, but what was taken is unclear.",
+    "reach": "It reached other organisations, their customers or the public. Partly: sources say others may be hit.",
+    "entry": "How the attackers got in is known. Partly: a flaw or route is named, but not explained.",
+    "contained": "The way in is closed and the attackers are out. Partly: closed, but stolen secrets still work or sources disagree.",
+}
+WHO_HELP = {
+    "record": "A named person or organisation said it publicly.",
+    "official": "An official spoke for an agency or company, without a name.",
+    "anonymous": "A reporter's unnamed source.",
+    "press": "Only the news report says it.",
+}
+ROOT_CAUSE_HELP = {
+    "vendor-flaw": "A bug in a provider's own service, which only the provider could fix.",
+    "supply-chain": "Victims got the attack through a trusted third party's code or service.",
+    "known-bug": "A bug that already had a patch, left unpatched.",
+    "zero-day": "A bug attacked before any patch existed.",
+    "stolen-login": "A stolen, guessed or reused password, key or token.",
+    "misconfig": "A setting that left the door open.",
+    "unknown": "Nobody has said yet.",
+}
+ROOT_CAUSES = {
+    "vendor-flaw": "Flaw in the provider's own service",
+    "supply-chain": "Supply chain: a trusted third party served it",
+    "known-bug": "Known bug, patch was available",
+    "zero-day": "Zero-day: no patch existed",
+    "stolen-login": "Stolen or guessed login",
+    "misconfig": "Misconfiguration",
+    "unknown": "Not disclosed yet",
+}
+WHO_LABELS = {"record": "On the record", "official": "Unnamed official", "anonymous": "Anonymous source",
+              "press": "Press report"}
+
 # Scare-o-meter zones, 0–4.
 ZONES = [
     (1, "Shrug", "Real, but not worth losing sleep over."),
     (2, "Keep an eye on it", "Patch on schedule. Watch for news."),
     (3, "Check today", "Find out if you're affected. If you are, patch."),
     (4.01, "Drop everything", "Attackers are already on it. Patch now."),
+]
+# Incident pages use the same meter, read as "how bad is it?" instead of "how fast should I patch?".
+INCIDENT_ZONES = [
+    (1, "Minor", "Contained, little or nothing taken."),
+    (2, "Notable", "One organisation hit. Limited data, or still unconfirmed."),
+    (3, "Serious", "Sensitive data exposed, others may be hit, or still unexplained."),
+    (4.01, "Severe", "Wide reach, money or secrets taken, or still open."),
 ]
 METER_COLORS = ["var(--m1)", "var(--m2)", "var(--m3)", "var(--m4)"]
 
@@ -82,11 +135,17 @@ def nice_date(iso: str) -> str:
     return f"{d.day} {d.strftime('%b')}"
 
 
-def zone(scare: float):
-    for limit, label, hint in ZONES:
+def zone(scare: float, zones: list = None):
+    zones = zones or ZONES
+    for limit, label, hint in zones:
         if scare < limit:
             return label, hint
-    return ZONES[-1][1], ZONES[-1][2]
+    return zones[-1][1], zones[-1][2]
+
+
+def zone_for(c: dict):
+    """The meter's label for a page: patch urgency, or for incidents how bad it is."""
+    return zone(c["status"]["scare"], INCIDENT_ZONES if c.get("kind") == "incident" else ZONES)
 
 
 def product_full(c: dict) -> str:
@@ -127,7 +186,7 @@ def page(title: str, description: str, body: str, current: str = "", path: str =
     description = plain(description)
     seo = social_tags(title, description, path)
     data_link = f'\n  <link rel="alternate" type="application/json" title="This page as JSON" href="{data}">' if data else ""
-    cur = {k: ' aria-current="page"' if k == current else "" for k in ("cves", "versions", "week", "how")}
+    cur = {k: ' aria-current="page"' if k == current else "" for k in ("cves", "incidents", "versions", "week", "how")}
     return f"""<!doctype html>
 <html lang="en" class="no-js">
 <head>
@@ -140,8 +199,7 @@ def page(title: str, description: str, body: str, current: str = "", path: str =
   <link rel="icon" href="/favicon.ico" sizes="16x16 32x32 48x48">
   <link rel="icon" href="/assets/icons/icon.svg" type="image/svg+xml">
   <link rel="apple-touch-icon" href="/assets/icons/apple-touch-icon.png">
-  <link rel="alternate" type="application/rss+xml" title="tldrcve updates" href="/feed.xml">
-  <link rel="alternate" type="application/feed+json" title="tldrcve updates (JSON Feed)" href="/feed.json">{data_link}
+{FEED_LINKS}{data_link}
   <link rel="stylesheet" href="{fingerprinted("site.css")}">
   <script src="{fingerprinted("site.js")}" defer></script>
 {ANALYTICS}
@@ -152,6 +210,7 @@ def page(title: str, description: str, body: str, current: str = "", path: str =
       <a class="wordmark" href="/" aria-label="tldrcve home"><span class="wordmark__tldr">tl;dr</span><span class="wordmark__cve">CVE</span></a>
       <nav class="site-nav" aria-label="Main">
         <a href="/cves/"{cur["cves"]}>All CVEs</a>
+        <a href="/incidents/"{cur["incidents"]}>Incidents</a>
         <a href="/versions/"{cur["versions"]}>Safe versions</a>
         <a href="/week/"{cur["week"]}>Weekly</a>
         <a href="/how-we-rate/"{cur["how"]}>How we rate</a>
@@ -161,7 +220,7 @@ def page(title: str, description: str, body: str, current: str = "", path: str =
 {body}
   <footer class="site-footer">
     <div class="wrap">
-      <p class="follow">Follow <a href="https://x.com/{X_HANDLE}">@{X_HANDLE}</a> on X for live updates, or subscribe to the <a href="/feed.xml">RSS feed</a>.</p>
+      <p class="follow">Follow <a href="https://x.com/{X_HANDLE}">@{X_HANDLE}</a> on X for live updates, or subscribe by RSS: <a href="/feed.xml">CVEs</a>, <a href="/incidents/feed.xml">incidents</a> or <a href="/all/feed.xml">both</a>.</p>
       <p>Every claim is sourced. Wrong or out of date? <a href="{REPO_URL}">Fix it on GitHub</a> or tell us on X. Made by <a href="https://x.com/{AUTHOR_HANDLE}">@{AUTHOR_HANDLE}</a>.</p>
     </div>
   </footer>
@@ -177,7 +236,7 @@ def _xy(r: float, deg: float):
     return 100 + r * math.cos(a), 100 - r * math.sin(a)
 
 
-def gauge(scare: float) -> str:
+def gauge(scare: float, zones: list = None) -> str:
     r = 78
     arcs = []
     for i, color in enumerate(METER_COLORS):
@@ -185,7 +244,7 @@ def gauge(scare: float) -> str:
         x1, y1 = _xy(r, 180 - 45 * (i + 1) + 1.5)
         arcs.append(f'<path d="M {x0:.2f} {y0:.2f} A {r} {r} 0 0 1 {x1:.2f} {y1:.2f}" stroke="{color}"/>')
     nx, ny = _xy(64, 180 - 45 * max(0.0, min(4.0, scare)))
-    label, hint = zone(scare)
+    label, hint = zone(scare, zones)
     return f"""<div class="meter">
           <svg class="meter__svg" viewBox="0 0 200 112" role="img" aria-label="Scare-o-meter: {label}">
             <g fill="none" stroke-width="20">{"".join(arcs)}</g>
@@ -211,6 +270,17 @@ def mini_meter(scare: float) -> str:
 def checklist(c: dict) -> str:
     s = c["status"]
     rows = []  # (key, state, text); state: yes | part | no
+    if c.get("kind") == "incident":
+        checks = c["incident"]["checks"]
+        cites = {k: v.get("cite", []) for k, v in checks.items()}
+        for key, words in INCIDENT_CHECKS:
+            st = checks[key]["state"]
+            rows.append((key, st, words[st]))
+        kev = s.get("kev")
+        if kev:
+            rows.append(("kev", "yes", f"Its bug is on CISA's exploited list (since {nice_date(kev['added'])})"))
+            cites["kev"] = c.get("status_cite", {}).get("kev", [])
+        return checklist_html(rows, cites)
 
     if "no_login" in s:
         rows.append(("no_login",) + (("yes", "Works without logging in") if s["no_login"]
@@ -227,7 +297,10 @@ def checklist(c: dict) -> str:
     else:
         rows.append(("kev", "no", "Not on CISA's exploited list"))
 
-    cites = c.get("status_cite", {})
+    return checklist_html(rows, c.get("status_cite", {}))
+
+
+def checklist_html(rows: list, cites: dict) -> str:
     marks = {"yes": "✓", "part": "~", "no": ""}
     words = {"yes": "Yes", "part": "Partly", "no": "No"}
     items = "\n".join(
@@ -270,8 +343,58 @@ def cve_paren(c: dict) -> str:
     return f" ({ids})" if ids else ""
 
 
+def is_incident(c: dict) -> bool:
+    return c.get("kind") == "incident"
+
+
+def badge(c: dict, lg: bool = False) -> str:
+    """The verdict badge, or "Incident" plus its entry-point status for incident pages."""
+    size = " verdict--lg" if lg else ""
+    if is_incident(c):
+        entry = c.get("incident", {}).get("checks", {}).get("entry", {}).get("state")
+        tag = entry_tag(entry) if entry and lg else ""
+        return f'<span class="verdict verdict--incident{size}">Incident</span>{tag}'
+    return f'<span class="verdict verdict--{c["verdict"]}{size}">{VERDICTS[c["verdict"]]}</span>'
+
+
+def badge_text(c: dict) -> str:
+    return "Incident" if is_incident(c) else VERDICTS[c["verdict"]]
+
+
+def timeline_pane(c: dict) -> str:
+    """Incidents: what's confirmed so far, each line dated and labelled by who says it."""
+    items = c.get("timeline") or []
+    if not items:
+        return ""
+    rows = "\n".join(
+        f'        <li><time datetime="{e["date"]}">{nice_date(e["date"])}</time><span>'
+        f'<span class="who who--{e["who"]}">{WHO_LABELS[e["who"]]}</span> {text(e["text"])}{cite_marks(e)}</span></li>'
+        for e in items)
+    return f"""    <section class="pane" aria-labelledby="h-timeline">
+      <div class="pane__head"><h2 id="h-timeline">What's confirmed</h2></div>
+      <div class="pane__body"><ul class="changes timeline">
+{rows}
+      </ul></div>
+    </section>
+"""
+
+
+def root_cause_pane(c: dict) -> str:
+    rc = c.get("root_cause")
+    if not rc:
+        return ""
+    chips = "".join(f'<span class="tag tag--soft">{ROOT_CAUSES[t]}</span>' for t in rc["tags"])
+    body = f'<p>{text(rc["text"])}{cite_marks(rc)}</p>' if rc.get("text") else ""
+    return f"""    <section class="pane" aria-labelledby="h-root">
+      <div class="pane__head"><h2 id="h-root">Root cause</h2></div>
+      <div class="pane__body"><p class="chips">{chips}</p>{body}</div>
+    </section>
+"""
+
+
 SEVERITY_ORDER = ("critical", "high", "medium", "low")
 ROUNDUP_OF = {}  # bug page slug -> the release roundup that lists it; filled in main()
+PAGES = {}  # slug -> page; filled in main()
 ROUNDUP_TAG = '<span class="tag">Roundup</span>'
 
 
@@ -363,7 +486,7 @@ def toolbar(c: dict) -> str:
     x = f"https://x.com/intent/post?text={post}&url={quote(url, safe='')}"
     li = f"https://www.linkedin.com/sharing/share-offsite/?url={quote(url, safe='')}"
     return f"""    <div class="toolbar">
-      <a class="back" href="/cves/">{ICONS["back"]}All CVEs</a>
+      <a class="back" href="{"/incidents/" if is_incident(c) else "/cves/"}">{ICONS["back"]}{"Incidents" if is_incident(c) else "All CVEs"}</a>
       <div class="share" role="group" aria-label="Share">
         <button class="icon-btn" type="button" data-copy="tldr-text" aria-label="Copy TL;DR and link" data-tip="Copy TL;DR">{ICONS["copy"]}</button>
         <button class="icon-btn" type="button" data-copy-link="{html.escape(url)}" aria-label="Copy link" data-tip="Copy link">{ICONS["link"]}</button>
@@ -416,44 +539,54 @@ def brief(c: dict) -> str:
         f'        <li><time datetime="{ch["date"]}">{nice_date(ch["date"])}</time><span>{text(ch["text"])}</span></li>'
         for ch in c["changes"]
     )
+    inc = is_incident(c)
+    kick = html.escape(" · ".join(kicker))
+    if c.get("orgs"):  # who it is about, spelled out and linked
+        orgs = " and ".join(f'<a href="{html.escape(o["url"])}">{html.escape(o["name"])}</a>' for o in c["orgs"])
+        kick = orgs + (" · " + html.escape(" · ".join(kicker[1:])) if kicker[1:] else "")
+    affected = "" if not c.get("affected") else f"""    <section class="pane" aria-labelledby="h-affected" data-folds>
+      <div class="pane__head">
+        <h2 id="h-affected">{"Were you hit?" if inc else "Are you affected?"} <span class="pane__sub">only if <strong>all</strong> are true</span></h2>
+        <button class="link-btn" type="button" data-expand-all>Expand all</button>
+      </div>
+{fold_items(c["affected"])}
+    </section>
+
+"""
+    related = ""
+    if c.get("related"):
+        links = ", ".join(f'<a href="/{r}/">{html.escape(PAGES[r]["name"])}</a>' for r in c["related"])
+        related = f'\n      <p class="related">Related on tldrcve: {links}</p>'
     body = f"""  <main class="wrap brief">
 {toolbar(c)}
 
     <header class="brief-head">
-      <p class="kicker">{html.escape(" · ".join(kicker))}</p>
+      <p class="kicker">{kick}</p>
       <h1>{html.escape(c["name"])}</h1>
-      <p class="verdict-line"><span class="verdict verdict--{v} verdict--lg">{VERDICTS[v]}</span>{roundup_tag(c)}<span>{text(c["tile_line"])}</span></p>
+      <p class="verdict-line">{badge(c, lg=True)}{roundup_tag(c)}<span>{text(c["tile_line"])}</span></p>
 {part_of(c)}
     </header>
 
 {tldr_pane(c)}
 
     <section class="pane" aria-labelledby="h-scare">
-      <div class="pane__head"><h2 id="h-scare">How scary is it?</h2><span class="pane__meta">updated {nice_date(c["updated"])}</span></div>
+      <div class="pane__head"><h2 id="h-scare">{"How bad is it?" if inc else "How scary is it?"}</h2><span class="pane__meta">updated {nice_date(c["updated"])}</span></div>
       <div class="scare">
         {checklist(c)}
-        {gauge(s["scare"])}
+        {gauge(s["scare"], INCIDENT_ZONES if inc else None)}
       </div>
     </section>
 
-{bug_list(c)}
-    <section class="pane" aria-labelledby="h-affected" data-folds>
+{timeline_pane(c)}{root_cause_pane(c)}{bug_list(c)}
+{affected}    <section class="pane" aria-labelledby="h-do" data-folds>
       <div class="pane__head">
-        <h2 id="h-affected">Are you affected? <span class="pane__sub">only if <strong>all</strong> are true</span></h2>
+        <h2 id="h-do">{"Clean up" if inc else "What to do"}</h2>
         <button class="link-btn" type="button" data-expand-all>Expand all</button>
-      </div>
-{fold_items(c["affected"])}
-    </section>
-
-    <section class="pane" aria-labelledby="h-do" data-folds>
-      <div class="pane__head">
-        <h2 id="h-do">What to do</h2>
-        <button class="link-btn" type="button" data-expand-all>Expand all</button>
-      </div>
+      </div>{related}
 {fold_items(c["do"])}
     </section>
 
-    <p class="disclaimer">This page shows you how to check. It can't tell you you're safe.</p>
+    <p class="disclaimer">{"This page shows what's known so far. It can't tell you you weren't hit." if is_incident(c) else "This page shows you how to check. It can't tell you you're safe."}</p>
     <details class="sources-fold" id="sources">
       <summary>Sources ({len(c["sources"])}) and changelog</summary>
       <ol class="sources">
@@ -922,15 +1055,15 @@ def tile(c: dict, attrs: str = "", when: str = "") -> str:
           <span class="tile__meta"><span class="tile__product">{html.escape(product_short(c))}</span><span>· {when}</span></span>
           <span class="tile__name">{html.escape(c["name"])}</span>
           <span class="tile__line">{text(c["tile_line"])}</span>
-          <span class="tile__foot"><span class="verdict verdict--{v}">{VERDICTS[v]}</span>{roundup_tag(c)}{mini_meter(c["status"]["scare"])}</span>
+          <span class="tile__foot">{badge(c)}{roundup_tag(c)}{mini_meter(c["status"]["scare"])}</span>
         </a>
       </li>"""
 
 
-def zones_list() -> str:
+def zones_list(zones: list = None) -> str:
     rows = "\n".join(
         f'        <li>{mini_meter(i + 0.5)}<strong>{label}</strong><span>{hint}</span></li>'
-        for i, (_, label, hint) in enumerate(ZONES)
+        for i, (_, label, hint) in enumerate(zones or ZONES)
     )
     return f'      <ul class="zones">\n{rows}\n      </ul>'
 
@@ -971,13 +1104,15 @@ def home(all_c: list) -> str:
 # ---------- All CVEs ----------
 
 def cves_page(all_c: list) -> str:
-    ordered = sorted(all_c, key=lambda c: c["status"]["scare"], reverse=True)
+    vulns = [c for c in all_c if not is_incident(c)]  # incidents have their own list,
+    incs = [c for c in all_c if is_incident(c)]       # but a search here finds them too
+    ordered = sorted(vulns, key=lambda c: c["status"]["scare"], reverse=True) + incs
     rows = []
     for c in ordered:
         v = c["verdict"]
         search = " ".join([c["name"], product_full(c), *c["cves"], *c.get("ghsa", []), *c.get("aliases", [])]).lower()
         rows.append(
-            f"""      <li class="row" data-search="{html.escape(search)}" data-scare="{c["status"]["scare"]}" data-disclosed="{c["disclosed"]}">
+            f"""      <li class="row{" row--incident" if is_incident(c) else ""}" data-search="{html.escape(search)}" data-scare="{c["status"]["scare"]}" data-disclosed="{c["disclosed"]}"{' data-incident="1" hidden' if is_incident(c) else ""}>
         <a href="/{c["slug"]}/">
           <span class="row__meter">{mini_meter(c["status"]["scare"])}</span>
           <span class="row__main">
@@ -985,7 +1120,7 @@ def cves_page(all_c: list) -> str:
             <span class="row__meta">{html.escape(product_short(c))} · {html.escape(cve_list(c) or "No CVE yet")}</span>
           </span>
           <span class="row__line">{text(c["tile_line"])}</span>
-          <span class="row__verdict"><span class="verdict verdict--{v}">{VERDICTS[v]}</span>{roundup_tag(c)}</span>
+          <span class="row__verdict">{badge(c)}{roundup_tag(c)}</span>
           <time class="row__date" datetime="{c["disclosed"]}">{nice_date(c["disclosed"])}</time>
         </a>
       </li>"""
@@ -993,7 +1128,7 @@ def cves_page(all_c: list) -> str:
     body = f"""  <main class="wrap list-page" data-list>
     <header class="page-head">
       <h1>All CVEs</h1>
-      <p>{len(all_c)} vulnerabilities people are actually asking about. Nothing else.</p>
+      <p>{len(vulns)} vulnerabilities people are actually asking about. Nothing else. Attacks that already happened are under <a href="/incidents/">Incidents</a>.</p>
     </header>
 
     <div class="controls">
@@ -1029,20 +1164,101 @@ def cves_page(all_c: list) -> str:
                 body, current="cves", path="/cves/")
 
 
+# ---------- Incidents ----------
+
+def incidents_page(all_c: list) -> str:
+    incs = sorted((c for c in all_c if is_incident(c)), key=lambda c: c["status"]["scare"], reverse=True)
+    rows = []
+    for c in incs:
+        when, verb = last_change(c)
+        entry = entry_tag(c["incident"]["checks"]["entry"]["state"])
+        search = " ".join([c["name"], product_full(c), *(o["name"] for o in c.get("orgs", [])), *c["cves"],
+                           *c.get("aliases", [])]).lower()
+        rows.append(f"""      <li class="row" data-search="{html.escape(search)}" data-scare="{c["status"]["scare"]}" data-disclosed="{when}">
+        <a href="/{c["slug"]}/">
+          <span class="row__meter">{mini_meter(c["status"]["scare"])}</span>
+          <span class="row__main">
+            <span class="row__name">{html.escape(c["name"])}</span>
+            <span class="row__meta">{html.escape(product_short(c))} · {html.escape(cve_list(c) or "No CVE")}</span>
+          </span>
+          <span class="row__line">{text(c["tile_line"])}</span>
+          <span class="row__verdict">{entry}</span>
+          <time class="row__date" datetime="{when}">{verb} {nice_date(when)}</time>
+        </a>
+      </li>""")
+    body = f"""  <main class="wrap list-page" data-list>
+    <header class="page-head">
+      <h1>Incidents</h1>
+      <p>Attacks that already happened. <a href="/how-we-rate/#incidents">How we rate them</a>.</p>
+    </header>
+
+    <div class="controls">
+      <div class="search search--inline" role="search">
+        <label for="list-q" class="visually-hidden">Filter</label>
+        {SEARCH_ICON}
+        <input id="list-q" type="search" placeholder="Filter by organisation, product or CVE" autocomplete="off" data-list-filter>
+      </div>
+      <div class="seg" role="group" aria-label="Sort by">
+        <button type="button" data-sort="scare" aria-pressed="true">Most severe</button>
+        <button type="button" data-sort="recent" aria-pressed="false">Most recent</button>
+      </div>
+      <div class="seg" role="group" aria-label="Updated">
+        <button type="button" data-days="7" aria-pressed="false">7 days</button>
+        <button type="button" data-days="30" aria-pressed="false">30 days</button>
+        <button type="button" data-days="90" aria-pressed="false">90 days</button>
+        <button type="button" data-days="" aria-pressed="true">All time</button>
+      </div>
+    </div>
+
+    <div class="pane list list--incidents">
+      <div class="list__head" aria-hidden="true">
+        <span>Impact</span><span>Incident</span><span>In short</span><span>How they got in</span><span>Last change</span>
+      </div>
+      <ol class="rows">
+{chr(10).join(rows)}
+      </ol>
+      <p class="list__empty" hidden>No incidents match. Try a wider date range, or a different search.</p>
+    </div>
+  </main>
+"""
+    return page("Incidents · tldrcve", "Attacks that already happened: what's confirmed, how bad it is, and what to clean up.",
+                body, current="incidents", path="/incidents/")
+
+
 # ---------- How we rate ----------
 
+def entry_tag(state: str) -> str:
+    return f'<span class="tag tag--entry tag--entry-{state}">{ENTRY_TAGS[state]}</span>'
+
+
 def how_page() -> str:
+    who = "\n".join(f'        <dt><span class="who who--{k}">{v}</span></dt><dd>{WHO_HELP[k]}</dd>' for k, v in WHO_LABELS.items())
+    causes = "\n".join(f'        <dt>{v}</dt><dd>{ROOT_CAUSE_HELP[k]}</dd>' for k, v in ROOT_CAUSES.items())
+    checks = "\n".join(f'        <dt>{words["yes"]}</dt><dd>{INCIDENT_CHECK_HELP[key]}</dd>' for key, words in INCIDENT_CHECKS)
     body = f"""  <main class="wrap prose-page">
     <header class="page-head">
       <h1>How we rate</h1>
-      <p>Every page answers three questions:<br>How scary is it, are you affected, and what should you do.</p>
+      <p>We rate CVEs and incidents differently. Pick one:</p>
+      <div class="seg tabs" role="tablist" aria-label="Page kind" data-tabs>
+        <button type="button" role="tab" data-tab="cves" aria-pressed="true">CVEs</button>
+        <button type="button" role="tab" data-tab="incidents" aria-pressed="false">Incidents</button>
+      </div>
     </header>
+
+    <div class="tabpanel" data-tabpanel="cves" id="cves">
+    <section class="pane">
+      <div class="pane__head"><h2>CVEs</h2></div>
+      <div class="pane__body intro">
+        <p>We cover the CVEs people are talking about, especially the ones attackers are already using. Each page tells you straight away how scary it is and what to do, then how to check whether you're affected and, if you are, how to fix it.</p>
+        <p>Listed under <a href="/cves/">All CVEs</a>.</p>
+      </div>
+    </section>
 
     <section class="pane">
       <div class="pane__head"><h2>The scare-o-meter</h2></div>
 {zones_list()}
       <div class="pane__body">
-        <p>What moves the needle, biggest first:<br><strong>Attacks seen in the wild</strong>, a listing on <strong>CISA's exploited list</strong>, <strong>public exploit code</strong>, whether it <strong>works without logging in</strong>, and <strong>how common</strong> the affected setup is.<br>A scary CVSS score on its own doesn't move it.</p>
+        <p>What moves the needle, biggest first: <strong>attacks seen in the wild</strong>, a listing on <strong>CISA's exploited list</strong>, <strong>public exploit code</strong>, whether it <strong>works without logging in</strong>, and <strong>how common</strong> the affected setup is. A scary CVSS score on its own doesn't move it.</p>
       </div>
     </section>
 
@@ -1066,6 +1282,58 @@ def how_page() -> str:
         <dt>On CISA's exploited list</dt><dd>Listed in CISA's <a href="https://www.cisa.gov/known-exploited-vulnerabilities-catalog">Known Exploited Vulnerabilities</a> catalog. The fix-by date is CISA's deadline for US federal civilian agencies, which is a good default for everyone else.</dd>
       </dl>
     </section>
+    </div>
+
+    <div class="tabpanel" data-tabpanel="incidents" id="incidents">
+    <section class="pane">
+      <div class="pane__head"><h2>Incidents</h2></div>
+      <div class="pane__body intro">
+        <p>An incident is an attack that already happened to someone, often at a provider you rely on, so there may be nothing for you to patch. We tell you what happened, how bad it is and who says so, then whether you were hit and what to clean up. Instead of a patch verdict, an incident carries an <span class="verdict verdict--incident">Incident</span> badge.</p>
+        <p>Listed under <a href="/incidents/">Incidents</a>.</p>
+      </div>
+    </section>
+
+    <section class="pane">
+      <div class="pane__head"><h2>The scare-o-meter</h2></div>
+      <div class="pane__body"><p>The same meter, but it answers "how bad is it?" instead of "how fast should I patch?":</p></div>
+{zones_list(INCIDENT_ZONES)}
+      <div class="pane__body">
+        <p>It's set by the checklist below. A famous name on its own doesn't move it.</p>
+      </div>
+    </section>
+
+    <section class="pane">
+      <div class="pane__head"><h2>The checklist</h2></div>
+      <div class="pane__body"><p>Each line is a yes, a partly or a no, with a source.</p></div>
+      <dl class="defs">
+{checks}
+      </dl>
+    </section>
+
+    <section class="pane">
+      <div class="pane__head"><h2>How they got in</h2></div>
+      <dl class="defs">
+        <dt>{entry_tag("yes")}</dt><dd>The victim, vendor or investigators have said how the attackers got in.</dd>
+        <dt>{entry_tag("part")}</dt><dd>A flaw or route is named, but not explained.</dd>
+        <dt>{entry_tag("no")}</dt><dd>Nobody has said how they got in. Treat any theory as a guess.</dd>
+      </dl>
+    </section>
+
+    <section class="pane">
+      <div class="pane__head"><h2>What's confirmed: who says it</h2></div>
+      <div class="pane__body"><p>Every line in an incident's timeline is labelled by its source:</p></div>
+      <dl class="defs">
+{who}
+      </dl>
+    </section>
+
+    <section class="pane">
+      <div class="pane__head"><h2>Root causes</h2></div>
+      <dl class="defs">
+{causes}
+      </dl>
+    </section>
+    </div>
 
     <section class="pane">
       <div class="pane__head"><h2>House rules</h2></div>
@@ -1073,13 +1341,13 @@ def how_page() -> str:
         <li><strong>Every claim has a source.</strong> Click the little numbers.</li>
         <li><strong>Every change is logged.</strong> Facts move fast in the first days. Each page has a changelog.</li>
         <li><strong>We show you how to check.</strong> We never tell you you're safe.</li>
-        <li><strong>We skip the noise.</strong> We only cover the CVEs people are actually asking about.</li>
+        <li><strong>We skip the noise.</strong> We only cover the CVEs and incidents people are actually asking about.</li>
         <li><strong>We get things wrong sometimes.</strong> Tell us on X (<a href="https://x.com/{X_HANDLE}">@{X_HANDLE}</a>) and we'll fix it, in the open.</li>
       </ul>
     </section>
   </main>
 """
-    return page("How we rate · tldrcve", "How tldrcve decides how scary a CVE is, and what each label means.",
+    return page("How we rate · tldrcve", "How tldrcve rates CVEs and incidents, and what each label means.",
                 body, current="how", path="/how-we-rate/")
 
 
@@ -1157,6 +1425,23 @@ def editor_checks(all_c: list) -> list:
                 yield from strings(v, f"{path}[{i}]")
 
     for c in all_c:
+        if c.get("kind", "vulnerability") not in KINDS:
+            warnings.append(f'{c["slug"]}: kind must be one of {", ".join(KINDS)}')
+        if is_incident(c):
+            checks = c.get("incident", {}).get("checks", {})
+            for key, _ in INCIDENT_CHECKS:
+                ch = checks.get(key, {})
+                if ch.get("state") not in ("yes", "part", "no") or not ch.get("cite"):
+                    warnings.append(f'{c["slug"]}: incident.checks.{key} needs a state (yes, part, no) and a cite')
+            tags = c.get("root_cause", {}).get("tags", [])
+            if not tags or any(t not in ROOT_CAUSES for t in tags):
+                warnings.append(f'{c["slug"]}: incidents need root_cause.tags from {", ".join(ROOT_CAUSES)}')
+        for r in c.get("related", []):
+            if r not in PAGES:
+                warnings.append(f'{c["slug"]}: related page "{r}" does not exist')
+        for i, e in enumerate(c.get("timeline", [])):
+            if e.get("who") not in WHO_LABELS:
+                warnings.append(f'{c["slug"]}.timeline[{i}]: who must be one of {", ".join(WHO_LABELS)}')
         if len(c["tldr"]) > TLDR_MAX:
             warnings.append(f'{c["slug"]}.tldr is {len(c["tldr"])} chars, keep it to {TLDR_MAX} so the X post with its link fits 280')
         if len(product_short(c)) > PRODUCT_MAX:
@@ -1260,7 +1545,8 @@ def social_tags(title: str, description: str, path: str) -> str:
 
 def write_sitemap(all_c: list) -> None:
     newest = max(c["updated"] for c in all_c)
-    urls = [("/", newest), ("/cves/", newest), ("/versions/", newest), ("/how-we-rate/", newest)]
+    urls = [("/", newest), ("/cves/", newest), ("/incidents/", newest), ("/versions/", newest),
+            ("/how-we-rate/", newest)]
     urls += [(f"/versions/{pid}/", v["checked"]) for pid, v in sorted(VERSIONS.items())]
     urls += [(f'/{c["slug"]}/', c["updated"]) for c in sorted(all_c, key=lambda c: c["slug"])]
     if WEEKS:
@@ -1274,6 +1560,18 @@ def write_sitemap(all_c: list) -> None:
 
 FEED_ITEMS = 60
 FEED_ABOUT = "The vulnerabilities everyone's talking about, in plain English. New pages, and updates that change what you should know or do."
+# (path prefix, title, description, which pages, weekly reviews too). /feed.xml stays CVEs only, as it always was, so
+# existing subscribers don't start getting incidents they didn't sign up for.
+FEEDS = [
+    ("", "tldrcve: CVEs", FEED_ABOUT, lambda c: not is_incident(c), True),
+    ("/incidents", "tldrcve: incidents",
+     "Attacks that already happened, in plain English: how bad it is, who says so, and what to clean up. New pages, and updates that change what you should know or do.",
+     lambda c: is_incident(c), False),
+    ("/all", "tldrcve: CVEs and incidents", FEED_ABOUT + " Incidents included.", lambda c: True, True),
+]
+FEED_LINKS = "\n".join(
+    f'  <link rel="alternate" type="application/rss+xml" title="{t}" href="{p}/feed.xml">\n'
+    f'  <link rel="alternate" type="application/feed+json" title="{t} (JSON Feed)" href="{p}/feed.json">' for p, t, *_ in FEEDS)
 
 
 def item_image(url: str, size: int) -> str:
@@ -1296,8 +1594,8 @@ LEGACY_GUIDS = {
 }
 
 
-def feed_entries(all_c: list) -> list:
-    """One entry per changelog line across all pages (newest first), then one per weekly review. Shared by both feeds.
+def feed_entries(all_c: list, weeks: bool = True) -> list:
+    """One entry per changelog line across the given pages (newest first), then one per weekly review. Shared by RSS and JSON Feed.
     Entries marked "minor" (wording, sources, rechecks that changed nothing) stay on the page and out of the feeds."""
     changes = sorted(((ch["date"], -i, c, ch["text"]) for c in all_c for i, ch in enumerate(c["changes"]) if not ch.get("minor")),
                      key=lambda e: (e[0], e[1]), reverse=True)[:FEED_ITEMS]
@@ -1308,7 +1606,7 @@ def feed_entries(all_c: list) -> list:
         nth = sum(1 for ch in c["changes"][:-neg_i] if ch["date"] == d)
         new = t == "Published."
         s = c["status"]
-        tags = [("type", "New page" if new else "Update"), ("verdict", VERDICTS[c["verdict"]]),
+        tags = [("type", "New page" if new else "Update"), ("verdict", badge_text(c)),
                 ("scare", zone(s["scare"])[0]), ("exploit", EXPLOIT_LABELS[s["exploit"]][1]),
                 ("attacks", ATTACK_LABELS[s["attacks"]][1])]
         if s.get("kev"):
@@ -1319,10 +1617,10 @@ def feed_entries(all_c: list) -> list:
             "title": f'{"" if new else "Update: "}{c["name"]} ({cve_list(c) or "no CVE yet"})',
             # A new page: the TL;DR, then More details. An update: what changed, then where things stand now.
             "text": plain(f'{c["tldr"]}\n\n{c["summary"]}' if new else f'What changed: {t}\n\nNow: {c["tldr"]}'),
-            "html": (f'<p>{html.escape(plain(c["tldr"]))}</p><p>{html.escape(plain(c["summary"]))}</p>' if new else
-                     f'<p><strong>What changed:</strong> {html.escape(plain(t))}</p><p><strong>Now:</strong> {html.escape(plain(c["tldr"]))}</p>'),
+            "html": (f'<p>{html.escape(plain(c["tldr"]))}</p>\n<p>{html.escape(plain(c["summary"]))}</p>' if new else
+                     f'<p><strong>What changed:</strong> {html.escape(plain(t))}</p>\n<p><strong>Now:</strong> {html.escape(plain(c["tldr"]))}</p>'),
             "image": og_image(f'/{c["slug"]}/'), "tags": tags, "json": f'{SITE_URL}/{c["slug"]}.json'})
-    for wk in WEEKS:
+    for wk in WEEKS if weeks else []:
         w = wk["week"]
         d = week_data(w, all_c)
         out.append({
@@ -1335,11 +1633,20 @@ def feed_entries(all_c: list) -> list:
     return out
 
 
-def write_feed(all_c: list) -> None:
-    """RSS 2.0 at /feed.xml and JSON Feed 1.1 at /feed.json, with the same items."""
+def write_feeds(all_c: list) -> None:
+    """Every feed in FEEDS, each as RSS 2.0 (feed.xml) and JSON Feed 1.1 (feed.json). An item has the same ID in every
+    feed, so a reader subscribed to two of them shows it once."""
+    for prefix, title, about, keep, weeks in FEEDS:
+        write_feed([c for c in all_c if keep(c)], prefix, title, about, weeks)
+
+
+def write_feed(pages: list, prefix: str, title: str, about: str, weeks: bool) -> None:
+    """RSS 2.0 at <prefix>/feed.xml and JSON Feed 1.1 at <prefix>/feed.json, with the same items."""
     from email.utils import format_datetime
     from datetime import datetime, timezone
-    entries = feed_entries(all_c)
+    entries = feed_entries(pages, weeks)
+    out_dir = OUT / prefix.strip("/")
+    out_dir.mkdir(parents=True, exist_ok=True)
 
     def when(d):  # noon UTC on that day, but never later than the build itself (validators flag future dates)
         return min(datetime.fromisoformat(d).replace(hour=12, tzinfo=timezone.utc), datetime.now(timezone.utc).replace(microsecond=0))
@@ -1355,16 +1662,15 @@ def write_feed(all_c: list) -> None:
       <description>{html.escape(e["html"])}</description>
 {item_image(*e["image"])}
 {cats}
-      <atom:link rel="alternate" type="application/json" href="{e["json"]}"/>
     </item>""")
     newest = max((e["date"] for e in entries), default=date.today().isoformat())
-    (OUT / "feed.xml").write_text(f"""<?xml version="1.0" encoding="UTF-8"?>
+    (out_dir / "feed.xml").write_text(f"""<?xml version="1.0" encoding="UTF-8"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:media="http://search.yahoo.com/mrss/">
   <channel>
-    <title>tldrcve</title>
-    <link>{SITE_URL}/</link>
-    <atom:link href="{SITE_URL}/feed.xml" rel="self" type="application/rss+xml"/>
-    <description>{FEED_ABOUT}</description>
+    <title>{title}</title>
+    <link>{SITE_URL}{prefix}/</link>
+    <atom:link href="{SITE_URL}{prefix}/feed.xml" rel="self" type="application/rss+xml"/>
+    <description>{html.escape(about)}</description>
     <language>en</language>
     <lastBuildDate>{format_datetime(when(newest))}</lastBuildDate>
 {chr(10).join(items)}
@@ -1382,13 +1688,13 @@ def write_feed(all_c: list) -> None:
                 "exploit": s["exploit"], "attacks": s["attacks"], "kev": s.get("kev"), "no_login": s.get("no_login")}
 
     feed = {
-        "version": "https://jsonfeed.org/version/1.1", "title": "tldrcve", "home_page_url": f"{SITE_URL}/",
-        "feed_url": f"{SITE_URL}/feed.json", "description": FEED_ABOUT, "language": "en",
+        "version": "https://jsonfeed.org/version/1.1", "title": title, "home_page_url": f"{SITE_URL}{prefix}/",
+        "feed_url": f"{SITE_URL}{prefix}/feed.json", "description": about, "language": "en",
         "icon": f"{SITE_URL}/assets/icons/apple-touch-icon.png", "favicon": f"{SITE_URL}/assets/icons/icon-32.png",
         "items": [{"id": e["id"], "url": e["url"], "title": e["title"], "content_text": e["text"], "content_html": e["html"],
                    "image": e["image"][0], "date_published": when(e["date"]).isoformat(),
                    "tags": [v for _, v in e["tags"]], "_tldrcve": extra(e)} for e in entries]}
-    (OUT / "feed.json").write_text(json.dumps(feed, indent=2, ensure_ascii=False) + "\n")
+    (out_dir / "feed.json").write_text(json.dumps(feed, indent=2, ensure_ascii=False) + "\n")
 
 
 def write_redirects(all_c: list) -> None:
@@ -1431,7 +1737,7 @@ def page_data(c: dict) -> dict:
 def index_row(c: dict) -> dict:
     s = c["status"]
     row = {k: c[k] for k in ("slug", "name", "cves", "product", "verdict") if k in c}
-    row.update({"verdict_label": VERDICTS[c["verdict"]], "tile_line": c["tile_line"], "scare": s["scare"],
+    row.update({"kind": c.get("kind", "vulnerability"), "verdict_label": badge_text(c), "tile_line": c["tile_line"], "scare": s["scare"],
                 "scare_label": scare_label(s["scare"]), "exploit": s["exploit"], "attacks": s["attacks"],
                 "kev": s["kev"]})
     row.update({k: c[k] for k in ("tldr", "ghsa", "also_in") if c.get(k)})
@@ -1495,10 +1801,12 @@ def write_data(all_c: list) -> None:
         f"- [All pages as JSON]({SITE_URL}/api/cves.json): verdict, scare level, exploit, attacks and KEV status for every page, with links to each page's JSON",
         f"- Each page as JSON: add `.json` to the page path, e.g. {SITE_URL}/upload2shell.json",
         f"- Safe versions as JSON: {SITE_URL}/versions/<product>.json, e.g. {SITE_URL}/versions/ghostscript.json",
-        f"- [RSS feed]({SITE_URL}/feed.xml): new pages (TL;DR and details) and material updates (what changed, then the "
+        f"- RSS feeds: [CVEs]({SITE_URL}/feed.xml), [incidents]({SITE_URL}/incidents/feed.xml) and "
+        f"[both]({SITE_URL}/all/feed.xml). Each has new pages (TL;DR and details) and material updates (what changed, then the "
         "current TL;DR; wording and source fixes are left out), each with its preview image and categories "
-        "(type, verdict, scare, exploit, attacks, CISA KEV, product, CVE) for filtering",
-        f"- [JSON Feed]({SITE_URL}/feed.json): the same items as JSON Feed 1.1; `_tldrcve` on each item holds the raw "
+        "(type, verdict, scare, exploit, attacks, CISA KEV, product, CVE) for filtering; the CVE and combined feeds also "
+        "carry the weekly review",
+        f"- JSON Feed: the same items as JSON Feed 1.1 at feed.json next to each feed.xml; `_tldrcve` on each item holds the raw "
         "verdict, scare, exploit, attacks, KEV dates, product and CVEs, plus a link to the page's JSON",
         f"- [Weekly review]({SITE_URL}/week/): each week's new pages, changes and the dates coming up; JSON at /week/<yyyy>-w<nn>.json",
         "",
@@ -1580,6 +1888,7 @@ def freeze_week(w: str, all_c: list) -> None:
 
 def main() -> None:
     all_c = [json.loads(p.read_text()) for p in sorted(CONTENT.glob("*.json"))]
+    PAGES.update({c["slug"]: c for c in all_c})
     missing = [c["slug"] for c in all_c if not c.get("tldr")]
     if missing:
         sys.exit(f"every page needs a tldr (the TL;DR panel, meta description, feed item and X post): {', '.join(missing)}")
@@ -1621,6 +1930,7 @@ def main() -> None:
     write_fingerprinted()
     shutil.copyfile(ASSETS / "icons" / "favicon.ico", OUT / "favicon.ico")  # browsers ask for /favicon.ico
     pages = {"index.html": home(all_c), "cves/index.html": cves_page(all_c), "how-we-rate/index.html": how_page(),
+             "incidents/index.html": incidents_page(all_c),
              "404.html": not_found_page(), "versions/index.html": versions_index(all_c)}
     pages.update({f"versions/{pid}/index.html": versions_page(v, all_c) for pid, v in VERSIONS.items()})
     pages.update({f'{c["slug"]}/index.html': brief(c) for c in all_c})
@@ -1635,7 +1945,7 @@ def main() -> None:
     write_host_files(public)
     write_sitemap(all_c)
     write_redirects(all_c)
-    write_feed(all_c)
+    write_feeds(all_c)
     write_data(all_c)
     (OUT / "build.txt").write_text(os.environ.get("TLDRCVE_BUILD_ID", "local"))  # lets CI see when a deploy is live
     print(f"{'PUBLIC' if public else 'private (noindex)'} build:", end=" ")

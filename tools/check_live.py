@@ -103,7 +103,8 @@ def main():
         for tag in ('name="twitter:card" content="summary_large_image"', 'rel="icon"', 'rel="canonical"'):
             if tag not in html:
                 problems.append(f"{path}: missing {tag}")
-    for name in ("/favicon.ico", "/assets/icons/icon-32.png", "/assets/icons/apple-touch-icon.png", "/feed.xml", "/feed.json"):
+    for name in ("/favicon.ico", "/assets/icons/icon-32.png", "/assets/icons/apple-touch-icon.png",
+                 "/feed.xml", "/feed.json", "/incidents/feed.xml", "/incidents/feed.json", "/all/feed.xml", "/all/feed.json"):
         status, headers, _ = get(BASE + name)
         if status != 200:
             problems.append(f"{name}: HTTP {status}")

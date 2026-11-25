@@ -41,6 +41,20 @@
     folds.forEach(function (d) { d.addEventListener("toggle", sync); });
   });
 
+  // How we rate: CVE pages and incident pages as tabs (#incidents opens the second).
+  var tabs = document.querySelector("[data-tabs]");
+  if (tabs) {
+    var panels = document.querySelectorAll("[data-tabpanel]");
+    var show = function (name) {
+      tabs.querySelectorAll("[data-tab]").forEach(function (b) { b.setAttribute("aria-pressed", b.dataset.tab === name ? "true" : "false"); });
+      panels.forEach(function (p) { p.hidden = p.dataset.tabpanel !== name; });
+    };
+    tabs.querySelectorAll("[data-tab]").forEach(function (b) {
+      b.addEventListener("click", function () { show(b.dataset.tab); history.replaceState(null, "", "#" + b.dataset.tab); });
+    });
+    show(location.hash === "#incidents" ? "incidents" : "cves");
+  }
+
   // All CVEs: search, sort and release-date filter.
   var list = document.querySelector("[data-list]");
   if (list) {
@@ -64,7 +78,7 @@
       });
       var shown = 0;
       sorted.forEach(function (r) {
-        var hit = !state.q || r.dataset.search.indexOf(state.q) !== -1;
+        var hit = !state.q ? !r.dataset.incident : r.dataset.search.indexOf(state.q) !== -1;
         if (hit && state.days) {
           var age = (now - new Date(r.dataset.disclosed + "T00:00:00Z").getTime()) / 864e5;
           hit = age <= parseInt(state.days, 10);
