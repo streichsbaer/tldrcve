@@ -32,7 +32,7 @@
     "GHSA-cvg6-q922-q66p"
   ],
   "product": "Linux kernel",
-  "disclosed": "2026-10-26",
+  "disclosed": "2026-08-17",
   "news": "2026-11-25",
   "updated": "2026-11-26",
   "verdict": "if",
@@ -88,8 +88,8 @@
       ]
     },
     {
-      "label": "NFSv4.1 or 4.2 is on",
-      "text": "The overflow is in NFSv4.1 session handling; OpenSec and Red Hat both name servers offering NFSv4.1 or 4.2, and OpenSec says they're on by default. You meet this condition if the output shows `+4.1` or `+4.2`.",
+      "label": "NFSv4.1 or later is on",
+      "text": "The overflow is in NFSv4.1 session handling, and OpenSec and Red Hat both name servers offering NFSv4.1 or 4.2; OpenSec says they're on by default. In the output, `+4.1` or `+4.2` means this condition is met.",
       "cmd": "cat /proc/fs/nfsd/versions",
       "cite": [
         1,

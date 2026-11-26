@@ -42,13 +42,13 @@
       ]
     },
     {
-      "text": "Fixed in 6.12.117, 6.18.61, 7.3.2 and 7.4-rc1. The kernel's CVE team lists no fix for the 5.10, 5.15, 6.1 or 6.6 long-term kernels.",
+      "text": "Fixed in 6.12.117, 6.18.61, 7.3.2 and 7.4-rc1. On 23 Nov the kernel's CVE team listed no fix for the 5.10, 5.15, 6.1 or 6.6 long-term kernels; later that day it added 5.10.275, 5.15.226, 6.1.193 and 6.6.163.",
       "cite": [
         1
       ]
     },
     {
-      "text": "Sources disagree on severity: Red Hat rates it Critical (9.8, marked draft) with no fix yet, Ubuntu rates it Medium and still needs to evaluate it, and NVD hasn't scored it. Debian has fixed its 6.12 and newer kernels; Debian 12's default 6.1 kernel is still vulnerable.",
+      "text": "Sources disagree on severity: Red Hat rates it Critical (9.8, marked draft) with no fix yet, Ubuntu rated it Medium on 23 Nov and Critical by 25 Nov, and NVD hasn't scored it. Debian has fixed its 6.12 and newer kernels; Debian 12's default 6.1 kernel is still vulnerable.",
       "cite": [
         6,
         7,

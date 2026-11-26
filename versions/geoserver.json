@@ -16,7 +16,7 @@
       "key": "3.0",
       "latest": "3.0.2",
       "released": "2026-10-19",
-      "note": "Stable line."
+      "note": "Stable line. GeoServer announced 3.0.2 on 19 Oct 2026; its GitHub release is dated 17 Oct."
     },
     {
       "line": "2.28",
@@ -30,7 +30,7 @@
       "key": "2.27",
       "latest": "2.27.7",
       "released": "2026-10-19",
-      "note": "End-of-life. GeoServer made 2.27.7 for security fixes only and says to plan a move to 2.28 or 3.0."
+      "note": "End-of-life. GeoServer says 2.27.7 was issued to address an urgent bug or security vulnerability, to apply it as a mitigation only, and to plan a move to 2.28 or 3.0. Announced 19 Oct 2026; its GitHub release is dated 18 Oct."
     }
   ],
   "older": "GeoServer 2.26 and older are end-of-life and get no fixes: move to 3.0 or 2.28.",
@@ -50,6 +50,14 @@
     {
       "title": "GitHub: GeoServer 2.28.6 release, published 2 Nov 2026",
       "url": "https://github.com/geoserver/geoserver/releases/tag/2.28.6"
+    },
+    {
+      "title": "GitHub: GeoServer 3.0.2 release, published 17 Oct 2026",
+      "url": "https://github.com/geoserver/geoserver/releases/tag/3.0.2"
+    },
+    {
+      "title": "GitHub: GeoServer 2.27.7 release, published 18 Oct 2026",
+      "url": "https://github.com/geoserver/geoserver/releases/tag/2.27.7"
     },
     {
       "title": "GeoServer 2.27.7 release, announced 19 Oct 2026: 2.27 is end-of-life, apply as a mitigation only",
