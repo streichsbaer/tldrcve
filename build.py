@@ -527,7 +527,7 @@ def tldr_pane(c: dict) -> str:
 def brief(c: dict) -> str:
     v = c["verdict"]
     s = c["status"]
-    kicker = [product_full(c), *(c["cves"] if len(c["cves"]) <= 3 and not c.get("bugs") else ["Release roundup", cve_list(c)])]
+    kicker = [product_full(c), *(c["cves"] if len(c["cves"]) <= 3 and not c.get("bugs") else [*(["Release roundup"] if c.get("bugs") else []), cve_list(c)])]
     if s.get("aka"):
         kicker.append(f"aka {s['aka']}")
     sources = "\n".join(

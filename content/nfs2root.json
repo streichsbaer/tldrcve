@@ -1,0 +1,228 @@
+{
+  "slug": "nfs2root",
+  "name": "Nfs2root",
+  "aliases": [
+    "nfs2root",
+    "nfsd",
+    "nfs",
+    "nfs server",
+    "nfsv4",
+    "nfsv4.1",
+    "nfsv4.2",
+    "pnfs",
+    "port 2049",
+    "linux",
+    "linux kernel",
+    "kernel",
+    "ca_maxresponsesize_cached",
+    "nfsd4_sequence",
+    "sequence",
+    "remote root",
+    "pre-auth",
+    "heap overflow",
+    "opensec",
+    "antara",
+    "cve-2026-99362",
+    "ghsa-cvg6-q922-q66p"
+  ],
+  "cves": [
+    "CVE-2026-99362"
+  ],
+  "ghsa": [
+    "GHSA-cvg6-q922-q66p"
+  ],
+  "product": "Linux kernel",
+  "disclosed": "2026-10-26",
+  "news": "2026-11-25",
+  "updated": "2026-11-26",
+  "verdict": "if",
+  "tile_line": "Root, no login, on NFS servers open to untrusted hosts.",
+  "tldr": "A Linux kernel NFS server bug lets anyone who can reach port 2049 get root, no login needed. OpenSec showed it working but keeps its exploit private; no attacks seen. If you serve NFSv4.1 or 4.2 to untrusted hosts, firewall 2049 until you can update.",
+  "summary": "The client shrinks its session's reply cache to the minimum, then pads a request so the server copies 80 bytes into a zero-length buffer, 61 of them past the end of the kernel heap object and 40 chosen by the client; replaying the request returns 3.8 KB of kernel heap memory and the KASLR offset. Jérémy Jean of ANSSI sent the fix on 17 Aug and OpenSec's automated harness Antara found the bug on its own (reported 22 Sep); the fix reached the main kernel on 26 Oct and the first stable kernels on 6 Nov, but Ubuntu and Red Hat have no fix yet.",
+  "status": {
+    "exploit": "demonstrated",
+    "attacks": "none",
+    "kev": null,
+    "no_login": true,
+    "scare": 2.6
+  },
+  "status_cite": {
+    "exploit": [
+      1
+    ],
+    "attacks": [
+      1,
+      12
+    ],
+    "kev": [
+      12
+    ],
+    "no_login": [
+      1,
+      2
+    ]
+  },
+  "affected": [
+    {
+      "label": "Kernel 3.16 or later, unpatched",
+      "text": "The bug came in with kernel 3.16 (2014). Upstream fixed it in 5.10.275, 5.15.226, 6.1.193, 6.6.163, 6.12.117, 6.18.61, 7.3.2 and 7.4-rc1. Distro kernels backport fixes, so compare with your distro's version under Update.",
+      "cmd": "uname -r",
+      "cite": [
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        1
+      ]
+    },
+    {
+      "label": "The kernel NFS server runs",
+      "text": "Only machines that share files with the kernel's own NFS server (nfsd) are affected; Red Hat says systems that don't act as an NFS server aren't exposed, and default RHEL doesn't run or enable it. A line of output means nfsd is loaded.",
+      "cmd": "lsmod | grep -w nfsd",
+      "cite": [
+        1,
+        9
+      ]
+    },
+    {
+      "label": "NFSv4.1 or 4.2 is on",
+      "text": "The overflow is in NFSv4.1 session handling; OpenSec and Red Hat both name servers offering NFSv4.1 or 4.2, and OpenSec says they're on by default. You meet this condition if the output shows `+4.1` or `+4.2`.",
+      "cmd": "cat /proc/fs/nfsd/versions",
+      "cite": [
+        1,
+        2,
+        9
+      ]
+    },
+    {
+      "label": "Untrusted hosts reach 2049",
+      "text": "The attacker needs one TCP connection to port 2049, no login and no mounted share: OpenSec calls it pre-auth, and the kernel CVE team says the steps involved skip the export access checks. A listener on any address other than loopback counts, unless a firewall lets only trusted hosts in.",
+      "cmd": "ss -ltn 'sport = :2049'",
+      "cite": [
+        1,
+        2
+      ]
+    }
+  ],
+  "do": [
+    {
+      "label": "Update the kernel and reboot",
+      "text": "Fixed so far: Debian 13 in 6.12.117-1, and Debian 12's optional linux-6.12 kernel in 6.12.117-1~deb12u1. Debian 12's default 6.1 kernel is still listed as vulnerable, although upstream fixed 6.1 in 6.1.193 on 23 Nov. Ubuntu lists its main kernel as vulnerable on every release from 16.04 to 26.10, with fixes in progress for 26.04 (7.0.0-45.45) and 26.10 (7.3.0-12.13). Red Hat lists RHEL 6 to 10 as affected with no fix yet. On other distros, OpenSec's advice is to install the kernel update that lists CVE-2026-99362.",
+      "cite": [
+        11,
+        10,
+        9,
+        8,
+        2,
+        1
+      ],
+      "versions": [
+        "linux-kernel"
+      ]
+    },
+    {
+      "label": "Can't update yet? Close 2049",
+      "text": "Firewall TCP port 2049 so only trusted hosts, such as your storage network, reach the server; Red Hat's page has firewalld steps. If the machine doesn't need to share files, stop the server with Red Hat's `systemctl stop nfs-server` and `systemctl disable nfs-server`; stopping it ends active NFS sessions. Or, from OpenSec, turn off NFSv4.1 and 4.2 with these lines in /etc/nfs.conf, then restart nfs-server; this turns off pNFS and some 4.2 features.",
+      "cmd": "[nfsd]\nvers4.1=n\nvers4.2=n",
+      "cite": [
+        1,
+        9
+      ]
+    },
+    {
+      "label": "Scan and look for signs",
+      "text": "The free NFS tool anfs added a check on 22 Nov that tells a vulnerable server from a fixed one over the network without triggering the overflow. OpenSec says each attempt leaves kernel warnings from `nfsd4_check_resp_size`; also look for kernel oopses naming `nfsd4_`, `svc_` or `call_usermodehelper` functions, shells started by kernel workers, and bursts of short NFSv4.1 sessions from one address. The attack is valid NFS, so there is no network signature.",
+      "cite": [
+        13,
+        1
+      ]
+    },
+    {
+      "label": "Why it isn't Patch now",
+      "text": "It only matters where the kernel NFS server runs with NFSv4.1 or 4.2 and untrusted hosts can reach port 2049; machines that don't serve NFS aren't exposed. On servers that do, treat it as urgent: no login is needed and OpenSec built a root shell from it. OpenSec keeps its exploit private, we found no public exploit code or reports of attacks, and it isn't on CISA's list of exploited bugs. The ratings agree it's severe: the kernel CVE team gives 9.8, Red Hat Critical (a draft 9.8) and Ubuntu Critical. We'd change the verdict to Patch now if exploit code is published or attacks are reported.",
+      "cite": [
+        1,
+        2,
+        9,
+        10,
+        12
+      ]
+    }
+  ],
+  "fixed_in": {
+    "linux-kernel": {
+      "Debian 13": "6.12.117-1"
+    }
+  },
+  "sources": [
+    {
+      "title": "OpenSec: Nfs2root write-up, root shell video, exploit private, checks, stopgaps, signs",
+      "url": "https://opensec.in/blog/nfs2root-cve-2026-99362",
+      "date": "25 Nov"
+    },
+    {
+      "title": "CVE record (kernel CNA): CVE-2026-99362, since 3.16, fixed versions, 9.8 and its reasoning",
+      "url": "https://www.cve.org/CVERecord?id=CVE-2026-99362",
+      "date": "23 Nov"
+    },
+    {
+      "title": "Linux kernel (GitHub mirror): the fix by Jérémy Jean, written 17 Aug",
+      "url": "https://github.com/torvalds/linux/commit/35ff1a7a7e3835c3e974bc5c45d335897564ceae"
+    },
+    {
+      "title": "Linux kernel (GitHub mirror): nfsd-7.4 merge into the main kernel, with the fix",
+      "url": "https://github.com/torvalds/linux/commit/47439bb1635e8dd9245e876c2046b66a9b6f9400",
+      "date": "26 Oct"
+    },
+    {
+      "title": "kernel.org: 7.3.2 changelog, includes the fix",
+      "url": "https://cdn.kernel.org/pub/linux/kernel/v7.x/ChangeLog-7.3.2",
+      "date": "6 Nov"
+    },
+    {
+      "title": "kernel.org: 6.18.61 changelog, includes the fix",
+      "url": "https://cdn.kernel.org/pub/linux/kernel/v6.x/ChangeLog-6.18.61",
+      "date": "6 Nov"
+    },
+    {
+      "title": "kernel.org: 6.12.117 changelog, includes the fix",
+      "url": "https://cdn.kernel.org/pub/linux/kernel/v6.x/ChangeLog-6.12.117",
+      "date": "10 Nov"
+    },
+    {
+      "title": "kernel.org: 6.1.193 changelog, released 23 Nov, includes the fix",
+      "url": "https://cdn.kernel.org/pub/linux/kernel/v6.x/ChangeLog-6.1.193"
+    },
+    {
+      "title": "Red Hat: Critical, default RHEL doesn't run nfsd, RHEL 6 to 10 affected, no fix, mitigations",
+      "url": "https://access.redhat.com/security/cve/CVE-2026-99362"
+    },
+    {
+      "title": "Ubuntu: priority Critical, main kernel vulnerable, 26.04 and 26.10 fixes in progress",
+      "url": "https://ubuntu.com/security/CVE-2026-99362",
+      "date": "25 Nov"
+    },
+    {
+      "title": "Debian tracker: fixed in Debian 13 6.12.117-1 and linux-6.12 6.12.117-1~deb12u1, Debian 12's 6.1 vulnerable",
+      "url": "https://security-tracker.debian.org/tracker/CVE-2026-99362"
+    },
+    {
+      "title": "CISA KEV catalog: not listed",
+      "url": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog"
+    },
+    {
+      "title": "anfs (GitHub): CVE-2026-99362 check that doesn't trigger the overflow",
+      "url": "https://github.com/skelsec/anfs/commit/bedc3dd18c79604551b8ccf7196bba4fd2ab2e89",
+      "date": "22 Nov"
+    }
+  ],
+  "changes": [
+    {
+      "date": "2026-11-26",
+      "text": "Published."
+    }
+  ]
+}

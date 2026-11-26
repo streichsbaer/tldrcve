@@ -1,0 +1,265 @@
+{
+  "slug": "geoserver-chain",
+  "name": "GeoServer chain",
+  "aliases": [
+    "geoserver",
+    "geotools",
+    "osgeo",
+    "wfs",
+    "stored query",
+    "getfeaturebyid",
+    "x/wfs",
+    "xinclude",
+    "xml injection",
+    "remember-me",
+    "rememberme",
+    "hsqldb",
+    "jdbc",
+    "deserialization",
+    "sqlite",
+    "rce",
+    "remote code execution",
+    "pre-auth rce",
+    "geoserver-unauth-rce-poc",
+    "cve-2026-129244",
+    "cve-2026-129243",
+    "cve-2026-120705",
+    "cve-2026-129245",
+    "cve-2026-129242",
+    "cve-2026-120704",
+    "ghsa-4v26-c537-jvxc",
+    "ghsa-rv5g-g2r9-58rj",
+    "ghsa-39mw-5chv-jh47",
+    "ghsa-hgm3-wq4h-8vvq",
+    "ghsa-9wf2-fcgq-vxhq",
+    "ghsa-wc3v-48j7-xf57"
+  ],
+  "cves": [
+    "CVE-2026-129244",
+    "CVE-2026-129243",
+    "CVE-2026-120705",
+    "CVE-2026-129245",
+    "CVE-2026-129242",
+    "CVE-2026-120704"
+  ],
+  "ghsa": [
+    "GHSA-4v26-c537-jvxc",
+    "GHSA-rv5g-g2r9-58rj",
+    "GHSA-39mw-5chv-jh47",
+    "GHSA-hgm3-wq4h-8vvq",
+    "GHSA-9wf2-fcgq-vxhq",
+    "GHSA-wc3v-48j7-xf57"
+  ],
+  "product": "GeoServer",
+  "disclosed": "2026-11-23",
+  "news": "2026-11-25",
+  "updated": "2026-11-26",
+  "verdict": "now",
+  "tile_line": "Public exploit, no login, default setup. Probes seen.",
+  "tldr": "Five chained bugs let someone with no login run code on an unpatched GeoServer in its default setup. Exploit code is public and attackers are already probing servers. Update GeoServer now, or use GeoServer's workarounds until you can.",
+  "summary": "CryptoCat reported the chain on 2 Aug 2026: leak the data directory path (CVE-2026-129244), save a stored query without logging in through `service=x/WFS` (CVE-2026-129243), read the admin password digest and the remember-me key through XML injection (CVE-2026-120705), forge an admin cookie with that key, which ships as `geoserver` (CVE-2026-129245), and run commands through an uploaded database (CVE-2026-129242); Eye Security, which also found CVE-2026-120705 and counts over 3,000 GeoServer servers online, ends with a different admin bug instead (CVE-2026-120704). Sources disagree on what attackers are doing: watchTowr's post on X says its honeypots saw CVE-2026-120705 and CVE-2026-129243 used in error-based probes that create and invoke stored queries, while its FAQ says all five are exploited but its table marks only CVE-2026-129245; no source reports attackers running code yet. The Hacker News lists CVE-2026-120704 as the chain's last step; GeoServer says it's CVE-2026-129242.",
+  "status": {
+    "exploit": "public",
+    "attacks": "seen",
+    "kev": null,
+    "no_login": true,
+    "scare": 3.3
+  },
+  "status_cite": {
+    "no_login": [
+      1,
+      10,
+      11,
+      13
+    ],
+    "exploit": [
+      10
+    ],
+    "attacks": [
+      12,
+      13,
+      14,
+      11
+    ],
+    "kev": [
+      16
+    ]
+  },
+  "affected": [
+    {
+      "label": "GeoServer, not updated",
+      "text": "Affected: 2.27.6 and earlier, 2.28.0 to 2.28.5, and 3.0.0 to 3.0.1; 2.27.7, 2.28.6 and 3.0.2 are fixed. 2.26 and older are affected and have no fixed release. To see your version, log in to the web admin and open the About GeoServer page: Build Information lists it.",
+      "cite": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        19,
+        17,
+        15
+      ]
+    },
+    {
+      "label": "WFS and admin are reachable",
+      "text": "The attack starts with an anonymous WFS request and then acts as admin: CryptoCat lists network access to WFS and the REST API as the preconditions, and for Eye Security's last step (CVE-2026-120704) GeoServer's advice is to restrict both the web admin console and the REST API, so blocking REST alone doesn't rule you out. GeoServer's default rules limit creating stored queries to admins, which the `x/WFS` bug skips, and `rememberme` is one of the login filters GeoServer sets up by default. CryptoCat and Eye Security say their chains work on a default installation with no configuration changes; watchTowr agrees. The public exploit targets the stock `admin` account, which is enabled by default. The public exploit needs a Linux server; Eye Security says its route also works on Windows.",
+      "cite": [
+        3,
+        6,
+        10,
+        11,
+        13,
+        15,
+        18
+      ]
+    }
+  ],
+  "do": [
+    {
+      "label": "Update GeoServer",
+      "text": "3.0.2 (stable), 2.28.6 (maintenance) or 2.27.7. GeoServer announced all three on 19 Oct 2026, more than a month before the advisories went public on 23 Nov; the researcher dates 2.28.6 to 2 Nov. 2.27 is end-of-life: GeoServer says to apply 2.27.7 as a mitigation only and plan a move to 2.28 or 3.0. Fixed releases make a new random remember-me key each time they start, so remember-me cookies stop working after the update and after every restart; in a cluster, set `GEOSERVER_REMEMBERME_KEY` to the same long value on every node. If you suspect exposure, GeoServer says to change admin passwords.",
+      "cite": [
+        1,
+        7,
+        8,
+        9,
+        11,
+        13,
+        18
+      ],
+      "versions": [
+        "geoserver"
+      ]
+    },
+    {
+      "label": "If you can't update yet",
+      "text": "GeoServer's stopgaps: block requests whose `service` parameter contains `/`, in the query string or in the `service` attribute of an XML request, at a proxy in front of GeoServer; remove `rememberme` from the `web` filter chain (Security > Authentication); limit the REST API's `/rest/resource` and `/rest/security` endpoints to trusted networks; disable WFS if you don't need it; and don't install JDBC drivers you don't need, such as SQLite, which Eye Security's route relies on. Changing the remember-me key alone doesn't help, because the same file read reveals the new key.",
+      "cite": [
+        1,
+        2,
+        3,
+        4,
+        6
+      ]
+    },
+    {
+      "label": "Look for signs",
+      "text": "Check the data directory's `wfs/query` and `workspaces/*/wfs/query` folders for stored queries you didn't create; the probes watchTowr saw create stored queries. watchTowr also suggests looking for unexpected JDBC user or role services, recently uploaded database files in the data directory and admin sessions created through remember-me cookies. The public exploit deletes its stored query, JDBC service and staging folder when it's done, and Eye Security's route uses the built-in `GetFeatureById` stored query and creates none, so a clean result doesn't prove nothing happened. If you find signs, change admin passwords; we would also treat the server as taken over, since the exploit runs commands as the GeoServer process, which is root in the official Docker image it was tested on.",
+      "cite": [
+        1,
+        2,
+        3,
+        10,
+        12,
+        13,
+        15
+      ]
+    }
+  ],
+  "fixed_in": {
+    "geoserver": {
+      "3.0": "3.0.2",
+      "2.28": "2.28.6",
+      "2.27": "2.27.7"
+    }
+  },
+  "sources": [
+    {
+      "title": "GeoServer GHSA-hgm3-wq4h-8vvq: CVE-2026-129245, default remember-me key, the five-step chain, fixes and stopgap",
+      "url": "https://github.com/geoserver/geoserver/security/advisories/GHSA-hgm3-wq4h-8vvq",
+      "date": "23 Nov"
+    },
+    {
+      "title": "GeoServer GHSA-39mw-5chv-jh47: CVE-2026-120705, file read and SSRF with no login, CVSS 8.6",
+      "url": "https://github.com/geoserver/geoserver/security/advisories/GHSA-39mw-5chv-jh47",
+      "date": "23 Nov"
+    },
+    {
+      "title": "GeoServer GHSA-rv5g-g2r9-58rj: CVE-2026-129243, x/WFS skips service security, default stored query rule, proxy block",
+      "url": "https://github.com/geoserver/geoserver/security/advisories/GHSA-rv5g-g2r9-58rj",
+      "date": "23 Nov"
+    },
+    {
+      "title": "GeoServer GHSA-9wf2-fcgq-vxhq: CVE-2026-129242, admin code execution through JDBC user services",
+      "url": "https://github.com/geoserver/geoserver/security/advisories/GHSA-9wf2-fcgq-vxhq",
+      "date": "23 Nov"
+    },
+    {
+      "title": "GeoServer GHSA-4v26-c537-jvxc: CVE-2026-129244, data directory path disclosed",
+      "url": "https://github.com/geoserver/geoserver/security/advisories/GHSA-4v26-c537-jvxc",
+      "date": "23 Nov"
+    },
+    {
+      "title": "GeoServer GHSA-wc3v-48j7-xf57: CVE-2026-120704, admin code execution through SQLite JDBC extension loading",
+      "url": "https://github.com/geoserver/geoserver/security/advisories/GHSA-wc3v-48j7-xf57",
+      "date": "23 Nov"
+    },
+    {
+      "title": "GeoServer 3.0.2 release: security fixes, announced 19 Oct 2026",
+      "url": "https://geoserver.org/announcements/vulnerability/2026/10/19/geoserver-3-0-2-released.html",
+      "date": "19 Oct"
+    },
+    {
+      "title": "GeoServer 2.28.6 release: security fixes, announced 19 Oct 2026",
+      "url": "https://geoserver.org/announcements/vulnerability/2026/10/19/geoserver-2-28-6-released.html",
+      "date": "19 Oct"
+    },
+    {
+      "title": "GeoServer 2.27.7 release: 2.27 is end-of-life, apply as a mitigation only",
+      "url": "https://geoserver.org/announcements/vulnerability/2026/10/19/geoserver-2-27-7-released.html",
+      "date": "19 Oct"
+    },
+    {
+      "title": "CryptoCat: public proof of concept for the full chain, runs a command as root on the official 3.0.0 Docker image",
+      "url": "https://github.com/Crypto-Cat/geoserver-unauth-rce-poc",
+      "date": "23 Nov"
+    },
+    {
+      "title": "CryptoCat: write-up, preconditions, default install, timeline (2.28.6 on 2 Nov), watchTowr's report",
+      "url": "https://cryptocat.me/blog/research/analysis/geoserver_preauth_rce/",
+      "date": "25 Nov"
+    },
+    {
+      "title": "watchTowr on X: in-the-wild exploitation of CVE-2026-120705 and CVE-2026-129243 on its honeypots, error-based probes",
+      "url": "https://x.com/watchtowrcyber/status/2125547398021693623",
+      "date": "25 Nov"
+    },
+    {
+      "title": "watchTowr FAQ: \"exploitation attempts are already underway\", table marks only CVE-2026-129245 exploited, default install, checks",
+      "url": "https://watchtowr.com/intelligence/geoserver-cve-2026-129245-faq/",
+      "date": "25 Nov"
+    },
+    {
+      "title": "The Hacker News (copy on LavX News): two flaws exploited per watchTowr, chain lists CVE-2026-120704 as last step",
+      "url": "https://news.lavx.hu/article/hackers-exploit-two-geoserver-flaws-as-researchers-warn-of-unauthenticated-rce-chains",
+      "date": "25 Nov"
+    },
+    {
+      "title": "Eye Security: chain through CVE-2026-120704, default configuration, over 3,000 servers online, About page version check",
+      "url": "https://labs.eye.security/unauthenticated-remote-code-execution-vulnerability-in-geoserver/",
+      "date": "24 Nov"
+    },
+    {
+      "title": "CISA KEV catalog: not listed",
+      "url": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog"
+    },
+    {
+      "title": "GeoServer docs: About GeoServer page shows build information when logged in",
+      "url": "https://docs.geoserver.org/latest/en/user/webadmin/about/"
+    },
+    {
+      "title": "GeoServer docs: rememberme is a default login filter, GEOSERVER_REMEMBERME_KEY for clusters",
+      "url": "https://docs.geoserver.org/stable/en/user/security/webadmin/auth/"
+    },
+    {
+      "title": "GeoServer downloads: 3.0 stable, 2.28 maintenance, 2.27 and older archived",
+      "url": "https://geoserver.org/download/"
+    }
+  ],
+  "changes": [
+    {
+      "date": "2026-11-26",
+      "text": "Published."
+    }
+  ]
+}

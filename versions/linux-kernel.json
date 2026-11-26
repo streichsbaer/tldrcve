@@ -79,6 +79,13 @@
       "pages": [
         "noisytcp"
       ]
+    },
+    {
+      "line": "All lines except Debian 13",
+      "note": "Nfs2root (CVE-2026-99362) is fixed in Debian 13's 6.12.117-1 and Debian 12's optional linux-6.12 6.12.117-1~deb12u1. Debian 12's default 6.1 kernel, Ubuntu (fixes in progress for 26.04 and 26.10) and RHEL 6 to 10 have no fix yet.",
+      "pages": [
+        "nfs2root"
+      ]
     }
   ],
   "sources": [
@@ -145,6 +152,18 @@
     {
       "title": "Ubuntu: NoisyTCP (CVE-2026-99288) fixes in progress",
       "url": "https://ubuntu.com/security/CVE-2026-99288"
+    },
+    {
+      "title": "Debian tracker: Nfs2root (CVE-2026-99362) fixed in Debian 13 6.12.117-1, Debian 12's 6.1 vulnerable",
+      "url": "https://security-tracker.debian.org/tracker/CVE-2026-99362"
+    },
+    {
+      "title": "Ubuntu: Nfs2root (CVE-2026-99362) fixes in progress",
+      "url": "https://ubuntu.com/security/CVE-2026-99362"
+    },
+    {
+      "title": "Red Hat: Nfs2root (CVE-2026-99362) affected, no fix",
+      "url": "https://access.redhat.com/security/cve/CVE-2026-99362"
     }
   ]
 }

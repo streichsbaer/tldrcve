@@ -9,7 +9,8 @@
   ],
   "product": "Linux kernel",
   "evaluated": "2026-11-23",
-  "decision": "watch",
+  "decision": "page",
+  "page": "nfs2root",
   "recheck": "2026-11-30",
   "why": "Rated 9.8 by the kernel's own CVE team, but it only matters on machines running the kernel's NFS server where untrusted hosts can reach it. No public exploit, no reported attacks, not in CISA KEV, and distros disagree on severity.",
   "page_if": [
@@ -108,6 +109,10 @@
     }
   ],
   "history": [
+    {
+      "date": "2026-11-26",
+      "text": "Got a page: [Nfs2root](/nfs2root/). OpenSec's 25 Nov write-up shows a root shell from an unauthenticated client (exploit kept private). After our 23 Nov evaluation the CVE record added fixes for 5.10.275, 5.15.226, 6.1.193 and 6.6.163, and Ubuntu raised it to Critical. Still no public exploit, no reported attacks, not on KEV."
+    },
     {
       "date": "2026-11-23",
       "text": "Evaluated: watch, no page yet."
