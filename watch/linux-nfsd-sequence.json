@@ -48,12 +48,13 @@
       ]
     },
     {
-      "text": "Sources disagree on severity: Red Hat rates it Critical (9.8, marked draft) with no fix yet, Ubuntu rated it Medium on 23 Nov and Critical by 25 Nov, and NVD hasn't scored it. Debian has fixed its 6.12 and newer kernels; Debian 12's default 6.1 kernel is still vulnerable.",
+      "text": "Sources disagree on severity: Red Hat rates it Critical (9.8, marked draft) with no fix yet, Ubuntu's page showed Medium when we checked on 23 Nov, though its tracker had raised it to Critical on 20 Nov, and NVD hasn't scored it. Debian has fixed its 6.12 and newer kernels; Debian 12's default 6.1 kernel is still vulnerable.",
       "cite": [
         6,
         7,
         5,
-        8
+        8,
+        11
       ]
     },
     {
@@ -106,12 +107,17 @@
     {
       "title": "anfs: NFS tool with a SEQUENCE preflight check",
       "url": "https://github.com/skelsec/anfs"
+    },
+    {
+      "title": "Ubuntu CVE tracker: priority raised from medium to critical",
+      "url": "https://git.launchpad.net/ubuntu-cve-tracker/commit/?id=fc938cd285484537f5bbcda7413ffa46ea3f6958",
+      "date": "20 Nov"
     }
   ],
   "history": [
     {
       "date": "2026-11-26",
-      "text": "Got a page: [Nfs2root](/nfs2root/). OpenSec's 25 Nov write-up shows a root shell from an unauthenticated client (exploit kept private). After our 23 Nov evaluation the CVE record added fixes for 5.10.275, 5.15.226, 6.1.193 and 6.6.163, and Ubuntu raised it to Critical. Still no public exploit, no reported attacks, not on KEV."
+      "text": "Got a page: [Nfs2root](/nfs2root/). OpenSec's 25 Nov write-up shows a root shell from an unauthenticated client (exploit kept private). After our 23 Nov evaluation the CVE record added fixes for 5.10.275, 5.15.226, 6.1.193 and 6.6.163, and Ubuntu's page now shows Critical. Still no public exploit, no reported attacks, not on KEV."
     },
     {
       "date": "2026-11-23",

@@ -117,7 +117,7 @@
   "do": [
     {
       "label": "Update GeoServer",
-      "text": "3.0.2 (stable), 2.28.6 (maintenance) or 2.27.7. GeoServer announced all three on 19 Oct 2026, more than a month before the advisories went public on 23 Nov; the researcher dates 2.28.6 to 2 Nov. 2.27 is end-of-life: GeoServer says to apply 2.27.7 as a mitigation only and plan a move to 2.28 or 3.0. Fixed releases make a new random remember-me key each time they start, so remember-me cookies stop working after the update and after every restart; in a cluster, set `GEOSERVER_REMEMBERME_KEY` to the same long value on every node. If you suspect exposure, GeoServer says to change admin passwords.",
+      "text": "3.0.2 (stable), 2.28.6 (maintenance) or 2.27.7. GeoServer announced all three on 19 Oct 2026, more than a month before the advisories went public on 23 Nov; the researcher dates 2.28.6 to 2 Nov. 2.27 is end-of-life: GeoServer says to apply 2.27.7 as a mitigation only and plan a move to 2.28 or 3.0. Unless `GEOSERVER_REMEMBERME_KEY` is set, fixed releases make a new random remember-me key each time they start, so remember-me cookies stop working after the update and after every restart. In a cluster, set it to the same long value on every node; then that key is used and restarts don't change it. If you suspect exposure, GeoServer says to change admin passwords.",
       "cite": [
         1,
         7,
@@ -125,7 +125,8 @@
         9,
         11,
         13,
-        18
+        18,
+        20
       ],
       "versions": [
         "geoserver"
@@ -254,6 +255,10 @@
     {
       "title": "GeoServer downloads: 3.0 stable, 2.28 maintenance, 2.27 and older archived",
       "url": "https://geoserver.org/download/"
+    },
+    {
+      "title": "GeoServer PR 10008: remember-me key from GEOSERVER_REMEMBERME_KEY when set, otherwise random per run",
+      "url": "https://github.com/geoserver/geoserver/pull/10008"
     }
   ],
   "changes": [

@@ -110,7 +110,7 @@
   "do": [
     {
       "label": "Update the kernel and reboot",
-      "text": "Fixed so far: Debian 13 in 6.12.117-1, and Debian 12's optional linux-6.12 kernel in 6.12.117-1~deb12u1. Debian 12's default 6.1 kernel is still listed as vulnerable, although upstream fixed 6.1 in 6.1.193 on 23 Nov. Ubuntu lists its main kernel as vulnerable on every release from 16.04 to 26.10, with fixes in progress for 26.04 (7.0.0-45.45) and 26.10 (7.3.0-12.13). Red Hat lists RHEL 6 to 10 as affected with no fix yet. On other distros, OpenSec's advice is to install the kernel update that lists CVE-2026-99362.",
+      "text": "Fixed so far: Debian 13 in 6.12.117-1, and Debian 12's optional linux-6.12 kernel in 6.12.117-1~deb12u1. Debian 12's default 6.1 kernel is still listed as vulnerable, although upstream fixed 6.1 in 6.1.193 on 23 Nov. Ubuntu lists its main kernel as vulnerable on every release from 16.04 to 26.10, with fixes in progress for 26.04 (7.0.0-45.45) and 26.10 (7.3.0-12.13); Ubuntu gives no date for them. Red Hat lists RHEL 6 to 10 as affected with no fix yet. On other distros, OpenSec's advice is to install the kernel update that lists CVE-2026-99362.",
       "cite": [
         11,
         10,
