@@ -1,0 +1,194 @@
+{
+  "slug": "juniper-ssr-conductor",
+  "name": "Juniper Conductor",
+  "aliases": [
+    "juniper",
+    "hpe",
+    "session smart",
+    "session smart conductor",
+    "session smart router",
+    "ssr",
+    "128t",
+    "sd-wan",
+    "conductor",
+    "automatedprovisioner",
+    "salt",
+    "salt minion",
+    "command injection",
+    "root",
+    "jsa112183",
+    "cve-2026-103406"
+  ],
+  "cves": [
+    "CVE-2026-103406"
+  ],
+  "product": "Juniper SSR Conductor",
+  "disclosed": "2026-10-28",
+  "news": "2026-11-25",
+  "updated": "2026-11-26",
+  "verdict": "now",
+  "tile_line": "Exploited, no login, runs as root. In CISA KEV.",
+  "tldr": "A bug in Juniper's Session Smart Conductor, which manages its Session Smart routers, lets someone with no login run commands as root. Juniper has a report of it being exploited, and it's in CISA KEV. Update the Conductor now.",
+  "summary": "Juniper found it in its own testing, shipped fixes in August and September 2026 and disclosed it on 28 Oct with 17 other Session Smart bugs; on 24 Nov it added that at least one case of exploitation had been reported to it, without saying by whom or how. The bug is in the Conductor's AutomatedProvisioner and is triggered by a crafted salt minion ID; routers talk to the Conductor's salt master on 4505 and 4506/TCP, but Juniper doesn't say the attack comes in that way. We found no public exploit.",
+  "status": {
+    "exploit": "none",
+    "attacks": "seen",
+    "kev": {
+      "added": "2026-11-25",
+      "due": "2026-11-28"
+    },
+    "no_login": true,
+    "scare": 3.2
+  },
+  "status_cite": {
+    "no_login": [
+      1,
+      3
+    ],
+    "exploit": [
+      1,
+      3
+    ],
+    "attacks": [
+      1,
+      2,
+      3
+    ],
+    "kev": [
+      2
+    ]
+  },
+  "affected": [
+    {
+      "label": "You run a Session Smart Conductor",
+      "text": "The CVE record and the bulletin's entry for this bug name only the Conductor. Sources disagree on routers: the bulletin's header says these issues affect all versions of both Session Smart Router and Conductor, and CISA's KEV entry names both. Routers need the same update anyway: the bulletin fixes 17 other bugs, among them CVE-2026-103409 (9.8), admin rights with no login on a Session Smart Router that isn't yet onboarded to Mist or a Conductor.",
+      "cite": [
+        3,
+        1,
+        2,
+        11
+      ]
+    },
+    {
+      "label": "Not on a fixed release",
+      "text": "Affected: before 7.0.5, 7.1.0 up to 7.1.6, and 7.2 before 7.2.3. Fixed: 7.0.5, 7.1.7, 7.2.3 and every later release. The 6.x lines get no fix: 6.2 is still supported until 6 Mar 2027 but past End of Engineering, and Juniper doesn't evaluate releases past End of Engineering or End of Life.",
+      "cite": [
+        3,
+        1,
+        4,
+        12
+      ]
+    }
+  ],
+  "do": [
+    {
+      "label": "Update the Conductor",
+      "text": "7.0.5-14-lts, 7.1.7-15-sts, 7.2.3-8r2 or any later release. All three came out between 20 Aug and 29 Sep 2026, before the bug was disclosed. On 6.2 or 6.3, move to 7.0.5 or later. Update routers to a fixed release too, for the other bugs in the same bulletin.",
+      "cite": [
+        8,
+        9,
+        10,
+        12,
+        1
+      ],
+      "versions": [
+        "juniper-ssr"
+      ]
+    },
+    {
+      "label": "Limit who can reach it",
+      "text": "Juniper says there's no workaround, but tells customers to \"take steps to mitigate\" until they upgrade, without saying which. Our advice: allow only your routers to reach the Conductor. Juniper's own deployment guide already says to restrict public-facing inbound access to 4505/TCP, 4506/TCP and 930/TCP, the ports routers use; Juniper doesn't say which port the attack uses, so this narrows exposure but doesn't close the hole.",
+      "cite": [
+        1,
+        7,
+        5,
+        6
+      ]
+    },
+    {
+      "label": "Check for a break-in",
+      "text": "A successful attack runs commands as root on the system that manages your routers. Juniper's bulletin gives no signs of attack to look for. Our advice: if an unpatched Conductor was reachable from the internet, treat it as possibly compromised and check it before trusting it again. US federal agencies must do CISA's forensic triage.",
+      "cite": [
+        3,
+        1,
+        2
+      ]
+    },
+    {
+      "label": "Why it's Patch now",
+      "text": "Juniper has a report of it being exploited and it's in CISA KEV. It needs no login and gives root. Juniper names no setting that blocks it, no workaround and no port, so you can't rule out a reachable Conductor.",
+      "cite": [
+        1,
+        2,
+        3
+      ]
+    }
+  ],
+  "fixed_in": {
+    "juniper-ssr": {
+      "7.2": "7.2.3-8r2",
+      "7.1": "7.1.7-15-sts",
+      "7.0": "7.0.5-14-lts"
+    }
+  },
+  "sources": [
+    {
+      "title": "Juniper JSA112183: 18 Session Smart bugs, affected and fixed releases, exploitation reported 24 Nov, no workaround, found internally",
+      "url": "https://supportportal.juniper.net/JSA112183",
+      "date": "24 Nov"
+    },
+    {
+      "title": "CISA KEV catalog: CVE-2026-103406 added 25 Nov 2026, due 28 Nov, forensic triage required, lists Conductor and Router",
+      "url": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog",
+      "date": "25 Nov"
+    },
+    {
+      "title": "CVE record CVE-2026-103406: AutomatedProvisioner, crafted salt minion ID, root, Conductor only, CVSS 9.8",
+      "url": "https://www.cve.org/CVERecord?id=CVE-2026-103406",
+      "date": "24 Nov"
+    },
+    {
+      "title": "NVD: CVE-2026-103406, affected Conductor releases",
+      "url": "https://nvd.nist.gov/vuln/detail/CVE-2026-103406"
+    },
+    {
+      "title": "Juniper docs: firewall ports, routers reach the Conductor on 930, 4505 and 4506/TCP",
+      "url": "https://networkingdocs.hpe.com/documentation/us/en/software/session-smart-router/docs/config_firewall_ports/index.html"
+    },
+    {
+      "title": "Juniper docs: router salt-minion talks to the Conductor's salt-master on 4505-4506/TCP",
+      "url": "https://networkingdocs.hpe.com/documentation/us/en/software/session-smart-router/docs/concepts_machine_communication/index.html"
+    },
+    {
+      "title": "Juniper docs: Conductor deployment best practices, restrict public-facing inbound access",
+      "url": "https://networkingdocs.hpe.com/documentation/us/en/software/session-smart-router/docs/bcp_conductor_deployment/index.html"
+    },
+    {
+      "title": "Juniper: SSR 7.0 release notes, 7.0.5-14-lts (20 Aug 2026) fixes CVE-2026-103406",
+      "url": "https://networkingdocs.hpe.com/documentation/us/en/software/session-smart-router/docs/release_notes_128t_7.0/"
+    },
+    {
+      "title": "Juniper: SSR 7.1 release notes, 7.1.7-15-sts (17 Sep 2026) fixes CVE-2026-103406",
+      "url": "https://networkingdocs.hpe.com/documentation/us/en/software/session-smart-router/docs/release_notes_128t_7.1/"
+    },
+    {
+      "title": "Juniper: SSR 7.2 release notes, 7.2.3-8r2 (29 Sep 2026) fixes CVE-2026-103406",
+      "url": "https://networkingdocs.hpe.com/documentation/us/en/software/session-smart-router/docs/release_notes_128t_7.2/"
+    },
+    {
+      "title": "CVE record CVE-2026-103409: Session Smart Router admin rights with no login, only before the router is onboarded to Mist or a Conductor",
+      "url": "https://www.cve.org/CVERecord?id=CVE-2026-103409",
+      "date": "28 Oct"
+    },
+    {
+      "title": "Juniper docs: Session Smart releases, 6.2 LTS End of Engineering 6 Sep 2026, End of Support 6 Mar 2027",
+      "url": "https://networkingdocs.hpe.com/documentation/us/en/software/session-smart-router/docs/about_releases/index.html"
+    }
+  ],
+  "changes": [
+    {
+      "date": "2026-11-26",
+      "text": "Published."
+    }
+  ]
+}

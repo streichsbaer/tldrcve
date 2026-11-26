@@ -8,25 +8,31 @@
     "https://github.com/BerriAI/litellm/releases"
   ],
   "filter": "litellm",
-  "checked": "2026-11-22",
+  "checked": "2026-11-26",
   "lines": [
+    {
+      "line": "1.111",
+      "key": "1.111",
+      "latest": "1.111.0",
+      "released": "2026-11-25"
+    },
     {
       "line": "1.110",
       "key": "1.110",
-      "latest": "1.110.2",
-      "released": "2026-11-20"
+      "latest": "1.110.4",
+      "released": "2026-11-25"
     },
     {
       "line": "1.109",
       "key": "1.109",
-      "latest": "1.109.3",
-      "released": "2026-11-20"
+      "latest": "1.109.5",
+      "released": "2026-11-25"
     },
     {
       "line": "1.108 (LTS)",
       "key": "1.108",
-      "latest": "1.108.15",
-      "released": "2026-11-21"
+      "latest": "1.108.18",
+      "released": "2026-11-25"
     },
     {
       "line": "1.106",

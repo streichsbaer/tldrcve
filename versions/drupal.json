@@ -8,26 +8,26 @@
     "https://www.drupal.org/security/core"
   ],
   "filter": "drupal",
-  "checked": "2026-11-25",
+  "checked": "2026-11-26",
   "lines": [
     {
       "line": "11.4",
       "key": "11.4",
-      "latest": "11.4.13",
-      "released": "2026-11-18"
+      "latest": "11.4.14",
+      "released": "2026-11-25"
     },
     {
       "line": "11.3",
       "key": "11.3",
-      "latest": "11.3.22",
-      "released": "2026-11-18",
+      "latest": "11.3.23",
+      "released": "2026-11-25",
       "note": "Security fixes end when Drupal 11.5.0 comes out in December 2026."
     },
     {
       "line": "10.6",
       "key": "10.6",
-      "latest": "10.6.22",
-      "released": "2026-11-18",
+      "latest": "10.6.23",
+      "released": "2026-11-25",
       "note": "Security fixes end when Drupal 11.5.0 comes out in December 2026."
     }
   ],
@@ -38,16 +38,20 @@
       "url": "https://www.drupal.org/sa-core-2026-017"
     },
     {
-      "title": "Drupal 11.4.13 release, 18 Nov 2026",
-      "url": "https://www.drupal.org/project/drupal/releases/11.4.13"
+      "title": "Drupal SA-CORE-2026-019: installer access bypass, fixed in 11.4.14, 11.3.23 and 10.6.23",
+      "url": "https://www.drupal.org/sa-core-2026-019"
     },
     {
-      "title": "Drupal 11.3.22 release, 18 Nov 2026: security coverage until Drupal 11.5.0 in December 2026",
-      "url": "https://www.drupal.org/project/drupal/releases/11.3.22"
+      "title": "Drupal 11.4.14 release, 25 Nov 2026",
+      "url": "https://www.drupal.org/project/drupal/releases/11.4.14"
     },
     {
-      "title": "Drupal 10.6.22 release, 18 Nov 2026: security coverage until Drupal 11.5.0 in December 2026",
-      "url": "https://www.drupal.org/project/drupal/releases/10.6.22"
+      "title": "Drupal 11.3.23 release, 25 Nov 2026: security coverage until Drupal 11.5.0 in December 2026",
+      "url": "https://www.drupal.org/project/drupal/releases/11.3.23"
+    },
+    {
+      "title": "Drupal 10.6.23 release, 25 Nov 2026: security coverage until Drupal 11.5.0 in December 2026",
+      "url": "https://www.drupal.org/project/drupal/releases/10.6.23"
     },
     {
       "title": "endoflife.date: Drupal release cycles and end-of-life dates",

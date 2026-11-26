@@ -1,0 +1,52 @@
+{
+  "id": "juniper-ssr",
+  "name": "Juniper Session Smart Router and Conductor",
+  "about": "The newest release on each Session Smart Router line, as Juniper's release notes list them. The same releases run on the Conductor.",
+  "feed": null,
+  "latest_from": [
+    "https://networkingdocs.hpe.com/documentation/us/en/software/session-smart-router/docs/about_releases/index.html",
+    "https://networkingdocs.hpe.com/documentation/us/en/software/session-smart-router/docs/release_notes_128t_7.2/",
+    "https://networkingdocs.hpe.com/documentation/us/en/software/session-smart-router/docs/release_notes_128t_7.1/",
+    "https://networkingdocs.hpe.com/documentation/us/en/software/session-smart-router/docs/release_notes_128t_7.0/"
+  ],
+  "filter": "juniper",
+  "checked": "2026-11-26",
+  "lines": [
+    {
+      "line": "7.2",
+      "key": "7.2",
+      "latest": "7.2.5-9r2",
+      "released": "2026-11-19"
+    },
+    {
+      "line": "7.1",
+      "key": "7.1",
+      "latest": "7.1.8-9-sts",
+      "released": "2026-11-16"
+    },
+    {
+      "line": "7.0",
+      "key": "7.0",
+      "latest": "7.0.7-2-lts",
+      "released": "2026-11-05"
+    }
+  ],
+  "sources": [
+    {
+      "title": "Juniper: Session Smart Router releases",
+      "url": "https://networkingdocs.hpe.com/documentation/us/en/software/session-smart-router/docs/about_releases/index.html"
+    },
+    {
+      "title": "Juniper: SSR 7.2 release notes, 7.2.5-9r2 (19 Nov 2026)",
+      "url": "https://networkingdocs.hpe.com/documentation/us/en/software/session-smart-router/docs/release_notes_128t_7.2/"
+    },
+    {
+      "title": "Juniper: SSR 7.1 release notes, 7.1.8-9-sts (16 Nov 2026)",
+      "url": "https://networkingdocs.hpe.com/documentation/us/en/software/session-smart-router/docs/release_notes_128t_7.1/"
+    },
+    {
+      "title": "Juniper: SSR 7.0 release notes, 7.0.7-2-lts (5 Nov 2026)",
+      "url": "https://networkingdocs.hpe.com/documentation/us/en/software/session-smart-router/docs/release_notes_128t_7.0/"
+    }
+  ]
+}

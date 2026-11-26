@@ -1,0 +1,158 @@
+{
+  "slug": "mitel-micollab",
+  "name": "Mitel MiCollab",
+  "aliases": [
+    "mitel",
+    "micollab",
+    "awv",
+    "audio web and video conferencing",
+    "conferencing",
+    "unified communications",
+    "command injection",
+    "xml injection",
+    "file upload",
+    "authentication bypass",
+    "rce",
+    "misa-2026-0012",
+    "kb000129195",
+    "cve-2026-133323",
+    "cve-2026-133303",
+    "cve-2026-133275",
+    "cve-2026-133324",
+    "cve-2026-133311"
+  ],
+  "cves": [
+    "CVE-2026-133323",
+    "CVE-2026-133303",
+    "CVE-2026-133275",
+    "CVE-2026-133324",
+    "CVE-2026-133311"
+  ],
+  "product": "Mitel MiCollab",
+  "disclosed": "2026-11-16",
+  "news": "2026-11-25",
+  "updated": "2026-11-26",
+  "verdict": "now",
+  "tile_line": "Five no-login bugs, exploited. In CISA KEV.",
+  "tldr": "Five bugs in the conferencing part of Mitel MiCollab (AWV) need no login, and the worst lets an attacker run commands on the server. CISA says all five are exploited. Apply Mitel's patch now and cut outside access to AWV.",
+  "summary": "The worst, CVE-2026-133323, is a blind command injection Mitel rates 10.0; CVE-2026-133303 (9.0) runs commands through XML injection with content planted in advance, and the other three (5.3 to 5.9) upload files, skip a login check or read some sensitive information. Mitel says using them together \"can significantly amplify their impact\" but doesn't say how; NVD scores both of the worst at 9.8. CISA names no source for the attacks, and a GitHub repository claiming an exploit for CVE-2026-133323 sends requests to URLs that don't match Mitel's description, so we don't count it as a public exploit.",
+  "status": {
+    "exploit": "none",
+    "attacks": "seen",
+    "kev": {
+      "added": "2026-11-25",
+      "due": "2026-11-28"
+    },
+    "no_login": true,
+    "scare": 3.1
+  },
+  "status_cite": {
+    "no_login": [
+      1,
+      2
+    ],
+    "exploit": [
+      1,
+      7
+    ],
+    "attacks": [
+      2,
+      3
+    ],
+    "kev": [
+      2
+    ]
+  },
+  "affected": [
+    {
+      "label": "MiCollab, not patched",
+      "text": "Mitel lists MiCollab 10.3 (10.3.0.18) and earlier as affected. The fix is a patch for 10.3.0.18, so 10.3.0.18 without it is still affected. Mitel doesn't consider versions past End of Support.",
+      "cite": [
+        1,
+        4
+      ]
+    },
+    {
+      "label": "An attacker can reach AWV",
+      "text": "All five bugs are in the Audio, Web and Video Conferencing (AWV) component and need no login. Mitel's workaround is to restrict external access to AWV.",
+      "cite": [
+        1
+      ]
+    }
+  ],
+  "do": [
+    {
+      "label": "Apply Mitel's patch",
+      "text": "Upgrade to 10.3.0.18 and apply Mitel's patch, or move to a later release; the patch is in Mitel's knowledge base article KB000129195, which is restricted: if you can't open it, Mitel says to contact your Mitel Authorized Partner. Mitel names no later release that includes the fix yet.",
+      "cite": [
+        1
+      ]
+    },
+    {
+      "label": "Cut outside access to AWV",
+      "text": "Mitel's workaround until you can patch: restrict external access to the AWV component.",
+      "cite": [
+        1
+      ]
+    },
+    {
+      "label": "Check for a break-in",
+      "text": "The worst bug runs commands on the server. Mitel's advisory gives no signs of attack to look for. Our advice: if AWV was reachable from the internet and unpatched, treat the server as possibly compromised and check it before trusting it again. US federal agencies must do CISA's forensic triage for CVE-2026-133323 and CVE-2026-133303.",
+      "cite": [
+        1,
+        2
+      ]
+    },
+    {
+      "label": "Why it's Patch now",
+      "text": "CISA lists all five as exploited, and they need no login. Mitel names AWV as the exposed part but doesn't say which setups expose it. Its workaround is to restrict external access to AWV; we read that as meaning outside access is a normal setup. Unless you know your AWV is unreachable from outside, you can't rule yourself out.",
+      "cite": [
+        2,
+        3,
+        1
+      ]
+    }
+  ],
+  "versions_skip": "The fix is a patch on 10.3.0.18 from a customer-only knowledge base article, and Mitel publishes no public release list.",
+  "sources": [
+    {
+      "title": "Mitel MISA-2026-0012: five no-login AWV bugs, scores, affected 10.3.0.18 and earlier, patch, workaround",
+      "url": "https://www.mitel.com/support/security-advisories/mitel-product-security-advisory-misa-2026-0012",
+      "date": "24 Nov"
+    },
+    {
+      "title": "CISA KEV catalog: all five added 25 Nov 2026, due 28 Nov (CVE-2026-133311: 9 Dec), forensic triage for CVE-2026-133323 and CVE-2026-133303",
+      "url": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog",
+      "date": "25 Nov"
+    },
+    {
+      "title": "CISA: adds 10 known exploited vulnerabilities, all five MiCollab bugs, \"evidence of active exploitation\"",
+      "url": "https://www.cisa.gov/news-events/alerts/2026/11/25/cisa-adds-10-known-exploited-vulnerabilities-catalog",
+      "date": "25 Nov"
+    },
+    {
+      "title": "CVE record CVE-2026-133323: blind command injection in AWV, through 10.3.0.18, 10.0",
+      "url": "https://www.cve.org/CVERecord?id=CVE-2026-133323",
+      "date": "19 Nov"
+    },
+    {
+      "title": "NVD: CVE-2026-133323, NVD's own score 9.8",
+      "url": "https://nvd.nist.gov/vuln/detail/CVE-2026-133323"
+    },
+    {
+      "title": "NVD: CVE-2026-133303, NVD's own score 9.8",
+      "url": "https://nvd.nist.gov/vuln/detail/CVE-2026-133303"
+    },
+    {
+      "title": "GitHub cveForge: claimed CVE-2026-133323 exploit, guessed URLs, checks for output a blind injection doesn't return",
+      "url": "https://github.com/cveForge/CVE-2026-133323",
+      "date": "24 Nov"
+    }
+  ],
+  "changes": [
+    {
+      "date": "2026-11-26",
+      "text": "Published."
+    }
+  ]
+}

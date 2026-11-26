@@ -7,22 +7,22 @@
     "https://releases.electronjs.org/"
   ],
   "filter": "electron",
-  "checked": "2026-11-22",
+  "checked": "2026-11-26",
   "lines": [
     {
       "line": "45",
       "key": "45",
-      "latest": "45.4.1"
+      "latest": "45.5.0"
     },
     {
       "line": "44",
       "key": "44",
-      "latest": "44.11.5"
+      "latest": "44.11.6"
     },
     {
       "line": "43",
       "key": "43",
-      "latest": "43.8.12"
+      "latest": "43.8.13"
     }
   ],
   "older": "Apps built on Electron are fixed only once they ship one of these.",

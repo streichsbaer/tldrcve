@@ -7,12 +7,12 @@
     "https://chromereleases.googleblog.com/"
   ],
   "filter": "chrome",
-  "checked": "2026-11-20",
+  "checked": "2026-11-26",
   "lines": [
     {
       "line": "158",
       "key": "158",
-      "latest": "158.0.8127.36"
+      "latest": "158.0.8127.88"
     },
     {
       "line": "157",
@@ -22,12 +22,12 @@
     {
       "line": "Extended Stable 156",
       "key": "156",
-      "latest": "156.0.8078.108"
+      "latest": "156.0.8078.114"
     },
     {
       "line": "ChromeOS",
       "key": "chromeos",
-      "latest": "158.0.8127.65"
+      "latest": "158.0.8127.98"
     }
   ],
   "older": "Chrome for Android: 157.0.8103.50 or later.",
