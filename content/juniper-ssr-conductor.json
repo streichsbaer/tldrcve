@@ -29,7 +29,7 @@
   "verdict": "now",
   "tile_line": "Exploited, no login, runs as root. In CISA KEV.",
   "tldr": "A bug in Juniper's Session Smart Conductor, which manages its Session Smart routers, lets someone with no login run commands as root. Juniper has a report of it being exploited, and it's in CISA KEV. Update the Conductor now.",
-  "summary": "Juniper found it in its own testing, shipped fixes in August and September 2026 and disclosed it on 28 Oct with 17 other Session Smart bugs; on 24 Nov it added that at least one case of exploitation had been reported to it, without saying by whom or how. The bug is in the Conductor's AutomatedProvisioner and is triggered by a crafted salt minion ID; routers talk to the Conductor's salt master on 4505 and 4506/TCP, but Juniper doesn't say the attack comes in that way. We found no public exploit.",
+  "summary": "Juniper found it in internal security testing, shipped fixes in August and September 2026 and disclosed it on 28 Oct with 17 other Session Smart bugs; on 24 Nov it added that at least one case of exploitation had been reported to it, without saying by whom or how. The bug is in the Conductor's AutomatedProvisioner and is triggered by a crafted salt minion ID; routers talk to the Conductor's salt master on 4505 and 4506/TCP, but Juniper doesn't say the attack comes in that way. We found no public exploit.",
   "status": {
     "exploit": "none",
     "attacks": "seen",
@@ -107,11 +107,12 @@
     },
     {
       "label": "Check for a break-in",
-      "text": "A successful attack runs commands as root on the system that manages your routers. Juniper's bulletin gives no signs of attack to look for. Our advice: if an unpatched Conductor was reachable from the internet, treat it as possibly compromised and check it before trusting it again. US federal agencies must do CISA's forensic triage.",
+      "text": "A successful attack runs commands as root on the system that manages your routers. Juniper's bulletin gives no signs of attack to look for. Our advice: if an unpatched Conductor was reachable from the internet, treat it as possibly compromised and check it before trusting it again. Federal Civilian Executive Branch (FCEB) agencies must do CISA's forensic triage.",
       "cite": [
         3,
         1,
-        2
+        2,
+        13
       ]
     },
     {
@@ -183,6 +184,11 @@
     {
       "title": "Juniper docs: Session Smart releases, 6.2 LTS End of Engineering 6 Sep 2026, End of Support 6 Mar 2027",
       "url": "https://networkingdocs.hpe.com/documentation/us/en/software/session-smart-router/docs/about_releases/index.html"
+    },
+    {
+      "title": "CISA: adds 10 known exploited vulnerabilities, including CVE-2026-103406; BOD 26-04 applies only to FCEB agencies",
+      "url": "https://www.cisa.gov/news-events/alerts/2026/11/25/cisa-adds-10-known-exploited-vulnerabilities-catalog",
+      "date": "25 Nov"
     }
   ],
   "changes": [

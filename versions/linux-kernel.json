@@ -75,7 +75,7 @@
     },
     {
       "line": "Ubuntu, RHEL 10.2 and RHEL 9.8 EUS",
-      "note": "NoisyTCP (CVE-2026-99288) has no released fix yet for Ubuntu (in progress), RHEL 10.2 or RHEL 9.8 EUS. RHEL 9.9 is fixed.",
+      "note": "NoisyTCP (CVE-2026-99288): Ubuntu's fix is in progress, and Red Hat lists no fixed kernel for RHEL 10.2 or RHEL 9.8 EUS yet. RHEL 9.9 is fixed.",
       "pages": [
         "noisytcp"
       ]

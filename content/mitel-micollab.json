@@ -19,7 +19,15 @@
     "cve-2026-133303",
     "cve-2026-133275",
     "cve-2026-133324",
-    "cve-2026-133311"
+    "cve-2026-133311",
+    "accenture",
+    "apex labs",
+    "zero-day",
+    "web shell",
+    "mivoice border gateway",
+    "mbg",
+    "ldap",
+    "active directory"
   ],
   "cves": [
     "CVE-2026-133323",
@@ -33,9 +41,9 @@
   "news": "2026-11-25",
   "updated": "2026-11-26",
   "verdict": "now",
-  "tile_line": "Five no-login bugs, exploited. In CISA KEV.",
-  "tldr": "Five bugs in the conferencing part of Mitel MiCollab (AWV) need no login, and the worst lets an attacker run commands on the server. CISA says all five are exploited. Apply Mitel's patch now and cut outside access to AWV.",
-  "summary": "The worst, CVE-2026-133323, is a blind command injection Mitel rates 10.0; CVE-2026-133303 (9.0) runs commands through XML injection with content planted in advance, and the other three (5.3 to 5.9) upload files, skip a login check or read some sensitive information. Mitel says using them together \"can significantly amplify their impact\" but doesn't say how; NVD scores both of the worst at 9.8. CISA names no source for the attacks, and a GitHub repository claiming an exploit for CVE-2026-133323 sends requests to URLs that don't match Mitel's description, so we don't count it as a public exploit.",
+  "tile_line": "Exploited before the patch, no login. In CISA KEV.",
+  "tldr": "Five bugs in the conferencing part of Mitel MiCollab (AWV) need no login. Attackers used them before the 16 Nov patch, in one case reaching a domain controller within an hour. Patch now and check for a break-in.",
+  "summary": "Accenture's APEX Labs saw web-shell activity at one victim before 23:00 UTC on 15 Nov, a day before Mitel's patch: the attacker ran its first command 12 minutes after its first request, had root within 30 minutes, used MiCollab's stored LDAP credentials to log in to a domain controller at 32 minutes and later stole databases, and it filtered its requests out of MiCollab's local logs. Accenture links a second organisation's MiCollab server to the same attacker from 9 Nov but doesn't know how it was broken into, and Mitel says using the five bugs together \"can significantly amplify their impact\" without saying how. A GitHub repository claiming an exploit for CVE-2026-133323 doesn't match Mitel's description, so we don't count it as a public exploit; NVD scores the two worst bugs 9.8.",
   "status": {
     "exploit": "none",
     "attacks": "seen",
@@ -44,7 +52,7 @@
       "due": "2026-11-28"
     },
     "no_login": true,
-    "scare": 3.1
+    "scare": 3.5
   },
   "status_cite": {
     "no_login": [
@@ -56,6 +64,7 @@
       7
     ],
     "attacks": [
+      8,
       2,
       3
     ],
@@ -74,42 +83,46 @@
     },
     {
       "label": "An attacker can reach AWV",
-      "text": "All five bugs are in the Audio, Web and Video Conferencing (AWV) component and need no login. Mitel's workaround is to restrict external access to AWV.",
+      "text": "All five bugs are in the Audio, Web and Video Conferencing (AWV) component and need no login: a blind command injection (CVE-2026-133323, 10.0), command execution through XML injection with content planted in advance (CVE-2026-133303, 9.0), and three medium bugs that upload files, skip a login check or read some sensitive information. Mitel's workaround is to restrict external access to AWV. At Accenture's victim the attack passed through an internet-facing reverse proxy, and Accenture says a MiVoice Border Gateway web proxy shouldn't be assumed to protect AWV.",
       "cite": [
-        1
+        1,
+        8
       ]
     }
   ],
   "do": [
     {
       "label": "Apply Mitel's patch",
-      "text": "Upgrade to 10.3.0.18 and apply Mitel's patch, or move to a later release; the patch is in Mitel's knowledge base article KB000129195, which is restricted: if you can't open it, Mitel says to contact your Mitel Authorized Partner. Mitel names no later release that includes the fix yet.",
+      "text": "Upgrade to 10.3.0.18 if needed, then apply Mitel's patch from knowledge base article KB000129195, which is restricted: if you can't open it, Mitel says to contact your Mitel Authorized Partner. Mitel also offers upgrading to a later release but names none. Accenture advises taking forensic images of MiCollab and Border Gateway servers before patching or rebuilding them, because that can overwrite evidence, and fixing older MiCollab flaws (MISA-2026-0006) on servers that have fallen behind.",
       "cite": [
-        1
+        1,
+        8
       ]
     },
     {
       "label": "Cut outside access to AWV",
-      "text": "Mitel's workaround until you can patch: restrict external access to the AWV component.",
+      "text": "Mitel's workaround until you can patch: restrict external access to the AWV component. Accenture adds: include any path a MiVoice Border Gateway web proxy publishes.",
       "cite": [
-        1
+        1,
+        8
       ]
     },
     {
       "label": "Check for a break-in",
-      "text": "The worst bug runs commands on the server. Mitel's advisory gives no signs of attack to look for. Our advice: if AWV was reachable from the internet and unpatched, treat the server as possibly compromised and check it before trusting it again. US federal agencies must do CISA's forensic triage for CVE-2026-133323 and CVE-2026-133303.",
+      "text": "Accenture says a server that is patched now may already be compromised, because attacks began before the patch existed. Compare MiCollab's logs with your proxy, gateway or WAF logs, since the attacker filtered its requests out of local logs. Look for web shells such as `shell.asp` under a `pictures` directory, scripts and `.tgz` archives in `/tmp`, round-the-clock HTTPS to unfamiliar hosts, and traffic to `204.76.203.204` or `204.76.203.216`; Accenture lists more indicators. If you find signs, Accenture says to treat it as an Active Directory compromise: reset MiCollab's LDAP connector account and any Kerberoastable service accounts, and rotate administrator, SIP trunk and file-share credentials the server could reach. Federal Civilian Executive Branch (FCEB) agencies must also do CISA's forensic triage for CVE-2026-133323 and CVE-2026-133303.",
       "cite": [
-        1,
-        2
+        8,
+        2,
+        3
       ]
     },
     {
       "label": "Why it's Patch now",
-      "text": "CISA lists all five as exploited, and they need no login. Mitel names AWV as the exposed part but doesn't say which setups expose it. Its workaround is to restrict external access to AWV; we read that as meaning outside access is a normal setup. Unless you know your AWV is unreachable from outside, you can't rule yourself out.",
+      "text": "CISA lists all five as exploited and they need no login. Accenture saw them used before any patch existed and, at one victim, to reach the domain controller. It says MiCollab is commonly internet-facing, and a reverse proxy in front of it didn't protect AWV.",
       "cite": [
         2,
         3,
-        1
+        8
       ]
     }
   ],
@@ -144,9 +157,13 @@
       "url": "https://nvd.nist.gov/vuln/detail/CVE-2026-133303"
     },
     {
-      "title": "GitHub cveForge: claimed CVE-2026-133323 exploit, guessed URLs, checks for output a blind injection doesn't return",
+      "title": "GitHub cveForge: claimed CVE-2026-133323 exploit; our reading: it posts to NuPoint paths, not AWV, and checks for output a blind injection doesn't return",
       "url": "https://github.com/cveForge/CVE-2026-133323",
       "date": "24 Nov"
+    },
+    {
+      "title": "Accenture APEX Labs: exploited before the patch, from first request to domain controller in 32 minutes, reverse proxy no help, indicators and advice",
+      "url": "https://accenture.github.io/cyber-intelligence/micollab-exploitation/"
     }
   ],
   "changes": [

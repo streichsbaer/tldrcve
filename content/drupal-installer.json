@@ -31,7 +31,7 @@
   "updated": "2026-11-26",
   "verdict": "now",
   "tile_line": "Both bugs exploited, no login. First in CISA KEV.",
-  "tldr": "Drupal's installer, `install.php`, can let someone with no login take over a site. Drupal's 18 Nov fix was incomplete, and both bugs are exploited; the first is in CISA KEV. Update Drupal again, run `update.php` and block `install.php`.",
+  "tldr": "Drupal's installer, `install.php`, can let someone with no login take over a site. Drupal's 18 Nov fix was incomplete, and both bugs are exploited; the first is in CISA KEV. Block `install.php`, check for a takeover, then update and run `update.php`.",
   "summary": "The first bug (CVE-2026-132165, 18 Nov, Highly critical 20 of 25, complex attack) is in CISA KEV; Drupal credits Anthropic's OSS Scanner with finding it and reports attacks from 19 Nov, and a proof of concept posted on GitHub on 20 Nov replaces the main admin account on 11.4.12 after planting a half-finished installer state itself, and shows no code execution. The second (CVE-2026-136716, 25 Nov, 21 of 25, basic attack) is about sites left in an unusual or incomplete install state, production sites included, which stayed open to takeover after the first fix; Drupal gives no date or source for attacks on it. The new fix makes the installer refuse to continue an install that has no session token recorded, and an update hook marks stuck sites as installed, which is why `update.php` must run.",
   "status": {
     "exploit": "public",
@@ -100,22 +100,7 @@
   ],
   "do": [
     {
-      "label": "Update Drupal",
-      "text": "11.4.14, 11.3.23 or 10.6.23 (25 Nov 2026), then run `update.php`: Drupal says an update hook must run to fix production sites stuck in the vulnerable state. The 25 Nov release notes say they also fix the theme registry bug the 18 Nov releases introduced (\"Theme hook field not found\", seen with Search API), and that a Symfony security update from the same day isn't included, so update Symfony too. 11.3 and 10.6 get security fixes only until Drupal 11.5.0 comes out in December 2026; on 11.2, 10.5 or older, move to a supported line.",
-      "cite": [
-        15,
-        16,
-        17,
-        18,
-        9,
-        10
-      ],
-      "versions": [
-        "drupal"
-      ]
-    },
-    {
-      "label": "Block install.php, even after updating",
+      "label": "Block install.php first",
       "text": "Drupal recommends blocking the installer in the web server, which survives core updates, and says sites that have already secured it aren't vulnerable to the second bug. nginx: add the block below to the HTTPS `server` block; Drupal says to use `^~`, not an exact match (`=`), which on some servers doesn't block `/core/install.php/foo`. Apache: in the virtual host, `<Location \"/core/install.php\">` with `Require all denied`. Apache without access to the virtual host: Drupal's docs also give an `.htaccess` rule (`<Files \"install.php\">` with `Require all denied`), but Composer overwrites `.htaccess`, so lines added by hand are lost. Test with `nginx -t` or `apachectl configtest` before reloading, then rerun the check above. Drupal Steward sites with its recommended mitigations are already protected from the known attack paths for both bugs, but should still update.",
       "cmd": "location ^~ /core/install.php { return 404; }",
       "cite": [
@@ -125,13 +110,31 @@
       ]
     },
     {
-      "label": "Check for a takeover",
-      "text": "Drupal says any site that left its installer reachable after the first fix may still have been compromised, and a site that was taken over may no longer be in the vulnerable state, so a clean-looking site isn't proof. Check your logs for changes to user 1, the site's first admin account, or made by it; make sure user 1's email address is one you control, and consider resetting its password. The public proof of concept replaces user 1's name, email and password, so the old admin password stops working; content is left in place. Anonymous `POST` requests to `/core/install.php` in your web logs after the site went live deserve a look. If you find signs, follow Drupal's \"Your Drupal site got hacked\" guide and assume the attacker had admin rights and may have run code on the server. US federal agencies must also do CISA's forensic triage.",
+      "label": "Check for a takeover, before update.php",
+      "text": "Drupal's guide says to run its checks before database updates, because the update rewrites the install state they read, and to copy your web server logs somewhere safe now, since some hosts keep them only a few days. The command prints the install state: anything other than `done` means the site is vulnerable now, but `done` doesn't prove it's safe, because a successful attack also sets it. Drupal says any site that left its installer reachable after the first fix may still have been compromised, and a site that was taken over may no longer be in the vulnerable state, so a clean-looking site isn't proof. Check your logs for changes to user 1, the site's first admin account, or made by it; make sure user 1's email address is one you control, and consider resetting its password. The public proof of concept replaces user 1's name, email and password, so the old admin password stops working; content is left in place. In your web logs since 18 Nov 2026, an installed site answers every installer request with `200`, so that alone isn't a sign; Drupal says to look into `POST` requests to `/core/install.php` that return `302` or `303`, much larger responses, and many installer requests from one address within minutes. If you find signs, follow Drupal's \"Your Drupal site got hacked\" guide and assume the attacker had admin rights and may have run code on the server. Federal Civilian Executive Branch (FCEB) agencies must also do CISA's forensic triage.",
       "cite": [
+        20,
         15,
         6,
         1,
         2
+      ],
+      "cmd": "drush state:get install_task"
+    },
+    {
+      "label": "Update Drupal",
+      "text": "11.4.14, 11.3.23 or 10.6.23 (25 Nov 2026), then run `update.php` once you've done the checks above. Drupal says the code update closes the hole right away, and the update hook then repairs sites stuck in the vulnerable state. The 25 Nov release notes say they also fix the theme registry bug the 18 Nov releases introduced (\"Theme hook field not found\", seen with Search API), and that a Symfony security update from the same day isn't included, so update Symfony too. 11.3 and 10.6 get security fixes only until Drupal 11.5.0 comes out in December 2026; on 11.2, 10.5 or older, move to a supported line.",
+      "cite": [
+        15,
+        16,
+        17,
+        18,
+        9,
+        10,
+        20
+      ],
+      "versions": [
+        "drupal"
       ]
     },
     {
@@ -245,12 +248,17 @@
       "title": "Drupal core: the SA-CORE-2026-019 fix, session token check and update hook",
       "url": "https://github.com/drupal/core/commit/f3d7b16d09a0119afe845907cb67163fb9d86951",
       "date": "25 Nov"
+    },
+    {
+      "title": "Drupal docs: checking whether your site was compromised through the installer, run the checks before database updates",
+      "url": "https://www.drupal.org/docs/administering-a-drupal-site/security-in-drupal/checking-whether-your-site-was-compromised-through-the-installer",
+      "date": "26 Nov"
     }
   ],
   "changes": [
     {
       "date": "2026-11-26",
-      "text": "Drupal's 18 Nov fix was incomplete: a second bug (CVE-2026-136716, SA-CORE-2026-019) is also exploited. The fix is now 11.4.14, 11.3.23 or 10.6.23 plus running `update.php`, and Drupal says to check user 1 for a takeover."
+      "text": "Drupal's 18 Nov fix was incomplete: a second bug (CVE-2026-136716, SA-CORE-2026-019) is also exploited. The fix is now 11.4.14, 11.3.23 or 10.6.23 plus running `update.php`, after Drupal's checks for a takeover, which the update would disturb."
     },
     {
       "date": "2026-11-25",
