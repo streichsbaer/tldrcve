@@ -1595,6 +1595,11 @@ LEGACY_GUIDS = {
     "brotli-2026-11-20-0": "brotli-2026-11-20-1",
 }
 
+# Items already published with the old build-time pubDate (before the noon fix). Keeping that time stops readers such as
+# Slack's RSS app from posting them again. Safe to delete once 26 Nov 2026 has scrolled out of the feed.
+PINNED_PUBDATES = {guid: "2026-11-26T03:20:38+00:00" for guid in (
+    "geoserver-chain-2026-11-26-0", "nfs2root-2026-11-26-0", "onepassword-breach-2026-11-26-0", "optimizely-malware-2026-11-26-0")}
+
 
 def feed_entries(all_c: list, weeks: bool = True) -> list:
     """One entry per changelog line across the given pages (newest first), then one per weekly review. Shared by RSS and JSON Feed.
@@ -1654,6 +1659,9 @@ def write_feed(pages: list, prefix: str, title: str, about: str, weeks: bool) ->
         # time made every morning deploy re-date today's items, and readers such as Slack's RSS app posted them again.
         return datetime.fromisoformat(d).replace(hour=12, tzinfo=timezone.utc)
 
+    def published(e):
+        return datetime.fromisoformat(PINNED_PUBDATES[e["id"]]) if e["id"] in PINNED_PUBDATES else when(e["date"])
+
     items = []
     for e in entries:
         cats = "\n".join(f'      <category domain="{k}">{html.escape(v)}</category>' for k, v in e["tags"])
@@ -1661,7 +1669,7 @@ def write_feed(pages: list, prefix: str, title: str, about: str, weeks: bool) ->
       <title>{html.escape(e["title"])}</title>
       <link>{e["url"]}</link>
       <guid isPermaLink="false">{e["id"]}</guid>
-      <pubDate>{format_datetime(when(e["date"]))}</pubDate>
+      <pubDate>{format_datetime(published(e))}</pubDate>
       <description>{html.escape(e["html"])}</description>
 {item_image(*e["image"])}
 {cats}
@@ -1695,7 +1703,7 @@ def write_feed(pages: list, prefix: str, title: str, about: str, weeks: bool) ->
         "feed_url": f"{SITE_URL}{prefix}/feed.json", "description": about, "language": "en",
         "icon": f"{SITE_URL}/assets/icons/apple-touch-icon.png", "favicon": f"{SITE_URL}/assets/icons/icon-32.png",
         "items": [{"id": e["id"], "url": e["url"], "title": e["title"], "content_text": e["text"], "content_html": e["html"],
-                   "image": e["image"][0], "date_published": when(e["date"]).isoformat(),
+                   "image": e["image"][0], "date_published": published(e).isoformat(),
                    "tags": [v for _, v in e["tags"]], "_tldrcve": extra(e)} for e in entries]}
     (out_dir / "feed.json").write_text(json.dumps(feed, indent=2, ensure_ascii=False) + "\n")
 
