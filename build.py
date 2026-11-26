@@ -1118,11 +1118,11 @@ def cves_page(all_c: list) -> str:
         <a href="/{c["slug"]}/">
           <span class="row__meter">{mini_meter(c["status"]["scare"], INCIDENT_ZONES if is_incident(c) else None)}</span>
           <span class="row__main">
-            <span class="row__name">{html.escape(c["name"])}</span>
+            <span class="row__name">{html.escape(c["name"])}{roundup_tag(c)}</span>
             <span class="row__meta">{html.escape(product_short(c))} · {html.escape(cve_list(c) or "No CVE yet")}</span>
           </span>
           <span class="row__line">{text(c["tile_line"])}</span>
-          <span class="row__verdict">{badge(c)}{roundup_tag(c)}</span>
+          <span class="row__verdict">{badge(c)}</span>
           <time class="row__date" datetime="{c["disclosed"]}">{nice_date(c["disclosed"])}</time>
         </a>
       </li>"""
@@ -1180,7 +1180,7 @@ def incidents_page(all_c: list) -> str:
         <a href="/{c["slug"]}/">
           <span class="row__meter">{mini_meter(c["status"]["scare"], INCIDENT_ZONES if is_incident(c) else None)}</span>
           <span class="row__main">
-            <span class="row__name">{html.escape(c["name"])}</span>
+            <span class="row__name">{html.escape(c["name"])}{roundup_tag(c)}</span>
             <span class="row__meta">{html.escape(product_short(c))} · {html.escape(cve_list(c) or "No CVE")}</span>
           </span>
           <span class="row__line">{text(c["tile_line"])}</span>
@@ -1650,8 +1650,9 @@ def write_feed(pages: list, prefix: str, title: str, about: str, weeks: bool) ->
     out_dir = OUT / prefix.strip("/")
     out_dir.mkdir(parents=True, exist_ok=True)
 
-    def when(d):  # noon UTC on that day, but never later than the build itself (validators flag future dates)
-        return min(datetime.fromisoformat(d).replace(hour=12, tzinfo=timezone.utc), datetime.now(timezone.utc).replace(microsecond=0))
+    def when(d):  # always noon UTC on that day, so an item's date never changes between builds. Capping it at the build
+        # time made every morning deploy re-date today's items, and readers such as Slack's RSS app posted them again.
+        return datetime.fromisoformat(d).replace(hour=12, tzinfo=timezone.utc)
 
     items = []
     for e in entries:
