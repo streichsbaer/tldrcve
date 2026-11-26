@@ -3,6 +3,16 @@
   "use strict";
   document.documentElement.classList.remove("no-js");
 
+  // Phone menu.
+  var toggle = document.querySelector(".nav-toggle");
+  if (toggle) {
+    toggle.addEventListener("click", function () {
+      var open = toggle.closest(".site-header").classList.toggle("is-open");
+      toggle.setAttribute("aria-expanded", open ? "true" : "false");
+      toggle.setAttribute("aria-label", open ? "Close menu" : "Menu");
+    });
+  }
+
   // Copy buttons: data-copy="<element id>" copies that element's text; data-copy-link copies a URL.
   function copy(btn, text) {
     if (!navigator.clipboard) return;
@@ -196,4 +206,90 @@
   if (params.get("q")) input.value = params.get("q");
   input.addEventListener("input", apply);
   apply();
+})();
+
+// Homepage search: matching pages appear under the box as you type. Arrow keys and Enter open one; Enter without a
+// pick (or "See all results") goes to All CVEs filtered, as before. Data: /api/cves.json, fetched on first focus.
+(function () {
+  "use strict";
+  var form = document.querySelector("[data-suggest]");
+  if (!form) return;
+  var input = form.querySelector("input");
+  var pages = null, shown = [], active = -1;
+  var list = document.createElement("ul");
+  list.id = "q-suggest";
+  list.className = "suggest";
+  list.setAttribute("role", "listbox");
+  list.hidden = true;
+  form.appendChild(list);
+  input.setAttribute("role", "combobox");
+  input.setAttribute("aria-controls", "q-suggest");
+  input.setAttribute("aria-expanded", "false");
+  input.setAttribute("aria-autocomplete", "list");
+
+  function load() {
+    if (pages) return Promise.resolve(pages);
+    return fetch("/api/cves.json").then(function (r) { return r.json(); }).then(function (d) {
+      pages = d.pages.map(function (p) {
+        p._s = [p.name, p.product].concat(p.cves || [], p.ghsa || [], p.aliases || [], p.also_in || []).join(" ").toLowerCase();
+        return p;
+      });
+      return pages;
+    });
+  }
+  function item(cls, children, onPick) {
+    var li = document.createElement("li");
+    li.className = cls;
+    li.setAttribute("role", "option");
+    children.forEach(function (c) { li.appendChild(c); });
+    li.addEventListener("mousedown", function (e) { e.preventDefault(); onPick(); });
+    return li;
+  }
+  function el(tag, cls, text) { var e = document.createElement(tag); if (cls) e.className = cls; e.textContent = text; return e; }
+  // Product, then up to two CVE IDs; each ID stays on one line so phones don't break it at the hyphen.
+  function meta(p) {
+    var m = el("span", "suggest__meta", p.product);
+    (p.cves || []).slice(0, 2).forEach(function (id) { m.appendChild(document.createTextNode(" · ")); m.appendChild(el("span", "suggest__id", id)); });
+    return m;
+  }
+  function render() {
+    var q = input.value.trim().toLowerCase();
+    list.textContent = "";
+    if (!q || !pages) { close(); return; }
+    var words = q.split(/\s+/);
+    shown = pages.filter(function (p) { return words.every(function (w) { return p._s.indexOf(w) !== -1; }); }).slice(0, 6);
+    shown.forEach(function (p, i) {
+      var li = item("suggest__item", [
+        el("span", "suggest__name", p.name),
+        meta(p),
+        el("span", "verdict verdict--" + (p.kind === "incident" ? "incident" : p.verdict), p.verdict_label)
+      ], function () { location.href = "/" + p.slug + "/"; });
+      li.id = "q-opt-" + i;
+      list.appendChild(li);
+    });
+    var all = item("suggest__all", [el("span", "", shown.length ? "See all results for “" + input.value.trim() + "” →" : "No page matches yet. Search all CVEs →")], function () { form.submit(); });
+    all.id = "q-opt-" + shown.length;
+    list.appendChild(all);
+    active = -1;
+    highlight();
+    list.hidden = false;
+    input.setAttribute("aria-expanded", "true");
+  }
+  function highlight() {
+    var rows = list.querySelectorAll('[role="option"]');
+    rows.forEach(function (r, i) { r.classList.toggle("is-active", i === active); r.setAttribute("aria-selected", i === active ? "true" : "false"); });
+    if (active >= 0) input.setAttribute("aria-activedescendant", "q-opt-" + active); else input.removeAttribute("aria-activedescendant");
+  }
+  function close() { list.hidden = true; input.setAttribute("aria-expanded", "false"); active = -1; }
+
+  input.addEventListener("focus", function () { load().then(render); });
+  input.addEventListener("input", function () { load().then(render); });
+  input.addEventListener("blur", close);
+  input.addEventListener("keydown", function (e) {
+    var rows = list.querySelectorAll('[role="option"]');
+    if (e.key === "ArrowDown" && rows.length) { e.preventDefault(); active = Math.min(active + 1, rows.length - 1); highlight(); }
+    else if (e.key === "ArrowUp" && rows.length) { e.preventDefault(); active = Math.max(active - 1, 0); highlight(); }
+    else if (e.key === "Escape") { close(); }
+    else if (e.key === "Enter" && active >= 0 && active < shown.length) { e.preventDefault(); location.href = "/" + shown[active].slug + "/"; }
+  });
 })();

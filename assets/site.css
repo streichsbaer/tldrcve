@@ -83,8 +83,19 @@ sup.cite a:hover { color: var(--brand); }
 .wordmark__cve { font: 600 1rem/1 var(--mono); color: var(--brand); letter-spacing: 0.04em; }
 .site-nav { display: flex; gap: 20px; font-size: 0.9375rem; font-weight: 500; }
 .site-nav a { text-decoration: none; color: var(--ink-2); white-space: nowrap; }
-@media (max-width: 520px) { .site-header .wrap { flex-wrap: wrap; row-gap: 6px; } .site-nav { gap: 6px 14px; width: 100%; font-size: 0.875rem; flex-wrap: wrap; } }
-@media (max-width: 360px) { .site-nav { gap: 10px; font-size: 0.8125rem; } }
+/* Phones: a menu button opens the nav as a list. Without JavaScript the links simply wrap under the logo. */
+.nav-toggle { display: none; place-items: center; width: 40px; height: 40px; margin-right: -8px; border: 0; border-radius: 10px; background: none; color: var(--ink); cursor: pointer; }
+.nav-toggle__close { display: none; }
+.site-header.is-open .nav-toggle__open { display: none; }
+.site-header.is-open .nav-toggle__close { display: inline; }
+@media (max-width: 560px) {
+  .site-header .wrap { flex-wrap: wrap; row-gap: 6px; }
+  .no-js .site-nav { gap: 6px 14px; width: 100%; font-size: 0.875rem; flex-wrap: wrap; }
+  html:not(.no-js) .nav-toggle { display: inline-grid; }
+  html:not(.no-js) .site-nav { display: none; width: 100%; flex-direction: column; gap: 0; padding: 0 0 10px; font-size: 1rem; }
+  html:not(.no-js) .site-header.is-open .site-nav { display: flex; }
+  html:not(.no-js) .site-nav a { padding: 11px 0; border-top: 1px solid var(--rule); }
+}
 .site-nav a:hover { color: var(--ink); text-decoration: underline; }
 .site-footer { padding: 24px 0 40px; font-size: 0.875rem; color: var(--muted); }
 .site-footer p { margin: 0 0 6px; }
@@ -396,6 +407,21 @@ table.data td:nth-child(n+2):not(:last-child) { white-space: nowrap; }
 .changes li[hidden] { display: none; }
 .search--week { margin: 4px 0 20px; max-width: 34rem; }
 [data-week-section][hidden], [data-search][hidden] { display: none; }
+
+/* Homepage search suggestions */
+.suggest {
+  position: absolute; z-index: 20; left: 0; right: 0; top: calc(100% + 8px); list-style: none; margin: 0; padding: 6px; text-align: left;
+  background: var(--surface); border: 2px solid var(--pane-border); border-radius: 14px; box-shadow: 4px 4px 0 var(--pane-shadow);
+}
+.suggest[hidden] { display: none; }
+.suggest__item { display: grid; grid-template-columns: 1fr auto; gap: 2px 12px; align-items: center; padding: 9px 10px; border-radius: 9px; cursor: pointer; }
+.suggest__name { font: 700 1rem/1.2 var(--display); color: var(--ink); }
+.suggest__meta { grid-column: 1; font: 500 0.75rem/1.3 var(--mono); color: var(--muted); }
+.suggest__id { white-space: nowrap; }
+.suggest__item .verdict { grid-column: 2; grid-row: 1 / span 2; }
+.suggest__all { padding: 10px; border-radius: 9px; cursor: pointer; font-weight: 600; font-size: 0.875rem; color: var(--ink-2); border-top: 1px solid var(--rule); margin-top: 4px; }
+.suggest__item.is-active, .suggest__item:hover, .suggest__all.is-active, .suggest__all:hover { background: var(--sunk); }
+@media (max-width: 560px) { .toolbar .back { white-space: nowrap; } }
 
 /* TL;DR panel on vulnerability pages */
 .tldr .pane__body { padding: 16px 20px 18px; display: grid; gap: 12px; }

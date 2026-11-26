@@ -208,7 +208,8 @@ def page(title: str, description: str, body: str, current: str = "", path: str =
   <header class="site-header">
     <div class="wrap">
       <a class="wordmark" href="/" aria-label="tldrcve home"><span class="wordmark__tldr">tl;dr</span><span class="wordmark__cve">CVE</span></a>
-      <nav class="site-nav" aria-label="Main">
+      <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-nav" aria-label="Menu"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path class="nav-toggle__open" d="M4 7h16M4 12h16M4 17h16"/><path class="nav-toggle__close" d="M6 6l12 12M18 6L6 18"/></svg></button>
+      <nav class="site-nav" id="site-nav" aria-label="Main">
         <a href="/cves/"{cur["cves"]}>All CVEs</a>
         <a href="/incidents/"{cur["incidents"]}>Incidents</a>
         <a href="/versions/"{cur["versions"]}>Safe versions</a>
@@ -1076,7 +1077,7 @@ def home(all_c: list) -> str:
     <section class="hero">
       <h1>CVEs in plain English</h1>
       <p class="hero__lede">The vulnerabilities and attacks everyone's panicking about.<br>Are you affected, and what should you do?</p>
-      <form class="search" role="search" action="/cves/" method="get">
+      <form class="search" role="search" action="/cves/" method="get" data-suggest>
         <label for="q" class="visually-hidden">Search all CVEs</label>
         {SEARCH_ICON}
         <input id="q" name="q" type="search" placeholder="CVE ID, product or nickname" autocomplete="off">
@@ -1742,7 +1743,7 @@ def index_row(c: dict) -> dict:
     row.update({"kind": c.get("kind", "vulnerability"), "verdict_label": badge_text(c), "tile_line": c["tile_line"], "scare": s["scare"],
                 "scare_label": scare_label(c), "exploit": s["exploit"], "attacks": s["attacks"],
                 "kev": s["kev"]})
-    row.update({k: c[k] for k in ("tldr", "ghsa", "also_in") if c.get(k)})
+    row.update({k: c[k] for k in ("tldr", "ghsa", "also_in", "aliases") if c.get(k)})
     if "no_login" in s:
         row["no_login"] = s["no_login"]
     row.update({k: c[k] for k in ("disclosed", "news", "updated") if c.get(k)})
