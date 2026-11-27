@@ -9,17 +9,17 @@
     "https://blogs.opera.com/desktop/changelog-for-140/"
   ],
   "filter": "chromium",
-  "checked": "2026-11-20",
+  "checked": "2026-11-27",
   "lines": [
     {
       "line": "Edge",
       "key": "edge",
-      "latest": "158.0.4370.33"
+      "latest": "158.0.4370.45"
     },
     {
       "line": "Brave",
       "key": "brave",
-      "latest": "1.100.58"
+      "latest": "1.100.59"
     },
     {
       "line": "Opera 140",

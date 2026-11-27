@@ -9,7 +9,7 @@
     "https://access.redhat.com/hydra/rest/securitydata/csaf.json?package=kernel"
   ],
   "filter": "linux",
-  "checked": "2026-11-26",
+  "checked": "2026-11-27",
   "lines": [
     {
       "line": "Debian 13",
@@ -19,7 +19,7 @@
     {
       "line": "Debian 12",
       "key": "Debian 12",
-      "latest": "6.1.192-2"
+      "latest": "6.1.192-3"
     },
     {
       "line": "Ubuntu 26.04",

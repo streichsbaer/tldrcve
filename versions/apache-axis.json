@@ -7,7 +7,7 @@
     "https://nvd.nist.gov/vuln/detail/CVE-2026-90436"
   ],
   "filter": "axis",
-  "checked": "2026-11-20",
+  "checked": "2026-11-27",
   "lines": [],
   "unfixed": [
     {
