@@ -8,7 +8,7 @@
     "https://github.com/adoptium/temurin/issues/326"
   ],
   "filter": "java",
-  "checked": "2026-11-20",
+  "checked": "2026-11-27",
   "lines": [
     {
       "line": "27",

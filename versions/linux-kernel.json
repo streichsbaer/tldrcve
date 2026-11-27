@@ -54,7 +54,7 @@
     {
       "line": "RHEL 8",
       "key": "RHEL 8",
-      "latest": "4.18.0-553.189.1.el8_10"
+      "latest": "4.18.0-553.190.1.el8_10"
     }
   ],
   "older": "Ubuntu 26.10: 7.3.0-10.10. Cloud and HWE kernels have their own versions.",

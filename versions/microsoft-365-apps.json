@@ -7,12 +7,12 @@
     "https://learn.microsoft.com/en-us/officeupdates/update-history-microsoft365-apps-by-date"
   ],
   "filter": "outlook",
-  "checked": "2026-11-20",
+  "checked": "2026-11-27",
   "lines": [
     {
       "line": "Current Channel",
       "key": "Current Channel",
-      "latest": "2611 (20625.20108)"
+      "latest": "2611 (20625.20142)"
     },
     {
       "line": "Monthly Enterprise 2610",
