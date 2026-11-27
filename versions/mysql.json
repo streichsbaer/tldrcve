@@ -1,16 +1,21 @@
 {
   "id": "mysql",
   "name": "MySQL",
-  "about": "Oracle's November security release on each MySQL Server line we track. Oracle hasn't said how the bug we cover works: see its page.",
+  "about": "Oracle's November security release on each MySQL Server and NDB Cluster line we track. Oracle hasn't said how the bug we cover works: see its page.",
   "feed": null,
   "latest_from": [
     "https://dev.mysql.com/doc/relnotes/mysql/8.4/en/",
     "https://dev.mysql.com/doc/relnotes/mysql/9.7/en/",
     "https://dev.mysql.com/doc/relnotes/mysql/26.10/en/",
-    "https://dev.mysql.com/downloads/mysql/"
+    "https://dev.mysql.com/downloads/mysql/",
+    "https://dev.mysql.com/doc/relnotes/mysql-cluster/8.0/en/",
+    "https://dev.mysql.com/doc/relnotes/mysql-cluster/8.4/en/",
+    "https://dev.mysql.com/doc/relnotes/mysql-cluster/9.7/en/",
+    "https://dev.mysql.com/doc/relnotes/mysql-cluster/26.10/en/",
+    "https://dev.mysql.com/downloads/cluster/"
   ],
   "filter": "mysql",
-  "checked": "2026-11-24",
+  "checked": "2026-11-27",
   "lines": [
     {
       "line": "8.4",
@@ -29,15 +34,30 @@
       "key": "26.10",
       "latest": "26.10.0.1",
       "released": "2026-11-24"
-    }
-  ],
-  "unfixed": [
+    },
     {
-      "line": "MySQL Cluster 8.0, 8.4, 9.7, 26.10",
-      "note": "Fixed NDB Cluster releases 8.0.51, 8.4.13.1, 9.7.4.1 and 26.10.0.1 are listed for 26 Nov 2026, not yet out. Server 8.0 isn't listed by Oracle because it's no longer supported.",
-      "pages": [
-        "mysql-client"
-      ]
+      "line": "NDB Cluster 26.10",
+      "key": "cluster-26.10",
+      "latest": "26.10.0.1",
+      "released": "2026-11-26"
+    },
+    {
+      "line": "NDB Cluster 9.7",
+      "key": "cluster-9.7",
+      "latest": "9.7.4.1",
+      "released": "2026-11-26"
+    },
+    {
+      "line": "NDB Cluster 8.4",
+      "key": "cluster-8.4",
+      "latest": "8.4.13.1",
+      "released": "2026-11-26"
+    },
+    {
+      "line": "NDB Cluster 8.0",
+      "key": "cluster-8.0",
+      "latest": "8.0.51",
+      "released": "2026-11-26"
     }
   ],
   "sources": [
@@ -60,6 +80,26 @@
     {
       "title": "MySQL: downloads offer 8.4.13.1, 9.7.4.1 and 26.10.0.1",
       "url": "https://dev.mysql.com/downloads/mysql/"
+    },
+    {
+      "title": "MySQL: NDB Cluster 26.10.0.1 release note, a Critical Security Patch Update",
+      "url": "https://dev.mysql.com/doc/relnotes/mysql-cluster/26.10/en/news-26-10-0-1.html"
+    },
+    {
+      "title": "MySQL: NDB Cluster 9.7.4.1 release note, a Critical Security Patch Update",
+      "url": "https://dev.mysql.com/doc/relnotes/mysql-cluster/9.7/en/news-9-7-4-1.html"
+    },
+    {
+      "title": "MySQL: NDB Cluster 8.4.13.1 release note, a Critical Security Patch Update",
+      "url": "https://dev.mysql.com/doc/relnotes/mysql-cluster/8.4/en/news-8-4-13-1.html"
+    },
+    {
+      "title": "MySQL: NDB Cluster 8.0.51 release note, a Critical Security Patch Update",
+      "url": "https://dev.mysql.com/doc/relnotes/mysql-cluster/8.0/en/news-8-0-51.html"
+    },
+    {
+      "title": "MySQL: NDB Cluster downloads offer 26.10.0.1, 9.7.4.1, 8.4.13.1 and 8.0.51",
+      "url": "https://dev.mysql.com/downloads/cluster/"
     }
   ]
 }

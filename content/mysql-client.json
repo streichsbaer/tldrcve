@@ -19,10 +19,10 @@
   ],
   "product": "MySQL Server",
   "disclosed": "2026-11-17",
-  "updated": "2026-11-24",
+  "updated": "2026-11-27",
   "verdict": "if",
   "tile_line": "Rated 9.1, no details or exploit; security releases out.",
-  "tldr": "Oracle rated a MySQL \"Client programs\" bug 9.1 but hasn't said how it works or who is at risk. No exploit or attacks are reported. On 8.4, 9.7 or 26.10, install Oracle's free fixed release; MySQL Cluster, 8.0 included, gets fixes on 26 Nov.",
+  "tldr": "Oracle rated a MySQL \"Client programs\" bug 9.1 but hasn't said how it works or who is at risk. No exploit or attacks are reported. Update Server 8.4, 9.7 or 26.10 and MySQL Cluster (8.0 included) to Oracle's free fixed release.",
   "summary": "Of the two GitHub \"exploits\" going around, one is a read-only version and exposure check; the other claims to exploit this CVE, but its author hadn't seen Oracle's fix, so that link is unverified.",
   "status": {
     "exploit": "none",
@@ -74,17 +74,20 @@
       ]
     },
     {
-      "label": "MySQL Cluster: fix due 26 Nov",
-      "text": "Oracle lists MySQL NDB Cluster 8.0.51, 8.4.13.1, 9.7.4.1 and 26.10.0.1 with a 26 Nov 2026 date; they aren't out yet. Update Cluster to them when they are.",
+      "label": "Update MySQL Cluster too",
+      "text": "Oracle released MySQL NDB Cluster 8.0.51, 8.4.13.1, 9.7.4.1 and 26.10.0.1 on 26 Nov 2026, free to download. Like the Server notes, each Cluster release note calls it \"a Critical Security Patch Update\" and points to Oracle's November advisory without naming this CVE. Cluster 8.0 gets a release even though Server 8.0 doesn't.",
       "cite": [
         17,
         18,
         19,
-        20
+        20,
+        21,
+        1,
+        16
       ],
-      "pending": {
-        "expected": "2026-11-26"
-      }
+      "versions": [
+        "mysql"
+      ]
     },
     {
       "label": "No exploit or attacks yet",
@@ -180,23 +183,31 @@
       "date": "24 Nov"
     },
     {
-      "title": "MySQL NDB Cluster 8.0 release notes: 8.0.51 dated 26 Nov",
-      "url": "https://dev.mysql.com/doc/relnotes/mysql-cluster/8.0/en/"
+      "title": "MySQL: NDB Cluster 8.0.51 release note (26 Nov 2026), a Critical Security Patch Update",
+      "url": "https://dev.mysql.com/doc/relnotes/mysql-cluster/8.0/en/news-8-0-51.html"
     },
     {
-      "title": "MySQL NDB Cluster 8.4 release notes: 8.4.13.1 dated 26 Nov",
-      "url": "https://dev.mysql.com/doc/relnotes/mysql-cluster/8.4/en/"
+      "title": "MySQL: NDB Cluster 8.4.13.1 release note (26 Nov 2026), a Critical Security Patch Update",
+      "url": "https://dev.mysql.com/doc/relnotes/mysql-cluster/8.4/en/news-8-4-13-1.html"
     },
     {
-      "title": "MySQL NDB Cluster 9.7 release notes: 9.7.4.1 dated 26 Nov",
-      "url": "https://dev.mysql.com/doc/relnotes/mysql-cluster/9.7/en/"
+      "title": "MySQL: NDB Cluster 9.7.4.1 release note (26 Nov 2026), a Critical Security Patch Update",
+      "url": "https://dev.mysql.com/doc/relnotes/mysql-cluster/9.7/en/news-9-7-4-1.html"
     },
     {
-      "title": "MySQL NDB Cluster 26.10 release notes: 26.10.0.1 dated 26 Nov",
-      "url": "https://dev.mysql.com/doc/relnotes/mysql-cluster/26.10/en/"
+      "title": "MySQL: NDB Cluster 26.10.0.1 release note (26 Nov 2026), a Critical Security Patch Update",
+      "url": "https://dev.mysql.com/doc/relnotes/mysql-cluster/26.10/en/news-26-10-0-1.html"
+    },
+    {
+      "title": "MySQL: NDB Cluster downloads offer 26.10.0.1, 9.7.4.1, 8.4.13.1 and 8.0.51",
+      "url": "https://dev.mysql.com/downloads/cluster/"
     }
   ],
   "changes": [
+    {
+      "date": "2026-11-27",
+      "text": "Oracle released the fixed MySQL NDB Cluster 8.0.51, 8.4.13.1, 9.7.4.1 and 26.10.0.1 on 26 Nov; the Cluster step now says to update."
+    },
     {
       "date": "2026-11-24",
       "text": "Oracle released fixed MySQL Server 8.4.13.1, 9.7.4.1 and 26.10.0.1 on 24 Nov; verdict moved from Watching to Patch now if… Cluster fixes are dated 26 Nov. Noted that Oracle's patch table and CVE record describe the protocol differently."
@@ -227,7 +238,11 @@
     "mysql": {
       "8.4": "8.4.13.1",
       "9.7": "9.7.4.1",
-      "26.10": "26.10.0.1"
+      "26.10": "26.10.0.1",
+      "cluster-8.0": "8.0.51",
+      "cluster-8.4": "8.4.13.1",
+      "cluster-9.7": "9.7.4.1",
+      "cluster-26.10": "26.10.0.1"
     }
   }
 }
