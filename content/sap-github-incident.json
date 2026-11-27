@@ -40,11 +40,12 @@
         ]
       },
       "taken": {
-        "state": "part",
+        "state": "yes",
         "cite": [
-          4,
           5,
-          1
+          6,
+          1,
+          3
         ]
       },
       "reach": {
@@ -75,7 +76,7 @@
     "tags": [
       "unknown"
     ],
-    "text": "SAP hasn't said how it started. Der Spiegel's insider says the attackers used stolen GitHub tokens belonging to SAP employees; no report says how those tokens were obtained.",
+    "text": "SAP hasn't said how it started. Der Spiegel's insider says the attackers used stolen GitHub tokens belonging to SAP employees; none of the reports we read says how those tokens were obtained.",
     "cite": [
       5,
       6
@@ -126,7 +127,7 @@
     {
       "date": "2026-11-27",
       "who": "press",
-      "text": "Reports say SAP didn't answer detailed questions, and left open whether all affected systems have been identified and the attack contained. SAP hasn't said whether any code was copied or changed. No report names the repositories, says whether any copied code was public or private, or says whether any changed code reached software customers use.",
+      "text": "Reports say SAP didn't answer detailed questions, and left open whether all affected systems have been identified and the attack contained. SAP hasn't said whether any code was copied or changed. None of the reports we read names the repositories, says whether any copied code was public or private, or says whether any changed code reached software customers use.",
       "cite": [
         6,
         5
@@ -137,7 +138,7 @@
     "exploit": "none",
     "attacks": "seen",
     "kev": null,
-    "scare": 2.2
+    "scare": 2.5
   },
   "status_cite": {
     "attacks": [
