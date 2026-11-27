@@ -1,0 +1,237 @@
+{
+  "slug": "sap-github-incident",
+  "kind": "incident",
+  "name": "Project Granite",
+  "aliases": [
+    "sap",
+    "sap se",
+    "github",
+    "project granite",
+    "sap github",
+    "sap hack",
+    "sap breach",
+    "source code",
+    "tokens",
+    "github tokens",
+    "signing keys",
+    "walldorf"
+  ],
+  "cves": [],
+  "product": "SAP GitHub environment",
+  "disclosed": "2026-11-26",
+  "updated": "2026-11-27",
+  "verdict": "watch",
+  "tile_line": "SAP confirms an incident; code tampering unconfirmed.",
+  "tldr": "SAP confirmed \"suspicious activity\", which an internal memo places on GitHub, and says it found no sign of access to customer business data. Claims of stolen tokens and changed code are from an anonymous insider. No product is named; nothing to patch.",
+  "summary": "Der Spiegel broke the story on 26 Nov and says SAP calls it \"Project Granite\"; its insider says the attackers may have had help from AI. Handelsblatt, citing people inside SAP, says SAP restricted GitHub access, stopped automated software development processes and replaced signing keys, measures that affect numerous teams. SAP hasn't said what the activity was, when it was detected, which repositories it touched or whether it's contained.",
+  "orgs": [
+    {
+      "name": "SAP SE",
+      "url": "https://www.sap.com/"
+    }
+  ],
+  "incident": {
+    "checks": {
+      "confirmed": {
+        "state": "yes",
+        "cite": [
+          1,
+          3
+        ]
+      },
+      "taken": {
+        "state": "part",
+        "cite": [
+          4,
+          5,
+          1
+        ]
+      },
+      "reach": {
+        "state": "part",
+        "cite": [
+          5,
+          6
+        ]
+      },
+      "entry": {
+        "state": "part",
+        "cite": [
+          1,
+          5,
+          6
+        ]
+      },
+      "contained": {
+        "state": "part",
+        "cite": [
+          3,
+          5
+        ]
+      }
+    }
+  },
+  "root_cause": {
+    "tags": [
+      "unknown"
+    ],
+    "text": "SAP hasn't said how it started. Der Spiegel's insider says the attackers used stolen GitHub tokens belonging to SAP employees; no report says how those tokens were obtained.",
+    "cite": [
+      5,
+      6
+    ]
+  },
+  "timeline": [
+    {
+      "date": "2026-11-26",
+      "who": "anonymous",
+      "text": "Der Spiegel reports an \"active security incident\" at SAP, handled internally as \"Project Granite\", possibly with help from AI. Citing an insider, it says attackers stole SAP employees' GitHub authentication tokens. Reports differ on the rest: some say the insider says the tokens were used to copy and change source code, while dpa and Handelsblatt say only that tokens like these could let attackers reach and change code. heise says Spiegel reports SAP confirmed a cyberattack.",
+      "cite": [
+        4,
+        1,
+        5,
+        6,
+        3,
+        2
+      ]
+    },
+    {
+      "date": "2026-11-26",
+      "who": "record",
+      "text": "SAP says it identified \"suspicious activity\" and \"immediately took the necessary steps to protect its customers and ensure the security of its services\". It adds that, based on its investigation so far, \"there are no indications of unauthorized access to customers' business data\". It doesn't confirm the token or code claims, and didn't initially confirm to dpa that it was a cyberattack.",
+      "cite": [
+        2,
+        1,
+        3,
+        5
+      ]
+    },
+    {
+      "date": "2026-11-27",
+      "who": "anonymous",
+      "text": "Handelsblatt, citing people inside SAP, says software development is affected. Under the name \"Project Granite\", SAP restricted GitHub access, stopped automated software development processes and replaced signing keys, to keep stolen credentials from giving further access.",
+      "cite": [
+        3
+      ]
+    },
+    {
+      "date": "2026-11-27",
+      "who": "press",
+      "text": "dpa, which saw part of an internal SAP memo sent a few days earlier, reports it describes suspicious activity in SAP's GitHub platform for developer productivity and software delivery, and asks employees to check whether they need to take security steps such as changing their credentials.",
+      "cite": [
+        1,
+        2
+      ]
+    },
+    {
+      "date": "2026-11-27",
+      "who": "press",
+      "text": "Reports say SAP didn't answer detailed questions, and left open whether all affected systems have been identified and the attack contained. SAP hasn't said whether any code was copied or changed. No report names the repositories, says whether any copied code was public or private, or says whether any changed code reached software customers use.",
+      "cite": [
+        6,
+        5
+      ]
+    }
+  ],
+  "status": {
+    "exploit": "none",
+    "attacks": "seen",
+    "kev": null,
+    "scare": 2.2
+  },
+  "status_cite": {
+    "attacks": [
+      3,
+      4,
+      1
+    ],
+    "exploit": [
+      6
+    ],
+    "kev": [
+      8
+    ]
+  },
+  "do": [
+    {
+      "label": "Nothing to patch yet",
+      "text": "No product, package, version or CVE has been named, and SAP says it has found no sign of access to customer business data. SAP hasn't posted about it on its News Center; its statement went to reporters.",
+      "cite": [
+        1,
+        2,
+        6,
+        7
+      ]
+    },
+    {
+      "label": "Treat the code claims as unconfirmed",
+      "text": "Our advice: don't act on posts that say as fact that attackers changed SAP's code. That comes from Der Spiegel's anonymous insider, and SAP hasn't confirmed it.",
+      "cite": [
+        5,
+        6
+      ]
+    },
+    {
+      "label": "SAP customers: ask in writing",
+      "text": "Our advice: if you need certainty for your own risk records, ask your SAP account team in writing whether any product or package you use is affected. SAP hasn't said which areas the activity touched.",
+      "cite": [
+        1,
+        6
+      ]
+    },
+    {
+      "label": "What would change this",
+      "text": "If SAP or researchers name a product, a package or tampered code that reached customers, we'll turn this into a page on what to check. We'll check again by 4 Dec 2026.",
+      "cite": [
+        6
+      ]
+    }
+  ],
+  "versions_skip": "No product, package or fix has been named.",
+  "sources": [
+    {
+      "title": "Tagesspiegel (dpa/Reuters): SAP's statement, the internal memo dpa saw, and Der Spiegel's token report",
+      "url": "https://www.tagesspiegel.de/wirtschaft/dpa-softwarekonzern-sap-haben-verdachtige-aktivitaten-identifiziert-16332556.html",
+      "date": "27 Nov"
+    },
+    {
+      "title": "heise: SAP's statement in English, the memo, Spiegel's AI claim",
+      "url": "https://www.heise.de/en/news/SAP-IT-incident-affects-development-systems-11540040.html",
+      "date": "27 Nov"
+    },
+    {
+      "title": "Handelsblatt: SAP's statement on Thursday evening; insiders on Project Granite, restricted GitHub access, stopped automation and replaced signing keys",
+      "url": "https://www.handelsblatt.com/technik/ki/sap-it-sicherheitsvorfall-haben-verdaechtige-aktivitaeten-identifiziert/100273138.html",
+      "date": "27 Nov"
+    },
+    {
+      "title": "Der Spiegel: the original report, \"Project Granite\", possible help from AI (paywalled beyond the teaser)",
+      "url": "https://www.spiegel.de/netzwelt/sap-wird-opfer-von-hackerangriff-a-6648b5ce-5d74-48dc-86ea-9469705bb91d",
+      "date": "26 Nov"
+    },
+    {
+      "title": "All About Security: Spiegel's insider says tokens were used to copy and change code; SAP didn't comment and left open whether it's contained",
+      "url": "https://www.all-about-security.de/sap-sicherheitsvorfall-angriff-auf-github-umgebung/",
+      "date": "27 Nov"
+    },
+    {
+      "title": "Cybersecurity News: SAP didn't answer detailed questions; how the tokens were obtained and which repositories are affected isn't disclosed",
+      "url": "https://cybersecuritynews.com/sap-security-incident/",
+      "date": "27 Nov"
+    },
+    {
+      "title": "SAP News Center feed: no post about the incident",
+      "url": "https://news.sap.com/feed/"
+    },
+    {
+      "title": "CISA KEV catalog: no CVE named, so nothing listed",
+      "url": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog"
+    }
+  ],
+  "changes": [
+    {
+      "date": "2026-11-27",
+      "text": "Published."
+    }
+  ]
+}
