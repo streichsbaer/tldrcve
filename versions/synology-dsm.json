@@ -7,7 +7,7 @@
     "https://www.synology.com/en-global/releaseNote/DSM"
   ],
   "filter": "synology",
-  "checked": "2026-11-27",
+  "checked": "2026-11-20",
   "lines": [
     {
       "line": "7.4",
