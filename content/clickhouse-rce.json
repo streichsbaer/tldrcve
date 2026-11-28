@@ -1,0 +1,157 @@
+{
+  "slug": "clickhouse-rce",
+  "name": "ClickHouse RCE",
+  "aliases": [
+    "clickhouse",
+    "clickhouse server",
+    "clickhouse-server",
+    "clickhouse rce",
+    "remote code execution",
+    "integer overflow"
+  ],
+  "cves": [
+    "CVE-2026-116366"
+  ],
+  "ghsa": [
+    "GHSA-qhgw-ghp3-xh36"
+  ],
+  "product": "ClickHouse",
+  "disclosed": "2026-10-30",
+  "updated": "2026-11-27",
+  "verdict": "if",
+  "tile_line": "No login needed. No working exploit or attacks seen.",
+  "tldr": "A flaw in ClickHouse Server lets anyone who can reach it over the network run code on it, under conditions ClickHouse hasn't detailed. No working exploit or attacks reported. Self-hosted servers older than the fixed builds are affected: update.",
+  "summary": "ClickHouse rates it 9.5 out of 10 (CVSS 4.0) but marks it hard to pull off, files it as an integer overflow (CWE-190), hasn't said which port or feature is involved, and credits Elshad Toklayev. Since 31 Oct a third-party GitHub repo has claimed the cause is the bundled Brotli decoder, reached over the HTTP port, and offers only a denial-of-service tool that hangs the server, no code execution; ClickHouse hasn't confirmed that cause, which doesn't match its CWE-190, and the repo disagrees with the CVE record on some affected versions. The very old ClickHouse 18.16 package in Debian 12 is marked vulnerable; Debian has postponed a fix and is considering ending support for it.",
+  "affected": [
+    {
+      "label": "Self-hosted, before the fix",
+      "text": "26.3 before 26.3.62.3, 26.8 before 26.8.36.3, 26.9 before 26.9.27.3 and 26.10 before 26.10.3.7. Lines 26.7 and older got no fix, so they count as affected. In Docker, run the check inside the container (`docker exec <container> clickhouse-client --query \"SELECT version()\"`). ClickHouse Cloud and BYOC deployments are already patched by ClickHouse.",
+      "cmd": "clickhouse-client --query \"SELECT version()\"",
+      "cite": [
+        1,
+        2,
+        4
+      ]
+    },
+    {
+      "label": "Untrusted hosts can reach it",
+      "text": "The attacker needs network access to the server, but no login. ClickHouse hasn't said which port or which \"certain conditions\" are needed, so count any ClickHouse port (8123, 9000 and the others) that untrusted hosts can reach. The default config listens on localhost only; the official Docker image is reachable only over the Docker network unless you publish its ports or run it with `--network=host`. Our advice: also look at `docker ps`, because published Docker ports may not show up as `clickhouse` in this check.",
+      "cmd": "sudo ss -ltnp | grep clickhouse",
+      "cite": [
+        1,
+        5,
+        6,
+        7
+      ]
+    }
+  ],
+  "do": [
+    {
+      "label": "Update ClickHouse",
+      "text": "To at least 26.10.3.7, 26.9.27.3, 26.8.36.3 (LTS) or 26.3.62.3 (LTS); later releases on the same line are fixed too. On 26.7 or older, move to a supported line. Debian's own `clickhouse` package isn't fixed, so use ClickHouse's packages or Docker image.",
+      "cite": [
+        1,
+        2,
+        4,
+        8
+      ],
+      "versions": [
+        "clickhouse"
+      ]
+    },
+    {
+      "label": "Keep it off untrusted networks",
+      "text": "ClickHouse gives no workaround. Our advice: if you've set `listen_host` to `::` or `0.0.0.0`, published the Docker ports or used `--network=host`, firewall them so only your apps and cluster nodes can connect. That narrows who can try; it doesn't fix the bug.",
+      "cite": [
+        2,
+        5,
+        6,
+        7
+      ]
+    }
+  ],
+  "fixed_in": {
+    "clickhouse": {
+      "26.10": "26.10.3.7",
+      "26.9": "26.9.27.3",
+      "26.8": "26.8.36.3",
+      "26.3": "26.3.62.3"
+    }
+  },
+  "sources": [
+    {
+      "title": "ClickHouse: security changelog, CVE-2026-116366 fixed versions, Cloud patched",
+      "url": "https://clickhouse.com/docs/resources/changelogs/security-changelog",
+      "date": "30 Oct"
+    },
+    {
+      "title": "CVE record (ClickHouse): affected ranges, CVSS 4.0 9.5, CWE-190, no workaround",
+      "url": "https://www.cve.org/CVERecord?id=CVE-2026-116366",
+      "date": "30 Oct"
+    },
+    {
+      "title": "GitHub Advisory Database: GHSA-qhgw-ghp3-xh36",
+      "url": "https://github.com/advisories/GHSA-qhgw-ghp3-xh36",
+      "date": "30 Oct"
+    },
+    {
+      "title": "ClickHouse SECURITY.md: supported versions (26.11, 26.10, 26.9, 26.8, 26.3)",
+      "url": "https://github.com/ClickHouse/ClickHouse/blob/master/SECURITY.md"
+    },
+    {
+      "title": "ClickHouse config.xml: listens on localhost by default",
+      "url": "https://github.com/ClickHouse/ClickHouse/blob/master/programs/server/config.xml"
+    },
+    {
+      "title": "ClickHouse docs: network ports",
+      "url": "https://clickhouse.com/docs/guides/sre/network-ports"
+    },
+    {
+      "title": "ClickHouse Docker image: reachable only via the Docker network by default",
+      "url": "https://github.com/ClickHouse/ClickHouse/blob/master/docker/server/README.md"
+    },
+    {
+      "title": "Debian tracker: bookworm 18.16 vulnerable, fix postponed",
+      "url": "https://security-tracker.debian.org/tracker/CVE-2026-116366"
+    },
+    {
+      "title": "CISA KEV catalog: not listed",
+      "url": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog"
+    },
+    {
+      "title": "googlesky on GitHub: third-party Brotli root-cause claim and DoS tool, not confirmed by ClickHouse",
+      "url": "https://github.com/googlesky/CVE-2026-116366",
+      "date": "31 Oct"
+    }
+  ],
+  "changes": [
+    {
+      "date": "2026-11-27",
+      "text": "Published."
+    }
+  ],
+  "status": {
+    "exploit": "none",
+    "attacks": "none",
+    "kev": null,
+    "scare": 2.3,
+    "no_login": true
+  },
+  "status_cite": {
+    "no_login": [
+      1,
+      2
+    ],
+    "exploit": [
+      2,
+      10
+    ],
+    "attacks": [
+      2,
+      9
+    ],
+    "kev": [
+      9
+    ]
+  }
+}

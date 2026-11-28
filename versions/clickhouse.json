@@ -1,0 +1,64 @@
+{
+  "id": "clickhouse",
+  "name": "ClickHouse",
+  "about": "The newest release on each ClickHouse server line that ClickHouse still supports with security updates, for self-managed open-source ClickHouse. ClickHouse Cloud is patched by ClickHouse.",
+  "feed": "github:ClickHouse/ClickHouse",
+  "latest_from": [
+    "https://github.com/ClickHouse/ClickHouse/releases",
+    "https://github.com/ClickHouse/ClickHouse/blob/master/SECURITY.md",
+    "https://clickhouse.com/docs/resources/changelogs/security-changelog"
+  ],
+  "filter": "clickhouse",
+  "checked": "2026-11-27",
+  "lines": [
+    {
+      "line": "26.11",
+      "key": "26.11",
+      "latest": "26.11.3.10",
+      "released": "2026-11-26"
+    },
+    {
+      "line": "26.10",
+      "key": "26.10",
+      "latest": "26.10.14.14",
+      "released": "2026-11-26"
+    },
+    {
+      "line": "26.9",
+      "key": "26.9",
+      "latest": "26.9.40.9",
+      "released": "2026-11-26"
+    },
+    {
+      "line": "26.8 LTS",
+      "key": "26.8",
+      "latest": "26.8.48.11",
+      "released": "2026-11-26"
+    },
+    {
+      "line": "26.3 LTS",
+      "key": "26.3",
+      "latest": "26.3.72.6",
+      "released": "2026-11-26"
+    }
+  ],
+  "older": "ClickHouse's security policy lists 26.11, 26.10, 26.9 and the LTS lines 26.8 and 26.3 as supported. Other lines, such as 26.7 and everything from 25.x back, get no security fixes: upgrade to a supported line.",
+  "sources": [
+    {
+      "title": "GitHub: ClickHouse releases, 26 Nov 2026 releases 26.11.3.10, 26.10.14.14, 26.9.40.9, 26.8.48.11-lts and 26.3.72.6-lts",
+      "url": "https://github.com/ClickHouse/ClickHouse/releases"
+    },
+    {
+      "title": "ClickHouse SECURITY.md: versions supported with security updates (26.11, 26.10, 26.9, 26.8, 26.3)",
+      "url": "https://github.com/ClickHouse/ClickHouse/blob/master/SECURITY.md"
+    },
+    {
+      "title": "ClickHouse docs: security changelog, fixed versions per vulnerability",
+      "url": "https://clickhouse.com/docs/resources/changelogs/security-changelog"
+    },
+    {
+      "title": "endoflife.date: ClickHouse release cycles, LTS lines and end-of-life dates",
+      "url": "https://endoflife.date/clickhouse"
+    }
+  ]
+}
