@@ -23,7 +23,7 @@
   "product": "Linux kernel",
   "disclosed": "2026-10-21",
   "news": "2026-11-15",
-  "updated": "2026-11-26",
+  "updated": "2026-11-28",
   "verdict": "if",
   "tile_line": "Remote crash, no login, if packets spread across CPUs.",
   "tldr": "Anyone who can reach a TCP port can crash a Linux server that spreads packets across CPUs, no login needed. No code execution so far, the researcher's exploit isn't public, and no attacks are seen. Patch if that's you.",
@@ -85,7 +85,7 @@
   "do": [
     {
       "label": "Update the kernel and reboot",
-      "text": "Fixed in the current releases: Debian 12 6.1.192-1, Debian 13 6.12.117-1, RHEL 8 4.18.0-553.189.1.el8_10, RHEL 9.9 5.14.0-741.26.1.el9_9 and RHEL 10.3 6.12.0-264.19.1.el10_3. Red Hat also fixed RHEL 8.8 for Telecommunications Update Service and SAP customers in 4.18.0-477.181.1.el8_8 (24 Nov 2026); it lists no fix yet for other older update streams, such as 9.8 and 10.2. Ubuntu lists fixes in progress for its main kernel on every release from 16.04 to 26.10; most of its other kernels (cloud, HWE, Raspberry Pi and others) are still listed as vulnerable on the releases they ship for, with no fix in progress yet. On Arm and POWER, a netdev review bot asked for this fix to be backported together with the [Linux 9.8 race](/linux-socket-race/) fix, because without it the crash might still be reachable there; no maintainer has confirmed that, and older stable kernels (5.10 to 6.6) have only this fix so far.",
+      "text": "Fixed in the current releases: Debian 12 6.1.192-1, Debian 13 6.12.117-1, RHEL 8 4.18.0-553.189.1.el8_10, RHEL 9.9 5.14.0-741.26.1.el9_9 and RHEL 10.3 6.12.0-264.19.1.el10_3. Red Hat also fixed older update streams: RHEL 8.8 for Telecommunications Update Service and SAP customers in 4.18.0-477.181.1.el8_8 (24 Nov 2026), and RHEL 8.6 (AUS and EUS Long-Life) in 4.18.0-372.230.1.el8_6 and RHEL 10.0 EUS in 6.12.0-55.121.1.el10_0 (27 Nov 2026); it lists no fix yet for other older update streams, such as 9.8 and 10.2. Ubuntu lists fixes in progress for its main kernel on every release from 16.04 to 26.10; most of its other kernels (cloud, HWE, Raspberry Pi and others) are still listed as vulnerable on the releases they ship for, with no fix in progress yet. On Arm and POWER, a netdev review bot asked for this fix to be backported together with the [Linux 9.8 race](/linux-socket-race/) fix, because without it the crash might still be reachable there; no maintainer has confirmed that, and older stable kernels (5.10 to 6.6) have only this fix so far.",
       "cite": [
         3,
         4,
@@ -93,7 +93,8 @@
         6,
         12,
         13,
-        14
+        14,
+        15
       ],
       "versions": [
         "linux-kernel"
@@ -195,9 +196,17 @@
       "title": "CVE record: CVE-2026-99676 (the sibling Linux 9.8 race), fixed only in 6.12.118, 6.18.64, 7.3.5 and 7.4-rc2",
       "url": "https://www.cve.org/CVERecord?id=CVE-2026-99676",
       "date": "22 Nov"
+    },
+    {
+      "title": "Red Hat: CVE data, fixed for RHEL 8.6 AUS and EUS Long-Life and 10.0 EUS (27 Nov), no fix listed for 9.8 or 10.2",
+      "url": "https://access.redhat.com/hydra/rest/securitydata/cve/CVE-2026-99288.json"
     }
   ],
   "changes": [
+    {
+      "date": "2026-11-28",
+      "text": "Red Hat released fixes for its older RHEL 8.6 (AUS and EUS Long-Life) and RHEL 10.0 EUS streams. RHEL 9.8 and 10.2 still have no fix."
+    },
     {
       "date": "2026-11-26",
       "text": "Red Hat released a fix for RHEL 8.8 Telecommunications Update Service and SAP customers (4.18.0-477.181.1.el8_8)."

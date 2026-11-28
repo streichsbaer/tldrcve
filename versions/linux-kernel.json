@@ -9,7 +9,7 @@
     "https://access.redhat.com/hydra/rest/securitydata/csaf.json?package=kernel"
   ],
   "filter": "linux",
-  "checked": "2026-11-27",
+  "checked": "2026-11-28",
   "lines": [
     {
       "line": "Debian 13",
@@ -44,12 +44,12 @@
     {
       "line": "RHEL 10.2",
       "key": "RHEL 10.2",
-      "latest": "6.12.0-211.76.1.el10_2"
+      "latest": "6.12.0-211.78.1.el10_2"
     },
     {
       "line": "RHEL 9",
       "key": "RHEL 9",
-      "latest": "5.14.0-741.27.1.el9_9"
+      "latest": "5.14.0-741.28.1.el9_9"
     },
     {
       "line": "RHEL 8",
@@ -57,11 +57,11 @@
       "latest": "4.18.0-553.190.1.el8_10"
     }
   ],
-  "older": "Ubuntu 26.10: 7.3.0-10.10. Cloud and HWE kernels have their own versions.",
+  "older": "Ubuntu 26.10: 7.3.0-11.12. Cloud and HWE kernels have their own versions.",
   "unfixed": [
     {
       "line": "All lines",
-      "note": "No stable kernel has the SCTP fix yet (merged into mainline 19 Nov, first in the 7.4-rc4 test release; not in the 23 Nov stable releases and not queued for the next ones on 24 Nov). Block the sctp module meanwhile.",
+      "note": "No stable kernel has the SCTP fix yet (merged into mainline 19 Nov, first in the 7.4-rc4 test release; not in the 23 Nov stable releases and in none of the stable queues, 7.3 to 5.10, on 28 Nov). Meanwhile, block the sctp module on hosts that don't use SCTP; that doesn't unload a module already loaded or help if SCTP is built into the kernel.",
       "pages": [
         "linux-sctp-root"
       ]
@@ -81,8 +81,8 @@
       ]
     },
     {
-      "line": "All lines except Debian 13",
-      "note": "Nfs2root (CVE-2026-99362) is fixed in Debian 13's 6.12.117-1 and Debian 12's optional linux-6.12 6.12.117-1~deb12u1. Debian 12's default 6.1 kernel, Ubuntu (fixes in progress for 26.04 and 26.10) and RHEL 6 to 10 have no fix yet.",
+      "line": "Ubuntu, RHEL 10.3 and RHEL 9",
+      "note": "Nfs2root (CVE-2026-99362) is fixed in Debian 13, Debian 12, RHEL 8 and RHEL 10.2. Ubuntu's fixes are in progress for 26.04 and 26.10, Red Hat lists RHEL 9 as affected, and its data doesn't list RHEL 10 (10.3) either way.",
       "pages": [
         "nfs2root"
       ]
@@ -154,7 +154,7 @@
       "url": "https://ubuntu.com/security/CVE-2026-99288"
     },
     {
-      "title": "Debian tracker: Nfs2root (CVE-2026-99362) fixed in Debian 13 6.12.117-1, Debian 12's 6.1 vulnerable",
+      "title": "Debian tracker: Nfs2root (CVE-2026-99362) fixed in Debian 13 6.12.117-1 and Debian 12 6.1.192-3",
       "url": "https://security-tracker.debian.org/tracker/CVE-2026-99362"
     },
     {
@@ -162,7 +162,7 @@
       "url": "https://ubuntu.com/security/CVE-2026-99362"
     },
     {
-      "title": "Red Hat: Nfs2root (CVE-2026-99362) affected, no fix",
+      "title": "Red Hat: Nfs2root (CVE-2026-99362), fixed for RHEL 8 and 10.2, RHEL 9 affected",
       "url": "https://access.redhat.com/security/cve/CVE-2026-99362"
     }
   ]

@@ -20,15 +20,15 @@
   "product": "Linux kernel",
   "disclosed": "2026-11-10",
   "news": "2026-11-18",
-  "updated": "2026-11-24",
+  "updated": "2026-11-28",
   "verdict": "if",
   "tile_line": "Needs code on the box. No stable kernel fix yet.",
   "tldr": "A Linux kernel SCTP bug lets any local user, even one inside a container, take over the machine. It was shown working, and no stable kernel has the fix yet. If untrusted code runs on your servers and you don't use SCTP, block the sctp module.",
-  "summary": "Xint chained it with [nginx2root](/nginx2root/) to get root on the host and escape a Docker container. The fix reached the main kernel tree on 19 Nov; the only distro kernels we found with it are Gentoo's and a Fedora Rawhide 7.4-rc4 build still in testing. The bug makes the kernel free memory twice or use it after freeing it.",
+  "summary": "Xint chained it with [nginx2root](/nginx2root/) to get root on the host and escape a Docker container. The fix reached the main kernel tree on 19 Nov; the only distro kernels we found with it are Gentoo's and Fedora Rawhide's, Fedora's development branch. The bug makes the kernel free memory twice or use it after freeing it.",
   "affected": [
     {
-      "label": "Kernel 4.15 or later",
-      "text": "The bug arrived in 4.15 (Jan 2018). The fix was merged into the main kernel tree on 19 Nov and first came out in 7.4-rc4 (22 Nov), a test release. The newest stable kernels (7.3.6, 6.18.65, 6.12.119, released 23 Nov) don't have it, and on 24 Nov it wasn't queued for the next ones either; the only distro kernels we found carrying it are Gentoo's kernel sources and a Fedora Rawhide 7.4-rc4 build still in testing. Xint hasn't named the fix, but the commit credits Xint's tool and matches its description.",
+      "label": "A kernel with the bug, unfixed",
+      "text": "Xint dates the bug to 4.15 (Jan 2018). The fix names the change that caused it, and that change was also copied into older stable kernels in early 2018: 4.14.16, 4.9.79, 4.4.114, 4.1.50, 3.18.93, 3.16.55 and 3.2.100. So an older version number doesn't rule you out. The fix was merged into the main kernel tree on 19 Nov and first came out in 7.4-rc4 (22 Nov), a test release. The newest stable kernels (7.3.6, 6.18.65, 6.12.119, released 23 Nov) don't have it, and on 28 Nov it wasn't in any of the stable queues (7.3, 6.18, 6.12, 6.6, 6.1, 5.15, 5.10); the only distro kernels we found carrying it are Gentoo's kernel sources and Fedora Rawhide's 7.4-rc4 snapshot builds (Rawhide is Fedora's development branch, not a release). Xint hasn't named the fix, but the commit credits Xint's tool and matches its description.",
       "cmd": "uname -r",
       "cite": [
         1,
@@ -42,7 +42,16 @@
         21,
         22,
         24,
-        25
+        25,
+        26,
+        27,
+        28,
+        29,
+        30,
+        31,
+        32,
+        33,
+        34
       ]
     },
     {
@@ -84,7 +93,7 @@
     },
     {
       "label": "Update the kernel and reboot",
-      "text": "Install your distro's kernel with the fix (\"sctp: do not free a new asoc peeled off while sendmsg slept\") once it ships, then reboot. The 23 Nov stable releases (7.3.6, 6.18.65, 6.12.119) don't have it, and on 24 Nov it wasn't queued for the next ones; Debian unstable's 7.3.5-1 doesn't have it either. No release date is announced and the fix has no CVE yet; we'll check again by 27 Nov 2026.",
+      "text": "Install your distro's kernel with the fix (\"sctp: do not free a new asoc peeled off while sendmsg slept\") once it ships, then reboot. The 23 Nov stable releases (7.3.6, 6.18.65, 6.12.119) don't have it, and on 28 Nov it wasn't in any of the stable queues (7.3, 6.18, 6.12, 6.6, 6.1, 5.15, 5.10); Debian unstable's 7.3.6-1 doesn't have it either. No release date is announced and the fix has no CVE yet; we'll check again by 2 Dec 2026.",
       "cite": [
         2,
         3,
@@ -95,10 +104,7 @@
         23,
         24,
         25
-      ],
-      "pending": {
-        "expected": "2026-11-27"
-      }
+      ]
     },
     {
       "label": "Patch the way in",
@@ -187,18 +193,18 @@
       "url": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog"
     },
     {
-      "title": "Linux stable queue: SCTP fix not queued for any stable release yet",
+      "title": "Linux stable queue: SCTP fix in none of the 7.3, 6.18, 6.12, 6.6, 6.1, 5.15 or 5.10 queues on 28 Nov",
       "url": "https://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git/tree/"
     },
     {
-      "title": "Debian: linux 7.3.5-1 in unstable, without the SCTP fix",
+      "title": "Debian: linux 7.3.6-1 in unstable, without the SCTP fix",
       "url": "https://metadata.ftp-master.debian.org/changelogs/main/l/linux/unstable_changelog",
-      "date": "18 Nov"
+      "date": "24 Nov"
     },
     {
-      "title": "Fedora: Rawhide kernel 7.4.0-0.rc4.33.fc46 in testing (FEDORA-2026-a150bd5da1); the earlier snapshot build is obsolete",
-      "url": "https://bodhi.fedoraproject.org/updates/FEDORA-2026-a150bd5da1",
-      "date": "23 Nov"
+      "title": "Fedora: Rawhide kernel 7.4.0-0.rc4.261125g4dce97c6c265.35.fc46 pushed (FEDORA-2026-09de50554e)",
+      "url": "https://bodhi.fedoraproject.org/updates/FEDORA-2026-09de50554e",
+      "date": "25 Nov"
     },
     {
       "title": "kernel.org: 7.3.6 changelog, no SCTP peel-off fix",
@@ -210,7 +216,7 @@
       "url": "https://github.com/torvalds/linux/compare/1e575bda30acc0bf01f799cee798d4a1c100d538...v7.4-rc4"
     },
     {
-      "title": "Linux kernel CNA: CVE records, none for the SCTP fix on 24 Nov",
+      "title": "Linux kernel CNA: published CVE records (git repository), none for the SCTP fix on 28 Nov",
       "url": "https://git.kernel.org/pub/scm/linux/security/vulns.git/"
     },
     {
@@ -222,9 +228,56 @@
       "title": "kernel.org: 6.12.119 changelog, no SCTP peel-off fix",
       "url": "https://cdn.kernel.org/pub/linux/kernel/v6.x/ChangeLog-6.12.119",
       "date": "23 Nov"
+    },
+    {
+      "title": "GitHub: Fedora's 4dce97c6c265 snapshot includes the fix's merge (1e575bda)",
+      "url": "https://github.com/torvalds/linux/compare/1e575bda30acc0bf01f799cee798d4a1c100d538...4dce97c6c265"
+    },
+    {
+      "title": "Fedora Docs: Rawhide is the development version of Fedora Linux",
+      "url": "https://docs.fedoraproject.org/en-US/releases/rawhide/"
+    },
+    {
+      "title": "kernel.org: 4.14.16 changelog, includes the change the SCTP fix repairs (a0ff660058b8)",
+      "url": "https://cdn.kernel.org/pub/linux/kernel/v4.x/ChangeLog-4.14.16",
+      "date": "31 Jan 2018"
+    },
+    {
+      "title": "kernel.org: 4.9.79 changelog, includes the change the SCTP fix repairs (a0ff660058b8)",
+      "url": "https://cdn.kernel.org/pub/linux/kernel/v4.x/ChangeLog-4.9.79",
+      "date": "31 Jan 2018"
+    },
+    {
+      "title": "kernel.org: 4.4.114 changelog, includes the change the SCTP fix repairs (a0ff660058b8)",
+      "url": "https://cdn.kernel.org/pub/linux/kernel/v4.x/ChangeLog-4.4.114",
+      "date": "31 Jan 2018"
+    },
+    {
+      "title": "kernel.org: 3.18.93 changelog, includes the change the SCTP fix repairs (a0ff660058b8)",
+      "url": "https://cdn.kernel.org/pub/linux/kernel/v3.x/ChangeLog-3.18.93",
+      "date": "31 Jan 2018"
+    },
+    {
+      "title": "kernel.org: 3.16.55 changelog, includes the change the SCTP fix repairs (a0ff660058b8)",
+      "url": "https://cdn.kernel.org/pub/linux/kernel/v3.x/ChangeLog-3.16.55",
+      "date": "3 Mar 2018"
+    },
+    {
+      "title": "kernel.org: 4.1.50 changelog, includes the change the SCTP fix repairs (a0ff660058b8)",
+      "url": "https://cdn.kernel.org/pub/linux/kernel/v4.x/ChangeLog-4.1.50",
+      "date": "5 Mar 2018"
+    },
+    {
+      "title": "kernel.org: 3.2.100 changelog, includes the change the SCTP fix repairs (a0ff660058b8)",
+      "url": "https://cdn.kernel.org/pub/linux/kernel/v3.x/ChangeLog-3.2.100",
+      "date": "3 Mar 2018"
     }
   ],
   "changes": [
+    {
+      "date": "2026-11-28",
+      "text": "Corrected: an older kernel version doesn't rule you out. The change that caused the bug was also copied into the 4.14.16, 4.9.79, 4.4.114, 4.1.50, 3.18.93, 3.16.55 and 3.2.100 stable kernels in 2018. Rechecked: still no stable kernel with the fix, it's in none of the stable queues, and it has no CVE."
+    },
     {
       "date": "2026-11-24",
       "text": "Rechecked: the 23 Nov stable kernels (7.3.6, 6.18.65, 6.12.119, 6.6.163, 6.1.193) don't have the fix and it isn't queued; Fedora Rawhide's build carrying it is now 7.4-rc4, still in testing. Still no CVE.",
