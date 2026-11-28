@@ -34,11 +34,11 @@
   "product": "Linux kernel",
   "disclosed": "2026-08-17",
   "news": "2026-11-25",
-  "updated": "2026-11-26",
+  "updated": "2026-11-28",
   "verdict": "if",
   "tile_line": "Root, no login, on NFS servers open to untrusted hosts.",
   "tldr": "A Linux kernel NFS server bug lets anyone who can reach port 2049 get root, no login needed. OpenSec showed it working but keeps its exploit private; no attacks seen. If you serve NFSv4.1 or 4.2 to untrusted hosts, firewall 2049 until you can update.",
-  "summary": "The client shrinks its session's reply cache to the minimum, then pads a request so the server copies 80 bytes into a zero-length buffer, 61 of them past the end of the kernel heap object and 40 chosen by the client; replaying the request returns 3.8 KB of kernel heap memory and the KASLR offset. Jérémy Jean of ANSSI sent the fix on 17 Aug and OpenSec's automated harness Antara found the bug on its own (reported 22 Sep); the fix reached the main kernel on 26 Oct and the first stable kernels on 6 Nov, but Ubuntu and Red Hat have no fix yet.",
+  "summary": "The client shrinks its session's reply cache to the minimum, then pads a request so the server copies 80 bytes into a zero-length buffer, 61 of them past the end of the kernel heap object and 40 chosen by the client; replaying the request returns 3.8 KB of kernel heap memory and the KASLR offset. Jérémy Jean of ANSSI sent the fix on 17 Aug and OpenSec's automated harness Antara found the bug on its own (reported 22 Sep); the fix reached the main kernel on 26 Oct and the first stable kernels on 6 Nov, and Debian and Red Hat have shipped fixes since, though not yet for RHEL 6, 7 or 9, or Ubuntu.",
   "status": {
     "exploit": "demonstrated",
     "attacks": "none",
@@ -110,11 +110,12 @@
   "do": [
     {
       "label": "Update the kernel and reboot",
-      "text": "Fixed so far: Debian 13 in 6.12.117-1, and Debian 12's optional linux-6.12 kernel in 6.12.117-1~deb12u1. Debian 12's default 6.1 kernel is still listed as vulnerable, although upstream fixed 6.1 in 6.1.193 on 23 Nov. Ubuntu lists its main kernel as vulnerable on every release from 16.04 to 26.10, with fixes in progress for 26.04 (7.0.0-45.45) and 26.10 (7.3.0-12.13); Ubuntu gives no date for them. Red Hat lists RHEL 6 to 10 as affected with no fix yet. On other distros, OpenSec's advice is to install the kernel update that lists CVE-2026-99362.",
+      "text": "Fixed so far: Debian 13 in 6.12.117-1, Debian 12 in 6.1.192-3 (and its optional linux-6.12 kernel in 6.12.117-1~deb12u1), RHEL 8 in 4.18.0-553.190.1.el8_10 (26 Nov) and RHEL 10.2 in 6.12.0-211.78.1.el10_2 (27 Nov). Red Hat also fixed its older RHEL 8.6 (AUS and EUS Long-Life) and RHEL 10.0 EUS streams; it still lists RHEL 6, 7 and 9 as affected, and its data doesn't list RHEL 10 (10.3) either way. Ubuntu lists its main kernel as vulnerable on every release from 16.04 to 26.10, with fixes in progress for 26.04 (7.0.0-45.45) and 26.10 (7.3.0-12.13); Ubuntu gives no date for them. On other distros, OpenSec's advice is to install the kernel update that lists CVE-2026-99362.",
       "cite": [
         11,
-        10,
+        14,
         9,
+        10,
         8,
         2,
         1
@@ -142,19 +143,23 @@
     },
     {
       "label": "Why it isn't Patch now",
-      "text": "It only matters where the kernel NFS server runs with NFSv4.1 or 4.2 and untrusted hosts can reach port 2049; machines that don't serve NFS aren't exposed. On servers that do, treat it as urgent: no login is needed and OpenSec built a root shell from it. OpenSec keeps its exploit private, we found no public exploit code or reports of attacks, and it isn't on CISA's list of exploited bugs. The ratings agree it's severe: the kernel CVE team gives 9.8, Red Hat Critical (a draft 9.8) and Ubuntu Critical. We'd change the verdict to Patch now if exploit code is published or attacks are reported.",
+      "text": "It only matters where the kernel NFS server runs with NFSv4.1 or 4.2 and untrusted hosts can reach port 2049; machines that don't serve NFS aren't exposed. On servers that do, treat it as urgent: no login is needed and OpenSec built a root shell from it. OpenSec keeps its exploit private, we found no public exploit code or reports of attacks, and it isn't on CISA's list of exploited bugs. The ratings agree it's severe: the kernel CVE team gives 9.8, Red Hat Critical (9.4) and Ubuntu Critical. We'd change the verdict to Patch now if exploit code is published or attacks are reported.",
       "cite": [
         1,
         2,
         9,
         10,
-        12
+        12,
+        14
       ]
     }
   ],
   "fixed_in": {
     "linux-kernel": {
-      "Debian 13": "6.12.117-1"
+      "Debian 13": "6.12.117-1",
+      "Debian 12": "6.1.192-3",
+      "RHEL 10.2": "6.12.0-211.78.1.el10_2",
+      "RHEL 8": "4.18.0-553.190.1.el8_10"
     }
   },
   "sources": [
@@ -197,7 +202,7 @@
       "url": "https://cdn.kernel.org/pub/linux/kernel/v6.x/ChangeLog-6.1.193"
     },
     {
-      "title": "Red Hat: Critical, default RHEL doesn't run nfsd, RHEL 6 to 10 affected, no fix, mitigations",
+      "title": "Red Hat: Critical, default RHEL doesn't run nfsd, mitigations",
       "url": "https://access.redhat.com/security/cve/CVE-2026-99362"
     },
     {
@@ -206,7 +211,7 @@
       "date": "25 Nov"
     },
     {
-      "title": "Debian tracker: fixed in Debian 13 6.12.117-1 and linux-6.12 6.12.117-1~deb12u1, Debian 12's 6.1 vulnerable",
+      "title": "Debian tracker: fixed in Debian 13 6.12.117-1, Debian 12 6.1.192-3 and linux-6.12 6.12.117-1~deb12u1",
       "url": "https://security-tracker.debian.org/tracker/CVE-2026-99362"
     },
     {
@@ -217,9 +222,17 @@
       "title": "anfs (GitHub): CVE-2026-99362 check that doesn't trigger the overflow",
       "url": "https://github.com/skelsec/anfs/commit/bedc3dd18c79604551b8ccf7196bba4fd2ab2e89",
       "date": "22 Nov"
+    },
+    {
+      "title": "Red Hat: CVE data, 9.4, fixed for RHEL 8, 8.6, 10.0 EUS and 10.2 EUS, RHEL 6, 7, 9 affected",
+      "url": "https://access.redhat.com/hydra/rest/securitydata/cve/CVE-2026-99362.json"
     }
   ],
   "changes": [
+    {
+      "date": "2026-11-28",
+      "text": "Red Hat released fixes for RHEL 8 and 10.2 (and its older 8.6 and 10.0 streams), and Debian fixed Debian 12's default kernel in 6.1.192-3. RHEL 6, 7 and 9 and Ubuntu still have no fix. Red Hat's score is now a verified 9.4, not the draft 9.8."
+    },
     {
       "date": "2026-11-26",
       "text": "Published."
