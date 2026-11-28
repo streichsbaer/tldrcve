@@ -231,7 +231,7 @@
   "changes": [
     {
       "date": "2026-11-28",
-      "text": "Red Hat released fixes for RHEL 8 and 10.2 (and its older 8.6 and 10.0 streams), and Debian fixed Debian 12's default kernel in 6.1.192-3. RHEL 6, 7 and 9 and Ubuntu still have no fix. Red Hat's score is now a verified 9.4, not the draft 9.8."
+      "text": "Red Hat released fixes for RHEL 8 and 10.2 (and its older 8.6 and 10.0 streams), and Debian fixed Debian 12's default kernel in 6.1.192-3. RHEL 6, 7 and 9 and Ubuntu still have no fix. Red Hat's score is a verified 9.4; this page said 9.8 before."
     },
     {
       "date": "2026-11-26",
