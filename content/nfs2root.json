@@ -38,7 +38,7 @@
   "verdict": "if",
   "tile_line": "Root, no login, on NFS servers open to untrusted hosts.",
   "tldr": "A Linux kernel NFS server bug lets anyone who can reach port 2049 get root, no login needed. OpenSec showed it working but keeps its exploit private; no attacks seen. If you serve NFSv4.1 or 4.2 to untrusted hosts, firewall 2049 until you can update.",
-  "summary": "The client shrinks its session's reply cache to the minimum, then pads a request so the server copies 80 bytes into a zero-length buffer, 61 of them past the end of the kernel heap object and 40 chosen by the client; replaying the request returns 3.8 KB of kernel heap memory and the KASLR offset. Jérémy Jean of ANSSI sent the fix on 17 Aug and OpenSec's automated harness Antara found the bug on its own (reported 22 Sep); the fix reached the main kernel on 26 Oct and the first stable kernels on 6 Nov, and Debian and Red Hat have shipped fixes since, though not yet for RHEL 6, 7 or 9, or Ubuntu.",
+  "summary": "The client shrinks its session's reply cache to the minimum, then pads a request so the server copies 80 bytes into a zero-length buffer, 61 of them past the end of the kernel heap object and 40 chosen by the client; replaying the request returns 3.8 KB of kernel heap memory and the KASLR offset. Jérémy Jean of ANSSI wrote the fix (dated 17 Aug) and Chuck Lever signed it off for the kernel, and OpenSec's automated harness Antara found the bug on its own (reported 22 Sep); the fix reached the main kernel on 26 Oct and the first stable kernels on 6 Nov, and Debian and Red Hat have shipped fixes since, though not yet for RHEL 6, 7 or 9, or Ubuntu.",
   "status": {
     "exploit": "demonstrated",
     "attacks": "none",
@@ -110,7 +110,7 @@
   "do": [
     {
       "label": "Update the kernel and reboot",
-      "text": "Fixed so far: Debian 13 in 6.12.117-1, Debian 12 in 6.1.192-3 (and its optional linux-6.12 kernel in 6.12.117-1~deb12u1), RHEL 8 in 4.18.0-553.190.1.el8_10 (26 Nov) and RHEL 10.2 in 6.12.0-211.78.1.el10_2 (27 Nov). Red Hat also fixed its older RHEL 8.6 (AUS and EUS Long-Life) and RHEL 10.0 EUS streams; it still lists RHEL 6, 7 and 9 as affected, and its data doesn't list RHEL 10 (10.3) either way. Ubuntu lists its main kernel as vulnerable on every release from 16.04 to 26.10, with fixes in progress for 26.04 (7.0.0-45.45) and 26.10 (7.3.0-12.13); Ubuntu gives no date for them. On other distros, OpenSec's advice is to install the kernel update that lists CVE-2026-99362.",
+      "text": "Fixed so far: Debian 13 in 6.12.117-1, Debian 12 in 6.1.192-3 (and its optional linux-6.12 kernel in 6.12.117-1~deb12u1), RHEL 8 in 4.18.0-553.190.1.el8_10 (26 Nov) and RHEL 10.2 in 6.12.0-211.78.1.el10_2 (27 Nov). Red Hat also fixed its older RHEL 8.6 (AUS and EUS Long-Life) and RHEL 10.0 EUS streams; it still lists RHEL 6, 7 and 9 as affected, and its data doesn't list RHEL 10 (10.3) either way. Ubuntu lists its main kernel as vulnerable on 16.04, 18.04, 20.04, 22.04, 24.04, 26.04 and 26.10, with fixes in progress for 26.04 (7.0.0-45.45) and 26.10 (7.3.0-12.13); Ubuntu gives no date for them. On other distros, OpenSec's advice is to install the kernel update that lists CVE-2026-99362.",
       "cite": [
         11,
         14,
@@ -174,7 +174,7 @@
       "date": "23 Nov"
     },
     {
-      "title": "Linux kernel (GitHub mirror): the fix by Jérémy Jean, written 17 Aug",
+      "title": "Linux kernel (GitHub mirror): the fix by Jérémy Jean, dated 17 Aug, signed off by Chuck Lever",
       "url": "https://github.com/torvalds/linux/commit/35ff1a7a7e3835c3e974bc5c45d335897564ceae"
     },
     {

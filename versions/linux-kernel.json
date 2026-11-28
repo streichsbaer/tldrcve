@@ -61,7 +61,7 @@
   "unfixed": [
     {
       "line": "All lines",
-      "note": "No stable kernel has the SCTP fix yet (merged into mainline 19 Nov, first in the 7.4-rc4 test release; not in the 23 Nov stable releases and in none of the stable queues, 7.3 to 5.10, on 28 Nov). Block the sctp module meanwhile.",
+      "note": "No stable kernel has the SCTP fix yet (merged into mainline 19 Nov, first in the 7.4-rc4 test release; not in the 23 Nov stable releases and in none of the stable queues, 7.3 to 5.10, on 28 Nov). Meanwhile, block the sctp module on hosts that don't use SCTP; that doesn't unload a module already loaded or help if SCTP is built into the kernel.",
       "pages": [
         "linux-sctp-root"
       ]
