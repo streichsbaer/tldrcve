@@ -19,11 +19,11 @@
   "cves": [],
   "product": "SAP GitHub environment",
   "disclosed": "2026-11-26",
-  "updated": "2026-11-27",
+  "updated": "2026-11-28",
   "verdict": "watch",
   "tile_line": "SAP confirms an incident; code tampering unconfirmed.",
   "tldr": "SAP confirmed \"suspicious activity\", which an internal memo places on GitHub, and says it found no sign of access to customer business data. Claims of stolen tokens and changed code are from an anonymous insider. No product is named; nothing to patch.",
-  "summary": "Der Spiegel broke the story on 26 Nov and says SAP calls it \"Project Granite\"; its insider says the attackers may have had help from AI. Handelsblatt, citing people inside SAP, says SAP restricted GitHub access, stopped automated software development processes and replaced signing keys, measures that affect numerous teams. SAP hasn't said what the activity was, when it was detected, which repositories it touched or whether it's contained.",
+  "summary": "Der Spiegel broke the story on 26 Nov and says SAP calls it \"Project Granite\"; its insider says the attackers may have had help from AI. Handelsblatt, citing people inside SAP, says SAP took several immediate steps to protect its development infrastructure that affect numerous teams; heise and All About Security, citing Handelsblatt, say they included restricted GitHub access, stopped automated software development processes and replaced signing keys. SAP hasn't said what the activity was, when it was detected (Handelsblatt's insiders say the week before its 27 Nov report), which repositories it touched or whether it's contained.",
   "orgs": [
     {
       "name": "SAP SE",
@@ -67,7 +67,8 @@
         "state": "part",
         "cite": [
           3,
-          5
+          5,
+          2
         ]
       }
     }
@@ -110,9 +111,11 @@
     {
       "date": "2026-11-27",
       "who": "anonymous",
-      "text": "Handelsblatt, citing people inside SAP, says software development is affected. Under the name \"Project Granite\", SAP restricted GitHub access, stopped automated software development processes and replaced signing keys, to keep stolen credentials from giving further access.",
+      "text": "Handelsblatt, citing people inside SAP, says SAP detected the incident in the week before this report, that software development was attacked, and that under the name \"Project Granite\" SAP took several immediate steps to protect its development infrastructure, affecting numerous teams. heise and All About Security, citing Handelsblatt, say SAP restricted GitHub access, stopped automated software development processes and replaced signing keys; All About Security adds that every code change must now be cryptographically signed, and that the steps are meant to keep stolen credentials from giving further access. The free-to-read part of Handelsblatt's updated article doesn't list these steps.",
       "cite": [
-        3
+        3,
+        2,
+        5
       ]
     },
     {
@@ -196,13 +199,13 @@
       "date": "27 Nov"
     },
     {
-      "title": "heise: SAP's statement in English, the memo, Spiegel's AI claim",
+      "title": "heise: SAP's statement in English, the memo, Spiegel's AI claim, and Handelsblatt's report of restricted GitHub access, stopped automation and replaced signing keys",
       "url": "https://www.heise.de/en/news/SAP-IT-incident-affects-development-systems-11540040.html",
       "date": "27 Nov"
     },
     {
-      "title": "Handelsblatt: SAP's statement on Thursday evening; insiders on Project Granite, restricted GitHub access, stopped automation and replaced signing keys",
-      "url": "https://www.handelsblatt.com/technik/ki/sap-it-sicherheitsvorfall-haben-verdaechtige-aktivitaeten-identifiziert/100273138.html",
+      "title": "Handelsblatt (updated 27 Nov): SAP's statement on Thursday evening; insiders on when SAP detected it, Project Granite and immediate steps affecting numerous teams",
+      "url": "https://www.handelsblatt.com/technik/ki/sap-it-sicherheitsvorfall-kunden-fordern-lueckenlose-aufklaerung/100273138.html",
       "date": "27 Nov"
     },
     {
@@ -211,7 +214,7 @@
       "date": "26 Nov"
     },
     {
-      "title": "All About Security: Spiegel's insider says tokens were used to copy and change code; SAP didn't comment and left open whether it's contained",
+      "title": "All About Security: Spiegel's insider says tokens were used to copy and change code; Handelsblatt's insiders on SAP's steps; SAP left open whether it's contained",
       "url": "https://www.all-about-security.de/sap-sicherheitsvorfall-angriff-auf-github-umgebung/",
       "date": "27 Nov"
     },
@@ -230,6 +233,11 @@
     }
   ],
   "changes": [
+    {
+      "date": "2026-11-28",
+      "minor": true,
+      "text": "Rechecked: no new statement from SAP or GitHub, and no product, package or repository named. The free-to-read part of Handelsblatt's updated article doesn't list the steps SAP reportedly took, so heise and All About Security, which reported them from Handelsblatt, are now cited for them. Added Handelsblatt's insider report that SAP detected the incident in the week before its 27 Nov report, and All About Security's report, citing Handelsblatt, that every code change must now be cryptographically signed."
+    },
     {
       "date": "2026-11-27",
       "text": "Published."
